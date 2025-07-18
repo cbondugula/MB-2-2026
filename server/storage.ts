@@ -10,6 +10,12 @@ import {
   collaborationSessions,
   advancedTemplates,
   smartComponents,
+  healthcareDomains,
+  healthcareAgents,
+  healthcareStandards,
+  healthcareOrganizations,
+  medicalPublications,
+  healthcareSimulations,
   type User,
   type UpsertUser,
   type Project,
@@ -27,6 +33,18 @@ import {
   type InsertCollaborationSession,
   type AdvancedTemplate,
   type SmartComponent,
+  type HealthcareDomain,
+  type HealthcareAgent,
+  type HealthcareStandard,
+  type HealthcareOrganization,
+  type MedicalPublication,
+  type HealthcareSimulation,
+  insertHealthcareDomainSchema,
+  insertHealthcareAgentSchema,
+  insertHealthcareStandardSchema,
+  insertHealthcareOrganizationSchema,
+  insertMedicalPublicationSchema,
+  insertHealthcareSimulationSchema,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -96,6 +114,37 @@ export interface IStorage {
     framework?: string;
     type?: string;
   }): Promise<SmartComponent[]>;
+  
+  // Healthcare Domain operations
+  getHealthcareDomains(): Promise<HealthcareDomain[]>;
+  getHealthcareDomain(id: number): Promise<HealthcareDomain | undefined>;
+  createHealthcareDomain(domain: typeof insertHealthcareDomainSchema._type): Promise<HealthcareDomain>;
+  
+  // Healthcare Agent operations
+  getHealthcareAgents(): Promise<HealthcareAgent[]>;
+  getHealthcareAgent(id: number): Promise<HealthcareAgent | undefined>;
+  createHealthcareAgent(agent: typeof insertHealthcareAgentSchema._type): Promise<HealthcareAgent>;
+  
+  // Healthcare Standard operations
+  getHealthcareStandards(): Promise<HealthcareStandard[]>;
+  getHealthcareStandard(id: number): Promise<HealthcareStandard | undefined>;
+  createHealthcareStandard(standard: typeof insertHealthcareStandardSchema._type): Promise<HealthcareStandard>;
+  
+  // Healthcare Organization operations
+  getHealthcareOrganizations(): Promise<HealthcareOrganization[]>;
+  getHealthcareOrganization(id: number): Promise<HealthcareOrganization | undefined>;
+  createHealthcareOrganization(org: typeof insertHealthcareOrganizationSchema._type): Promise<HealthcareOrganization>;
+  
+  // Medical Publication operations
+  getMedicalPublications(limit?: number): Promise<MedicalPublication[]>;
+  getMedicalPublication(id: number): Promise<MedicalPublication | undefined>;
+  getMedicalPublicationByPubmedId(pubmedId: string): Promise<MedicalPublication | undefined>;
+  createMedicalPublication(publication: typeof insertMedicalPublicationSchema._type): Promise<MedicalPublication>;
+  
+  // Healthcare Simulation operations
+  getUserHealthcareSimulations(userId: string): Promise<HealthcareSimulation[]>;
+  getHealthcareSimulation(id: number): Promise<HealthcareSimulation | undefined>;
+  createHealthcareSimulation(simulation: typeof insertHealthcareSimulationSchema._type): Promise<HealthcareSimulation>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -342,6 +391,105 @@ export class DatabaseStorage implements IStorage {
       .from(smartComponents)
       .where(and(...conditions))
       .orderBy(desc(smartComponents.downloadCount), desc(smartComponents.rating));
+  }
+
+  // Healthcare Domain operations
+  async getHealthcareDomains(): Promise<HealthcareDomain[]> {
+    return await db.select().from(healthcareDomains).orderBy(healthcareDomains.name);
+  }
+
+  async getHealthcareDomain(id: number): Promise<HealthcareDomain | undefined> {
+    const [domain] = await db.select().from(healthcareDomains).where(eq(healthcareDomains.id, id));
+    return domain;
+  }
+
+  async createHealthcareDomain(domainData: typeof insertHealthcareDomainSchema._type): Promise<HealthcareDomain> {
+    const [domain] = await db.insert(healthcareDomains).values(domainData).returning();
+    return domain;
+  }
+
+  // Healthcare Agent operations
+  async getHealthcareAgents(): Promise<HealthcareAgent[]> {
+    return await db.select().from(healthcareAgents).orderBy(healthcareAgents.name);
+  }
+
+  async getHealthcareAgent(id: number): Promise<HealthcareAgent | undefined> {
+    const [agent] = await db.select().from(healthcareAgents).where(eq(healthcareAgents.id, id));
+    return agent;
+  }
+
+  async createHealthcareAgent(agentData: typeof insertHealthcareAgentSchema._type): Promise<HealthcareAgent> {
+    const [agent] = await db.insert(healthcareAgents).values(agentData).returning();
+    return agent;
+  }
+
+  // Healthcare Standard operations
+  async getHealthcareStandards(): Promise<HealthcareStandard[]> {
+    return await db.select().from(healthcareStandards).orderBy(healthcareStandards.name);
+  }
+
+  async getHealthcareStandard(id: number): Promise<HealthcareStandard | undefined> {
+    const [standard] = await db.select().from(healthcareStandards).where(eq(healthcareStandards.id, id));
+    return standard;
+  }
+
+  async createHealthcareStandard(standardData: typeof insertHealthcareStandardSchema._type): Promise<HealthcareStandard> {
+    const [standard] = await db.insert(healthcareStandards).values(standardData).returning();
+    return standard;
+  }
+
+  // Healthcare Organization operations
+  async getHealthcareOrganizations(): Promise<HealthcareOrganization[]> {
+    return await db.select().from(healthcareOrganizations).orderBy(healthcareOrganizations.name);
+  }
+
+  async getHealthcareOrganization(id: number): Promise<HealthcareOrganization | undefined> {
+    const [org] = await db.select().from(healthcareOrganizations).where(eq(healthcareOrganizations.id, id));
+    return org;
+  }
+
+  async createHealthcareOrganization(orgData: typeof insertHealthcareOrganizationSchema._type): Promise<HealthcareOrganization> {
+    const [org] = await db.insert(healthcareOrganizations).values(orgData).returning();
+    return org;
+  }
+
+  // Medical Publication operations
+  async getMedicalPublications(limit: number = 50): Promise<MedicalPublication[]> {
+    return await db.select().from(medicalPublications)
+      .orderBy(desc(medicalPublications.publicationDate))
+      .limit(limit);
+  }
+
+  async getMedicalPublication(id: number): Promise<MedicalPublication | undefined> {
+    const [pub] = await db.select().from(medicalPublications).where(eq(medicalPublications.id, id));
+    return pub;
+  }
+
+  async getMedicalPublicationByPubmedId(pubmedId: string): Promise<MedicalPublication | undefined> {
+    const [pub] = await db.select().from(medicalPublications).where(eq(medicalPublications.pubmedId, pubmedId));
+    return pub;
+  }
+
+  async createMedicalPublication(pubData: typeof insertMedicalPublicationSchema._type): Promise<MedicalPublication> {
+    const [pub] = await db.insert(medicalPublications).values(pubData).returning();
+    return pub;
+  }
+
+  // Healthcare Simulation operations
+  async getUserHealthcareSimulations(userId: string): Promise<HealthcareSimulation[]> {
+    return await db.select().from(healthcareSimulations)
+      .where(eq(healthcareSimulations.userId, userId))
+      .orderBy(desc(healthcareSimulations.createdAt));
+  }
+
+  async getHealthcareSimulation(id: number): Promise<HealthcareSimulation | undefined> {
+    const [sim] = await db.select().from(healthcareSimulations).where(eq(healthcareSimulations.id, id));
+    return sim;
+  }
+
+  async createHealthcareSimulation(simData: typeof insertHealthcareSimulationSchema._type): Promise<HealthcareSimulation> {
+    const [sim] = await db.insert(healthcareSimulations).values(simData).returning();
+    return sim;
   }
 }
 

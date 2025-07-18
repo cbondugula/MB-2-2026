@@ -3,9 +3,20 @@ import { createServer, type Server } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertProjectSchema, insertProjectActivitySchema } from "@shared/schema";
+import { 
+  insertProjectSchema, 
+  insertProjectActivitySchema,
+  insertHealthcareDomainSchema,
+  insertHealthcareAgentSchema,
+  insertHealthcareStandardSchema,
+  insertHealthcareOrganizationSchema,
+  insertMedicalPublicationSchema,
+  insertHealthcareSimulationSchema,
+} from "@shared/schema";
 import { aiService } from "./ai-service";
 import { HEALTHCARE_STACKS } from "@shared/healthcare-stacks";
+import { healthcareDomainService } from "@shared/healthcare-domains";
+import { advancedCapabilitiesService } from "./advanced-capabilities-service";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -517,6 +528,507 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching collaboration sessions:", error);
       res.status(500).json({ message: "Failed to fetch sessions" });
+    }
+  });
+
+  // === COMPREHENSIVE DYNAMIC HEALTHCARE APIs ===
+
+  // Healthcare Domains API
+  app.get('/api/healthcare-domains', async (req, res) => {
+    try {
+      const { category, country, language, search } = req.query;
+      let domains = healthcareDomainService.getAllDomains();
+      
+      if (category) {
+        domains = domains.filter(d => d.category.toLowerCase() === (category as string).toLowerCase());
+      }
+      if (country) {
+        domains = domains.filter(d => d.countries.includes(country as string));
+      }
+      if (language) {
+        domains = domains.filter(d => d.languages.includes(language as string));
+      }
+      if (search) {
+        const searchTerm = (search as string).toLowerCase();
+        domains = domains.filter(d => 
+          d.name.toLowerCase().includes(searchTerm) || 
+          d.description.toLowerCase().includes(searchTerm) ||
+          d.subdomains.some(sub => sub.toLowerCase().includes(searchTerm))
+        );
+      }
+      
+      res.json(domains);
+    } catch (error) {
+      console.error("Error fetching healthcare domains:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare domains" });
+    }
+  });
+
+  app.get('/api/healthcare-domains/categories', async (req, res) => {
+    try {
+      const domains = healthcareDomainService.getAllDomains();
+      const categories = [...new Set(domains.map(d => d.category))];
+      res.json(categories);
+    } catch (error) {
+      console.error("Error fetching domain categories:", error);
+      res.status(500).json({ message: "Failed to fetch domain categories" });
+    }
+  });
+
+  app.get('/api/healthcare-domains/:id', async (req, res) => {
+    try {
+      const domainId = req.params.id;
+      const domains = healthcareDomainService.getAllDomains();
+      const domain = domains.find(d => d.id === domainId);
+      
+      if (!domain) {
+        return res.status(404).json({ message: "Healthcare domain not found" });
+      }
+      
+      res.json(domain);
+    } catch (error) {
+      console.error("Error fetching healthcare domain:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare domain" });
+    }
+  });
+
+  // Healthcare Organizations API
+  app.get('/api/healthcare-organizations', async (req, res) => {
+    try {
+      const { type, category, country, search } = req.query;
+      let organizations = await storage.getHealthcareOrganizations();
+      
+      if (type) {
+        organizations = organizations.filter(org => org.type === type);
+      }
+      if (category) {
+        organizations = organizations.filter(org => org.category === category);
+      }
+      if (country) {
+        organizations = organizations.filter(org => org.country === country);
+      }
+      if (search) {
+        const searchTerm = (search as string).toLowerCase();
+        organizations = organizations.filter(org => 
+          org.name.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      res.json(organizations);
+    } catch (error) {
+      console.error("Error fetching healthcare organizations:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare organizations" });
+    }
+  });
+
+  app.post('/api/healthcare-organizations', isAuthenticated, async (req: any, res) => {
+    try {
+      const orgData = insertHealthcareOrganizationSchema.parse(req.body);
+      const organization = await storage.createHealthcareOrganization(orgData);
+      res.status(201).json(organization);
+    } catch (error) {
+      console.error("Error creating healthcare organization:", error);
+      res.status(500).json({ message: "Failed to create healthcare organization" });
+    }
+  });
+
+  // Medical Publications API
+  app.get('/api/medical-publications', async (req, res) => {
+    try {
+      const { specialty, type, journal, search, limit = 50 } = req.query;
+      let publications = await storage.getMedicalPublications(parseInt(limit as string));
+      
+      if (specialty) {
+        publications = publications.filter(pub => pub.medicalSpecialty === specialty);
+      }
+      if (type) {
+        publications = publications.filter(pub => pub.publicationType === type);
+      }
+      if (journal) {
+        publications = publications.filter(pub => pub.journal === journal);
+      }
+      if (search) {
+        const searchTerm = (search as string).toLowerCase();
+        publications = publications.filter(pub => 
+          pub.title.toLowerCase().includes(searchTerm) ||
+          pub.abstract?.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      res.json(publications);
+    } catch (error) {
+      console.error("Error fetching medical publications:", error);
+      res.status(500).json({ message: "Failed to fetch medical publications" });
+    }
+  });
+
+  app.get('/api/medical-publications/pubmed/:pubmedId', async (req, res) => {
+    try {
+      const pubmedId = req.params.pubmedId;
+      const publication = await storage.getMedicalPublicationByPubmedId(pubmedId);
+      
+      if (!publication) {
+        return res.status(404).json({ message: "Publication not found" });
+      }
+      
+      res.json(publication);
+    } catch (error) {
+      console.error("Error fetching publication:", error);
+      res.status(500).json({ message: "Failed to fetch publication" });
+    }
+  });
+
+  // Healthcare Standards API
+  app.get('/api/healthcare-standards', async (req, res) => {
+    try {
+      const { category, organization, country, search } = req.query;
+      let standards = await storage.getHealthcareStandards();
+      
+      if (category) {
+        standards = standards.filter(std => std.category === category);
+      }
+      if (organization) {
+        standards = standards.filter(std => std.organization === organization);
+      }
+      if (country) {
+        standards = standards.filter(std => 
+          std.supportedCountries?.includes(country as string)
+        );
+      }
+      if (search) {
+        const searchTerm = (search as string).toLowerCase();
+        standards = standards.filter(std => 
+          std.name.toLowerCase().includes(searchTerm) ||
+          std.acronym?.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      res.json(standards);
+    } catch (error) {
+      console.error("Error fetching healthcare standards:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare standards" });
+    }
+  });
+
+  // Healthcare Agents API  
+  app.get('/api/healthcare-agents', async (req, res) => {
+    try {
+      const { type, specialty, search } = req.query;
+      let agents = await storage.getHealthcareAgents();
+      
+      if (type) {
+        agents = agents.filter(agent => agent.type === type);
+      }
+      if (specialty) {
+        agents = agents.filter(agent => agent.specialty === specialty);
+      }
+      if (search) {
+        const searchTerm = (search as string).toLowerCase();
+        agents = agents.filter(agent => 
+          agent.name.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      res.json(agents);
+    } catch (error) {
+      console.error("Error fetching healthcare agents:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare agents" });
+    }
+  });
+
+  app.post('/api/healthcare-agents', isAuthenticated, async (req: any, res) => {
+    try {
+      const agentData = insertHealthcareAgentSchema.parse(req.body);
+      const agent = await storage.createHealthcareAgent(agentData);
+      res.status(201).json(agent);
+    } catch (error) {
+      console.error("Error creating healthcare agent:", error);
+      res.status(500).json({ message: "Failed to create healthcare agent" });
+    }
+  });
+
+  // Healthcare Simulations API
+  app.get('/api/healthcare-simulations', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { type, category, status } = req.query;
+      let simulations = await storage.getUserHealthcareSimulations(userId);
+      
+      if (type) {
+        simulations = simulations.filter(sim => sim.type === type);
+      }
+      if (category) {
+        simulations = simulations.filter(sim => sim.category === category);
+      }
+      if (status) {
+        simulations = simulations.filter(sim => sim.status === status);
+      }
+      
+      res.json(simulations);
+    } catch (error) {
+      console.error("Error fetching healthcare simulations:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare simulations" });
+    }
+  });
+
+  app.post('/api/healthcare-simulations', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const simulationData = insertHealthcareSimulationSchema.parse({
+        ...req.body,
+        userId
+      });
+      
+      // Run the simulation using advanced capabilities service
+      const simulationResult = await advancedCapabilitiesService.createHealthcareSimulation(
+        simulationData.type,
+        simulationData.parameters
+      );
+      
+      simulationData.results = simulationResult;
+      simulationData.status = 'completed';
+      
+      const simulation = await storage.createHealthcareSimulation(simulationData);
+      res.status(201).json(simulation);
+    } catch (error) {
+      console.error("Error creating healthcare simulation:", error);
+      res.status(500).json({ message: "Failed to create healthcare simulation" });
+    }
+  });
+
+  // Advanced Capabilities API
+  app.post('/api/advanced-capabilities/enable', isAuthenticated, async (req: any, res) => {
+    try {
+      const capabilities = await advancedCapabilitiesService.enableAdvancedCapabilities(req.body);
+      res.json(capabilities);
+    } catch (error) {
+      console.error("Error enabling advanced capabilities:", error);
+      res.status(500).json({ message: "Failed to enable advanced capabilities" });
+    }
+  });
+
+  // VR/AR/XR Simulation API
+  app.post('/api/immersive/vr-simulation', isAuthenticated, async (req: any, res) => {
+    try {
+      const { type, parameters } = req.body;
+      const capabilities = await advancedCapabilitiesService.enableAdvancedCapabilities({
+        vrArXrEnabled: true,
+        simulationTypes: [type],
+        immersiveEducation: true,
+        computerVision: false,
+        medicalImaging: false,
+        multimodalAnalysis: false,
+        blockchain: false,
+        web3Integration: false,
+        decentralizedHealth: false,
+        federatedLearning: false,
+        distributedAI: false,
+        privateComputation: false,
+        iotSensors: false,
+        medicalDevices: false,
+        wearableIntegration: false,
+        preventiveMedicine: false,
+        precisionMedicine: false,
+        personalizedMedicine: false,
+        clinicalPractice: false,
+        medicalEducation: true,
+        drugDiscovery: false,
+        biotechnology: false,
+        digitalHealth: false,
+        healthEconomics: false,
+        healthFinance: false,
+        healthLaw: false,
+        humanResources: false,
+        learningHealthSystems: false,
+        continuousImprovement: false,
+        realWorldEvidence: false,
+        healthcareMedia: false,
+        medicalJournals: false,
+        pubmedIntegration: false,
+        healthRegistries: false,
+        healthInsurance: false,
+        pharmaceuticalCompanies: false,
+        medicalEquipment: false,
+        medicalSocieties: false
+      });
+      
+      const simulation = await capabilities.services.immersiveHealthcare.createVRSimulation(type, parameters);
+      res.json(simulation);
+    } catch (error) {
+      console.error("Error creating VR simulation:", error);
+      res.status(500).json({ message: "Failed to create VR simulation" });
+    }
+  });
+
+  // Computer Vision Medical Analysis API
+  app.post('/api/computer-vision/analyze-medical-image', isAuthenticated, async (req: any, res) => {
+    try {
+      const { imageData, modality } = req.body;
+      const capabilities = await advancedCapabilitiesService.enableAdvancedCapabilities({
+        vrArXrEnabled: false,
+        simulationTypes: [],
+        immersiveEducation: false,
+        computerVision: true,
+        medicalImaging: true,
+        multimodalAnalysis: true,
+        blockchain: false,
+        web3Integration: false,
+        decentralizedHealth: false,
+        federatedLearning: false,
+        distributedAI: false,
+        privateComputation: false,
+        iotSensors: false,
+        medicalDevices: false,
+        wearableIntegration: false,
+        preventiveMedicine: false,
+        precisionMedicine: false,
+        personalizedMedicine: false,
+        clinicalPractice: true,
+        medicalEducation: false,
+        drugDiscovery: false,
+        biotechnology: false,
+        digitalHealth: true,
+        healthEconomics: false,
+        healthFinance: false,
+        healthLaw: false,
+        humanResources: false,
+        learningHealthSystems: false,
+        continuousImprovement: false,
+        realWorldEvidence: false,
+        healthcareMedia: false,
+        medicalJournals: false,
+        pubmedIntegration: false,
+        healthRegistries: false,
+        healthInsurance: false,
+        pharmaceuticalCompanies: false,
+        medicalEquipment: false,
+        medicalSocieties: false
+      });
+      
+      const analysis = await capabilities.services.medicalVision.analyzeMedicalImage(
+        Buffer.from(imageData, 'base64'),
+        modality
+      );
+      res.json(analysis);
+    } catch (error) {
+      console.error("Error analyzing medical image:", error);
+      res.status(500).json({ message: "Failed to analyze medical image" });
+    }
+  });
+
+  // Blockchain Health Records API
+  app.post('/api/blockchain/create-health-record', isAuthenticated, async (req: any, res) => {
+    try {
+      const { patientData } = req.body;
+      const capabilities = await advancedCapabilitiesService.enableAdvancedCapabilities({
+        vrArXrEnabled: false,
+        simulationTypes: [],
+        immersiveEducation: false,
+        computerVision: false,
+        medicalImaging: false,
+        multimodalAnalysis: false,
+        blockchain: true,
+        web3Integration: true,
+        decentralizedHealth: true,
+        federatedLearning: false,
+        distributedAI: false,
+        privateComputation: false,
+        iotSensors: false,
+        medicalDevices: false,
+        wearableIntegration: false,
+        preventiveMedicine: false,
+        precisionMedicine: false,
+        personalizedMedicine: false,
+        clinicalPractice: false,
+        medicalEducation: false,
+        drugDiscovery: false,
+        biotechnology: false,
+        digitalHealth: true,
+        healthEconomics: false,
+        healthFinance: false,
+        healthLaw: false,
+        humanResources: false,
+        learningHealthSystems: false,
+        continuousImprovement: false,
+        realWorldEvidence: false,
+        healthcareMedia: false,
+        medicalJournals: false,
+        pubmedIntegration: false,
+        healthRegistries: false,
+        healthInsurance: false,
+        pharmaceuticalCompanies: false,
+        medicalEquipment: false,
+        medicalSocieties: false
+      });
+      
+      const record = await capabilities.services.blockchainHealth.createHealthRecord(patientData);
+      res.json(record);
+    } catch (error) {
+      console.error("Error creating blockchain health record:", error);
+      res.status(500).json({ message: "Failed to create blockchain health record" });
+    }
+  });
+
+  // IoT Medical Devices API
+  app.post('/api/iot/connect-medical-device', isAuthenticated, async (req: any, res) => {
+    try {
+      const { deviceId, deviceType } = req.body;
+      const capabilities = await advancedCapabilitiesService.enableAdvancedCapabilities({
+        vrArXrEnabled: false,
+        simulationTypes: [],
+        immersiveEducation: false,
+        computerVision: false,
+        medicalImaging: false,
+        multimodalAnalysis: false,
+        blockchain: false,
+        web3Integration: false,
+        decentralizedHealth: false,
+        federatedLearning: false,
+        distributedAI: false,
+        privateComputation: false,
+        iotSensors: true,
+        medicalDevices: true,
+        wearableIntegration: true,
+        preventiveMedicine: false,
+        precisionMedicine: false,
+        personalizedMedicine: false,
+        clinicalPractice: false,
+        medicalEducation: false,
+        drugDiscovery: false,
+        biotechnology: false,
+        digitalHealth: true,
+        healthEconomics: false,
+        healthFinance: false,
+        healthLaw: false,
+        humanResources: false,
+        learningHealthSystems: false,
+        continuousImprovement: false,
+        realWorldEvidence: false,
+        healthcareMedia: false,
+        medicalJournals: false,
+        pubmedIntegration: false,
+        healthRegistries: false,
+        healthInsurance: false,
+        pharmaceuticalCompanies: false,
+        medicalEquipment: false,
+        medicalSocieties: false
+      });
+      
+      const connection = await capabilities.services.iotMedical.connectMedicalDevice(deviceId, deviceType);
+      res.json(connection);
+    } catch (error) {
+      console.error("Error connecting medical device:", error);
+      res.status(500).json({ message: "Failed to connect medical device" });
+    }
+  });
+
+  // Healthcare stacks
+  app.get('/api/healthcare-stacks', async (req, res) => {
+    try {
+      res.json(HEALTHCARE_STACKS);
+    } catch (error) {
+      console.error("Error fetching healthcare stacks:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare stacks" });
     }
   });
 

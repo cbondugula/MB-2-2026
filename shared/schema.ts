@@ -9,6 +9,7 @@ import {
   boolean,
   integer,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -117,6 +118,120 @@ export const apiIntegrations = pgTable("api_integrations", {
   sdkExamples: jsonb("sdk_examples"), // Code examples for different languages
   complianceNotes: text("compliance_notes"), // HIPAA, security considerations
   isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Healthcare Domains table - Dynamic healthcare domain management
+export const healthcareDomains = pgTable("healthcare_domains", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  category: varchar("category").notNull(),
+  description: text("description"),
+  subdomains: jsonb("subdomains"), // Array of subdomain strings
+  standards: jsonb("standards"), // Array of applicable standards
+  regulations: jsonb("regulations"), // Array of regulations
+  stakeholders: jsonb("stakeholders"), // Array of stakeholders
+  technologies: jsonb("technologies"), // Array of relevant technologies
+  dataTypes: jsonb("data_types"), // Array of data types
+  integrations: jsonb("integrations"), // Array of possible integrations
+  globalCoverage: boolean("global_coverage").default(true),
+  languages: jsonb("languages"), // Array of supported languages
+  countries: jsonb("countries"), // Array of supported countries
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Healthcare Agents table - Dynamic AI agent configurations
+export const healthcareAgents = pgTable("healthcare_agents", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  type: varchar("type").notNull(), // "clinical", "research", "administrative", etc.
+  specialty: varchar("specialty"), // Medical specialty if applicable
+  capabilities: jsonb("capabilities"), // Array of agent capabilities
+  models: jsonb("models"), // AI models used (GPT-4, Claude, Gemini, etc.)
+  healthcareDomains: jsonb("healthcare_domains"), // Array of applicable domains
+  compliance: jsonb("compliance"), // HIPAA, FDA, etc. compliance features
+  integrations: jsonb("integrations"), // EHR, lab systems, etc.
+  configuration: jsonb("configuration"), // Agent-specific configuration
+  isPublic: boolean("is_public").default(true),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Healthcare Standards table - Dynamic standards management
+export const healthcareStandards = pgTable("healthcare_standards", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  acronym: varchar("acronym"),
+  category: varchar("category").notNull(), // "data", "messaging", "security", etc.
+  description: text("description"),
+  version: varchar("version"),
+  organization: varchar("organization"), // HL7, FHIR, etc.
+  implementationGuide: text("implementation_guide"),
+  supportedCountries: jsonb("supported_countries"),
+  complianceRequirements: jsonb("compliance_requirements"),
+  technicalSpecs: jsonb("technical_specs"),
+  apiEndpoints: jsonb("api_endpoints"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Global Healthcare Organizations table
+export const healthcareOrganizations = pgTable("healthcare_organizations", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  type: varchar("type").notNull(), // "hospital", "pharmaceutical", "insurance", etc.
+  category: varchar("category"), // "provider", "payer", "vendor", etc.
+  country: varchar("country"),
+  region: varchar("region"),
+  website: varchar("website"),
+  apiAccess: jsonb("api_access"), // Available APIs
+  contactInfo: jsonb("contact_info"),
+  services: jsonb("services"), // Services offered
+  standards: jsonb("standards"), // Standards supported
+  isVerified: boolean("is_verified").default(false),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Medical Publications table - Dynamic medical literature
+export const medicalPublications = pgTable("medical_publications", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  authors: jsonb("authors"), // Array of author objects
+  journal: varchar("journal"),
+  pubmedId: varchar("pubmed_id"),
+  doi: varchar("doi"),
+  abstract: text("abstract"),
+  keywords: jsonb("keywords"), // Array of keywords
+  medicalSpecialty: varchar("medical_specialty"),
+  publicationType: varchar("publication_type"), // "research", "review", "case-study", etc.
+  publicationDate: timestamp("publication_date"),
+  impactFactor: jsonb("impact_factor"),
+  citations: integer("citations").default(0),
+  fullTextUrl: varchar("full_text_url"),
+  isOpenAccess: boolean("is_open_access").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Healthcare Simulations table
+export const healthcareSimulations = pgTable("healthcare_simulations", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  type: varchar("type").notNull(), // "clinical-trial", "disease-progression", etc.
+  category: varchar("category"), // "education", "research", "planning", etc.
+  description: text("description"),
+  parameters: jsonb("parameters"), // Simulation parameters
+  results: jsonb("results"), // Simulation results
+  userId: varchar("user_id").notNull(),
+  isPublic: boolean("is_public").default(false),
+  status: varchar("status").default("draft"), // "draft", "running", "completed"
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -292,10 +407,32 @@ export const insertCodeAnalysisSchema = createInsertSchema(codeAnalysis);
 export const insertCollaborationSessionSchema = createInsertSchema(collaborationSessions);
 export const insertAdvancedTemplateSchema = createInsertSchema(advancedTemplates);
 export const insertSmartComponentSchema = createInsertSchema(smartComponents);
+export const insertHealthcareDomainSchema = createInsertSchema(healthcareDomains);
+export const insertHealthcareAgentSchema = createInsertSchema(healthcareAgents);
+export const insertHealthcareStandardSchema = createInsertSchema(healthcareStandards);
+export const insertHealthcareOrganizationSchema = createInsertSchema(healthcareOrganizations);
+export const insertMedicalPublicationSchema = createInsertSchema(medicalPublications);
+export const insertHealthcareSimulationSchema = createInsertSchema(healthcareSimulations);
 
 // Types
 export type UpsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+export type Project = typeof projects.$inferSelect;
+export type Template = typeof templates.$inferSelect;
+export type Component = typeof components.$inferSelect;
+export type ApiIntegration = typeof apiIntegrations.$inferSelect;
+export type ProjectActivity = typeof projectActivities.$inferSelect;
+export type AiSession = typeof aiSessions.$inferSelect;
+export type CodeAnalysis = typeof codeAnalysis.$inferSelect;
+export type CollaborationSession = typeof collaborationSessions.$inferSelect;
+export type AdvancedTemplate = typeof advancedTemplates.$inferSelect;
+export type SmartComponent = typeof smartComponents.$inferSelect;
+export type HealthcareDomain = typeof healthcareDomains.$inferSelect;
+export type HealthcareAgent = typeof healthcareAgents.$inferSelect;
+export type HealthcareStandard = typeof healthcareStandards.$inferSelect;
+export type HealthcareOrganization = typeof healthcareOrganizations.$inferSelect;
+export type MedicalPublication = typeof medicalPublications.$inferSelect;
+export type HealthcareSimulation = typeof healthcareSimulations.$inferSelect;
 
 // Memory and conversation tables for healthcare AI agents
 export const conversations = pgTable("conversations", {
