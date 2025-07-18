@@ -2,8 +2,29 @@
 
 ## Overview
 
-This is a healthcare-focused web application called "MedBuilder" - the world's most advanced AI-powered development platform specifically designed for creating HIPAA-compliant healthcare applications. The platform combines Replit's cloud infrastructure with Cursor-like AI intelligence to provide:
+This is a healthcare-focused web application called "MedBuilder" - the world's most advanced AI-powered development platform specifically designed for creating ANY healthcare and life sciences application. The platform combines Replit's cloud infrastructure with Cursor-like AI intelligence to support the complete healthcare technology ecosystem:
 
+**Complete Healthcare Coverage:**
+- Clinical Applications (EHRs, EMRs, Clinical Decision Support)
+- Telehealth & Remote Patient Monitoring
+- Medical Research & Clinical Trials
+- Pharmaceutical & Drug Discovery
+- Medical Device Software & IoT
+- Health Analytics & Population Health
+- Genomics & Bioinformatics
+- Laboratory Information Management
+- Medical Imaging & DICOM Processing
+- Healthcare Administration & Billing
+
+**Technology Stack Flexibility:**
+- Frontend: React, Angular, Vue, Flutter, React Native
+- Backend: Node.js, Python, Java, Go, Rust, PHP
+- Mobile: iOS, Android, Cross-platform
+- Desktop: Electron, native applications
+- Web: Progressive Web Apps, responsive design
+- APIs: REST, GraphQL, FHIR, HL7
+
+**AI-Powered Features:**
 - Real-time AI code completion with healthcare-specific context
 - Intelligent HIPAA compliance checking and suggestions
 - Advanced architecture review and optimization
@@ -11,7 +32,7 @@ This is a healthcare-focused web application called "MedBuilder" - the world's m
 - Smart templates with AI-powered customization
 - Automated security scanning and vulnerability detection
 
-The platform helps developers build healthcare software 10x faster with cutting-edge AI technology.
+The platform helps developers build ANY healthcare software 10x faster with cutting-edge AI technology.
 
 ## User Preferences
 
@@ -112,7 +133,9 @@ Preferred communication style: Simple, everyday language.
 
 ### AI & Intelligence
 - OpenAI GPT-4o for advanced code analysis and completion
-- Custom AI service layer for healthcare-specific intelligence
+- Google Med-Gemma for specialized medical AI analysis and healthcare domain expertise
+- Healthcare BERT Models: ClinicalBERT, BioBERT, PubMedBERT, BlueBERT, RadBERT, PathBERT, CardioBERT, OncoBERT, MentalBERT
+- Custom AI service layer for healthcare-specific intelligence with medical NER, clinical classification, and medical concept extraction
 - Real-time collaboration with WebSocket integration
 
 ### Database & ORM

@@ -1,488 +1,506 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AICodeEditor } from "@/components/ui/ai-code-editor";
-import { useToast } from "@/hooks/use-toast";
-import { 
-  Sparkles, 
-  Brain, 
-  Rocket, 
-  Shield, 
-  Zap, 
-  Users,
-  FileCode,
-  Database,
-  Cloud,
-  Settings,
-  Activity,
-  TrendingUp,
-  CheckCircle2,
-  AlertTriangle,
-  Bot,
-  Code2,
-  GitBranch,
-  Globe
-} from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
+import { Brain, Code, Shield, Zap, FileCode, Users, BarChart3, Lightbulb } from 'lucide-react';
 
-interface Project {
-  id: number;
-  name: string;
-  description: string;
-  isHipaaCompliant: boolean;
-  code: any;
-  createdAt: string;
+interface AIAnalysisResult {
+  score: number;
+  issues: Array<{
+    severity: string;
+    category: string;
+    description: string;
+    solution: string;
+    healthcareSpecific: boolean;
+  }>;
+  recommendations: Array<{
+    type: string;
+    title: string;
+    description: string;
+    implementation: string;
+    priority: string;
+  }>;
+  compliance: Array<{
+    requirement: string;
+    status: string;
+    details: string;
+  }>;
+  summary: string;
+  confidence: number;
 }
 
-interface AdvancedTemplate {
-  id: number;
-  name: string;
+interface CodeSuggestion {
+  text: string;
   description: string;
-  category: string;
-  complexity: string;
-  complianceLevel: string;
-  techStack: string[];
-  estimatedTime: number;
-  rating: number;
-  downloadCount: number;
+  type: string;
+  confidence: number;
+  healthcareSpecific: boolean;
 }
 
 export default function AIWorkspace() {
-  const { user, isAuthenticated } = useAuth();
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [selectedTemplate, setSelectedTemplate] = useState<AdvancedTemplate | null>(null);
-  const [aiAssistantActive, setAiAssistantActive] = useState(true);
-  const [activeFile, setActiveFile] = useState("index.tsx");
+  const [selectedDomain, setSelectedDomain] = useState("clinical");
+  const [codeInput, setCodeInput] = useState("");
+  const [analysis, setAnalysis] = useState<AIAnalysisResult | null>(null);
+  const [suggestions, setSuggestions] = useState<CodeSuggestion[]>([]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
-  const queryClient = useQueryClient();
 
-  // Fetch user projects
-  const { data: projects = [], isLoading: projectsLoading } = useQuery({
-    queryKey: ["/api/projects"],
-    enabled: isAuthenticated,
-  });
+  const healthcareDomains = [
+    { value: "clinical", label: "Clinical Care & EHR" },
+    { value: "research", label: "Medical Research" },
+    { value: "pharma", label: "Pharmaceutical" },
+    { value: "telehealth", label: "Telehealth" },
+    { value: "medtech", label: "Medical Devices" },
+    { value: "admin", label: "Healthcare Admin" }
+  ];
 
-  // Fetch advanced templates
-  const { data: templates = [], isLoading: templatesLoading } = useQuery({
-    queryKey: ["/api/advanced-templates"],
-    queryFn: () => apiRequest("/api/advanced-templates", "GET"),
-  });
-
-  // Fetch AI sessions for insights
-  const { data: aiSessions = [] } = useQuery({
-    queryKey: ["/api/ai/sessions"],
-    queryFn: () => apiRequest("/api/ai/sessions", "GET"),
-    enabled: isAuthenticated,
-  });
-
-  // Create new project mutation
-  const createProjectMutation = useMutation({
-    mutationFn: async (projectData: { name: string; description: string; templateId?: number }) => {
-      return apiRequest("/api/projects", "POST", projectData);
-    },
-    onSuccess: (newProject) => {
-      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
-      setSelectedProject(newProject);
+  const analyzeCode = async () => {
+    if (!codeInput.trim()) {
       toast({
-        title: "Project Created",
-        description: "Your new healthcare project is ready for development.",
+        title: "No code to analyze",
+        description: "Please enter some code first",
+        variant: "destructive"
       });
-    },
-    onError: () => {
+      return;
+    }
+
+    setIsAnalyzing(true);
+    try {
+      const response = await fetch('/api/ai/analyze-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: "code-review",
+          code: codeInput,
+          domain: selectedDomain,
+          context: "AI Workspace analysis"
+        })
+      });
+
+      if (!response.ok) throw new Error('Analysis failed');
+
+      const result = await response.json();
+      setAnalysis(result);
+      
       toast({
-        title: "Creation Failed",
-        description: "Unable to create project. Please try again.",
-        variant: "destructive",
+        title: "Code Analysis Complete",
+        description: `Analysis score: ${result.score}/100`
       });
-    },
-  });
-
-  // Architecture review mutation
-  const architectureReviewMutation = useMutation({
-    mutationFn: async (data: { projectStructure: any; requirements: string[]; complianceLevel: string }) => {
-      return apiRequest("/api/ai/architecture-review", "POST", data);
-    },
-    onSuccess: (review) => {
+    } catch (error) {
       toast({
-        title: "Architecture Review Complete",
-        description: `Overall score: ${review.overallScore}/100`,
+        title: "Analysis Failed",
+        description: "Failed to analyze code. Please try again.",
+        variant: "destructive"
       });
-    },
-  });
-
-  const handleCreateProject = async (templateId?: number) => {
-    const template = templates.find((t: AdvancedTemplate) => t.id === templateId);
-    await createProjectMutation.mutateAsync({
-      name: template ? `${template.name} Project` : "New Healthcare App",
-      description: template ? template.description : "AI-powered healthcare application",
-      templateId,
-    });
-  };
-
-  const handleArchitectureReview = async () => {
-    if (!selectedProject) return;
-    
-    await architectureReviewMutation.mutateAsync({
-      projectStructure: selectedProject.code || {},
-      requirements: ["HIPAA Compliance", "Scalability", "Security", "Performance"],
-      complianceLevel: "hipaa",
-    });
-  };
-
-  const getComplexityColor = (complexity: string) => {
-    switch (complexity) {
-      case "beginner": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
-      case "intermediate": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
-      case "advanced": return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300";
-      case "expert": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300";
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
-  const getComplianceColor = (level: string) => {
-    switch (level) {
-      case "basic": return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
-      case "hipaa": return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
-      case "fda": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
-      case "soc2": return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300";
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300";
+  const getCodeCompletion = async () => {
+    if (!codeInput.trim()) return;
+
+    try {
+      const response = await fetch('/api/ai/code-completion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: codeInput,
+          language: "typescript",
+          context: "AI Workspace",
+          healthcareDomain: selectedDomain,
+          cursor: { line: codeInput.split('\n').length }
+        })
+      });
+
+      if (!response.ok) throw new Error('Code completion failed');
+
+      const result = await response.json();
+      setSuggestions(result.suggestions || []);
+    } catch (error) {
+      console.error('Code completion error:', error);
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <Bot className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-        <h1 className="text-2xl font-bold mb-2">AI Workspace</h1>
-        <p className="text-muted-foreground mb-6">
-          Please log in to access the AI-powered development environment.
-        </p>
-      </div>
-    );
-  }
+  const generateHealthcareCode = async (template: string) => {
+    setIsGenerating(true);
+    try {
+      const response = await fetch('/api/ai/generate-medical-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          template,
+          domain: selectedDomain,
+          requirements: {
+            compliance: ["HIPAA", "FDA", "GDPR"],
+            features: ["authentication", "audit-logging", "encryption", "clinical-safety"],
+            aiModels: ["Med-Gemma", "ClinicalBERT"]
+          }
+        })
+      });
+
+      if (!response.ok) throw new Error('Code generation failed');
+
+      const result = await response.json();
+      if (result.code) {
+        setCodeInput(result.code);
+        toast({
+          title: "Medical Code Generated",
+          description: `Generated ${template} with Med-Gemma for ${selectedDomain} domain`
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Generation Failed",
+        description: "Failed to generate medical code. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const analyzeMedicalText = async (text: string, analysisType: string = "medical-ner") => {
+    try {
+      const response = await fetch('/api/ai/bert-analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text,
+          analysisType,
+          model: "clinicalbert"
+        })
+      });
+
+      if (!response.ok) throw new Error('BERT analysis failed');
+
+      const result = await response.json();
+      toast({
+        title: "Healthcare BERT Analysis Complete",
+        description: `Analyzed medical text with ${result.model}`
+      });
+      
+      return result;
+    } catch (error) {
+      toast({
+        title: "BERT Analysis Failed",
+        description: "Failed to analyze with healthcare BERT models",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Real-time code completion
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (codeInput.trim()) {
+        getCodeCompletion();
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [codeInput, selectedDomain]);
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical': return 'bg-red-500';
+      case 'high': return 'bg-orange-500';
+      case 'medium': return 'bg-yellow-500';
+      case 'low': return 'bg-green-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const getComplianceColor = (status: string) => {
+    switch (status) {
+      case 'compliant': return 'bg-green-500';
+      case 'non-compliant': return 'bg-red-500';
+      case 'partially-compliant': return 'bg-yellow-500';
+      default: return 'bg-gray-500';
+    }
+  };
 
   return (
-    <div className="container mx-auto px-4 py-6 space-y-6">
-      {/* Header */}
+    <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            <Bot className="h-8 w-8 text-primary" />
-            AI Workspace
-            <Badge variant="secondary" className="ml-2">
-              <Sparkles className="h-3 w-3 mr-1" />
-              Advanced
-            </Badge>
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Combine Replit's cloud development with Cursor-like AI intelligence for healthcare applications
+          <h1 className="text-3xl font-bold">AI Development Workspace</h1>
+          <p className="text-muted-foreground">
+            Highest-level AI assistance for healthcare and life sciences development
           </p>
         </div>
-        
-        <div className="flex gap-2">
-          <Button onClick={handleArchitectureReview} variant="outline" disabled={!selectedProject}>
-            <Brain className="h-4 w-4 mr-2" />
-            AI Review
-          </Button>
-          <Button onClick={() => handleCreateProject()}>
-            <Rocket className="h-4 w-4 mr-2" />
-            New Project
-          </Button>
+        <div className="flex items-center space-x-2">
+          <Brain className="h-8 w-8 text-blue-500" />
+          <span className="text-sm font-medium">GPT-4o Powered</span>
         </div>
       </div>
 
-      {/* AI Insights Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Brain className="h-5 w-5 text-blue-500" />
-              <div>
-                <p className="text-sm font-medium">AI Suggestions</p>
-                <p className="text-2xl font-bold">{aiSessions.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-green-500" />
-              <div>
-                <p className="text-sm font-medium">HIPAA Score</p>
-                <p className="text-2xl font-bold">94%</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-yellow-500" />
-              <div>
-                <p className="text-sm font-medium">Dev Speed</p>
-                <p className="text-2xl font-bold">8.2x</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-purple-500" />
-              <div>
-                <p className="text-sm font-medium">Quality Score</p>
-                <p className="text-2xl font-bold">96%</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {selectedProject ? (
-        /* AI Code Editor View */
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <FileCode className="h-5 w-5" />
-                {selectedProject.name}
-                {selectedProject.isHipaaCompliant && (
-                  <Badge variant="secondary">
-                    <Shield className="h-3 w-3 mr-1" />
-                    HIPAA Compliant
-                  </Badge>
-                )}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Code Input Section */}
+        <div className="lg:col-span-2 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Code className="h-5 w-5" />
+                <span>Healthcare Code Editor</span>
               </CardTitle>
-              
-              <div className="flex items-center gap-2">
-                <Select value={activeFile} onValueChange={setActiveFile}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue />
+              <CardDescription>
+                Write your healthcare application code with AI assistance
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <Select value={selectedDomain} onValueChange={setSelectedDomain}>
+                  <SelectTrigger className="w-64">
+                    <SelectValue placeholder="Select healthcare domain" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="index.tsx">index.tsx</SelectItem>
-                    <SelectItem value="components/Patient.tsx">components/Patient.tsx</SelectItem>
-                    <SelectItem value="utils/fhir.ts">utils/fhir.ts</SelectItem>
-                    <SelectItem value="api/patients.ts">api/patients.ts</SelectItem>
+                    {healthcareDomains.map(domain => (
+                      <SelectItem key={domain.value} value={domain.value}>
+                        {domain.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-                
-                <Button variant="outline" size="sm">
-                  <GitBranch className="h-4 w-4 mr-1" />
-                  Branch
-                </Button>
-                
-                <Button variant="outline" size="sm">
-                  <Globe className="h-4 w-4 mr-1" />
-                  Deploy
+
+                <Button 
+                  onClick={analyzeCode} 
+                  disabled={isAnalyzing}
+                  className="flex items-center space-x-2"
+                >
+                  <Shield className="h-4 w-4" />
+                  <span>{isAnalyzing ? "Analyzing..." : "Analyze Code"}</span>
                 </Button>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <AICodeEditor
-              projectId={selectedProject.id}
-              fileName={activeFile}
-              language="typescript"
-              initialCode={`// ${activeFile} - Healthcare Application
-import React, { useState } from 'react';
-import { Patient, FHIRResource } from '@/types/healthcare';
 
-// AI will provide intelligent suggestions as you type
-export function PatientDashboard() {
-  const [patients, setPatients] = useState<Patient[]>([]);
-  
-  // Type here for AI-powered healthcare code completion
-  return (
-    <div className="patient-dashboard">
-      {/* Your healthcare UI components here */}
-    </div>
-  );
+              <Textarea
+                value={codeInput}
+                onChange={(e) => setCodeInput(e.target.value)}
+                placeholder={`// Enter your ${selectedDomain} healthcare code here
+// AI will provide real-time suggestions and HIPAA compliance checks
+
+interface Patient {
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  medicalRecordNumber: string;
 }`}
-            />
-          </CardContent>
-        </Card>
-      ) : (
-        /* Project Selection and Templates */
-        <Tabs defaultValue="projects" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="projects">
-              <FileCode className="h-4 w-4 mr-2" />
-              Projects
-            </TabsTrigger>
-            <TabsTrigger value="templates">
-              <Rocket className="h-4 w-4 mr-2" />
-              AI Templates
-            </TabsTrigger>
-            <TabsTrigger value="collaboration">
-              <Users className="h-4 w-4 mr-2" />
-              Team
-            </TabsTrigger>
-          </TabsList>
+                className="min-h-[400px] font-mono text-sm"
+              />
 
-          <TabsContent value="projects">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projectsLoading ? (
-                Array.from({ length: 6 }).map((_, i) => (
-                  <Card key={i} className="animate-pulse">
-                    <CardContent className="p-6">
-                      <div className="h-4 bg-muted rounded mb-2"></div>
-                      <div className="h-3 bg-muted rounded mb-4"></div>
-                      <div className="h-8 bg-muted rounded"></div>
-                    </CardContent>
-                  </Card>
-                ))
-              ) : projects.length > 0 ? (
-                projects.map((project: Project) => (
-                  <Card key={project.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <h3 className="font-semibold">{project.name}</h3>
-                        {project.isHipaaCompliant && (
-                          <Badge variant="secondary" className="text-xs">
-                            <Shield className="h-3 w-3 mr-1" />
-                            HIPAA
-                          </Badge>
-                        )}
-                      </div>
-                      
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                        {project.description}
-                      </p>
-                      
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(project.createdAt).toLocaleDateString()}
-                        </span>
-                        <Button
-                          onClick={() => setSelectedProject(project)}
-                          size="sm"
-                        >
-                          <Code2 className="h-4 w-4 mr-1" />
-                          Open
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                <Card className="col-span-full p-8 text-center">
-                  <FileCode className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-medium mb-2">No Projects Yet</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Create your first AI-powered healthcare application
-                  </p>
-                  <Button onClick={() => handleCreateProject()}>
-                    <Rocket className="h-4 w-4 mr-2" />
-                    Create Project
-                  </Button>
-                </Card>
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="templates">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {templatesLoading ? (
-                Array.from({ length: 6 }).map((_, i) => (
-                  <Card key={i} className="animate-pulse">
-                    <CardContent className="p-6">
-                      <div className="h-4 bg-muted rounded mb-2"></div>
-                      <div className="h-3 bg-muted rounded mb-4"></div>
-                      <div className="h-8 bg-muted rounded"></div>
-                    </CardContent>
-                  </Card>
-                ))
-              ) : templates.length > 0 ? (
-                templates.map((template: AdvancedTemplate) => (
-                  <Card key={template.id} className="hover:shadow-lg transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <h3 className="font-semibold">{template.name}</h3>
-                        <div className="flex gap-1">
-                          <Badge className={getComplexityColor(template.complexity)}>
-                            {template.complexity}
-                          </Badge>
-                          <Badge className={getComplianceColor(template.complianceLevel)}>
-                            {template.complianceLevel.toUpperCase()}
-                          </Badge>
-                        </div>
-                      </div>
-                      
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                        {template.description}
-                      </p>
-                      
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {template.techStack?.slice(0, 3).map((tech, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">
-                            {tech}
-                          </Badge>
-                        ))}
-                        {template.techStack?.length > 3 && (
-                          <Badge variant="outline" className="text-xs">
-                            +{template.techStack.length - 3}
-                          </Badge>
-                        )}
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="text-xs text-muted-foreground">
-                          ⭐ {template.rating} • {template.downloadCount} downloads
-                        </div>
-                        <Button
-                          onClick={() => handleCreateProject(template.id)}
-                          size="sm"
-                          disabled={createProjectMutation.isPending}
-                        >
-                          <Sparkles className="h-4 w-4 mr-1" />
-                          Use Template
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                <Card className="col-span-full p-8 text-center">
-                  <Rocket className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-medium mb-2">Templates Loading</h3>
-                  <p className="text-muted-foreground">
-                    AI-powered healthcare templates will appear here
-                  </p>
-                </Card>
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="collaboration">
-            <Card>
-              <CardContent className="p-8 text-center">
-                <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-medium mb-2">Real-time Collaboration</h3>
-                <p className="text-muted-foreground mb-4">
-                  Invite team members to collaborate on healthcare projects with real-time editing and AI assistance
-                </p>
-                <Button variant="outline">
-                  <Users className="h-4 w-4 mr-2" />
-                  Invite Team Members
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => generateHealthcareCode("patient-model")}
+                  disabled={isGenerating}
+                >
+                  <FileCode className="h-4 w-4 mr-2" />
+                  Patient Model
                 </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => generateHealthcareCode("hipaa-auth")}
+                  disabled={isGenerating}
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  HIPAA Auth
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => generateHealthcareCode("fhir-integration")}
+                  disabled={isGenerating}
+                >
+                  <Zap className="h-4 w-4 mr-2" />
+                  FHIR Integration
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.location.href = '/bert-analysis'}
+                >
+                  <Brain className="h-4 w-4 mr-2" />
+                  Healthcare BERT
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* AI Suggestions */}
+          {suggestions.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Lightbulb className="h-5 w-5" />
+                  <span>AI Code Suggestions</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {suggestions.slice(0, 3).map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
+                      onClick={() => setCodeInput(codeInput + "\n" + suggestion.text)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{suggestion.description}</span>
+                        <div className="flex items-center space-x-2">
+                          {suggestion.healthcareSpecific && (
+                            <Badge variant="secondary">Healthcare</Badge>
+                          )}
+                          <Badge variant="outline">{Math.round(suggestion.confidence * 100)}%</Badge>
+                        </div>
+                      </div>
+                      <code className="text-sm text-gray-600 block mt-1">
+                        {suggestion.text.substring(0, 100)}...
+                      </code>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
-      )}
+          )}
+        </div>
+
+        {/* Analysis Results */}
+        <div className="space-y-4">
+          {analysis && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BarChart3 className="h-5 w-5" />
+                  <span>AI Analysis Results</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Tabs defaultValue="overview" className="space-y-4">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="overview">Overview</TabsTrigger>
+                    <TabsTrigger value="issues">Issues</TabsTrigger>
+                    <TabsTrigger value="compliance">Compliance</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="overview" className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Code Quality Score</span>
+                        <span className="font-bold">{analysis.score}/100</span>
+                      </div>
+                      <Progress value={analysis.score} className="w-full" />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>AI Confidence</span>
+                        <span className="font-bold">{Math.round(analysis.confidence * 100)}%</span>
+                      </div>
+                      <Progress value={analysis.confidence * 100} className="w-full" />
+                    </div>
+
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <p className="text-sm">{analysis.summary}</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="text-center p-2 border rounded">
+                        <div className="text-lg font-bold text-red-500">
+                          {analysis.issues.filter(i => i.severity === 'critical' || i.severity === 'high').length}
+                        </div>
+                        <div className="text-xs text-gray-600">Critical/High Issues</div>
+                      </div>
+                      <div className="text-center p-2 border rounded">
+                        <div className="text-lg font-bold text-blue-500">
+                          {analysis.recommendations.length}
+                        </div>
+                        <div className="text-xs text-gray-600">Recommendations</div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="issues" className="space-y-2">
+                    {analysis.issues.map((issue, index) => (
+                      <div key={index} className="p-3 border rounded-lg space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Badge className={getSeverityColor(issue.severity)}>
+                            {issue.severity}
+                          </Badge>
+                          {issue.healthcareSpecific && (
+                            <Badge variant="outline">Healthcare Specific</Badge>
+                          )}
+                        </div>
+                        <p className="text-sm font-medium">{issue.description}</p>
+                        <p className="text-xs text-gray-600">{issue.solution}</p>
+                      </div>
+                    ))}
+                  </TabsContent>
+
+                  <TabsContent value="compliance" className="space-y-2">
+                    {analysis.compliance.map((comp, index) => (
+                      <div key={index} className="p-3 border rounded-lg space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium">{comp.requirement}</span>
+                          <Badge className={getComplianceColor(comp.status)}>
+                            {comp.status}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-gray-600">{comp.details}</p>
+                      </div>
+                    ))}
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Quick Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Users className="h-5 w-5" />
+                <span>AI Actions</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start"
+                onClick={() => generateHealthcareCode("architecture-review")}
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Architecture Review
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start"
+                onClick={() => generateHealthcareCode("security-audit")}
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Security Audit
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start"
+                onClick={() => generateHealthcareCode("compliance-check")}
+              >
+                <FileCode className="h-4 w-4 mr-2" />
+                Compliance Check
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

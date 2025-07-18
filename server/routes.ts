@@ -5,6 +5,7 @@ import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertProjectSchema, insertProjectActivitySchema } from "@shared/schema";
 import { aiService } from "./ai-service";
+import { HEALTHCARE_STACKS } from "@shared/healthcare-stacks";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -247,13 +248,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // AI-powered code assistance routes
   app.post('/api/ai/code-completion', isAuthenticated, async (req: any, res) => {
     try {
-      const { code, cursor, filePath, language, context } = req.body;
+      const { code, cursor, filePath, language, context, healthcareDomain } = req.body;
       const result = await aiService.getCodeCompletion({
         code,
-        cursor,
-        filePath,
         language,
-        context: { ...context, isHealthcare: true }
+        context: JSON.stringify({ ...context, isHealthcare: true }),
+        healthcareDomain: healthcareDomain || "clinical",
+        cursorPosition: cursor?.line || 0,
+        cursor,
+        filePath
       });
       
       // Log AI session
@@ -286,7 +289,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const result = await aiService.analyzeCode({
+        type: analysisType || "code-review",
         code,
+        context: `File: ${filePath}`,
+        domain: "clinical",
         filePath,
         analysisType
       });
@@ -310,17 +316,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/ai/architecture-review', isAuthenticated, async (req: any, res) => {
     try {
-      const { projectStructure, requirements, complianceLevel } = req.body;
-      const result = await aiService.reviewArchitecture({
-        projectStructure,
-        requirements,
-        complianceLevel
-      });
+      const { projectStructure, requirements, complianceLevel, stack, domain } = req.body;
+      const result = await aiService.reviewArchitecture(
+        stack || "react-node",
+        domain || "clinical",
+        requirements || []
+      );
       
       res.json(result);
     } catch (error) {
       console.error("Architecture review error:", error);
       res.status(500).json({ message: "Architecture review failed" });
+    }
+  });
+
+  // Advanced AI endpoints with Med-Gemma integration
+  app.post('/api/ai/analyze-code', isAuthenticated, async (req, res) => {
+    try {
+      const analysisRequest = req.body;
+      const useMedGemma = req.body.useMedGemma !== false; // Default to Med-Gemma for medical analysis
+      
+      const result = useMedGemma 
+        ? await aiService.analyzeMedicalCode(analysisRequest)
+        : await aiService.analyzeCode(analysisRequest);
+      
+      res.json({ ...result, aiModel: useMedGemma ? "Med-Gemma" : "GPT-4o" });
+    } catch (error) {
+      console.error("AI code analysis error:", error);
+      res.status(500).json({ message: "Failed to analyze code" });
+    }
+  });
+
+  app.post('/api/ai/medical-analysis', isAuthenticated, async (req, res) => {
+    try {
+      const analysisRequest = req.body;
+      const result = await aiService.analyzeMedicalCode(analysisRequest);
+      res.json({ ...result, aiModel: "Med-Gemma" });
+    } catch (error) {
+      console.error("Med-Gemma analysis error:", error);
+      res.status(500).json({ message: "Failed to analyze with Med-Gemma" });
+    }
+  });
+
+  app.post('/api/ai/clinical-data', isAuthenticated, async (req, res) => {
+    try {
+      const { data, analysisType, clinicalContext } = req.body;
+      const result = await aiService.analyzeClinicalData(data, analysisType, clinicalContext);
+      res.json({ ...result, aiModel: "Med-Gemma" });
+    } catch (error) {
+      console.error("Clinical data analysis error:", error);
+      res.status(500).json({ message: "Failed to analyze clinical data" });
+    }
+  });
+
+  app.post('/api/ai/generate-medical-code', isAuthenticated, async (req, res) => {
+    try {
+      const { template, domain, requirements } = req.body;
+      const result = await aiService.generateMedicalCode(template, domain, requirements);
+      res.json({ ...result, aiModel: "Med-Gemma" });
+    } catch (error) {
+      console.error("Medical code generation error:", error);
+      res.status(500).json({ message: "Failed to generate medical code" });
+    }
+  });
+
+  // Healthcare BERT models integration
+  app.post('/api/ai/bert-analysis', isAuthenticated, async (req, res) => {
+    try {
+      const { text, analysisType, model } = req.body;
+      const result = await aiService.analyzeWithHealthcareBERT(text, analysisType, model);
+      res.json(result);
+    } catch (error) {
+      console.error("Healthcare BERT analysis error:", error);
+      res.status(500).json({ message: "Failed to analyze with healthcare BERT" });
     }
   });
 
