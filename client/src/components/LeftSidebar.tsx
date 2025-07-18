@@ -13,7 +13,8 @@ import {
   Brain,
   Activity,
   Globe,
-  Building
+  Building,
+  Rocket
 } from "lucide-react";
 
 export default function LeftSidebar() {
@@ -22,6 +23,7 @@ export default function LeftSidebar() {
   const menuItems = [
     { path: "/", label: "Dashboard", icon: Home },
     { path: "/ai-workspace", label: "AI Workspace", icon: Brain },
+    { path: "/app-builder", label: "App Builder", icon: Rocket },
     { path: "/bert-analysis", label: "BERT Analysis", icon: Activity },
     { path: "/standards-builder", label: "Standards Builder", icon: Building },
     { path: "/global-healthcare", label: "Global Healthcare", icon: Globe },

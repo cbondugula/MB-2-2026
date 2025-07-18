@@ -1032,6 +1032,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // App Builder routes
+  app.get('/api/tech-stacks', async (req, res) => {
+    try {
+      const stacks = await storage.getTechStacks();
+      res.json(stacks);
+    } catch (error) {
+      console.error('Error fetching tech stacks:', error);
+      res.status(500).json({ message: 'Failed to fetch tech stacks' });
+    }
+  });
+
+  app.get('/api/build-capabilities', async (req, res) => {
+    try {
+      const capabilities = await storage.getBuildCapabilities();
+      res.json(capabilities);
+    } catch (error) {
+      console.error('Error fetching build capabilities:', error);
+      res.status(500).json({ message: 'Failed to fetch build capabilities' });
+    }
+  });
+
+  app.get('/api/compliance-frameworks', async (req, res) => {
+    try {
+      const frameworks = await storage.getComplianceFrameworks();
+      res.json(frameworks);
+    } catch (error) {
+      console.error('Error fetching compliance frameworks:', error);
+      res.status(500).json({ message: 'Failed to fetch compliance frameworks' });
+    }
+  });
+
+  app.get('/api/deployment-options', async (req, res) => {
+    try {
+      const options = await storage.getDeploymentOptions();
+      res.json(options);
+    } catch (error) {
+      console.error('Error fetching deployment options:', error);
+      res.status(500).json({ message: 'Failed to fetch deployment options' });
+    }
+  });
+
+  app.post('/api/app-builder/build', async (req, res) => {
+    try {
+      const appConfig = req.body;
+      const buildResult = await storage.buildHealthcareApp(appConfig);
+      res.json(buildResult);
+    } catch (error) {
+      console.error('Error building app:', error);
+      res.status(500).json({ message: 'Failed to build application' });
+    }
+  });
+
+  app.get('/api/user-apps', async (req, res) => {
+    try {
+      const apps = await storage.getUserApps();
+      res.json(apps);
+    } catch (error) {
+      console.error('Error fetching user apps:', error);
+      res.status(500).json({ message: 'Failed to fetch user apps' });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // Setup WebSocket for real-time collaboration

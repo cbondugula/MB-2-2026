@@ -491,6 +491,304 @@ export class DatabaseStorage implements IStorage {
     const [sim] = await db.insert(healthcareSimulations).values(simData).returning();
     return sim;
   }
+
+  // App Builder methods
+  async getTechStacks(): Promise<any[]> {
+    return [
+      {
+        id: 'react-node-typescript',
+        name: 'React + Node.js + TypeScript',
+        description: 'Modern full-stack with React frontend and Node.js backend',
+        category: 'fullstack',
+        healthcareDomain: 'general',
+        frontend: { name: 'React', features: ['responsive', 'pwa', 'accessibility'] },
+        backend: { framework: 'Express.js', features: ['auth', 'encryption', 'audit-logging'] }
+      },
+      {
+        id: 'angular-dotnet',
+        name: 'Angular + .NET Core',
+        description: 'Enterprise-grade solution with Angular and .NET Core',
+        category: 'enterprise',
+        healthcareDomain: 'clinical',
+        frontend: { name: 'Angular', features: ['enterprise', 'forms', 'testing'] },
+        backend: { framework: '.NET Core', features: ['security', 'performance', 'scalability'] }
+      },
+      {
+        id: 'vue-python-django',
+        name: 'Vue.js + Python Django',
+        description: 'Rapid development with Vue.js and Django REST framework',
+        category: 'rapid',
+        healthcareDomain: 'research',
+        frontend: { name: 'Vue.js', features: ['reactive', 'lightweight', 'flexible'] },
+        backend: { framework: 'Django', features: ['admin', 'orm', 'security'] }
+      },
+      {
+        id: 'flutter-firebase',
+        name: 'Flutter + Firebase',
+        description: 'Cross-platform mobile with real-time backend',
+        category: 'mobile',
+        healthcareDomain: 'patient-care',
+        frontend: { name: 'Flutter', features: ['cross-platform', 'native', 'real-time'] },
+        backend: { framework: 'Firebase', features: ['real-time', 'auth', 'cloud-functions'] }
+      },
+      {
+        id: 'nextjs-prisma',
+        name: 'Next.js + Prisma + PostgreSQL',
+        description: 'Full-stack React framework with type-safe database',
+        category: 'modern',
+        healthcareDomain: 'digital-health',
+        frontend: { name: 'Next.js', features: ['ssr', 'api-routes', 'optimization'] },
+        backend: { framework: 'Prisma', features: ['type-safe', 'migrations', 'monitoring'] }
+      },
+      {
+        id: 'svelte-rust',
+        name: 'Svelte + Rust + WebAssembly',
+        description: 'High-performance solution with Svelte and Rust backend',
+        category: 'performance',
+        healthcareDomain: 'medical-imaging',
+        frontend: { name: 'Svelte', features: ['performance', 'minimal', 'reactive'] },
+        backend: { framework: 'Rust', features: ['performance', 'memory-safety', 'wasm'] }
+      }
+    ];
+  }
+
+  async getBuildCapabilities(): Promise<any[]> {
+    return [
+      {
+        id: 'ai',
+        name: 'AI Integration',
+        description: 'Healthcare AI models and machine learning capabilities',
+        icon: 'brain',
+        complexity: 'medium',
+        buildTime: '5-10 minutes'
+      },
+      {
+        id: 'realtime',
+        name: 'Real-time Collaboration',
+        description: 'Live updates and collaborative editing features',
+        icon: 'network',
+        complexity: 'medium',
+        buildTime: '3-5 minutes'
+      },
+      {
+        id: 'blockchain',
+        name: 'Blockchain Integration',
+        description: 'Secure, decentralized data storage and verification',
+        icon: 'shield',
+        complexity: 'high',
+        buildTime: '10-15 minutes'
+      },
+      {
+        id: 'iot',
+        name: 'IoT Device Support',
+        description: 'Medical device connectivity and data streaming',
+        icon: 'zap',
+        complexity: 'high',
+        buildTime: '8-12 minutes'
+      },
+      {
+        id: 'analytics',
+        name: 'Advanced Analytics',
+        description: 'Healthcare data visualization and reporting',
+        icon: 'brain',
+        complexity: 'medium',
+        buildTime: '4-6 minutes'
+      },
+      {
+        id: 'mobile',
+        name: 'Mobile App Support',
+        description: 'Native iOS and Android companion apps',
+        icon: 'network',
+        complexity: 'high',
+        buildTime: '12-18 minutes'
+      },
+      {
+        id: 'telemedicine',
+        name: 'Telemedicine Features',
+        description: 'Video calling, screen sharing, and remote consultations',
+        icon: 'zap',
+        complexity: 'medium',
+        buildTime: '6-8 minutes'
+      },
+      {
+        id: 'payments',
+        name: 'Payment Processing',
+        description: 'Secure healthcare billing and payment systems',
+        icon: 'shield',
+        complexity: 'medium',
+        buildTime: '4-6 minutes'
+      },
+      {
+        id: 'interoperability',
+        name: 'FHIR/HL7 Integration',
+        description: 'Healthcare standard compliance and data exchange',
+        icon: 'network',
+        complexity: 'high',
+        buildTime: '8-10 minutes'
+      }
+    ];
+  }
+
+  async getComplianceFrameworks(): Promise<any[]> {
+    return [
+      {
+        id: 'hipaa',
+        name: 'HIPAA',
+        description: 'Health Insurance Portability and Accountability Act (US)',
+        region: 'US',
+        required: true
+      },
+      {
+        id: 'gdpr',
+        name: 'GDPR',
+        description: 'General Data Protection Regulation (EU)',
+        region: 'EU',
+        required: true
+      },
+      {
+        id: 'pipeda',
+        name: 'PIPEDA',
+        description: 'Personal Information Protection and Electronic Documents Act (Canada)',
+        region: 'Canada',
+        required: false
+      },
+      {
+        id: 'lgpd',
+        name: 'LGPD',
+        description: 'Lei Geral de Proteção de Dados (Brazil)',
+        region: 'Brazil',
+        required: false
+      },
+      {
+        id: 'pdpa',
+        name: 'PDPA',
+        description: 'Personal Data Protection Act (Singapore)',
+        region: 'APAC',
+        required: false
+      },
+      {
+        id: 'fda-510k',
+        name: 'FDA 510(k)',
+        description: 'FDA medical device approval process (US)',
+        region: 'US',
+        required: false
+      },
+      {
+        id: 'mdr',
+        name: 'EU MDR',
+        description: 'Medical Device Regulation (EU)',
+        region: 'EU',
+        required: false
+      }
+    ];
+  }
+
+  async getDeploymentOptions(): Promise<any[]> {
+    return [
+      {
+        id: 'cloud-aws',
+        name: 'AWS Cloud',
+        description: 'Deploy to Amazon Web Services with auto-scaling and global CDN',
+        type: 'cloud',
+        recommended: true,
+        setupTime: '5-10 minutes',
+        cost: 'Pay-as-you-go',
+        compliance: true
+      },
+      {
+        id: 'cloud-azure',
+        name: 'Microsoft Azure',
+        description: 'Enterprise-grade cloud with healthcare-specific compliance',
+        type: 'cloud',
+        recommended: true,
+        setupTime: '5-10 minutes',
+        cost: 'Pay-as-you-go',
+        compliance: true
+      },
+      {
+        id: 'cloud-gcp',
+        name: 'Google Cloud Platform',
+        description: 'Advanced AI/ML capabilities with global infrastructure',
+        type: 'cloud',
+        recommended: false,
+        setupTime: '5-10 minutes',
+        cost: 'Pay-as-you-go',
+        compliance: true
+      },
+      {
+        id: 'on-premise',
+        name: 'On-Premise',
+        description: 'Deploy on your own infrastructure for maximum control',
+        type: 'private',
+        recommended: false,
+        setupTime: '30-60 minutes',
+        cost: 'Infrastructure costs',
+        compliance: true
+      },
+      {
+        id: 'hybrid',
+        name: 'Hybrid Cloud',
+        description: 'Combination of cloud and on-premise for sensitive data',
+        type: 'hybrid',
+        recommended: false,
+        setupTime: '45-90 minutes',
+        cost: 'Mixed costs',
+        compliance: true
+      }
+    ];
+  }
+
+  async buildHealthcareApp(appConfig: any): Promise<any> {
+    // Simulate app building process
+    const buildId = `build-${Date.now()}`;
+    const timestamp = new Date().toISOString();
+    
+    return {
+      buildId,
+      status: 'completed',
+      appName: appConfig.name,
+      techStack: appConfig.techStack,
+      features: appConfig.features,
+      compliance: appConfig.compliance,
+      deploymentTarget: appConfig.deploymentTarget,
+      buildTime: '8 minutes 32 seconds',
+      artifacts: {
+        sourceCode: `${appConfig.name}-source.zip`,
+        deployment: `${appConfig.name}-deploy.yml`,
+        documentation: `${appConfig.name}-docs.pdf`,
+        tests: `${appConfig.name}-tests.zip`
+      },
+      endpoints: {
+        frontend: `https://${appConfig.name.toLowerCase().replace(/\s+/g, '-')}.healthcare-app.com`,
+        api: `https://api-${appConfig.name.toLowerCase().replace(/\s+/g, '-')}.healthcare-app.com`,
+        admin: `https://admin-${appConfig.name.toLowerCase().replace(/\s+/g, '-')}.healthcare-app.com`
+      },
+      createdAt: timestamp
+    };
+  }
+
+  async getUserApps(): Promise<any[]> {
+    return [
+      {
+        id: 'app-1',
+        name: 'Cardiology Practice Manager',
+        status: 'deployed',
+        techStack: 'react-node-typescript',
+        createdAt: '2024-01-15T10:30:00Z',
+        lastUpdated: '2024-01-20T14:22:00Z',
+        url: 'https://cardiology-practice.healthcare-app.com'
+      },
+      {
+        id: 'app-2',
+        name: 'Telemedicine Platform',
+        status: 'building',
+        techStack: 'angular-dotnet',
+        createdAt: '2024-01-18T09:15:00Z',
+        lastUpdated: '2024-01-18T09:15:00Z',
+        url: null
+      }
+    ];
+  }
 }
 
 export const storage = new DatabaseStorage();

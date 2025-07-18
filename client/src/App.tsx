@@ -16,6 +16,7 @@ import AIWorkspace from "@/pages/ai-workspace";
 import BERTAnalysis from "@/pages/bert-analysis";
 import StandardsBuilder from "@/pages/standards-builder";
 import GlobalHealthcare from "@/pages/global-healthcare";
+import AppBuilder from "@/pages/app-builder";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -34,6 +35,7 @@ function Router() {
           <Route path="/code-editor" component={CodeEditor} />
           <Route path="/templates" component={Templates} />
           <Route path="/components" component={Components} />
+          <Route path="/app-builder" component={AppBuilder} />
           <Route path="/preview" component={Preview} />
           <Route path="/hipaa-tools" component={HIPAATools} />
         </>
