@@ -42,7 +42,17 @@ export const projects = pgTable("projects", {
   description: text("description"),
   userId: varchar("user_id").notNull(),
   templateId: integer("template_id"),
+  framework: varchar("framework").notNull(), // react, angular, vue, nextjs, nuxt, svelte, etc.
+  backend: varchar("backend").notNull(), // nodejs, python, java, go, rust, php, etc.
+  database: varchar("database"), // postgresql, mysql, mongodb, firebase, supabase, etc.
+  cloudProvider: varchar("cloud_provider"), // aws, gcp, azure, vercel, netlify, etc.
+  projectType: varchar("project_type").notNull(), // web, mobile, desktop, api, fullstack
+  techStack: jsonb("tech_stack"), // detailed tech stack configuration
+  buildConfig: jsonb("build_config"), // build and deployment configuration
+  environmentVars: jsonb("environment_vars"), // environment variables
+  dependencies: jsonb("dependencies"), // project dependencies
   isHipaaCompliant: boolean("is_hipaa_compliant").default(false),
+  isResponsive: boolean("is_responsive").default(true),
   code: jsonb("code"), // Store project files and structure
   settings: jsonb("settings"), // Project configuration
   createdAt: timestamp("created_at").defaultNow(),
@@ -54,11 +64,18 @@ export const templates = pgTable("templates", {
   id: serial("id").primaryKey(),
   name: varchar("name").notNull(),
   description: text("description"),
-  category: varchar("category").notNull(), // "EHR", "Telemedicine", "Patient Portal", etc.
+  category: varchar("category").notNull(), // "EHR", "Telemedicine", "Patient Portal", "Lab Management", etc.
+  healthcareDomain: varchar("healthcare_domain").notNull(), // "clinical", "research", "pharma", "medtech", "telehealth"
+  framework: varchar("framework").notNull(), // react, angular, vue, flutter, react-native, etc.
+  backend: varchar("backend").notNull(), // nodejs, python, java, go, etc.
+  projectType: varchar("project_type").notNull(), // web, mobile, desktop, api
+  complianceLevel: varchar("compliance_level").notNull(), // hipaa, fda, gdpr, soc2
   imageUrl: varchar("image_url"),
   code: jsonb("code").notNull(), // Template files and structure
+  buildConfig: jsonb("build_config"), // Framework-specific build configuration
+  dependencies: jsonb("dependencies"), // Tech stack dependencies
   isHipaaCompliant: boolean("is_hipaa_compliant").default(true),
-  tags: jsonb("tags"), // Array of tags like ["FHIR", "HL7", "Mobile"]
+  tags: jsonb("tags"), // Array of tags like ["FHIR", "HL7", "Mobile", "AI", "Blockchain"]
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -68,11 +85,16 @@ export const components = pgTable("components", {
   id: serial("id").primaryKey(),
   name: varchar("name").notNull(),
   description: text("description"),
-  category: varchar("category").notNull(), // "Forms", "Charts", "Communication", etc.
+  category: varchar("category").notNull(), // "Forms", "Charts", "Communication", "Data Visualization", etc.
+  healthcareUseCase: varchar("healthcare_use_case"), // "patient-data", "clinical-notes", "lab-results", etc.
+  frameworks: jsonb("frameworks"), // ["react", "angular", "vue", "flutter"] - supported frameworks
   icon: varchar("icon"), // Font Awesome icon class
-  code: jsonb("code").notNull(), // Component implementation
+  code: jsonb("code").notNull(), // Multi-framework component implementations
+  apiIntegrations: jsonb("api_integrations"), // FHIR, HL7, Epic integrations
+  complianceFeatures: jsonb("compliance_features"), // HIPAA, audit trail features
   isVerified: boolean("is_verified").default(false),
   isHipaaCompliant: boolean("is_hipaa_compliant").default(true),
+  isResponsive: boolean("is_responsive").default(true),
   tags: jsonb("tags"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -83,10 +105,17 @@ export const apiIntegrations = pgTable("api_integrations", {
   id: serial("id").primaryKey(),
   name: varchar("name").notNull(),
   description: text("description"),
-  type: varchar("type").notNull(), // "FHIR", "HL7", "Epic", etc.
+  type: varchar("type").notNull(), // "FHIR", "HL7", "Epic", "Cerner", "AWS HealthLake", etc.
+  category: varchar("category").notNull(), // "ehr", "lab", "pharmacy", "imaging", "ai-ml", "cloud"
+  provider: varchar("provider"), // "epic", "cerner", "aws", "google", "microsoft", etc.
   endpoint: varchar("endpoint"),
+  authentication: varchar("authentication"), // "oauth2", "api-key", "cert-based", etc.
+  supportedBackends: jsonb("supported_backends"), // ["nodejs", "python", "java", "go"]
+  supportedClouds: jsonb("supported_clouds"), // ["aws", "gcp", "azure"]
   documentation: text("documentation"),
   configTemplate: jsonb("config_template"),
+  sdkExamples: jsonb("sdk_examples"), // Code examples for different languages
+  complianceNotes: text("compliance_notes"), // HIPAA, security considerations
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
