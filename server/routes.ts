@@ -1,8 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { Server as SocketIOServer } from "socket.io";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertProjectSchema, insertProjectActivitySchema } from "@shared/schema";
+import { aiService } from "./ai-service";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -242,6 +244,193 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI-powered code assistance routes
+  app.post('/api/ai/code-completion', isAuthenticated, async (req: any, res) => {
+    try {
+      const { code, cursor, filePath, language, context } = req.body;
+      const result = await aiService.getCodeCompletion({
+        code,
+        cursor,
+        filePath,
+        language,
+        context: { ...context, isHealthcare: true }
+      });
+      
+      // Log AI session
+      await storage.createAiSession({
+        userId: req.user.claims.sub,
+        projectId: context?.projectId,
+        type: "code_completion",
+        context: { code, cursor, filePath },
+        prompt: code.substring(Math.max(0, cursor.line - 5), cursor.line + 5),
+        response: JSON.stringify(result),
+        confidence: result.suggestions[0]?.confidence || 50,
+      });
+      
+      res.json(result);
+    } catch (error) {
+      console.error("AI completion error:", error);
+      res.status(500).json({ message: "AI completion failed" });
+    }
+  });
+
+  app.post('/api/ai/code-analysis', isAuthenticated, async (req: any, res) => {
+    try {
+      const { code, filePath, analysisType, projectId } = req.body;
+      const fileHash = aiService.calculateCodeHash(code);
+      
+      // Check cache first
+      const cached = await storage.getCodeAnalysis(projectId, fileHash, analysisType);
+      if (cached && cached.lastAnalyzed && Date.now() - cached.lastAnalyzed.getTime() < 300000) { // 5 min cache
+        return res.json(cached);
+      }
+      
+      const result = await aiService.analyzeCode({
+        code,
+        filePath,
+        analysisType
+      });
+      
+      // Cache results
+      await storage.createCodeAnalysis({
+        projectId,
+        fileHash,
+        filePath,
+        analysisType,
+        findings: result.findings,
+        score: result.score,
+      });
+      
+      res.json(result);
+    } catch (error) {
+      console.error("AI analysis error:", error);
+      res.status(500).json({ message: "Code analysis failed" });
+    }
+  });
+
+  app.post('/api/ai/architecture-review', isAuthenticated, async (req: any, res) => {
+    try {
+      const { projectStructure, requirements, complianceLevel } = req.body;
+      const result = await aiService.reviewArchitecture({
+        projectStructure,
+        requirements,
+        complianceLevel
+      });
+      
+      res.json(result);
+    } catch (error) {
+      console.error("Architecture review error:", error);
+      res.status(500).json({ message: "Architecture review failed" });
+    }
+  });
+
+  // Advanced template routes
+  app.get('/api/advanced-templates', async (req, res) => {
+    try {
+      const { category, complexity, complianceLevel } = req.query;
+      const templates = await storage.getAdvancedTemplates({
+        category: category as string,
+        complexity: complexity as string,
+        complianceLevel: complianceLevel as string,
+      });
+      res.json(templates);
+    } catch (error) {
+      console.error("Error fetching advanced templates:", error);
+      res.status(500).json({ message: "Failed to fetch templates" });
+    }
+  });
+
+  // Smart components routes
+  app.get('/api/smart-components', async (req, res) => {
+    try {
+      const { category, framework, type } = req.query;
+      const components = await storage.getSmartComponents({
+        category: category as string,
+        framework: framework as string,
+        type: type as string,
+      });
+      res.json(components);
+    } catch (error) {
+      console.error("Error fetching smart components:", error);
+      res.status(500).json({ message: "Failed to fetch components" });
+    }
+  });
+
+  // Real-time collaboration routes
+  app.get('/api/collaboration/:projectId/sessions', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.projectId);
+      const sessions = await storage.getCollaborationSessions(projectId);
+      res.json(sessions);
+    } catch (error) {
+      console.error("Error fetching collaboration sessions:", error);
+      res.status(500).json({ message: "Failed to fetch sessions" });
+    }
+  });
+
   const httpServer = createServer(app);
+  
+  // Setup WebSocket for real-time collaboration
+  const io = new SocketIOServer(httpServer, {
+    cors: {
+      origin: process.env.NODE_ENV === "development" ? "http://localhost:5000" : true,
+      methods: ["GET", "POST"]
+    }
+  });
+
+  io.on('connection', (socket) => {
+    console.log('Client connected:', socket.id);
+
+    socket.on('join-project', async (data) => {
+      const { projectId, userId } = data;
+      socket.join(`project-${projectId}`);
+      
+      // Update collaboration session
+      await storage.upsertCollaborationSession({
+        projectId,
+        userId,
+        sessionId: socket.id,
+        status: "active",
+      });
+      
+      // Notify other users
+      socket.to(`project-${projectId}`).emit('user-joined', { userId, sessionId: socket.id });
+    });
+
+    socket.on('cursor-move', (data) => {
+      const { projectId, cursorPosition, activeFile } = data;
+      socket.to(`project-${projectId}`).emit('cursor-update', {
+        sessionId: socket.id,
+        cursorPosition,
+        activeFile
+      });
+    });
+
+    socket.on('code-change', (data) => {
+      const { projectId, fileId, changes, version } = data;
+      socket.to(`project-${projectId}`).emit('code-update', {
+        sessionId: socket.id,
+        fileId,
+        changes,
+        version
+      });
+    });
+
+    socket.on('ai-suggestion', (data) => {
+      const { projectId, suggestion, position } = data;
+      socket.to(`project-${projectId}`).emit('ai-suggestion-shared', {
+        sessionId: socket.id,
+        suggestion,
+        position
+      });
+    });
+
+    socket.on('disconnect', async () => {
+      console.log('Client disconnected:', socket.id);
+      // Update session status
+      await storage.updateCollaborationSessionStatus(socket.id, "disconnected");
+    });
+  });
+
   return httpServer;
 }

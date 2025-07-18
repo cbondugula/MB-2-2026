@@ -5,6 +5,11 @@ import {
   components,
   apiIntegrations,
   projectActivities,
+  aiSessions,
+  codeAnalysis,
+  collaborationSessions,
+  advancedTemplates,
+  smartComponents,
   type User,
   type UpsertUser,
   type Project,
@@ -14,6 +19,14 @@ import {
   type ApiIntegration,
   type ProjectActivity,
   type InsertProjectActivity,
+  type AiSession,
+  type InsertAiSession,
+  type CodeAnalysis,
+  type InsertCodeAnalysis,
+  type CollaborationSession,
+  type InsertCollaborationSession,
+  type AdvancedTemplate,
+  type SmartComponent,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -55,6 +68,34 @@ export interface IStorage {
     componentsUsed: number;
     timeSaved: number;
   }>;
+  
+  // AI Assistant operations
+  createAiSession(session: InsertAiSession): Promise<AiSession>;
+  getAiSessions(userId: string, projectId?: number): Promise<AiSession[]>;
+  
+  // Code Analysis operations
+  createCodeAnalysis(analysis: InsertCodeAnalysis): Promise<CodeAnalysis>;
+  getCodeAnalysis(projectId: number, fileHash: string, analysisType: string): Promise<CodeAnalysis | undefined>;
+  getProjectCodeAnalysis(projectId: number): Promise<CodeAnalysis[]>;
+  
+  // Collaboration operations
+  upsertCollaborationSession(session: InsertCollaborationSession): Promise<CollaborationSession>;
+  getCollaborationSessions(projectId: number): Promise<CollaborationSession[]>;
+  updateCollaborationSessionStatus(sessionId: string, status: string): Promise<void>;
+  
+  // Advanced Template operations
+  getAdvancedTemplates(filters: {
+    category?: string;
+    complexity?: string;
+    complianceLevel?: string;
+  }): Promise<AdvancedTemplate[]>;
+  
+  // Smart Component operations
+  getSmartComponents(filters: {
+    category?: string;
+    framework?: string;
+    type?: string;
+  }): Promise<SmartComponent[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -168,6 +209,139 @@ export class DatabaseStorage implements IStorage {
       componentsUsed: 24, // This could be calculated from project data
       timeSaved: 85, // This could be calculated based on template usage
     };
+  }
+
+  // AI Assistant operations
+  async createAiSession(session: InsertAiSession): Promise<AiSession> {
+    const [result] = await db.insert(aiSessions).values(session).returning();
+    return result;
+  }
+
+  async getAiSessions(userId: string, projectId?: number): Promise<AiSession[]> {
+    const conditions = [eq(aiSessions.userId, userId)];
+    if (projectId) {
+      conditions.push(eq(aiSessions.projectId, projectId));
+    }
+    
+    return await db
+      .select()
+      .from(aiSessions)
+      .where(and(...conditions))
+      .orderBy(desc(aiSessions.createdAt));
+  }
+
+  // Code Analysis operations
+  async createCodeAnalysis(analysis: InsertCodeAnalysis): Promise<CodeAnalysis> {
+    const [result] = await db.insert(codeAnalysis).values(analysis).returning();
+    return result;
+  }
+
+  async getCodeAnalysis(projectId: number, fileHash: string, analysisType: string): Promise<CodeAnalysis | undefined> {
+    const [result] = await db
+      .select()
+      .from(codeAnalysis)
+      .where(
+        and(
+          eq(codeAnalysis.projectId, projectId),
+          eq(codeAnalysis.fileHash, fileHash),
+          eq(codeAnalysis.analysisType, analysisType)
+        )
+      );
+    return result;
+  }
+
+  async getProjectCodeAnalysis(projectId: number): Promise<CodeAnalysis[]> {
+    return await db
+      .select()
+      .from(codeAnalysis)
+      .where(eq(codeAnalysis.projectId, projectId))
+      .orderBy(desc(codeAnalysis.lastAnalyzed));
+  }
+
+  // Collaboration operations
+  async upsertCollaborationSession(session: InsertCollaborationSession): Promise<CollaborationSession> {
+    const [result] = await db
+      .insert(collaborationSessions)
+      .values(session)
+      .onConflictDoUpdate({
+        target: [collaborationSessions.sessionId],
+        set: {
+          ...session,
+          lastActivity: new Date(),
+        },
+      })
+      .returning();
+    return result;
+  }
+
+  async getCollaborationSessions(projectId: number): Promise<CollaborationSession[]> {
+    return await db
+      .select()
+      .from(collaborationSessions)
+      .where(
+        and(
+          eq(collaborationSessions.projectId, projectId),
+          eq(collaborationSessions.status, "active")
+        )
+      )
+      .orderBy(desc(collaborationSessions.lastActivity));
+  }
+
+  async updateCollaborationSessionStatus(sessionId: string, status: string): Promise<void> {
+    await db
+      .update(collaborationSessions)
+      .set({ status, lastActivity: new Date() })
+      .where(eq(collaborationSessions.sessionId, sessionId));
+  }
+
+  // Advanced Template operations
+  async getAdvancedTemplates(filters: {
+    category?: string;
+    complexity?: string;
+    complianceLevel?: string;
+  }): Promise<AdvancedTemplate[]> {
+    const conditions = [eq(advancedTemplates.isActive, true)];
+    
+    if (filters.category) {
+      conditions.push(eq(advancedTemplates.category, filters.category));
+    }
+    if (filters.complexity) {
+      conditions.push(eq(advancedTemplates.complexity, filters.complexity));
+    }
+    if (filters.complianceLevel) {
+      conditions.push(eq(advancedTemplates.complianceLevel, filters.complianceLevel));
+    }
+
+    return await db
+      .select()
+      .from(advancedTemplates)
+      .where(and(...conditions))
+      .orderBy(desc(advancedTemplates.downloadCount), desc(advancedTemplates.rating));
+  }
+
+  // Smart Component operations
+  async getSmartComponents(filters: {
+    category?: string;
+    framework?: string;
+    type?: string;
+  }): Promise<SmartComponent[]> {
+    const conditions = [eq(smartComponents.isVerified, true)];
+    
+    if (filters.category) {
+      conditions.push(eq(smartComponents.category, filters.category));
+    }
+    if (filters.framework) {
+      conditions.push(eq(smartComponents.framework, filters.framework));
+    }
+    if (filters.type) {
+      conditions.push(eq(smartComponents.type, filters.type));
+    }
+
+    return await db
+      .select()
+      .from(smartComponents)
+      .where(and(...conditions))
+      .orderBy(desc(smartComponents.downloadCount), desc(smartComponents.rating));
   }
 }
 

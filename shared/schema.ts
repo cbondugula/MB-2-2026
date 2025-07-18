@@ -103,6 +103,92 @@ export const projectActivities = pgTable("project_activities", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// AI Assistant Sessions
+export const aiSessions = pgTable("ai_sessions", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  projectId: integer("project_id"),
+  type: varchar("type").notNull(), // "code_completion", "compliance_check", "architecture_review"
+  context: jsonb("context"), // Current file, cursor position, selected code
+  prompt: text("prompt"),
+  response: text("response"),
+  confidence: integer("confidence"), // AI confidence score 1-100
+  applied: boolean("applied").default(false), // Whether suggestion was accepted
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Code Analysis Cache
+export const codeAnalysis = pgTable("code_analysis", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  fileHash: varchar("file_hash").notNull(), // SHA256 of file content
+  filePath: varchar("file_path").notNull(),
+  analysisType: varchar("analysis_type").notNull(), // "security", "hipaa", "performance", "quality"
+  findings: jsonb("findings"), // Array of issues/suggestions
+  score: integer("score"), // Overall score 1-100
+  lastAnalyzed: timestamp("last_analyzed").defaultNow(),
+});
+
+// Real-time Collaboration
+export const collaborationSessions = pgTable("collaboration_sessions", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  sessionId: varchar("session_id").notNull(),
+  cursorPosition: jsonb("cursor_position"),
+  activeFile: varchar("active_file"),
+  status: varchar("status").default("active"), // "active", "idle", "disconnected"
+  lastActivity: timestamp("last_activity").defaultNow(),
+});
+
+// Advanced Templates with AI
+export const advancedTemplates = pgTable("advanced_templates", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  category: varchar("category").notNull(),
+  subCategory: varchar("sub_category"),
+  complexity: varchar("complexity").notNull(), // "beginner", "intermediate", "advanced", "expert"
+  estimatedTime: integer("estimated_time"), // in minutes
+  techStack: jsonb("tech_stack"), // Array of technologies
+  aiPrompts: jsonb("ai_prompts"), // AI prompts for customization
+  complianceLevel: varchar("compliance_level").notNull(), // "basic", "hipaa", "fda", "soc2"
+  deploymentTargets: jsonb("deployment_targets"), // "cloud", "on-premise", "hybrid"
+  code: jsonb("code").notNull(),
+  metadata: jsonb("metadata"),
+  downloadCount: integer("download_count").default(0),
+  rating: integer("rating").default(0), // 1-5 stars
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Smart Components with AI Context
+export const smartComponents = pgTable("smart_components", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  category: varchar("category").notNull(),
+  subCategory: varchar("sub_category"),
+  type: varchar("type").notNull(), // "ui", "logic", "integration", "utility"
+  framework: varchar("framework").notNull(), // "react", "vue", "angular", "vanilla"
+  dependencies: jsonb("dependencies"),
+  props: jsonb("props"), // Component props schema
+  events: jsonb("events"), // Available events
+  styling: jsonb("styling"), // Tailwind classes, CSS variables
+  accessibility: jsonb("accessibility"), // ARIA labels, keyboard navigation
+  code: jsonb("code").notNull(),
+  examples: jsonb("examples"), // Usage examples
+  aiContext: jsonb("ai_context"), // Context for AI assistance
+  complianceFlags: jsonb("compliance_flags"), // HIPAA, accessibility flags
+  performanceMetrics: jsonb("performance_metrics"),
+  isVerified: boolean("is_verified").default(false),
+  downloadCount: integer("download_count").default(0),
+  rating: integer("rating").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   projects: many(projects),
@@ -136,6 +222,35 @@ export const projectActivitiesRelations = relations(projectActivities, ({ one })
   }),
 }));
 
+export const aiSessionsRelations = relations(aiSessions, ({ one }) => ({
+  user: one(users, {
+    fields: [aiSessions.userId],
+    references: [users.id],
+  }),
+  project: one(projects, {
+    fields: [aiSessions.projectId],
+    references: [projects.id],
+  }),
+}));
+
+export const codeAnalysisRelations = relations(codeAnalysis, ({ one }) => ({
+  project: one(projects, {
+    fields: [codeAnalysis.projectId],
+    references: [projects.id],
+  }),
+}));
+
+export const collaborationSessionsRelations = relations(collaborationSessions, ({ one }) => ({
+  project: one(projects, {
+    fields: [collaborationSessions.projectId],
+    references: [projects.id],
+  }),
+  user: one(users, {
+    fields: [collaborationSessions.userId],
+    references: [users.id],
+  }),
+}));
+
 // Schemas
 export const insertUserSchema = createInsertSchema(users);
 export const insertProjectSchema = createInsertSchema(projects);
@@ -143,6 +258,11 @@ export const insertTemplateSchema = createInsertSchema(templates);
 export const insertComponentSchema = createInsertSchema(components);
 export const insertApiIntegrationSchema = createInsertSchema(apiIntegrations);
 export const insertProjectActivitySchema = createInsertSchema(projectActivities);
+export const insertAiSessionSchema = createInsertSchema(aiSessions);
+export const insertCodeAnalysisSchema = createInsertSchema(codeAnalysis);
+export const insertCollaborationSessionSchema = createInsertSchema(collaborationSessions);
+export const insertAdvancedTemplateSchema = createInsertSchema(advancedTemplates);
+export const insertSmartComponentSchema = createInsertSchema(smartComponents);
 
 // Types
 export type UpsertUser = z.infer<typeof insertUserSchema>;
@@ -157,3 +277,13 @@ export type InsertApiIntegration = z.infer<typeof insertApiIntegrationSchema>;
 export type ApiIntegration = typeof apiIntegrations.$inferSelect;
 export type InsertProjectActivity = z.infer<typeof insertProjectActivitySchema>;
 export type ProjectActivity = typeof projectActivities.$inferSelect;
+export type InsertAiSession = z.infer<typeof insertAiSessionSchema>;
+export type AiSession = typeof aiSessions.$inferSelect;
+export type InsertCodeAnalysis = z.infer<typeof insertCodeAnalysisSchema>;
+export type CodeAnalysis = typeof codeAnalysis.$inferSelect;
+export type InsertCollaborationSession = z.infer<typeof insertCollaborationSessionSchema>;
+export type CollaborationSession = typeof collaborationSessions.$inferSelect;
+export type InsertAdvancedTemplate = z.infer<typeof insertAdvancedTemplateSchema>;
+export type AdvancedTemplate = typeof advancedTemplates.$inferSelect;
+export type InsertSmartComponent = z.infer<typeof insertSmartComponentSchema>;
+export type SmartComponent = typeof smartComponents.$inferSelect;

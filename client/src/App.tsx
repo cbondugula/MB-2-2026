@@ -12,6 +12,7 @@ import Templates from "@/pages/templates";
 import Components from "@/pages/components";
 import Preview from "@/pages/preview";
 import HIPAATools from "@/pages/hipaa-tools";
+import AIWorkspace from "@/pages/ai-workspace";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -23,6 +24,7 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={Dashboard} />
+          <Route path="/ai-workspace" component={AIWorkspace} />
           <Route path="/code-editor" component={CodeEditor} />
           <Route path="/templates" component={Templates} />
           <Route path="/components" component={Components} />

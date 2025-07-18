@@ -2,7 +2,16 @@
 
 ## Overview
 
-This is a healthcare-focused web application called "MedBuilder" - a development platform specifically designed for creating HIPAA-compliant healthcare applications. The application provides pre-built templates, verified components, and integrated compliance tools to help developers build healthcare software 10x faster.
+This is a healthcare-focused web application called "MedBuilder" - the world's most advanced AI-powered development platform specifically designed for creating HIPAA-compliant healthcare applications. The platform combines Replit's cloud infrastructure with Cursor-like AI intelligence to provide:
+
+- Real-time AI code completion with healthcare-specific context
+- Intelligent HIPAA compliance checking and suggestions
+- Advanced architecture review and optimization
+- Real-time collaborative development with AI assistance
+- Smart templates with AI-powered customization
+- Automated security scanning and vulnerability detection
+
+The platform helps developers build healthcare software 10x faster with cutting-edge AI technology.
 
 ## User Preferences
 
@@ -50,16 +59,19 @@ Preferred communication style: Simple, everyday language.
 ### Database Layer
 - **ORM**: Drizzle with TypeScript-first approach
 - **Schema**: Shared schema definitions in `/shared/schema.ts`
-- **Tables**: Users, projects, templates, components, API integrations, activities, sessions
-- **Migrations**: Managed through drizzle-kit
+- **Core Tables**: Users, projects, templates, components, API integrations, activities, sessions
+- **AI Tables**: AI sessions, code analysis cache, collaboration sessions, advanced templates, smart components
+- **Migrations**: Managed through drizzle-kit with automatic schema updates
 
 ### Frontend Components
-- **Dashboard**: Main application hub with stats and quick actions
-- **Code Editor**: In-browser code editing interface
-- **Templates**: Healthcare-specific application templates
-- **Components Library**: Pre-built HIPAA-compliant UI components
-- **HIPAA Tools**: Compliance checking and documentation tools
-- **Preview**: Application preview with responsive testing
+- **Dashboard**: Main application hub with AI insights and quick actions
+- **AI Workspace**: Advanced AI-powered development environment with real-time collaboration
+- **AI Code Editor**: Intelligent code editor with healthcare-specific AI completion and analysis
+- **Code Editor**: Traditional in-browser code editing interface
+- **Templates**: AI-enhanced healthcare-specific application templates
+- **Components Library**: Smart HIPAA-compliant UI components with AI context
+- **HIPAA Tools**: AI-powered compliance checking and documentation tools
+- **Preview**: Application preview with AI-driven responsive testing
 
 ### UI Framework
 - **Design System**: shadcn/ui with healthcare-specific color palette
@@ -94,30 +106,44 @@ Preferred communication style: Simple, everyday language.
 
 ### Core Framework Dependencies
 - React 18 ecosystem (React, React DOM)
-- Express.js with middleware
+- Express.js with middleware and WebSocket support
 - TypeScript for type safety
 - Vite for build tooling
+
+### AI & Intelligence
+- OpenAI GPT-4o for advanced code analysis and completion
+- Custom AI service layer for healthcare-specific intelligence
+- Real-time collaboration with WebSocket integration
 
 ### Database & ORM
 - Drizzle ORM with PostgreSQL dialect
 - @neondatabase/serverless for database connection
 - Zod for schema validation
+- Advanced caching for AI analysis results
 
-### Authentication
+### Authentication & Security
 - Replit Auth with OpenID Connect
 - Passport.js integration
-- Session management dependencies
+- Session management with PostgreSQL storage
+- HIPAA-compliant security protocols
+
+### Real-time Features
+- Socket.io for real-time collaboration
+- WebSocket connections for AI assistance
+- Live cursor tracking and code synchronization
 
 ### UI & Styling
 - Tailwind CSS for styling
 - Radix UI for accessible components
 - Lucide React for icons
 - shadcn/ui component library
+- Advanced AI-powered code editor components
 
 ### Development Tools
 - tsx for TypeScript execution
 - ESBuild for production builds
 - PostCSS for CSS processing
+- Advanced debugging and analysis tools
 
 ## Deployment Strategy
 
