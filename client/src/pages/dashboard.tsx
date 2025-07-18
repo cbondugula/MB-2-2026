@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { Link } from "wouter";
 import { 
   Code, 
   Shield, 
@@ -23,7 +24,10 @@ import {
   Users,
   TrendingUp,
   GitBranch,
-  Cpu
+  Cpu,
+  Globe,
+  Brain,
+  FileText
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -248,6 +252,37 @@ export default function Dashboard() {
                     </div>
                   </CardContent>
                 </Card>
+              </div>
+
+              {/* Quick Tools */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-gray-300">Quick Tools</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link href="/global-healthcare">
+                    <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
+                      <Globe className="w-4 h-4 mr-2" />
+                      Global Healthcare
+                    </Button>
+                  </Link>
+                  <Link href="/clinical-ai">
+                    <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
+                      <Brain className="w-4 h-4 mr-2" />
+                      Clinical AI
+                    </Button>
+                  </Link>
+                  <Link href="/hipaa-tools">
+                    <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
+                      <Shield className="w-4 h-4 mr-2" />
+                      HIPAA Tools
+                    </Button>
+                  </Link>
+                  <Link href="/standards-builder">
+                    <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Standards
+                    </Button>
+                  </Link>
+                </div>
               </div>
 
               {/* Recent Projects */}

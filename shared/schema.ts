@@ -122,6 +122,54 @@ export const apiIntegrations = pgTable("api_integrations", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Global Privacy Compliance table
+export const privacyCompliance = pgTable("privacy_compliance", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").references(() => projects.id),
+  applicableLaws: jsonb("applicable_laws").notNull(), // Array of privacy law IDs
+  complianceStatus: varchar("compliance_status").notNull(), // "compliant", "partial", "non-compliant"
+  assessmentDate: timestamp("assessment_date").defaultNow(),
+  requirements: jsonb("requirements"), // Specific requirements for each law
+  implementationNotes: text("implementation_notes"),
+  auditTrail: jsonb("audit_trail"), // Compliance verification history
+  riskAssessment: jsonb("risk_assessment"), // Risk analysis for each jurisdiction
+  crossBorderTransfers: jsonb("cross_border_transfers"), // International transfer documentation
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Multicultural Healthcare table
+export const multiculturalSupport = pgTable("multicultural_support", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").references(() => projects.id),
+  targetCultures: jsonb("target_cultures").notNull(), // Array of cultural groups
+  supportedLanguages: jsonb("supported_languages").notNull(), // Array of languages
+  culturalConsiderations: jsonb("cultural_considerations"), // Specific cultural requirements
+  communicationPatterns: jsonb("communication_patterns"), // Cultural communication preferences
+  religiousConsiderations: jsonb("religious_considerations"), // Religious accommodations
+  accessibilityFeatures: jsonb("accessibility_features"), // Cultural accessibility needs
+  translationStatus: varchar("translation_status"), // "complete", "partial", "pending"
+  culturalValidation: jsonb("cultural_validation"), // Community validation feedback
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Alternative Medicine Integration table
+export const alternativeMedicine = pgTable("alternative_medicine", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").references(() => projects.id),
+  supportedSystems: jsonb("supported_systems").notNull(), // Array of alternative medicine systems
+  integrationLevel: varchar("integration_level").notNull(), // "basic", "moderate", "comprehensive"
+  safetyProtocols: jsonb("safety_protocols"), // Safety measures and drug interaction checks
+  practitionerNetwork: jsonb("practitioner_network"), // Network of certified practitioners
+  evidenceBase: jsonb("evidence_base"), // Research and evidence documentation
+  regulatoryCompliance: jsonb("regulatory_compliance"), // Compliance with alt medicine regulations
+  patientEducation: jsonb("patient_education"), // Educational materials for patients
+  qualityAssurance: jsonb("quality_assurance"), // Quality control measures
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Healthcare Domains table - Dynamic healthcare domain management
 export const healthcareDomains = pgTable("healthcare_domains", {
   id: serial("id").primaryKey(),
@@ -349,6 +397,9 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
     references: [templates.id],
   }),
   activities: many(projectActivities),
+  privacyCompliance: many(privacyCompliance),
+  multiculturalSupport: many(multiculturalSupport),
+  alternativeMedicine: many(alternativeMedicine),
 }));
 
 export const templatesRelations = relations(templates, ({ many }) => ({
@@ -395,6 +446,27 @@ export const collaborationSessionsRelations = relations(collaborationSessions, (
   }),
 }));
 
+export const privacyComplianceRelations = relations(privacyCompliance, ({ one }) => ({
+  project: one(projects, {
+    fields: [privacyCompliance.projectId],
+    references: [projects.id],
+  }),
+}));
+
+export const multiculturalSupportRelations = relations(multiculturalSupport, ({ one }) => ({
+  project: one(projects, {
+    fields: [multiculturalSupport.projectId],
+    references: [projects.id],
+  }),
+}));
+
+export const alternativeMedicineRelations = relations(alternativeMedicine, ({ one }) => ({
+  project: one(projects, {
+    fields: [alternativeMedicine.projectId],
+    references: [projects.id],
+  }),
+}));
+
 // Schemas
 export const insertUserSchema = createInsertSchema(users);
 export const insertProjectSchema = createInsertSchema(projects);
@@ -413,6 +485,9 @@ export const insertHealthcareStandardSchema = createInsertSchema(healthcareStand
 export const insertHealthcareOrganizationSchema = createInsertSchema(healthcareOrganizations);
 export const insertMedicalPublicationSchema = createInsertSchema(medicalPublications);
 export const insertHealthcareSimulationSchema = createInsertSchema(healthcareSimulations);
+export const insertPrivacyComplianceSchema = createInsertSchema(privacyCompliance);
+export const insertMulticulturalSupportSchema = createInsertSchema(multiculturalSupport);
+export const insertAlternativeMedicineSchema = createInsertSchema(alternativeMedicine);
 
 // Types
 export type UpsertUser = z.infer<typeof insertUserSchema>;
@@ -433,6 +508,9 @@ export type HealthcareStandard = typeof healthcareStandards.$inferSelect;
 export type HealthcareOrganization = typeof healthcareOrganizations.$inferSelect;
 export type MedicalPublication = typeof medicalPublications.$inferSelect;
 export type HealthcareSimulation = typeof healthcareSimulations.$inferSelect;
+export type PrivacyCompliance = typeof privacyCompliance.$inferSelect;
+export type MulticulturalSupport = typeof multiculturalSupport.$inferSelect;
+export type AlternativeMedicine = typeof alternativeMedicine.$inferSelect;
 
 // Memory and conversation tables for healthcare AI agents
 export const conversations = pgTable("conversations", {
