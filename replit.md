@@ -41,6 +41,8 @@ The platform helps developers build ANY healthcare software 10x faster with cutt
 
 Preferred communication style: Simple, everyday language.
 
+**Critical Development Requirement**: NEVER use static pages or static content. Everything must be dynamic with real-time data integration from APIs. All pages, components, and content must fetch live data from the backend services and database. No hardcoded data, mock data, or static arrays should be used in any component.
+
 ## System Architecture
 
 ### Frontend Architecture
