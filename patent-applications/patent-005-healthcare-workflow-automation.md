@@ -1,5 +1,8 @@
 # Patent Application 005: Dynamic Healthcare Workflow Automation System
 
+## TITLE OF THE INVENTION
+**Dynamic Healthcare Workflow Automation System**
+
 ## FIELD OF THE INVENTION
 
 This invention relates to artificial intelligence-powered healthcare workflow automation systems, and more specifically to a dynamic, adaptive system for optimizing healthcare processes through AI-driven workflow orchestration, predictive resource allocation, and real-time process optimization across global healthcare environments.

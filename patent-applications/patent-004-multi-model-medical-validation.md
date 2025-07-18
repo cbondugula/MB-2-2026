@@ -1,7 +1,7 @@
 Patent Application: Multi-Model Medical AI Validation System
 
 TITLE OF INVENTION
-**Multi-Model Constellation Architecture for Medical AI Validation with Specialized BERT Models and Consensus Algorithms**
+**Multi-Model Medical AI Validation System**
 
 FIELD OF INVENTION
 This invention relates to artificial intelligence systems for medical validation, specifically to multi-model architectures that combine general-purpose large language models with specialized medical BERT models to provide comprehensive validation and verification of medical AI responses.

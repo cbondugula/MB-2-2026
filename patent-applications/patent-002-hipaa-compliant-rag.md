@@ -1,7 +1,7 @@
 Patent Application: HIPAA-Compliant RAG Architecture
 
 TITLE OF INVENTION
-**Privacy-Preserving Retrieval-Augmented Generation System for Healthcare Applications with Automated Compliance Verification**
+**HIPAA-Compliant Healthcare Knowledge Retrieval System**
 
 FIELD OF INVENTION
 This invention relates to retrieval-augmented generation (RAG) systems for healthcare applications, specifically to systems that maintain HIPAA and GDPR compliance while providing accurate medical information retrieval and generation.

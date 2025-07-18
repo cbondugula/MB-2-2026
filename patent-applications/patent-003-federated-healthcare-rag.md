@@ -1,7 +1,7 @@
 Patent Application: Federated Healthcare RAG System
 
 TITLE OF INVENTION
-**Federated Learning-Based Retrieval-Augmented Generation System for Multi-Institutional Healthcare Collaboration with Privacy Preservation**
+**Federated Healthcare Knowledge System**
 
 FIELD OF INVENTION
 This invention relates to federated learning systems combined with retrieval-augmented generation for healthcare applications, enabling multiple healthcare institutions to collaborate on AI-powered medical knowledge systems while maintaining patient privacy and regulatory compliance.
