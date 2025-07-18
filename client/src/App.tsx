@@ -18,6 +18,8 @@ import StandardsBuilder from "@/pages/standards-builder";
 import GlobalHealthcare from "@/pages/global-healthcare";
 import AppBuilder from "@/pages/app-builder";
 import AICodeGenerator from "@/pages/ai-code-generator";
+import ClinicalAI from "@/pages/clinical-ai";
+import AdvancedHealthcare from "@/pages/advanced-healthcare";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -38,6 +40,8 @@ function Router() {
           <Route path="/components" component={Components} />
           <Route path="/app-builder" component={AppBuilder} />
           <Route path="/ai-code-generator" component={AICodeGenerator} />
+          <Route path="/clinical-ai" component={ClinicalAI} />
+          <Route path="/advanced-healthcare" component={AdvancedHealthcare} />
           <Route path="/preview" component={Preview} />
           <Route path="/hipaa-tools" component={HIPAATools} />
         </>

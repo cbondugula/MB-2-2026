@@ -17,6 +17,9 @@ import { aiService } from "./ai-service";
 import { HEALTHCARE_STACKS } from "@shared/healthcare-stacks";
 import { healthcareDomainService } from "@shared/healthcare-domains";
 import { advancedCapabilitiesService } from "./advanced-capabilities-service";
+import { clinicalAIService } from "./clinical-ai-service";
+import { standardsIntegrationService } from "./standards-integration-service";
+import { PATENTABLE_INNOVATIONS, PatentDocumentationService } from "./patent-documentation";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -1156,6 +1159,139 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error generating code:', error);
       res.status(500).json({ message: 'Failed to generate code' });
+    }
+  });
+
+  // PATENT-PROTECTED CLINICAL AI ENDPOINTS
+  // Patent #001: Multi-Modal Clinical Decision Support AI
+  app.post('/api/clinical-ai/recommendations', isAuthenticated, async (req: any, res) => {
+    try {
+      const { query, context } = req.body;
+      
+      // Validate clinical context
+      const clinicalContextSchema = z.object({
+        patientData: z.object({
+          age: z.number().optional(),
+          gender: z.string().optional(),
+          conditions: z.array(z.string()).optional(),
+          medications: z.array(z.string()).optional(),
+          allergies: z.array(z.string()).optional()
+        }).optional(),
+        clinicalDomain: z.enum(['cardiology', 'oncology', 'radiology', 'pathology', 'neurology', 'psychiatry', 'emergency', 'primary-care']),
+        riskLevel: z.enum(['low', 'moderate', 'high', 'critical']),
+        standards: z.array(z.enum(['FHIR', 'HL7', 'SNOMED', 'ICD-10', 'LOINC', 'DICOM']))
+      });
+
+      const validatedContext = clinicalContextSchema.parse(context);
+      const recommendations = await clinicalAIService.getConstellationRecommendations(query, validatedContext);
+      
+      res.json(recommendations);
+    } catch (error) {
+      console.error('Clinical AI recommendations error:', error);
+      res.status(500).json({ message: 'Failed to generate clinical recommendations' });
+    }
+  });
+
+  // Patent #002: Healthcare Standards Translation
+  app.post('/api/standards/translate', isAuthenticated, async (req: any, res) => {
+    try {
+      const { sourceData, sourceStandard, targetStandard, targetCountry } = req.body;
+      
+      const translationResult = await standardsIntegrationService.translateBetweenStandards(
+        sourceData, 
+        sourceStandard, 
+        targetStandard, 
+        targetCountry
+      );
+
+      res.json(translationResult);
+    } catch (error) {
+      console.error('Standards translation error:', error);
+      res.status(500).json({ message: 'Failed to translate between standards' });
+    }
+  });
+
+  // Multi-country compliance verification
+  app.post('/api/standards/compliance-check', isAuthenticated, async (req: any, res) => {
+    try {
+      const { data, standard, countries } = req.body;
+      
+      const complianceResults = await standardsIntegrationService.verifyMultiCountryCompliance(
+        data, 
+        standard, 
+        countries
+      );
+
+      res.json(complianceResults);
+    } catch (error) {
+      console.error('Compliance check error:', error);
+      res.status(500).json({ message: 'Failed to verify compliance' });
+    }
+  });
+
+  // Patent #003: AI-Powered Healthcare Code Generation
+  app.post('/api/clinical-ai/generate-code', isAuthenticated, async (req: any, res) => {
+    try {
+      const { requirements, framework, complianceLevel } = req.body;
+      
+      const codeResult = await clinicalAIService.generateClinicalCode(
+        requirements,
+        framework,
+        complianceLevel
+      );
+
+      res.json(codeResult);
+    } catch (error) {
+      console.error('Clinical code generation error:', error);
+      res.status(500).json({ message: 'Failed to generate clinical code' });
+    }
+  });
+
+  // Standards-compliant code generation
+  app.post('/api/standards/generate-integration', isAuthenticated, async (req: any, res) => {
+    try {
+      const { apiType, operation, framework, complianceLevel } = req.body;
+      
+      const codeResult = await standardsIntegrationService.generateStandardsCompliantCode(
+        apiType,
+        operation,
+        framework,
+        complianceLevel
+      );
+
+      res.json(codeResult);
+    } catch (error) {
+      console.error('Standards code generation error:', error);
+      res.status(500).json({ message: 'Failed to generate standards-compliant code' });
+    }
+  });
+
+  // PATENT PORTFOLIO INFORMATION ENDPOINTS
+  app.get('/api/patents/innovations', isAuthenticated, async (req: any, res) => {
+    try {
+      res.json({
+        innovations: PATENTABLE_INNOVATIONS,
+        portfolioValue: PatentDocumentationService.calculatePortfolioValue(),
+        filingTimeline: PatentDocumentationService.generateFilingTimeline()
+      });
+    } catch (error) {
+      console.error('Patent information error:', error);
+      res.status(500).json({ message: 'Failed to fetch patent information' });
+    }
+  });
+
+  app.get('/api/patents/application/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const innovation = PATENTABLE_INNOVATIONS.find(p => p.id === req.params.id);
+      if (!innovation) {
+        return res.status(404).json({ message: 'Patent innovation not found' });
+      }
+
+      const application = PatentDocumentationService.generatePatentApplication(innovation);
+      res.json({ application, innovation });
+    } catch (error) {
+      console.error('Patent application error:', error);
+      res.status(500).json({ message: 'Failed to generate patent application' });
     }
   });
 
