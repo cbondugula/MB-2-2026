@@ -1,212 +1,182 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, Code, Zap, Users, Lock, FileCheck } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Shield, Code, Zap, Sparkles, Cpu, Terminal } from "lucide-react";
+import { useState } from "react";
 
 export default function Landing() {
+  const [prompt, setPrompt] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const examplePrompts = [
+    "Create a HIPAA-compliant patient registration form with real-time validation",
+    "Build a telemedicine platform with video calling and secure messaging",
+    "Generate an EHR integration dashboard with FHIR R4 support",
+    "Design a clinical decision support system with AI recommendations",
+    "Create a medical device data collection app with IoT sensors",
+    "Build a pharmaceutical drug tracking system with blockchain"
+  ];
+
+  const handleGenerateApp = () => {
+    if (!prompt.trim()) return;
+    setIsGenerating(true);
+    localStorage.setItem('pendingPrompt', prompt);
+    window.location.href = '/api/login';
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-medical-blue-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
+    <div className="min-h-screen bg-gray-900 text-white font-mono">
+      {/* Replit-style Header */}
+      <header className="bg-gray-800/50 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-medical-blue-500 rounded-lg flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
+              <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                <Code className="w-5 h-5 text-white" />
               </div>
               <div>
-                <span className="text-2xl font-bold text-slate-900">MedBuilder</span>
-                <div className="flex items-center space-x-2 mt-1">
-                  <span className="bg-trust-green-100 text-trust-green-600 px-2 py-1 rounded-full text-xs font-medium">
-                    HIPAA Compliant
-                  </span>
-                </div>
+                <span className="text-xl font-semibold text-white">MedBuilder</span>
+                <Badge variant="secondary" className="ml-2 text-xs bg-green-900 text-green-300">
+                  Healthcare AI
+                </Badge>
               </div>
             </div>
             
             <Button 
               onClick={() => window.location.href = '/api/login'}
-              className="bg-medical-blue-500 hover:bg-medical-blue-600 text-white px-6 py-2"
+              className="bg-green-600 hover:bg-green-700 text-white"
+              size="sm"
             >
-              Get Started
+              Sign in
             </Button>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="container mx-auto px-6 py-20">
-        <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-            Build Healthcare Apps
-            <span className="text-medical-blue-500 block">10x Faster</span>
-          </h1>
-          <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-            The only development platform designed specifically for healthcare and life sciences. 
-            Create HIPAA-compliant applications with pre-built templates, verified components, 
-            and integrated compliance tools.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              onClick={() => window.location.href = '/api/login'}
-              className="bg-medical-blue-500 hover:bg-medical-blue-600 text-white px-8 py-3 text-lg"
-            >
-              Start Building Now
-            </Button>
-            <Button 
-              variant="outline" 
-              className="border-medical-blue-500 text-medical-blue-500 hover:bg-medical-blue-50 px-8 py-3 text-lg"
-            >
-              View Templates
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Everything You Need for Healthcare Development
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              From EHR integrations to telemedicine platforms, we provide the tools and templates 
-              to build compliant healthcare applications without starting from scratch.
+      {/* Main Content - Replit-style centered prompt */}
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[80vh] px-6">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
+          {/* Title */}
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-6xl font-bold">
+              Build Healthcare Apps with
+              <span className="text-green-400 block">AI-Powered Code</span>
+            </h1>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Describe your healthcare application and get production-ready, HIPAA-compliant code instantly.
+              From EHR systems to telemedicine platforms.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-slate-200 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-medical-blue-100 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="w-6 h-6 text-medical-blue-500" />
-                </div>
-                <CardTitle className="text-slate-900">HIPAA Compliance Built-In</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-slate-600">
-                  Every template and component is pre-verified for HIPAA compliance. 
-                  Built-in security scanning and audit trails ensure your app meets healthcare standards.
-                </CardDescription>
-              </CardContent>
-            </Card>
+          {/* Central Prompt Input */}
+          <div className="space-y-6">
+            <div className="relative">
+              <Textarea
+                placeholder="Describe the healthcare application you want to build..."
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                className="w-full h-32 bg-gray-800 border-gray-600 text-white placeholder-gray-400 text-lg resize-none focus:border-green-500 focus:ring-green-500 font-mono"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                    handleGenerateApp();
+                  }
+                }}
+              />
+              <div className="absolute bottom-4 right-4 flex items-center space-x-2">
+                <span className="text-xs text-gray-500">Ctrl+Enter to generate</span>
+                <Button
+                  onClick={handleGenerateApp}
+                  disabled={!prompt.trim() || isGenerating}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                  size="sm"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Cpu className="w-4 h-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Generate App
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
 
-            <Card className="border-slate-200 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-trust-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <Code className="w-6 h-6 text-trust-green-500" />
-                </div>
-                <CardTitle className="text-slate-900">Healthcare-Specific Templates</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-slate-600">
-                  Ready-to-use templates for EHR integration, telemedicine, patient portals, 
-                  lab management, and more. Skip months of development time.
-                </CardDescription>
-              </CardContent>
-            </Card>
+          {/* Example Prompts */}
+          <div className="space-y-4">
+            <p className="text-sm text-gray-500">Try these examples:</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl mx-auto">
+              {examplePrompts.map((example, index) => (
+                <button
+                  key={index}
+                  onClick={() => setPrompt(example)}
+                  className="text-left p-4 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg transition-colors text-sm text-gray-300 hover:text-white"
+                >
+                  <div className="flex items-start space-x-2">
+                    <Terminal className="w-4 h-4 mt-0.5 text-green-500 flex-shrink-0" />
+                    <span>{example}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
 
-            <Card className="border-slate-200 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-healthcare-teal-100 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6 text-healthcare-teal-500" />
-                </div>
-                <CardTitle className="text-slate-900">API Integration Hub</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-slate-600">
-                  Pre-configured integrations for FHIR, HL7, Epic, and other healthcare APIs. 
-                  Connect to existing systems with just a few clicks.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-slate-200 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <Users className="w-6 h-6 text-purple-500" />
-                </div>
-                <CardTitle className="text-slate-900">Verified Component Library</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-slate-600">
-                  Drag-and-drop components for patient forms, appointment scheduling, 
-                  medical charts, and secure messaging. All medically reviewed and tested.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-slate-200 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                  <Lock className="w-6 h-6 text-orange-500" />
-                </div>
-                <CardTitle className="text-slate-900">Enterprise Security</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-slate-600">
-                  AES-256 encryption, SOC 2 compliance, and automated security scanning. 
-                  Deploy with confidence knowing your app meets healthcare security standards.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-slate-200 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                  <FileCheck className="w-6 h-6 text-red-500" />
-                </div>
-                <CardTitle className="text-slate-900">Automated Compliance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-slate-600">
-                  Generate Business Associate Agreements, audit trails, and compliance reports automatically. 
-                  Focus on building, not paperwork.
-                </CardDescription>
-              </CardContent>
-            </Card>
+          {/* Quick Access Features */}
+          <div className="mt-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
+                <CardContent className="p-6 text-center">
+                  <Shield className="w-8 h-8 text-green-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-white mb-2">HIPAA Compliant</h3>
+                  <p className="text-gray-400 text-sm">Built-in compliance checking and security scanning</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
+                <CardContent className="p-6 text-center">
+                  <Zap className="w-8 h-8 text-blue-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-white mb-2">AI-Powered</h3>
+                  <p className="text-gray-400 text-sm">Claude Sonnet 4 and Med-Gemma models for medical AI</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
+                <CardContent className="p-6 text-center">
+                  <Code className="w-8 h-8 text-purple-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-white mb-2">Full Stack</h3>
+                  <p className="text-gray-400 text-sm">Frontend, backend, database, and deployment included</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-medical-blue-500">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Build Your Healthcare App?
-          </h2>
-          <p className="text-xl text-medical-blue-100 mb-8 max-w-2xl mx-auto">
-            Join healthcare innovators who are building the future of medical technology 
-            with our HIPAA-compliant development platform.
-          </p>
-          <Button 
-            onClick={() => window.location.href = '/api/login'}
-            className="bg-white text-medical-blue-500 hover:bg-slate-100 px-8 py-3 text-lg font-semibold"
-          >
-            Start Building Today
-          </Button>
-        </div>
-      </section>
+      </div>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12">
+      <footer className="bg-gray-800 border-t border-gray-700 py-6 mt-auto">
         <div className="container mx-auto px-6">
-          <div className="text-center">
-            <div className="flex items-center justify-center space-x-3 mb-4">
-              <div className="w-8 h-8 bg-medical-blue-500 rounded-lg flex items-center justify-center">
-                <Shield className="w-5 h-5 text-white" />
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+              <div className="w-6 h-6 bg-green-500 rounded flex items-center justify-center">
+                <Code className="w-4 h-4 text-white" />
               </div>
-              <span className="text-xl font-bold">MedBuilder</span>
+              <span className="text-white font-medium">MedBuilder</span>
+              <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
+                v1.0.0
+              </Badge>
             </div>
-            <p className="text-slate-400 mb-4">
-              The healthcare development platform that puts compliance first.
-            </p>
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-              <span>HIPAA Compliant</span>
+            
+            <div className="flex items-center space-x-6 text-sm text-gray-400">
+              <span>Built for Healthcare Developers</span>
               <span>•</span>
-              <span>SOC 2 Certified</span>
+              <span>HIPAA Compliant by Design</span>
               <span>•</span>
-              <span>HITRUST Ready</span>
+              <span>AI-Powered Development</span>
             </div>
           </div>
         </div>

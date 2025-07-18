@@ -36,7 +36,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard stats
-  app.get('/api/stats', isAuthenticated, async (req: any, res) => {
+  app.get('/api/users/stats', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const stats = await storage.getUserStats(userId);
@@ -44,6 +44,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching stats:", error);
       res.status(500).json({ message: "Failed to fetch stats" });
+    }
+  });
+
+  // Recent activities
+  app.get('/api/activities/recent', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const activities = await storage.getUserRecentActivities(userId);
+      res.json(activities);
+    } catch (error) {
+      console.error("Error fetching activities:", error);
+      res.status(500).json({ message: "Failed to fetch activities" });
     }
   });
 
@@ -710,6 +722,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI Models API
+  app.get('/api/ai/models', async (req, res) => {
+    try {
+      const models = await storage.getAIModels();
+      res.json(models);
+    } catch (error) {
+      console.error('Error fetching AI models:', error);
+      res.status(500).json({ message: 'Failed to fetch AI models' });
+    }
+  });
+
   // Healthcare Agents API  
   app.get('/api/healthcare-agents', async (req, res) => {
     try {
@@ -1091,6 +1114,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error fetching user apps:', error);
       res.status(500).json({ message: 'Failed to fetch user apps' });
+    }
+  });
+
+  // AI Code Generator routes
+  app.get('/api/ai/code-templates', async (req, res) => {
+    try {
+      const templates = await storage.getAICodeTemplates();
+      res.json(templates);
+    } catch (error) {
+      console.error('Error fetching code templates:', error);
+      res.status(500).json({ message: 'Failed to fetch code templates' });
+    }
+  });
+
+  app.get('/api/ai/models', async (req, res) => {
+    try {
+      const models = await storage.getAIModels();
+      res.json(models);
+    } catch (error) {
+      console.error('Error fetching AI models:', error);
+      res.status(500).json({ message: 'Failed to fetch AI models' });
+    }
+  });
+
+  app.get('/api/ai/code-examples', async (req, res) => {
+    try {
+      const examples = await storage.getCodeExamples();
+      res.json(examples);
+    } catch (error) {
+      console.error('Error fetching code examples:', error);
+      res.status(500).json({ message: 'Failed to fetch code examples' });
+    }
+  });
+
+  app.post('/api/ai/generate-code', async (req, res) => {
+    try {
+      const codeRequest = req.body;
+      const generatedCode = await storage.generateCode(codeRequest);
+      res.json(generatedCode);
+    } catch (error) {
+      console.error('Error generating code:', error);
+      res.status(500).json({ message: 'Failed to generate code' });
     }
   });
 

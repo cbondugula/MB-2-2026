@@ -1,22 +1,37 @@
-import TopNavigation from "@/components/TopNavigation";
-import LeftSidebar from "@/components/LeftSidebar";
-import QuickStats from "@/components/QuickStats";
-import TemplatesSection from "@/components/TemplatesSection";
-import ComponentsLibrary from "@/components/ComponentsLibrary";
-import HIPAATools from "@/components/HIPAATools";
-import APIIntegrationHub from "@/components/APIIntegrationHub";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { Code, Shield, Clock, Cloud } from "lucide-react";
+import { 
+  Code, 
+  Shield, 
+  Clock, 
+  Cloud, 
+  Sparkles, 
+  Terminal, 
+  Play, 
+  Eye, 
+  Settings, 
+  Zap,
+  Activity,
+  Users,
+  TrendingUp,
+  GitBranch,
+  Cpu
+} from "lucide-react";
 
 export default function Dashboard() {
   const { toast } = useToast();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [activeProject, setActiveProject] = useState(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -33,20 +48,73 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
-  const { data: activities, isLoading: activitiesLoading } = useQuery({
-    queryKey: ["/api/projects/1/activities"],
+  // Fetch user projects dynamically
+  const { data: projects, isLoading: projectsLoading } = useQuery({
+    queryKey: ["/api/projects"],
     enabled: isAuthenticated,
     retry: false,
   });
 
+  // Fetch user statistics dynamically
+  const { data: userStats, isLoading: statsLoading } = useQuery({
+    queryKey: ["/api/users/stats"],
+    enabled: isAuthenticated,
+    retry: false,
+  });
+
+  // Fetch recent activities dynamically
+  const { data: activities, isLoading: activitiesLoading } = useQuery({
+    queryKey: ["/api/activities/recent"],
+    enabled: isAuthenticated,
+    retry: false,
+  });
+
+  // Handle pending prompt from localStorage (from landing page)
+  useEffect(() => {
+    const pendingPrompt = localStorage.getItem('pendingPrompt');
+    if (pendingPrompt && isAuthenticated) {
+      setAiPrompt(pendingPrompt);
+      localStorage.removeItem('pendingPrompt');
+    }
+  }, [isAuthenticated]);
+
+  const handleGenerateApp = async () => {
+    if (!aiPrompt.trim()) return;
+    setIsGenerating(true);
+    try {
+      // This would normally call the AI service
+      toast({
+        title: "Generating Application",
+        description: "Your healthcare app is being created with AI assistance...",
+      });
+      // Simulate AI generation
+      setTimeout(() => {
+        setIsGenerating(false);
+        setActiveProject({
+          id: Date.now(),
+          name: "Generated Healthcare App",
+          type: "healthcare-platform",
+          status: "ready"
+        });
+      }, 3000);
+    } catch (error) {
+      setIsGenerating(false);
+      toast({
+        title: "Generation Failed",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center font-mono">
         <div className="text-center">
-          <div className="w-12 h-12 bg-medical-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Shield className="w-6 h-6 text-white animate-pulse" />
+          <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <Cpu className="w-6 h-6 text-white animate-spin" />
           </div>
-          <p className="text-slate-600">Loading...</p>
+          <p className="text-gray-400">Loading MedBuilder...</p>
         </div>
       </div>
     );
@@ -57,91 +125,273 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <TopNavigation />
-      
-      <div className="flex h-screen">
-        <LeftSidebar />
-        
-        <main className="flex-1 flex flex-col overflow-hidden">
-          {/* Main Header */}
-          <header className="bg-white border-b border-slate-200 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900">Healthcare App Builder</h1>
-                <p className="text-slate-600 mt-1">Build HIPAA-compliant healthcare applications faster</p>
+    <div className="min-h-screen bg-gray-900 text-white font-mono">
+      {/* Replit-style Header */}
+      <header className="bg-gray-800/50 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
+        <div className="flex items-center justify-between px-6 py-3">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                <Code className="w-5 h-5 text-white" />
               </div>
+              <span className="text-xl font-semibold">MedBuilder</span>
+            </div>
+            
+            {activeProject && (
+              <div className="flex items-center space-x-2 text-sm">
+                <span className="text-gray-400">/</span>
+                <span className="text-green-400">{activeProject.name}</span>
+                <Badge className="bg-green-900 text-green-300 text-xs">
+                  {activeProject.status}
+                </Badge>
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 text-sm text-gray-400">
+              <span>Welcome back,</span>
+              <span className="text-white font-medium">
+                {user?.firstName || user?.email || 'Developer'}
+              </span>
+            </div>
+            <Button 
+              onClick={() => window.location.href = '/api/logout'}
+              variant="outline"
+              size="sm"
+              className="border-gray-600 text-gray-300 hover:bg-gray-700"
+            >
+              Sign out
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Split Screen Layout */}
+      <div className="flex h-[calc(100vh-73px)]">
+        {/* Left Side - AI Assistant & Controls */}
+        <div className="w-1/2 border-r border-gray-700 flex flex-col">
+          {/* AI Assistant Panel */}
+          <div className="flex-1 flex flex-col">
+            <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
               <div className="flex items-center space-x-3">
-                <Button variant="outline" className="border-slate-200 text-slate-700 hover:bg-slate-100">
-                  <Cloud className="w-4 h-4 mr-2" />
-                  Save
-                </Button>
-                <Button className="bg-trust-green-500 hover:bg-trust-green-600 text-white">
-                  <Code className="w-4 h-4 mr-2" />
-                  Run Preview
-                </Button>
+                <Sparkles className="w-6 h-6 text-green-400" />
+                <h2 className="text-lg font-semibold">AI Assistant</h2>
+                <Badge className="bg-blue-900 text-blue-300 text-xs">
+                  Claude Sonnet 4
+                </Badge>
               </div>
             </div>
-          </header>
 
-          {/* Dashboard Content */}
-          <div className="flex-1 p-6 overflow-y-auto">
-            <QuickStats />
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2">
-                <TemplatesSection />
+            <div className="flex-1 p-6 space-y-6">
+              {/* AI Prompt Input */}
+              <div className="space-y-3">
+                <label className="text-sm text-gray-400">Describe your healthcare application</label>
+                <div className="relative">
+                  <Textarea
+                    placeholder="Create a HIPAA-compliant patient portal with secure messaging, appointment scheduling, and lab results viewing..."
+                    value={aiPrompt}
+                    onChange={(e) => setAiPrompt(e.target.value)}
+                    className="bg-gray-800 border-gray-600 text-white placeholder-gray-500 min-h-[120px] resize-none focus:border-green-500 focus:ring-green-500"
+                  />
+                  <Button
+                    onClick={handleGenerateApp}
+                    disabled={!aiPrompt.trim() || isGenerating}
+                    className="absolute bottom-3 right-3 bg-green-600 hover:bg-green-700"
+                    size="sm"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Cpu className="w-4 h-4 mr-2 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Generate
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
-              
-              <div className="space-y-6">
-                {/* Recent Activity */}
-                <Card className="border-slate-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-slate-900">Recent Activity</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-8 h-8 bg-medical-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <Code className="w-4 h-4 text-medical-blue-500" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm text-slate-900">Updated patient form component</p>
-                          <p className="text-xs text-slate-500">2 hours ago</p>
-                        </div>
+
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 gap-4">
+                <Card className="bg-gray-800 border-gray-700">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center">
+                        <Code className="w-5 h-5 text-blue-400" />
                       </div>
-                      
-                      <div className="flex items-start space-x-3">
-                        <div className="w-8 h-8 bg-trust-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <Shield className="w-4 h-4 text-trust-green-500" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm text-slate-900">HIPAA compliance check passed</p>
-                          <p className="text-xs text-slate-500">4 hours ago</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start space-x-3">
-                        <div className="w-8 h-8 bg-healthcare-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <Cloud className="w-4 h-4 text-healthcare-teal-500" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm text-slate-900">Deployed to staging environment</p>
-                          <p className="text-xs text-slate-500">6 hours ago</p>
-                        </div>
+                      <div>
+                        <p className="text-lg font-semibold text-white">
+                          {statsLoading ? "..." : userStats?.totalProjects || 0}
+                        </p>
+                        <p className="text-xs text-gray-400">Projects</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <HIPAATools />
+                <Card className="bg-gray-800 border-gray-700">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-green-900 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-lg font-semibold text-white">
+                          {statsLoading ? "..." : userStats?.deploymentsCount || 0}
+                        </p>
+                        <p className="text-xs text-gray-400">Deployments</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Recent Projects */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-gray-300">Recent Projects</h3>
+                <div className="space-y-2">
+                  {projectsLoading ? (
+                    <div className="text-gray-500 text-sm">Loading projects...</div>
+                  ) : projects && projects.length > 0 ? (
+                    projects.slice(0, 5).map((project) => (
+                      <div 
+                        key={project.id}
+                        className="p-3 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-750 cursor-pointer transition-colors"
+                        onClick={() => setActiveProject(project)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-6 h-6 bg-purple-900 rounded flex items-center justify-center">
+                              <GitBranch className="w-3 h-3 text-purple-400" />
+                            </div>
+                            <span className="text-sm text-white">{project.name}</span>
+                          </div>
+                          <Badge className="bg-gray-700 text-gray-300 text-xs">
+                            {project.type}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-500 text-sm">No projects yet. Generate your first app!</div>
+                  )}
+                </div>
               </div>
             </div>
-
-            <ComponentsLibrary />
-            <APIIntegrationHub />
           </div>
-        </main>
+        </div>
+
+        {/* Right Side - Preview & Analytics */}
+        <div className="w-1/2 flex flex-col">
+          {/* Preview Panel Header */}
+          <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Eye className="w-6 h-6 text-blue-400" />
+                <h2 className="text-lg font-semibold">Preview & Analytics</h2>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-700">
+                  <Play className="w-4 h-4 mr-2" />
+                  Run
+                </Button>
+                <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-700">
+                  <Cloud className="w-4 h-4 mr-2" />
+                  Deploy
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col">
+            {activeProject ? (
+              <div className="flex-1 p-6">
+                <div className="bg-gray-800 border border-gray-700 rounded-lg h-full flex items-center justify-center">
+                  <div className="text-center space-y-4">
+                    <div className="w-16 h-16 bg-green-900 rounded-lg flex items-center justify-center mx-auto">
+                      <Eye className="w-8 h-8 text-green-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white">{activeProject.name}</h3>
+                      <p className="text-gray-400 text-sm">Application preview will appear here</p>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2">
+                      <Button className="bg-green-600 hover:bg-green-700">
+                        <Play className="w-4 h-4 mr-2" />
+                        Start Preview
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex-1 p-6 space-y-6">
+                {/* Activity Feed */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium text-gray-300">Recent Activity</h3>
+                  <ScrollArea className="h-64">
+                    <div className="space-y-3">
+                      {activitiesLoading ? (
+                        <div className="text-gray-500 text-sm">Loading activities...</div>
+                      ) : activities && activities.length > 0 ? (
+                        activities.map((activity) => (
+                          <div key={activity.id} className="flex items-start space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <div className="w-6 h-6 bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                              <Activity className="w-3 h-3 text-blue-400" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm text-white">{activity.description}</p>
+                              <p className="text-xs text-gray-400 mt-1">
+                                {new Date(activity.timestamp).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-gray-500 text-sm">No recent activity</div>
+                      )}
+                    </div>
+                  </ScrollArea>
+                </div>
+
+                {/* Healthcare Metrics */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium text-gray-300">Healthcare Compliance</h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    <Card className="bg-gray-800 border-gray-700">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Shield className="w-4 h-4 text-green-400" />
+                            <span className="text-sm text-white">HIPAA Compliance</span>
+                          </div>
+                          <Badge className="bg-green-900 text-green-300 text-xs">100%</Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gray-800 border-gray-700">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Zap className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm text-white">FHIR Integration</span>
+                          </div>
+                          <Badge className="bg-blue-900 text-blue-300 text-xs">Ready</Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

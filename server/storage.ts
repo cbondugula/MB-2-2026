@@ -53,6 +53,13 @@ export interface IStorage {
   // User operations (mandatory for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  getUserStats(userId: string): Promise<{
+    totalProjects: number;
+    deploymentsCount: number;
+    templatesUsed: number;
+    componentsCreated: number;
+  }>;
+  getUserRecentActivities(userId: string): Promise<ProjectActivity[]>;
   
   // Project operations
   getUserProjects(userId: string): Promise<Project[]>;
@@ -166,6 +173,34 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  async getUserStats(userId: string): Promise<{
+    totalProjects: number;
+    deploymentsCount: number;
+    templatesUsed: number;
+    componentsCreated: number;
+  }> {
+    const userProjects = await this.getUserProjects(userId);
+    const deploymentsCount = userProjects.filter(p => p.status === 'deployed').length;
+    
+    return {
+      totalProjects: userProjects.length,
+      deploymentsCount,
+      templatesUsed: userProjects.filter(p => p.templateId).length,
+      componentsCreated: userProjects.reduce((acc, p) => acc + (p.componentCount || 0), 0),
+    };
+  }
+
+  async getUserRecentActivities(userId: string): Promise<ProjectActivity[]> {
+    return await db
+      .select()
+      .from(projectActivities)
+      .innerJoin(projects, eq(projectActivities.projectId, projects.id))
+      .where(eq(projects.userId, userId))
+      .orderBy(desc(projectActivities.timestamp))
+      .limit(10)
+      .then(results => results.map(r => r.project_activities));
   }
 
   async getUserProjects(userId: string): Promise<Project[]> {
@@ -786,6 +821,863 @@ export class DatabaseStorage implements IStorage {
         createdAt: '2024-01-18T09:15:00Z',
         lastUpdated: '2024-01-18T09:15:00Z',
         url: null
+      }
+    ];
+  }
+
+  // AI Code Generator methods
+  async getAICodeTemplates(): Promise<any[]> {
+    return [
+      {
+        id: 'patient-form',
+        name: 'Patient Registration Form',
+        description: 'HIPAA-compliant patient registration with validation and encryption',
+        category: 'forms',
+        language: 'typescript',
+        linesOfCode: 245,
+        code: `// Patient Registration Form Component
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { encryptPHI, validatePHI } from '@/utils/hipaa';
+
+interface PatientData {
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  ssn: string;
+  medicalRecordNumber: string;
+}
+
+export default function PatientRegistrationForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm<PatientData>();
+  
+  const onSubmit = async (data: PatientData) => {
+    try {
+      const encryptedData = await encryptPHI(data);
+      await submitPatientData(encryptedData);
+    } catch (error) {
+      console.error('Registration failed:', error);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input 
+        {...register('firstName', { required: 'First name is required' })}
+        placeholder="First Name"
+      />
+      {errors.firstName && <span>{errors.firstName.message}</span>}
+      
+      <input 
+        {...register('lastName', { required: 'Last name is required' })}
+        placeholder="Last Name"
+      />
+      {errors.lastName && <span>{errors.lastName.message}</span>}
+      
+      <button type="submit">Register Patient</button>
+    </form>
+  );
+}`
+      },
+      {
+        id: 'fhir-api',
+        name: 'FHIR API Integration',
+        description: 'Healthcare interoperability with FHIR R4 standard',
+        category: 'integration',
+        language: 'typescript',
+        linesOfCode: 180,
+        code: `// FHIR R4 Patient Resource Handler
+import { Patient, Bundle } from 'fhir/r4';
+
+class FHIRPatientService {
+  private baseUrl: string;
+  
+  constructor(fhirServerUrl: string) {
+    this.baseUrl = fhirServerUrl;
+  }
+  
+  async createPatient(patient: Patient): Promise<Patient> {
+    const response = await fetch(\`\${this.baseUrl}/Patient\`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/fhir+json',
+        'Authorization': \`Bearer \${process.env.FHIR_ACCESS_TOKEN}\`
+      },
+      body: JSON.stringify(patient)
+    });
+    
+    if (!response.ok) {
+      throw new Error(\`FHIR error: \${response.statusText}\`);
+    }
+    
+    return await response.json();
+  }
+  
+  async searchPatients(query: string): Promise<Bundle> {
+    const response = await fetch(\`\${this.baseUrl}/Patient?name=\${query}\`);
+    return await response.json();
+  }
+}`
+      }
+    ];
+  }
+
+  async getAIModels(): Promise<any[]> {
+    return [
+      {
+        id: 'claude-sonnet-4',
+        name: 'Claude Sonnet 4.0',
+        description: 'Latest Anthropic model with advanced reasoning and healthcare expertise',
+        provider: 'Anthropic',
+        capabilities: ['advanced-reasoning', 'code-generation', 'medical-analysis', 'fhir-compliance', 'hipaa-guidance'],
+        accuracy: 99.2,
+        speed: 'very-fast',
+        contextWindow: '200k tokens',
+        specialization: 'Healthcare & Medical AI'
+      },
+      {
+        id: 'healthcare-gpt4o',
+        name: 'GPT-4o Healthcare',
+        description: 'OpenAI multimodal model optimized for healthcare applications',
+        provider: 'OpenAI',
+        capabilities: ['multimodal', 'code-generation', 'medical-nlp', 'image-analysis', 'fhir-compliance'],
+        accuracy: 98.5,
+        speed: 'fast',
+        contextWindow: '128k tokens',
+        specialization: 'Multimodal Healthcare AI'
+      },
+      {
+        id: 'medllama-70b',
+        name: 'MedLlama 70B',
+        description: 'Fine-tuned medical language model for clinical applications',
+        provider: 'Meta',
+        capabilities: ['clinical-notes', 'diagnosis-assist', 'drug-interaction', 'medical-coding'],
+        accuracy: 96.2,
+        speed: 'medium',
+        contextWindow: '32k tokens',
+        specialization: 'Clinical Decision Support'
+      },
+      {
+        id: 'gemini-2-pro-health',
+        name: 'Gemini 2.0 Pro Health',
+        description: 'Google advanced AI model with healthcare specialization',
+        provider: 'Google',
+        capabilities: ['multimodal', 'real-time', 'medical-imaging', 'genomics', 'drug-discovery'],
+        accuracy: 97.8,
+        speed: 'very-fast',
+        contextWindow: '2M tokens',
+        specialization: 'Medical Research & Imaging'
+      },
+      {
+        id: 'clinicalbert-v3',
+        name: 'ClinicalBERT v3.0',
+        description: 'Enhanced BERT model trained on latest clinical datasets',
+        provider: 'Google Health',
+        capabilities: ['medical-ner', 'clinical-classification', 'symptom-extraction', 'icd-coding'],
+        accuracy: 95.8,
+        speed: 'very-fast',
+        contextWindow: '16k tokens',
+        specialization: 'Clinical Text Processing'
+      },
+      {
+        id: 'perplexity-health',
+        name: 'Perplexity Healthcare Pro',
+        description: 'Real-time AI with access to latest medical research and publications',
+        provider: 'Perplexity',
+        capabilities: ['real-time-search', 'pubmed-integration', 'research-synthesis', 'evidence-based'],
+        accuracy: 96.5,
+        speed: 'fast',
+        contextWindow: '64k tokens',
+        specialization: 'Medical Research & Evidence'
+      },
+      {
+        id: 'med-gemma-7b',
+        name: 'Med-Gemma 7B',
+        description: 'Google open-source medical language model for clinical content generation',
+        provider: 'Google (Open Source)',
+        capabilities: ['medical-content-generation', 'clinical-qa', 'medical-summarization', 'patient-education'],
+        accuracy: 94.2,
+        speed: 'very-fast',
+        contextWindow: '8k tokens',
+        specialization: 'Medical Content Generation',
+        isOpenSource: true
+      },
+      {
+        id: 'med-gemma-2b',
+        name: 'Med-Gemma 2B',
+        description: 'Lightweight medical model for edge deployment and fast inference',
+        provider: 'Google (Open Source)',
+        capabilities: ['medical-qa', 'symptom-checker', 'drug-information', 'medical-coding'],
+        accuracy: 91.8,
+        speed: 'ultra-fast',
+        contextWindow: '4k tokens',
+        specialization: 'Edge Medical AI',
+        isOpenSource: true
+      },
+      {
+        id: 'biomistral-7b',
+        name: 'BioMistral 7B',
+        description: 'Mistral AI medical model fine-tuned on biomedical literature',
+        provider: 'Mistral AI (Open Source)',
+        capabilities: ['biomedical-research', 'drug-discovery', 'molecular-biology', 'genetics'],
+        accuracy: 93.5,
+        speed: 'fast',
+        contextWindow: '32k tokens',
+        specialization: 'Biomedical Research',
+        isOpenSource: true
+      },
+      {
+        id: 'meditron-70b',
+        name: 'Meditron 70B',
+        description: 'EPFL open-source medical LLM trained on medical literature and guidelines',
+        provider: 'EPFL (Open Source)',
+        capabilities: ['clinical-guidelines', 'medical-reasoning', 'differential-diagnosis', 'treatment-planning'],
+        accuracy: 95.1,
+        speed: 'medium',
+        contextWindow: '4k tokens',
+        specialization: 'Clinical Decision Support',
+        isOpenSource: true
+      },
+      {
+        id: 'clinical-camel-70b',
+        name: 'Clinical-Camel 70B',
+        description: 'Open-source medical model with clinical conversation capabilities',
+        provider: 'King Abdullah University (Open Source)',
+        capabilities: ['clinical-conversations', 'patient-counseling', 'medical-education', 'case-studies'],
+        accuracy: 94.7,
+        speed: 'medium',
+        contextWindow: '4k tokens',
+        specialization: 'Clinical Communication',
+        isOpenSource: true
+      },
+      {
+        id: 'pubmedbert',
+        name: 'PubMedBERT',
+        description: 'BERT model pre-trained on PubMed abstracts and full-text articles',
+        provider: 'Microsoft (Open Source)',
+        capabilities: ['pubmed-search', 'literature-analysis', 'medical-ner', 'biomedical-qa'],
+        accuracy: 92.3,
+        speed: 'very-fast',
+        contextWindow: '512 tokens',
+        specialization: 'Biomedical Literature',
+        isOpenSource: true
+      }
+    ];
+  }
+
+  async getCodeExamples(): Promise<any[]> {
+    return [
+      {
+        id: 'telehealth-video',
+        title: 'Telehealth Video Call',
+        description: 'HIPAA-compliant video calling with screen sharing',
+        language: 'typescript',
+        useCase: 'telemedicine',
+        code: `// Secure Video Call Component
+import { useEffect, useRef } from 'react';
+import { WebRTCManager } from '@/utils/webrtc-secure';
+
+export default function SecureVideoCall() {
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  
+  useEffect(() => {
+    const webrtc = new WebRTCManager({
+      encryption: 'DTLS-SRTP',
+      recording: {
+        enabled: true,
+        hipaaCompliant: true
+      }
+    });
+    
+    webrtc.initialize();
+    
+    return () => webrtc.cleanup();
+  }, []);
+  
+  return (
+    <div className="video-call-container">
+      <video ref={localVideoRef} autoPlay muted />
+      <video ref={remoteVideoRef} autoPlay />
+    </div>
+  );
+}`
+      },
+      {
+        id: 'blockchain-records',
+        title: 'Blockchain Medical Records',
+        description: 'Immutable patient records using blockchain technology',
+        language: 'typescript',
+        useCase: 'data-security',
+        code: `// Blockchain Medical Record Storage
+import { ethers } from 'ethers';
+
+class MedicalRecordBlockchain {
+  private contract: ethers.Contract;
+  
+  constructor(contractAddress: string, provider: ethers.Provider) {
+    const abi = [
+      'function storeRecord(string memory patientId, string memory encryptedData) public',
+      'function getRecord(string memory patientId) public view returns (string memory)'
+    ];
+    this.contract = new ethers.Contract(contractAddress, abi, provider);
+  }
+  
+  async storePatientRecord(patientId: string, data: any): Promise<string> {
+    const encryptedData = await this.encryptData(data);
+    const tx = await this.contract.storeRecord(patientId, encryptedData);
+    return tx.hash;
+  }
+  
+  private async encryptData(data: any): Promise<string> {
+    // Implementation of encryption logic
+    return JSON.stringify(data);
+  }
+}`
+      }
+    ];
+  }
+
+  async generateCode(codeRequest: any): Promise<any> {
+    // Simulate AI code generation with realistic healthcare code
+    const { prompt, language, framework, complexity } = codeRequest;
+    
+    const templates = {
+      'patient-dashboard': `// Healthcare Patient Dashboard
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useQuery } from '@tanstack/react-query';
+import { Heart, Activity, Thermometer, Weight } from 'lucide-react';
+
+interface VitalSigns {
+  heartRate: number;
+  bloodPressure: string;
+  temperature: number;
+  weight: number;
+  timestamp: string;
+}
+
+interface Patient {
+  id: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  mrn: string;
+  allergies: string[];
+  vitals: VitalSigns[];
+}
+
+export default function PatientDashboard({ patientId }: { patientId: string }) {
+  const { data: patient, isLoading } = useQuery({
+    queryKey: ['/api/patients', patientId],
+    enabled: !!patientId,
+  });
+
+  if (isLoading) {
+    return <div className="p-6">Loading patient data...</div>;
+  }
+
+  const latestVitals = patient?.vitals?.[0];
+
+  return (
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">
+            {patient?.firstName} {patient?.lastName}
+          </h1>
+          <p className="text-muted-foreground">MRN: {patient?.mrn}</p>
+        </div>
+        <Badge variant="secondary">Active Patient</Badge>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Heart Rate</CardTitle>
+            <Heart className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{latestVitals?.heartRate} BPM</div>
+            <p className="text-xs text-muted-foreground">Normal range</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Blood Pressure</CardTitle>
+            <Activity className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{latestVitals?.bloodPressure}</div>
+            <p className="text-xs text-muted-foreground">Systolic/Diastolic</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Temperature</CardTitle>
+            <Thermometer className="h-4 w-4 text-orange-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{latestVitals?.temperature}°F</div>
+            <p className="text-xs text-muted-foreground">Body temperature</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Weight</CardTitle>
+            <Weight className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{latestVitals?.weight} lbs</div>
+            <p className="text-xs text-muted-foreground">Current weight</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Allergies</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {patient?.allergies?.map((allergy: string, index: number) => (
+              <Badge key={index} variant="destructive">
+                {allergy}
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex space-x-4">
+        <Button>Update Vitals</Button>
+        <Button variant="outline">View Medical History</Button>
+        <Button variant="outline">Schedule Appointment</Button>
+      </div>
+    </div>
+  );
+}`,
+
+      'medication-tracker': `// Medication Tracking System
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Clock, Pill, AlertTriangle, CheckCircle } from 'lucide-react';
+
+interface Medication {
+  id: string;
+  name: string;
+  dosage: string;
+  frequency: string;
+  nextDose: string;
+  status: 'due' | 'taken' | 'overdue';
+  instructions: string;
+}
+
+export default function MedicationTracker() {
+  const [medications, setMedications] = useState<Medication[]>([
+    {
+      id: '1',
+      name: 'Lisinopril',
+      dosage: '10mg',
+      frequency: 'Once daily',
+      nextDose: '2024-01-20T08:00:00',
+      status: 'due',
+      instructions: 'Take with food'
+    },
+    {
+      id: '2',
+      name: 'Metformin',
+      dosage: '500mg',
+      frequency: 'Twice daily',
+      nextDose: '2024-01-20T12:00:00',
+      status: 'taken',
+      instructions: 'Take with meals'
+    }
+  ]);
+
+  const markAsTaken = (medicationId: string) => {
+    setMedications(prev =>
+      prev.map(med =>
+        med.id === medicationId
+          ? { ...med, status: 'taken' as const }
+          : med
+      )
+    );
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'due':
+        return <Clock className="h-4 w-4 text-yellow-500" />;
+      case 'taken':
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case 'overdue':
+        return <AlertTriangle className="h-4 w-4 text-red-500" />;
+      default:
+        return <Pill className="h-4 w-4" />;
+    }
+  };
+
+  return (
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Medication Tracker</h1>
+      
+      <div className="grid gap-4">
+        {medications.map((medication) => (
+          <Card key={medication.id}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center space-x-2">
+                  {getStatusIcon(medication.status)}
+                  <span>{medication.name}</span>
+                </CardTitle>
+                <Badge
+                  variant={
+                    medication.status === 'taken'
+                      ? 'default'
+                      : medication.status === 'overdue'
+                      ? 'destructive'
+                      : 'secondary'
+                  }
+                >
+                  {medication.status}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <p><strong>Dosage:</strong> {medication.dosage}</p>
+                <p><strong>Frequency:</strong> {medication.frequency}</p>
+                <p><strong>Next Dose:</strong> {new Date(medication.nextDose).toLocaleString()}</p>
+                <p><strong>Instructions:</strong> {medication.instructions}</p>
+                
+                {medication.status === 'due' && (
+                  <Button
+                    onClick={() => markAsTaken(medication.id)}
+                    className="mt-4"
+                  >
+                    Mark as Taken
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}`
+    };
+
+    // Simulate realistic generation time and return appropriate template
+    const codeTemplate = templates['patient-dashboard'] || templates['medication-tracker'];
+    
+    return {
+      code: codeTemplate,
+      linesOfCode: codeTemplate.split('\n').length,
+      language: language,
+      framework: framework,
+      features: ['authentication', 'encryption', 'audit-logging', 'fhir-compliance'],
+      buildTime: '2.3 seconds',
+      securityScore: 95,
+      hipaaCompliant: true
+    };
+  }
+
+  // Replit Development Features
+  async getGitRepositories(): Promise<any[]> {
+    return [
+      {
+        id: 'healthcare-ehr-system',
+        name: 'healthcare-ehr-system',
+        description: 'Complete EHR system with FHIR integration',
+        owner: 'healthcare-team',
+        isPrivate: false,
+        branch: 'main',
+        lastCommit: {
+          message: 'Add patient consent management',
+          author: 'Dr. Smith',
+          timestamp: '2024-01-18T10:30:00Z',
+          hash: 'a1b2c3d'
+        },
+        collaborators: 15,
+        stars: 342,
+        forks: 89,
+        size: '12.4 MB',
+        language: 'TypeScript',
+        topics: ['healthcare', 'ehr', 'fhir', 'hipaa'],
+        commits: 1247,
+        branches: 8,
+        releases: 12
+      },
+      {
+        id: 'telemedicine-platform',
+        name: 'telemedicine-platform',
+        description: 'HIPAA-compliant video consultation platform',
+        owner: 'medtech-solutions',
+        isPrivate: true,
+        branch: 'develop',
+        lastCommit: {
+          message: 'Implement secure video encryption',
+          author: 'Jane Doe',
+          timestamp: '2024-01-17T15:45:00Z',
+          hash: 'x7y8z9a'
+        },
+        collaborators: 8,
+        stars: 156,
+        forks: 23,
+        size: '8.7 MB',
+        language: 'React',
+        topics: ['telemedicine', 'video-call', 'hipaa', 'webrtc'],
+        commits: 523,
+        branches: 5,
+        releases: 6
+      }
+    ];
+  }
+
+  async getDeployments(): Promise<any[]> {
+    return [
+      {
+        id: 'prod-ehr-system',
+        name: 'Healthcare EHR Production',
+        url: 'https://ehr-system.medbuilder.app',
+        status: 'running',
+        environment: 'production',
+        region: 'us-east-1',
+        lastDeployment: '2024-01-18T08:30:00Z',
+        version: 'v2.1.4',
+        health: 'healthy',
+        traffic: '1.2K/hour',
+        uptime: '99.9%',
+        ssl: true,
+        customDomain: true,
+        buildTime: '3m 45s',
+        memoryUsage: '512MB',
+        cpuUsage: '45%'
+      },
+      {
+        id: 'staging-telemedicine',
+        name: 'Telemedicine Staging',
+        url: 'https://telemedicine-staging.medbuilder.app',
+        status: 'running',
+        environment: 'staging',
+        region: 'us-west-2',
+        lastDeployment: '2024-01-17T14:20:00Z',
+        version: 'v1.8.2',
+        health: 'healthy',
+        traffic: '45/hour',
+        uptime: '99.5%',
+        ssl: true,
+        customDomain: false,
+        buildTime: '2m 12s',
+        memoryUsage: '256MB',
+        cpuUsage: '23%'
+      }
+    ];
+  }
+
+  async getCodeReviews(): Promise<any[]> {
+    return [
+      {
+        id: 'pr-123',
+        title: 'Add FHIR R4 patient resource validation',
+        author: 'Dr. Johnson',
+        reviewers: ['alice-dev', 'bob-security'],
+        status: 'approved',
+        createdAt: '2024-01-17T09:00:00Z',
+        updatedAt: '2024-01-18T11:30:00Z',
+        linesAdded: 145,
+        linesRemoved: 23,
+        files: 8,
+        comments: 12,
+        aiInsights: [
+          'HIPAA compliance verified',
+          'Security scan passed',
+          'Performance impact: minimal'
+        ],
+        checks: {
+          tests: 'passed',
+          security: 'passed',
+          performance: 'passed',
+          accessibility: 'passed'
+        }
+      },
+      {
+        id: 'pr-124',
+        title: 'Implement clinical decision support API',
+        author: 'sarah-ai',
+        reviewers: ['charlie-medical', 'david-backend'],
+        status: 'pending',
+        createdAt: '2024-01-18T14:15:00Z',
+        updatedAt: '2024-01-18T16:45:00Z',
+        linesAdded: 267,
+        linesRemoved: 45,
+        files: 15,
+        comments: 5,
+        aiInsights: [
+          'Medical algorithm validation needed',
+          'Consider adding unit tests',
+          'Documentation coverage: 85%'
+        ],
+        checks: {
+          tests: 'running',
+          security: 'pending',
+          performance: 'passed',
+          accessibility: 'warning'
+        }
+      }
+    ];
+  }
+
+  async getPreviewEnvironments(): Promise<any[]> {
+    return [
+      {
+        id: 'preview-pr-123',
+        name: 'FHIR Validation Preview',
+        url: 'https://pr-123-preview.medbuilder.app',
+        status: 'active',
+        pullRequest: 'pr-123',
+        createdAt: '2024-01-17T09:30:00Z',
+        expiresAt: '2024-01-24T09:30:00Z',
+        features: ['FHIR R4 validation', 'Patient resource management'],
+        testResults: {
+          passed: 145,
+          failed: 2,
+          coverage: '94%'
+        },
+        performance: {
+          loadTime: '1.2s',
+          firstPaint: '0.8s',
+          lighthouse: 92
+        }
+      },
+      {
+        id: 'preview-feature-cds',
+        name: 'Clinical Decision Support Preview',
+        url: 'https://cds-feature.medbuilder.app',
+        status: 'building',
+        pullRequest: 'pr-124',
+        createdAt: '2024-01-18T14:30:00Z',
+        expiresAt: '2024-01-25T14:30:00Z',
+        features: ['AI-powered clinical insights', 'Drug interaction checking'],
+        testResults: null,
+        performance: null
+      }
+    ];
+  }
+
+  async getBuildHistory(): Promise<any[]> {
+    return [
+      {
+        id: 'build-456',
+        commit: 'a1b2c3d',
+        branch: 'main',
+        status: 'success',
+        startTime: '2024-01-18T08:25:00Z',
+        endTime: '2024-01-18T08:28:45Z',
+        duration: '3m 45s',
+        logs: [
+          'Installing dependencies...',
+          'Running tests...',
+          'Building application...',
+          'Deployment successful'
+        ],
+        tests: {
+          total: 342,
+          passed: 340,
+          failed: 2,
+          skipped: 0
+        }
+      },
+      {
+        id: 'build-455',
+        commit: 'x7y8z9a',
+        branch: 'develop',
+        status: 'failed',
+        startTime: '2024-01-17T15:40:00Z',
+        endTime: '2024-01-17T15:42:15Z',
+        duration: '2m 15s',
+        logs: [
+          'Installing dependencies...',
+          'Running tests...',
+          'Error: Test suite failed',
+          'Build cancelled'
+        ],
+        tests: {
+          total: 298,
+          passed: 285,
+          failed: 13,
+          skipped: 0
+        }
+      }
+    ];
+  }
+
+  async getEnvironmentVariables(): Promise<any[]> {
+    return [
+      {
+        key: 'DATABASE_URL',
+        value: '••••••••••••••••',
+        environment: 'production',
+        encrypted: true,
+        lastUpdated: '2024-01-15T10:00:00Z'
+      },
+      {
+        key: 'FHIR_SERVER_URL',
+        value: 'https://api.fhir.org/r4',
+        environment: 'production',
+        encrypted: false,
+        lastUpdated: '2024-01-10T14:30:00Z'
+      },
+      {
+        key: 'HIPAA_ENCRYPTION_KEY',
+        value: '••••••••••••••••',
+        environment: 'production',
+        encrypted: true,
+        lastUpdated: '2024-01-18T09:15:00Z'
+      }
+    ];
+  }
+
+  async getCollaborators(): Promise<any[]> {
+    return [
+      {
+        id: 'dr-smith',
+        name: 'Dr. Emily Smith',
+        email: 'emily.smith@medcenter.org',
+        role: 'owner',
+        permissions: ['read', 'write', 'admin'],
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=emily',
+        lastActive: '2024-01-18T16:30:00Z',
+        contributions: 247
+      },
+      {
+        id: 'alice-dev',
+        name: 'Alice Johnson',
+        email: 'alice@techteam.com',
+        role: 'developer',
+        permissions: ['read', 'write'],
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice',
+        lastActive: '2024-01-18T15:45:00Z',
+        contributions: 189
+      },
+      {
+        id: 'bob-security',
+        name: 'Bob Wilson',
+        email: 'bob@security.com',
+        role: 'security-reviewer',
+        permissions: ['read', 'review'],
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob',
+        lastActive: '2024-01-17T12:20:00Z',
+        contributions: 56
       }
     ];
   }
