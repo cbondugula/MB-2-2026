@@ -392,6 +392,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Global Healthcare Application Generation
+  app.post('/api/ai/generate-global-healthcare', isAuthenticated, async (req, res) => {
+    try {
+      const { countries, languages, requirements } = req.body;
+      const result = await aiService.generateGlobalHealthcareApp(countries, languages, requirements);
+      res.json({ ...result, aiModel: "Med-Gemma", countries: countries.length, languages: languages.length });
+    } catch (error) {
+      console.error("Global healthcare app generation error:", error);
+      res.status(500).json({ message: "Failed to generate global healthcare application" });
+    }
+  });
+
+  // Healthcare Standards Code Generation
+  app.post('/api/ai/generate-standards-code', isAuthenticated, async (req, res) => {
+    try {
+      const { standards, configuration } = req.body;
+      const result = await aiService.generateStandardsCode(standards, configuration);
+      res.json({ ...result, aiModel: "Med-Gemma", standards: standards.length });
+    } catch (error) {
+      console.error("Healthcare standards generation error:", error);
+      res.status(500).json({ message: "Failed to generate healthcare standards implementation" });
+    }
+  });
+
   // Advanced template routes
   app.get('/api/advanced-templates', async (req, res) => {
     try {

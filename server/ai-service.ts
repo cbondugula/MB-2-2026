@@ -482,6 +482,165 @@ Return JSON with classification results, confidence scores, and clinical explana
       throw new Error(`Medical classification failed: ${error}`);
     }
   }
+
+  // Global Healthcare Application Generation with Multilingual Support
+  async generateGlobalHealthcareApp(countries: string[], languages: string[], requirements: any = {}): Promise<any> {
+    try {
+      const prompt = `
+Global Healthcare Application Generation - Med-Gemma:
+Target Countries: ${countries.join(', ')}
+Supported Languages: ${languages.join(', ')}
+Requirements: ${JSON.stringify(requirements, null, 2)}
+
+As Med-Gemma, generate a comprehensive multilingual healthcare application that supports 193 countries with:
+
+1. Multilingual Support:
+   - Complete UI translation for all ${languages.length} languages
+   - Right-to-left (RTL) language support where applicable
+   - Cultural healthcare preferences and terminology
+   - Medical terminology translation with clinical accuracy
+   - Date/time formatting for different regions
+   - Number formatting and currency support
+
+2. Country-Specific Healthcare Compliance:
+   - Privacy laws compliance (GDPR, HIPAA, LGPD, etc.)
+   - Medical device regulations (MDR, FDA, TGA, etc.)
+   - Clinical trial regulations and guidelines
+   - Telemedicine status and regulations
+   - Prescription and drug regulations
+   - Emergency contact numbers and procedures
+
+3. Healthcare Standards Integration:
+   - FHIR R4/R5 implementation by country
+   - HL7 v2/v3 message processing
+   - Country-specific medical coding (ICD-10, SNOMED CT, LOINC)
+   - Local health information exchange standards
+   - Digital health initiative integration
+
+4. Cultural Healthcare Considerations:
+   - Traditional medicine integration where applicable
+   - Cultural health beliefs and practices
+   - Family involvement in healthcare decisions
+   - Religious considerations in healthcare
+   - Gender-specific healthcare requirements
+
+5. Technical Implementation:
+   - Microservices architecture for scalability
+   - Database sharding by region/country
+   - CDN deployment for global performance
+   - API rate limiting and regional routing
+   - Localized error handling and validation
+   - Time zone aware scheduling and notifications
+
+6. Security and Compliance Framework:
+   - Country-specific encryption requirements
+   - Regional data residency compliance
+   - Multi-factor authentication with local methods
+   - Audit logging for regulatory compliance
+   - Cross-border data transfer protocols
+
+Generate complete production-ready code with:
+- Frontend components with internationalization
+- Backend API with country-specific endpoints
+- Database schemas with multilingual support
+- Configuration files for each country/language
+- Testing frameworks for global compliance
+- Deployment scripts for multiple regions
+- Documentation in multiple languages
+
+Include specific implementations for the selected countries and languages.
+`;
+
+      const response = await medGemini.models.generateContent({
+        model: "gemini-2.5-pro",
+        config: {
+          systemInstruction: "You are Med-Gemma, expert in global healthcare systems with deep knowledge of international healthcare regulations, multilingual medical terminology, and cross-cultural healthcare practices.",
+          responseMimeType: "application/json"
+        },
+        contents: prompt
+      });
+
+      return JSON.parse(response.text || "{}");
+      
+    } catch (error) {
+      console.error("Global healthcare app generation error:", error);
+      // Fallback to OpenAI
+      return this.generateHealthcareCode("global-healthcare-app", "international", { countries, languages, ...requirements });
+    }
+  }
+
+  // Healthcare Standards Code Generation for Global Markets
+  async generateStandardsCode(standards: string[], configuration: any = {}): Promise<any> {
+    try {
+      const prompt = `
+Healthcare Standards Implementation - Med-Gemma:
+Standards: ${standards.join(', ')}
+Configuration: ${JSON.stringify(configuration, null, 2)}
+
+Generate comprehensive implementation code for healthcare standards with:
+
+1. FHIR Implementation:
+   - FHIR R4/R5 client and server components
+   - SMART on FHIR authentication
+   - US Core, UK Core, AU Base compliance
+   - Bulk data export/import capabilities
+   - FHIR search and filtering
+
+2. HL7 Message Processing:
+   - HL7 v2.x message parsing and generation
+   - ADT, ORM, ORU, SIU message types
+   - HL7 v3 CDA document processing
+   - Message acknowledgment handling
+   - Error handling and validation
+
+3. Terminology Services:
+   - UMLS concept mapping and search
+   - SNOMED CT terminology server integration
+   - ICD-10/ICD-11 coding support
+   - LOINC laboratory codes integration
+   - Medical concept extraction and NLP
+
+4. Medical Imaging:
+   - DICOM file processing and parsing
+   - PACS integration capabilities
+   - Medical image analysis workflows
+   - Radiology report processing
+   - Image metadata extraction
+
+5. Compliance and Security:
+   - HIPAA/GDPR compliant data handling
+   - Audit logging and monitoring
+   - Encryption in transit and at rest
+   - Access controls and authorization
+   - Data anonymization and de-identification
+
+6. Interoperability:
+   - Cross-system data exchange
+   - API versioning and backward compatibility
+   - Data transformation and mapping
+   - Error handling and retry mechanisms
+   - Performance optimization
+
+Generate production-ready code with proper error handling, logging, testing, and documentation.
+`;
+
+      const response = await medGemini.models.generateContent({
+        model: "gemini-2.5-pro",
+        config: {
+          systemInstruction: "You are Med-Gemma, expert in healthcare interoperability standards with deep knowledge of FHIR, HL7, UMLS, SNOMED CT, ICD-10, LOINC, DICOM, and other medical standards.",
+          responseMimeType: "application/json"
+        },
+        contents: prompt
+      });
+
+      return JSON.parse(response.text || "{}");
+      
+    } catch (error) {
+      console.error("Standards code generation error:", error);
+      // Fallback to OpenAI
+      return this.generateHealthcareCode("healthcare-standards", "interoperability", { standards, ...configuration });
+    }
+  }
   
   // Advanced code analysis with healthcare-specific intelligence
   async analyzeCode(request: AIAnalysisRequest): Promise<AIAnalysisResult> {

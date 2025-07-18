@@ -15,6 +15,9 @@ This is a healthcare-focused web application called "MedBuilder" - the world's m
 - Laboratory Information Management
 - Medical Imaging & DICOM Processing
 - Healthcare Administration & Billing
+- Global Healthcare Systems (193 Countries)
+- Multilingual Healthcare Applications (10+ Languages)
+- International Healthcare Standards (FHIR, HL7, UMLS, SNOMED CT, ICD-10, LOINC, DICOM)
 
 **Technology Stack Flexibility:**
 - Frontend: React, Angular, Vue, Flutter, React Native

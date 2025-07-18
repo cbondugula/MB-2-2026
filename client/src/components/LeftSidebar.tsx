@@ -9,7 +9,11 @@ import {
   Shield, 
   Cloud,
   Folder,
-  CheckCircle
+  CheckCircle,
+  Brain,
+  Activity,
+  Globe,
+  Building
 } from "lucide-react";
 
 export default function LeftSidebar() {
@@ -17,6 +21,10 @@ export default function LeftSidebar() {
 
   const menuItems = [
     { path: "/", label: "Dashboard", icon: Home },
+    { path: "/ai-workspace", label: "AI Workspace", icon: Brain },
+    { path: "/bert-analysis", label: "BERT Analysis", icon: Activity },
+    { path: "/standards-builder", label: "Standards Builder", icon: Building },
+    { path: "/global-healthcare", label: "Global Healthcare", icon: Globe },
     { path: "/code-editor", label: "Code Editor", icon: Code },
     { path: "/components", label: "Components", icon: Puzzle },
     { path: "/templates", label: "Templates", icon: FileCode },
