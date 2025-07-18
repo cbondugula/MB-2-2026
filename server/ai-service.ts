@@ -1,6 +1,7 @@
 // Advanced AI Service for Healthcare Development Platform
 import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
+import { ollamaService } from "./ollama-service";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ 
@@ -567,6 +568,243 @@ Include specific implementations for the selected countries and languages.
       // Fallback to OpenAI
       return this.generateHealthcareCode("global-healthcare-app", "international", { countries, languages, ...requirements });
     }
+  }
+
+  // Local Ollama Healthcare AI Generation
+  async generateWithOllama(
+    prompt: string,
+    modelName: string = 'medalpaca',
+    context: any = {}
+  ): Promise<any> {
+    try {
+      const isAvailable = await ollamaService.checkAvailability();
+      if (!isAvailable) {
+        throw new Error('Ollama service not available, using cloud fallback');
+      }
+
+      return await ollamaService.generateHealthcareResponse(modelName, prompt, context);
+    } catch (error) {
+      console.log('Ollama fallback to cloud:', error.message);
+      // Fallback to cloud models
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: "You are a healthcare AI assistant. Provide accurate medical information while emphasizing the need for professional medical consultation."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.1
+      });
+
+      return {
+        content: response.choices[0].message.content,
+        model: 'gpt-4o-fallback',
+        provider: 'openai',
+        local: false,
+        compliance: 'cloud-processing'
+      };
+    }
+  }
+
+  // Healthcare Agent Generation with Ollama Support
+  async generateHealthcareAgent(
+    agentType: string,
+    specialty: string[],
+    requirements: any = {},
+    useLocal: boolean = true
+  ): Promise<any> {
+    try {
+      const prompt = `
+Healthcare Agent Generation Request:
+Agent Type: ${agentType}
+Medical Specialties: ${specialty.join(', ')}
+Requirements: ${JSON.stringify(requirements, null, 2)}
+
+Generate a comprehensive healthcare AI agent with:
+
+1. Core Agent Architecture:
+   - Agent personality and communication style
+   - Medical expertise and knowledge base
+   - Ethical guidelines and safety protocols
+   - Compliance frameworks (HIPAA, GDPR, FDA)
+   - Multi-language support capabilities
+
+2. Technical Implementation:
+   - Agent workflow and decision trees
+   - Integration with healthcare systems (FHIR, HL7)
+   - Real-time processing capabilities
+   - Security and privacy measures
+   - Error handling and fallback systems
+
+3. Clinical Capabilities:
+   - Medical reasoning and inference
+   - Evidence-based recommendations
+   - Risk assessment and stratification
+   - Patient safety monitoring
+   - Clinical documentation support
+
+4. Deployment Configuration:
+   - Local deployment with Ollama
+   - Cloud deployment options
+   - Hybrid deployment strategies
+   - Scalability and performance optimization
+   - Monitoring and maintenance protocols
+
+5. Compliance and Certification:
+   - Regulatory compliance mapping
+   - Quality assurance frameworks
+   - Audit trails and logging
+   - Data governance protocols
+   - Clinical validation requirements
+
+Generate production-ready code, configuration files, and deployment documentation.
+`;
+
+      if (useLocal) {
+        // Try Ollama first for enhanced privacy
+        const ollamaResult = await this.generateWithOllama(prompt, 'clinical-camel', {
+          specialty: specialty[0],
+          complianceMode: 'HIPAA'
+        });
+        
+        return {
+          ...ollamaResult,
+          agentType,
+          specialty,
+          deploymentType: 'local-first',
+          privacyEnhanced: true,
+          complianceLevel: 'maximum'
+        };
+      } else {
+        // Use cloud models
+        const response = await medGemini.models.generateContent({
+          model: "gemini-2.5-pro",
+          config: {
+            systemInstruction: "You are Med-Gemma, expert in healthcare AI agent development with deep knowledge of medical workflows, compliance requirements, and clinical decision support systems.",
+            responseMimeType: "application/json"
+          },
+          contents: prompt
+        });
+
+        return {
+          content: JSON.parse(response.text || "{}"),
+          agentType,
+          specialty,
+          deploymentType: 'cloud',
+          model: 'Med-Gemma',
+          provider: 'google',
+          local: false
+        };
+      }
+    } catch (error) {
+      console.error("Healthcare agent generation error:", error);
+      throw new Error(`Failed to generate healthcare agent: ${error}`);
+    }
+  }
+
+  // Medical analysis with local model preference
+  async analyzeWithLocalModel(
+    text: string,
+    analysisType: string,
+    preferredModel: string = 'medalpaca'
+  ): Promise<any> {
+    try {
+      return await ollamaService.analyzeMedicalText(text, analysisType, preferredModel);
+    } catch (error) {
+      console.log('Using cloud fallback for medical analysis');
+      // Fallback to existing cloud-based analysis
+      return this.analyzeWithHealthcareBERT(text, analysisType, 'ClinicalBERT');
+    }
+  }
+
+  // Clinical decision support with Ollama
+  async generateClinicalDecisionSupport(
+    symptoms: string[],
+    patientHistory: string,
+    labResults: any = {},
+    useLocal: boolean = true
+  ): Promise<any> {
+    try {
+      if (useLocal) {
+        return await ollamaService.generateClinicalDecisionSupport(
+          symptoms,
+          patientHistory,
+          labResults,
+          'clinical-camel'
+        );
+      } else {
+        // Cloud-based clinical decision support
+        const prompt = `
+Clinical Decision Support Analysis:
+Symptoms: ${symptoms.join(', ')}
+Patient History: ${patientHistory}
+Lab Results: ${JSON.stringify(labResults)}
+
+Provide comprehensive clinical decision support with differential diagnosis, recommendations, and risk assessment.
+`;
+
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [
+            {
+              role: "system",
+              content: "You are a clinical decision support AI. Provide evidence-based medical analysis while emphasizing the need for professional medical consultation."
+            },
+            {
+              role: "user",
+              content: prompt
+            }
+          ],
+          response_format: { type: "json_object" },
+          temperature: 0.1
+        });
+
+        return {
+          content: JSON.parse(response.choices[0].message.content || "{}"),
+          model: 'gpt-4o',
+          provider: 'openai',
+          local: false
+        };
+      }
+    } catch (error) {
+      console.error("Clinical decision support error:", error);
+      throw new Error(`Failed to generate clinical decision support: ${error}`);
+    }
+  }
+
+  // Get Ollama model status and recommendations
+  async getOllamaStatus(): Promise<any> {
+    const status = await ollamaService.getModelStatus();
+    const healthcareModels = ollamaService.getHealthcareModels();
+    
+    return {
+      ...status,
+      healthcareModels: healthcareModels.map(model => ({
+        name: model.name,
+        specialty: model.healthcareSpecialty,
+        size: model.modelSize,
+        ram: model.requiredRAM,
+        compliance: model.complianceLevel,
+        languages: model.languages,
+        downloadSize: model.downloadSize
+      })),
+      recommendations: {
+        basicSetup: ['medalpaca', 'meditron'],
+        advancedSetup: ['clinical-camel', 'biomistral', 'radiology-llm'],
+        multilingualSetup: ['multilingual-medical'],
+        specialtySetup: {
+          radiology: ['radiology-llm'],
+          pathology: ['pathology-ai'],
+          pharmacy: ['pharmacy-llm'],
+          mentalHealth: ['mental-health-llm']
+        }
+      }
+    };
   }
 
   // Healthcare Standards Code Generation for Global Markets

@@ -416,6 +416,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Ollama Local AI Routes
+  app.get('/api/ai/ollama/status', isAuthenticated, async (req, res) => {
+    try {
+      const status = await aiService.getOllamaStatus();
+      res.json(status);
+    } catch (error) {
+      console.error("Ollama status error:", error);
+      res.status(500).json({ message: "Failed to get Ollama status" });
+    }
+  });
+
+  app.post('/api/ai/ollama/generate', isAuthenticated, async (req, res) => {
+    try {
+      const { prompt, modelName, context } = req.body;
+      const result = await aiService.generateWithOllama(prompt, modelName, context);
+      res.json(result);
+    } catch (error) {
+      console.error("Ollama generation error:", error);
+      res.status(500).json({ message: "Failed to generate with Ollama" });
+    }
+  });
+
+  app.post('/api/ai/ollama/analyze', isAuthenticated, async (req, res) => {
+    try {
+      const { text, analysisType, modelName } = req.body;
+      const result = await aiService.analyzeWithLocalModel(text, analysisType, modelName);
+      res.json(result);
+    } catch (error) {
+      console.error("Ollama analysis error:", error);
+      res.status(500).json({ message: "Failed to analyze with local model" });
+    }
+  });
+
+  app.post('/api/ai/ollama/clinical-support', isAuthenticated, async (req, res) => {
+    try {
+      const { symptoms, patientHistory, labResults, useLocal } = req.body;
+      const result = await aiService.generateClinicalDecisionSupport(
+        symptoms, 
+        patientHistory, 
+        labResults, 
+        useLocal
+      );
+      res.json(result);
+    } catch (error) {
+      console.error("Clinical decision support error:", error);
+      res.status(500).json({ message: "Failed to generate clinical decision support" });
+    }
+  });
+
+  app.post('/api/ai/generate-healthcare-agent', isAuthenticated, async (req, res) => {
+    try {
+      const { agentType, specialty, requirements, useLocal } = req.body;
+      const result = await aiService.generateHealthcareAgent(agentType, specialty, requirements, useLocal);
+      res.json(result);
+    } catch (error) {
+      console.error("Healthcare agent generation error:", error);
+      res.status(500).json({ message: "Failed to generate healthcare agent" });
+    }
+  });
+
   // Advanced template routes
   app.get('/api/advanced-templates', async (req, res) => {
     try {

@@ -296,6 +296,79 @@ export const insertSmartComponentSchema = createInsertSchema(smartComponents);
 // Types
 export type UpsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+// Memory and conversation tables for healthcare AI agents
+export const conversations = pgTable("conversations", {
+  id: varchar("id").primaryKey().notNull(),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  agentId: varchar("agent_id").notNull(),
+  title: varchar("title"),
+  summary: text("summary"),
+  medicalContext: jsonb("medical_context"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const memoryEntries = pgTable("memory_entries", {
+  id: varchar("id").primaryKey().notNull().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  agentId: varchar("agent_id").notNull(),
+  conversationId: varchar("conversation_id").references(() => conversations.id, { onDelete: "cascade" }),
+  type: varchar("type").notNull(), // 'short-term', 'long-term', 'persistent'
+  category: varchar("category").notNull(), // 'medical-history', 'preferences', 'context', etc.
+  content: text("content").notNull(),
+  importance: integer("importance").default(5), // 0-10 scale
+  tags: jsonb("tags").default(sql`'[]'`),
+  embedding: jsonb("embedding"), // Vector embedding for semantic search
+  encrypted: boolean("encrypted").default(false),
+  metadata: jsonb("metadata").default(sql`'{}'`),
+  createdAt: timestamp("created_at").defaultNow(),
+  lastAccessed: timestamp("last_accessed").defaultNow(),
+  expiresAt: timestamp("expires_at"),
+});
+
+export const userPreferences = pgTable("user_preferences", {
+  id: varchar("id").primaryKey().notNull().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  key: varchar("key").notNull(),
+  value: jsonb("value").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("user_preferences_user_key_idx").on(table.userId, table.key),
+]);
+
+// Relations for memory system
+export const conversationsRelations = relations(conversations, ({ one, many }) => ({
+  user: one(users, {
+    fields: [conversations.userId],
+    references: [users.id],
+  }),
+  memoryEntries: many(memoryEntries),
+}));
+
+export const memoryEntriesRelations = relations(memoryEntries, ({ one }) => ({
+  user: one(users, {
+    fields: [memoryEntries.userId],
+    references: [users.id],
+  }),
+  conversation: one(conversations, {
+    fields: [memoryEntries.conversationId],
+    references: [conversations.id],
+  }),
+}));
+
+export const userPreferencesRelations = relations(userPreferences, ({ one }) => ({
+  user: one(users, {
+    fields: [userPreferences.userId],
+    references: [users.id],
+  }),
+}));
+
+export type Conversation = typeof conversations.$inferSelect;
+export type MemoryEntry = typeof memoryEntries.$inferSelect;
+export type UserPreference = typeof userPreferences.$inferSelect;
 export type InsertProject = z.infer<typeof insertProjectSchema>;
 export type Project = typeof projects.$inferSelect;
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
