@@ -604,3 +604,81 @@ export type InsertAdvancedTemplate = z.infer<typeof insertAdvancedTemplateSchema
 export type AdvancedTemplate = typeof advancedTemplates.$inferSelect;
 export type InsertSmartComponent = z.infer<typeof insertSmartComponentSchema>;
 export type SmartComponent = typeof smartComponents.$inferSelect;
+
+// Contract automation tables
+export const organizations = pgTable("organizations", {
+  id: varchar("id").primaryKey().notNull(),
+  userId: varchar("user_id").references(() => users.id),
+  name: varchar("name").notNull(),
+  type: varchar("type").notNull(), // hospital, clinic, practice, etc
+  size: varchar("size").notNull(), // small, medium, large, enterprise
+  address: text("address").notNull(),
+  city: varchar("city").notNull(),
+  state: varchar("state").notNull(),
+  zipCode: varchar("zip_code").notNull(),
+  country: varchar("country").notNull(),
+  phone: varchar("phone").notNull(),
+  email: varchar("email").notNull(),
+  website: varchar("website"),
+  taxId: varchar("tax_id"),
+  contactPerson: varchar("contact_person").notNull(),
+  contactTitle: varchar("contact_title").notNull(),
+  contactEmail: varchar("contact_email").notNull(),
+  contactPhone: varchar("contact_phone").notNull(),
+  requirements: jsonb("requirements").notNull(), // compliance, integrations, features
+  estimatedUsers: integer("estimated_users").notNull(),
+  complianceNeeds: text("compliance_needs").array(),
+  integrationNeeds: text("integration_needs").array(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const contracts = pgTable("contracts", {
+  id: varchar("id").primaryKey().notNull(),
+  organizationId: varchar("organization_id").references(() => organizations.id),
+  userId: varchar("user_id").references(() => users.id),
+  planId: varchar("plan_id").notNull(),
+  customPricing: jsonb("custom_pricing").notNull(),
+  contractTerms: text("contract_terms").notNull(),
+  monthlyPrice: integer("monthly_price").notNull(),
+  annualPrice: integer("annual_price").notNull(),
+  setupFee: integer("setup_fee").default(0),
+  discountPercent: integer("discount_percent").default(0),
+  billingPeriod: varchar("billing_period").notNull(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  status: varchar("status").default("pending"), // pending, client_signed, fully_executed, cancelled
+  clientSignature: text("client_signature"),
+  clientSignedAt: timestamp("client_signed_at"),
+  repSignature: text("rep_signature"),
+  repSignedAt: timestamp("rep_signed_at"),
+  repSignedBy: varchar("rep_signed_by"),
+  paymentStatus: varchar("payment_status").default("pending"), // pending, processed, failed
+  paymentMethod: varchar("payment_method"), // ach, credit_card
+  stripePaymentIntentId: varchar("stripe_payment_intent_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const contractSignatures = pgTable("contract_signatures", {
+  id: varchar("id").primaryKey().notNull(),
+  contractId: varchar("contract_id").references(() => contracts.id),
+  signerType: varchar("signer_type").notNull(), // client, representative
+  signerName: varchar("signer_name").notNull(),
+  signerEmail: varchar("signer_email").notNull(),
+  signatureData: text("signature_data").notNull(), // base64 signature image
+  ipAddress: varchar("ip_address"),
+  signedAt: timestamp("signed_at").defaultNow(),
+});
+
+// Contract automation Zod schemas
+export const insertOrganizationSchema = createInsertSchema(organizations);
+export const insertContractSchema = createInsertSchema(contracts);
+export const insertContractSignatureSchema = createInsertSchema(contractSignatures);
+
+export type InsertOrganization = z.infer<typeof insertOrganizationSchema>;
+export type Organization = typeof organizations.$inferSelect;
+export type InsertContract = z.infer<typeof insertContractSchema>;
+export type Contract = typeof contracts.$inferSelect;
+export type InsertContractSignature = z.infer<typeof insertContractSignatureSchema>;
+export type ContractSignature = typeof contractSignatures.$inferSelect;

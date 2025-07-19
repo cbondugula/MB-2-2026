@@ -23,6 +23,8 @@ import AICodeGenerator from "@/pages/ai-code-generator";
 import ClinicalAI from "@/pages/clinical-ai";
 import AdvancedHealthcare from "@/pages/advanced-healthcare";
 import MLDashboard from "@/pages/ml-dashboard";
+import ContractOnboarding from "@/pages/contract-onboarding";
+import LegalDocuments from "@/pages/legal-documents";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -54,6 +56,8 @@ function Router() {
           <Route path="/hipaa-tools" component={HIPAATools} />
           <Route path="/pricing" component={Pricing} />
           <Route path="/custom-pricing" component={CustomPricing} />
+          <Route path="/contract-onboarding" component={ContractOnboarding} />
+          <Route path="/legal-documents" component={LegalDocuments} />
         </>
       )}
       <Route component={NotFound} />

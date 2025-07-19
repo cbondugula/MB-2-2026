@@ -1682,6 +1682,214 @@ export default function MedicationTracker() {
     ];
   }
 
+  // Contract automation operations
+  async createOrganization(organizationData: any): Promise<any> {
+    const id = `org_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const organization = {
+      id,
+      ...organizationData,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    // In a real implementation, this would use the database
+    // For now, return the organization with computed fields
+    return organization;
+  }
+
+  async generateContract(organizationId: string, planId: string, customPricing: any): Promise<any> {
+    const contractId = `contract_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Dynamic pricing calculation based on organization requirements
+    const basePrice = this.calculateDynamicPricing(customPricing);
+    const setupFee = this.calculateSetupFee(customPricing);
+    const discountPercent = this.calculateDiscount(customPricing);
+    
+    const contract = {
+      id: contractId,
+      organizationId,
+      planId,
+      customPricing,
+      monthlyPrice: basePrice.monthly,
+      annualPrice: basePrice.annual,
+      setupFee,
+      discountPercent,
+      billingPeriod: "monthly",
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
+      status: "pending",
+      paymentStatus: "pending",
+      contractTerms: this.generateDynamicContractTerms(organizationId, customPricing),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    return contract;
+  }
+
+  async getLegalDocument(organizationId: string, documentType: string): Promise<string> {
+    // Fetch organization data (would be from database)
+    const organization = await this.getOrganizationById(organizationId);
+    const contract = await this.getActiveContract(organizationId);
+    
+    const { LegalDocumentService } = await import('./legal-document-service');
+    
+    switch (documentType) {
+      case 'terms-of-service':
+        return LegalDocumentService.generateTermsOfService(organization, contract);
+      case 'privacy-policy':
+        return LegalDocumentService.generatePrivacyPolicy(organization);
+      case 'ai-usage-policy':
+        return LegalDocumentService.generateAIUsagePolicy(organization);
+      case 'business-associate-agreement':
+        return LegalDocumentService.generateBusinessAssociateAgreement(organization, contract);
+      default:
+        throw new Error(`Unknown document type: ${documentType}`);
+    }
+  }
+
+  private calculateDynamicPricing(requirements: any): { monthly: number; annual: number } {
+    let baseMonthly = 499; // Enterprise base price
+    
+    // Adjust based on organization size
+    if (requirements.estimatedUsers > 1000) baseMonthly += 200;
+    if (requirements.estimatedUsers > 5000) baseMonthly += 500;
+    
+    // Compliance add-ons
+    const complianceCount = requirements.complianceNeeds?.length || 0;
+    baseMonthly += complianceCount * 50;
+    
+    // Integration complexity
+    const integrationCount = requirements.integrationNeeds?.length || 0;
+    baseMonthly += integrationCount * 75;
+    
+    // Custom features
+    if (requirements.customDevelopment) baseMonthly += 300;
+    if (requirements.onPremiseDeployment) baseMonthly += 400;
+    if (requirements.dedicatedSupport) baseMonthly += 200;
+    
+    const annual = Math.round(baseMonthly * 10); // 20% discount for annual
+    
+    return { monthly: baseMonthly, annual };
+  }
+
+  private calculateSetupFee(requirements: any): number {
+    let setupFee = 0;
+    
+    if (requirements.customDevelopment) setupFee += 5000;
+    if (requirements.onPremiseDeployment) setupFee += 10000;
+    if (requirements.datamigration) setupFee += 3000;
+    if (requirements.customIntegrations) setupFee += 2500;
+    
+    return setupFee;
+  }
+
+  private calculateDiscount(requirements: any): number {
+    let discount = 0;
+    
+    // Multi-year commitment discount
+    if (requirements.contractLength >= 24) discount += 15;
+    else if (requirements.contractLength >= 12) discount += 10;
+    
+    // Large organization discount
+    if (requirements.estimatedUsers > 5000) discount += 10;
+    
+    // Academic/non-profit discount
+    if (requirements.organizationType?.includes('Non-profit') || 
+        requirements.organizationType?.includes('Academic')) {
+      discount += 20;
+    }
+    
+    return Math.min(discount, 30); // Max 30% discount
+  }
+
+  private generateDynamicContractTerms(organizationId: string, requirements: any): string {
+    const currentDate = new Date().toLocaleDateString();
+    
+    return `
+HEALTHCARE DEVELOPMENT PLATFORM SERVICE AGREEMENT
+
+Agreement Date: ${currentDate}
+Service Provider: MedBuilder Inc.
+Customer Organization ID: ${organizationId}
+
+DYNAMIC TERMS BASED ON YOUR REQUIREMENTS:
+
+1. SERVICE SCOPE
+- Healthcare application development platform access
+- AI-powered code generation and assistance
+- HIPAA-compliant infrastructure and tools
+${requirements.complianceNeeds?.map((compliance: string) => `- ${compliance} compliance support`).join('\n') || ''}
+${requirements.integrationNeeds?.map((integration: string) => `- ${integration} integration capabilities`).join('\n') || ''}
+
+2. PERFORMANCE COMMITMENTS
+- 99.9% uptime guarantee with SLA credits
+- <2 hour response time for critical healthcare issues
+- Real-time data backup and disaster recovery
+- 24/7 security monitoring and threat detection
+
+3. COMPLIANCE OBLIGATIONS
+- Continuous compliance monitoring and reporting
+- Regular security audits and penetration testing
+- Automated compliance checking for generated code
+- Audit trail maintenance for regulatory requirements
+
+4. PRICING STRUCTURE
+Monthly Fee: Calculated dynamically based on:
+- Organization size and user count
+- Compliance requirements complexity
+- Integration needs and custom features
+- Support level and SLA requirements
+
+5. DATA PROTECTION
+- End-to-end encryption for all data in transit and at rest
+- Role-based access controls and audit logging
+- HIPAA Business Associate Agreement (if applicable)
+- GDPR compliance for international operations
+
+6. INTELLECTUAL PROPERTY
+- Customer retains ownership of all generated applications
+- MedBuilder retains platform technology and AI model IP
+- Open source components governed by respective licenses
+
+7. TERMINATION AND DATA PORTABILITY
+- 30-day notice required for termination
+- Complete data export provided within 90 days
+- Audit trails maintained for regulatory periods
+- No vendor lock-in for generated applications
+
+This agreement incorporates organization-specific requirements and automatically updates based on compliance needs and service usage.
+`;
+  }
+
+  private async getOrganizationById(organizationId: string): Promise<any> {
+    // Placeholder - would fetch from database
+    return {
+      id: organizationId,
+      name: "Sample Healthcare Organization",
+      type: "Hospital",
+      size: "Large (251-1000 employees)",
+      country: "United States",
+      state: "California",
+      contactPerson: "Dr. Jane Smith",
+      contactTitle: "Chief Technology Officer",
+      complianceNeeds: ["HIPAA", "SOC 2"],
+      integrationNeeds: ["Epic", "FHIR R4"],
+      estimatedUsers: 500
+    };
+  }
+
+  private async getActiveContract(organizationId: string): Promise<any> {
+    // Placeholder - would fetch from database
+    return {
+      id: "contract_" + organizationId,
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+      monthlyPrice: 999,
+      annualPrice: 9990
+    };
+  }
+
   // Pricing operations
   async getPricingPlans(): Promise<any[]> {
     // Return dynamic pricing plans with real-time data

@@ -98,6 +98,14 @@ export default function Landing() {
                 <Link href="/pricing">Pricing</Link>
               </Button>
               <Button 
+                asChild
+                variant="outline"
+                className="border-blue-600 text-blue-300 hover:bg-blue-700"
+                size="sm"
+              >
+                <Link href="/legal-documents">Legal Docs</Link>
+              </Button>
+              <Button 
                 onClick={() => window.location.href = '/api/login'}
                 className="bg-green-600 hover:bg-green-700 text-white"
                 size="sm"

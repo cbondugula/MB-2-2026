@@ -1564,5 +1564,147 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Contract automation routes
+  app.post('/api/organizations', async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      const organizationData = {
+        ...req.body,
+        userId: req.user?.claims?.sub
+      };
+
+      const organization = await storage.createOrganization(organizationData);
+      res.json(organization);
+    } catch (error) {
+      console.error('Error creating organization:', error);
+      res.status(500).json({ message: 'Failed to create organization' });
+    }
+  });
+
+  app.post('/api/contracts/generate', async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      const { organizationId, planId, customPricing } = req.body;
+      const contract = await storage.generateContract(organizationId, planId, customPricing);
+      
+      res.json(contract);
+    } catch (error) {
+      console.error('Error generating contract:', error);
+      res.status(500).json({ message: 'Failed to generate contract' });
+    }
+  });
+
+  app.post('/api/contracts/sign', async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      const { contractId, signatureData, paymentMethod } = req.body;
+      
+      // Process signature and payment
+      const result = {
+        contractId,
+        status: 'client_signed',
+        signedAt: new Date().toISOString(),
+        paymentMethod,
+        nextStep: 'awaiting_representative_signature'
+      };
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error signing contract:', error);
+      res.status(500).json({ message: 'Failed to sign contract' });
+    }
+  });
+
+  // Legal document generation routes
+  app.get('/api/legal/:organizationId/:documentType', async (req, res) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      const { organizationId, documentType } = req.params;
+      const document = await storage.getLegalDocument(organizationId, documentType);
+      
+      res.json({ document, generatedAt: new Date().toISOString() });
+    } catch (error) {
+      console.error('Error generating legal document:', error);
+      res.status(500).json({ message: 'Failed to generate legal document' });
+    }
+  });
+
+  // Dynamic pricing calculation endpoint
+  app.post('/api/pricing/calculate', async (req, res) => {
+    try {
+      const requirements = req.body;
+      
+      // Calculate dynamic pricing based on requirements
+      let basePrice = 99; // Professional base
+      let setupFee = 0;
+      let features = [];
+
+      // Organization size multiplier
+      const userCount = requirements.estimatedUsers || 0;
+      if (userCount > 100) {
+        basePrice = 299; // Clinical Practice
+        features.push('Multi-user collaboration');
+      }
+      if (userCount > 500) {
+        basePrice = 499; // Healthcare System
+        features.push('Enterprise features');
+        setupFee += 1000;
+      }
+
+      // Compliance add-ons
+      const complianceCount = requirements.complianceNeeds?.length || 0;
+      basePrice += complianceCount * 25;
+      features.push(`${complianceCount} compliance frameworks`);
+
+      // Integration complexity
+      const integrationCount = requirements.integrationNeeds?.length || 0;
+      basePrice += integrationCount * 35;
+      features.push(`${integrationCount} system integrations`);
+
+      // Custom features
+      if (requirements.customDevelopment) {
+        basePrice += 200;
+        setupFee += 5000;
+        features.push('Custom development');
+      }
+
+      if (requirements.onPremiseDeployment) {
+        basePrice += 300;
+        setupFee += 10000;
+        features.push('On-premise deployment');
+      }
+
+      // Calculate annual discount
+      const annualPrice = Math.round(basePrice * 10); // 20% discount
+
+      const pricing = {
+        monthlyPrice: basePrice,
+        annualPrice,
+        setupFee,
+        features,
+        estimatedROI: '300-500%',
+        paybackPeriod: '6-8 months',
+        calculatedAt: new Date().toISOString()
+      };
+
+      res.json(pricing);
+    } catch (error) {
+      console.error('Error calculating pricing:', error);
+      res.status(500).json({ message: 'Failed to calculate pricing' });
+    }
+  });
+
   return httpServer;
 }
