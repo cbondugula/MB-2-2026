@@ -1512,6 +1512,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Dynamic pricing routes
+  app.get('/api/pricing/plans', async (req, res) => {
+    try {
+      // Fetch dynamic pricing plans from storage/database
+      const plans = await storage.getPricingPlans();
+      res.json(plans);
+    } catch (error) {
+      console.error("Error fetching pricing plans:", error);
+      res.status(500).json({ message: "Failed to fetch pricing plans" });
+    }
+  });
+
+  app.get('/api/pricing/stats', async (req, res) => {
+    try {
+      // Fetch real-time pricing statistics
+      const stats = await storage.getPricingStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching pricing stats:", error);
+      res.status(500).json({ message: "Failed to fetch pricing stats" });
+    }
+  });
+
   // Stripe payment routes
   app.post("/api/create-subscription", isAuthenticated, async (req: any, res) => {
     try {

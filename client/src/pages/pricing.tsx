@@ -5,12 +5,26 @@ import { Check, Zap, Shield, Star, ArrowRight, Users, Building, Crown } from "lu
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Pricing() {
   const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
 
-  const plans = [
+  // Fetch dynamic pricing plans from API
+  const { data: plans = [], isLoading: plansLoading } = useQuery({
+    queryKey: ['/api/pricing/plans'],
+  });
+
+  // Fetch real-time pricing statistics
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ['/api/pricing/stats'],
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
+
+  const staticPlans = [
     {
       id: 'starter',
       name: 'Healthcare Professional',
@@ -91,6 +105,9 @@ export default function Pricing() {
       limitations: []
     }
   ];
+
+  // Use dynamic plans if available, fallback to static for offline demo
+  const activePlans = plans.length > 0 ? plans : staticPlans;
 
   const handleSubscribe = async (planId: string) => {
     if (!isAuthenticated) {
@@ -188,10 +205,16 @@ export default function Pricing() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
-          {plans.map((plan) => {
-            const Icon = plan.icon;
-            const price = billingPeriod === 'monthly' ? plan.monthlyPrice : plan.annualPrice;
+        {plansLoading ? (
+          <div className="text-center mb-16">
+            <div className="animate-spin w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-gray-400">Loading pricing plans...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
+            {activePlans.map((plan: any) => {
+              const Icon = plan.icon === 'Users' ? Users : plan.icon === 'Building' ? Building : Crown;
+              const price = billingPeriod === 'monthly' ? plan.monthlyPrice : plan.annualPrice;
             
             return (
               <Card
@@ -239,17 +262,26 @@ export default function Pricing() {
                 </CardHeader>
 
                 <CardContent className="space-y-6">
-                  <Button
-                    onClick={() => handleSubscribe(plan.id)}
-                    className={`w-full ${
-                      plan.popular
-                        ? 'bg-green-600 hover:bg-green-700'
-                        : 'bg-gray-700 hover:bg-gray-600'
-                    } text-white`}
-                  >
-                    {plan.id === 'enterprise' ? 'Contact Sales' : 'Start Free Trial'}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+                  {plan.id === 'enterprise' ? (
+                    <Button
+                      asChild
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                    >
+                      <Link href="/custom-pricing">Get Custom Quote</Link>
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleSubscribe(plan.id)}
+                      className={`w-full ${
+                        plan.popular
+                          ? 'bg-green-600 hover:bg-green-700'
+                          : 'bg-gray-700 hover:bg-gray-600'
+                      } text-white`}
+                    >
+                      Start Free Trial
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  )}
 
                   <div className="space-y-3">
                     <h4 className="font-semibold text-white">What's included:</h4>
@@ -265,8 +297,9 @@ export default function Pricing() {
                 </CardContent>
               </Card>
             );
-          })}
-        </div>
+            })}
+          </div>
+        )}
 
         {/* Trust Section */}
         <div className="text-center max-w-4xl mx-auto">
@@ -280,16 +313,20 @@ export default function Pricing() {
             </div>
             <div className="flex flex-col items-center">
               <Users className="w-8 h-8 text-blue-500 mb-3" />
-              <h3 className="font-semibold text-white mb-2">Trusted by 2,500+</h3>
+              <h3 className="font-semibold text-white mb-2">
+                Trusted by {statsLoading ? "2,500+" : stats?.totalUsers?.toLocaleString() + "+"}
+              </h3>
               <p className="text-sm text-gray-400">
                 Healthcare professionals worldwide
               </p>
             </div>
             <div className="flex flex-col items-center">
               <Star className="w-8 h-8 text-yellow-500 mb-3" />
-              <h3 className="font-semibold text-white mb-2">30-Day Guarantee</h3>
+              <h3 className="font-semibold text-white mb-2">
+                {statsLoading ? "4.8★" : `${stats?.averageRating?.toFixed(1)}★`} Rating
+              </h3>
               <p className="text-sm text-gray-400">
-                Risk-free trial for all plans
+                {statsLoading ? "99.9%" : `${stats?.uptime}%`} uptime guarantee
               </p>
             </div>
           </div>
@@ -302,8 +339,12 @@ export default function Pricing() {
               Large healthcare systems and organizations can get custom pricing and features
               tailored to their specific needs.
             </p>
-            <Button size="lg" className="bg-green-600 hover:bg-green-700">
-              Contact Sales Team
+            <Button 
+              asChild 
+              size="lg" 
+              className="bg-green-600 hover:bg-green-700"
+            >
+              <Link href="/custom-pricing">Get Custom Quote</Link>
             </Button>
           </div>
         </div>
