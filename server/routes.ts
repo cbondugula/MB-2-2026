@@ -1512,5 +1512,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Stripe payment routes
+  app.post("/api/create-subscription", isAuthenticated, async (req: any, res) => {
+    try {
+      const { planId, billingPeriod } = req.body;
+      
+      // Plan pricing mapping
+      const plans = {
+        starter: { monthly: 49, annual: 39 },
+        professional: { monthly: 129, annual: 99 },
+        enterprise: { monthly: 499, annual: 399 }
+      };
+      
+      const plan = plans[planId as keyof typeof plans];
+      if (!plan) {
+        return res.status(400).json({ error: 'Invalid plan ID' });
+      }
+      
+      const amount = plan[billingPeriod as keyof typeof plan] * 100; // Convert to cents
+      
+      // For demo purposes, we'll create a simple checkout URL
+      // In production, integrate with Stripe properly
+      const checkoutUrl = `https://checkout.stripe.com/pay/demo?amount=${amount}&plan=${planId}&billing=${billingPeriod}`;
+      
+      res.json({ checkoutUrl });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   return httpServer;
 }

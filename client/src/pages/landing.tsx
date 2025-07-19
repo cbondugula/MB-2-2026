@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Shield, Code, Zap, Sparkles, Cpu, Terminal, Activity, Brain, Network, TrendingUp, CheckCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 
 export default function Landing() {
   const [prompt, setPrompt] = useState('');
@@ -89,6 +90,14 @@ export default function Landing() {
                 {showDemo ? 'Hide Demo' : 'View Demo'}
               </Button>
               <Button 
+                asChild
+                variant="outline"
+                className="border-green-600 text-green-300 hover:bg-green-700"
+                size="sm"
+              >
+                <Link href="/pricing">Pricing</Link>
+              </Button>
+              <Button 
                 onClick={() => window.location.href = '/api/login'}
                 className="bg-green-600 hover:bg-green-700 text-white"
                 size="sm"
@@ -100,47 +109,52 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* Main Content - Replit-style centered prompt */}
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[80vh] px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+      {/* Main Content - Clean centered layout */}
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[85vh] px-6 py-12">
+        <div className="max-w-5xl mx-auto text-center space-y-12">
           {/* Title */}
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-bold">
-              Turn Your Healthcare Ideas Into
-              <span className="text-green-400 block">Real Apps</span>
-            </h1>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Simply describe what you need - patient tracking, appointment scheduling, or treatment plans.
-              Our AI creates secure, professional apps instantly. No coding required.
-            </p>
-            <div className="flex flex-col items-center space-y-4">
-              <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-                <Shield className="w-4 h-4 text-blue-400" />
-                <span>Used by 2,500+ healthcare professionals</span>
-                <span>•</span>
+          <div className="space-y-8">
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+                Turn Your Healthcare Ideas Into
+                <span className="text-green-400 block mt-2">Real Apps</span>
+              </h1>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                Simply describe what you need - patient tracking, appointment scheduling, or treatment plans.
+                Our AI creates secure, professional apps instantly. No coding required.
+              </p>
+            </div>
+            
+            <div className="flex flex-col items-center space-y-6">
+              <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
+                <div className="flex items-center space-x-2">
+                  <Shield className="w-4 h-4 text-blue-400" />
+                  <span>2,500+ healthcare professionals</span>
+                </div>
+                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
                 <span>HIPAA compliant</span>
-                <span>•</span>
+                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
                 <span>Ready in minutes</span>
               </div>
               
               {/* User Mode Toggle */}
-              <div className="flex items-center space-x-1 bg-gray-800 rounded-lg p-1">
+              <div className="flex items-center space-x-2 bg-gray-800 rounded-xl p-1.5 border border-gray-700">
                 <button
                   onClick={() => setUserMode('healthcare')}
-                  className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
                     userMode === 'healthcare' 
-                      ? 'bg-green-600 text-white' 
-                      : 'text-gray-400 hover:text-white'
+                      ? 'bg-green-600 text-white shadow-lg' 
+                      : 'text-gray-400 hover:text-white hover:bg-gray-700'
                   }`}
                 >
                   Healthcare Professional
                 </button>
                 <button
                   onClick={() => setUserMode('developer')}
-                  className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
                     userMode === 'developer' 
-                      ? 'bg-green-600 text-white' 
-                      : 'text-gray-400 hover:text-white'
+                      ? 'bg-green-600 text-white shadow-lg' 
+                      : 'text-gray-400 hover:text-white hover:bg-gray-700'
                   }`}
                 >
                   Developer
@@ -150,8 +164,8 @@ export default function Landing() {
           </div>
 
           {/* Central Prompt Input */}
-          <div className="space-y-6">
-            <div className="relative">
+          <div className="max-w-4xl mx-auto">
+            <div className="relative bg-gray-800 rounded-2xl border border-gray-700 p-6 shadow-2xl">
               <Textarea
                 placeholder={userMode === 'healthcare' 
                   ? "Tell me what you need for your practice...\n\nExample: I'm a family doctor and need an app where patients can book appointments, fill out forms before visits, and I can track their health progress over time."
@@ -159,20 +173,19 @@ export default function Landing() {
                 }
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="w-full h-32 bg-gray-800 border-gray-600 text-white placeholder-gray-400 text-lg resize-none focus:border-green-500 focus:ring-green-500 font-mono"
+                className="w-full h-36 bg-transparent border-none text-white placeholder-gray-400 text-lg resize-none focus:outline-none"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                     handleGenerateApp();
                   }
                 }}
               />
-              <div className="absolute bottom-4 right-4 flex items-center space-x-2">
-                <span className="text-xs text-gray-500">Ctrl+Enter to generate</span>
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-700">
+                <span className="text-sm text-gray-500">Ctrl+Enter to generate</span>
                 <Button
                   onClick={handleGenerateApp}
                   disabled={!prompt.trim() || isGenerating}
-                  className="bg-green-600 hover:bg-green-700 text-white"
-                  size="sm"
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
                 >
                   {isGenerating ? (
                     <>
@@ -191,20 +204,20 @@ export default function Landing() {
           </div>
 
           {/* Example Prompts */}
-          <div className="space-y-4">
+          <div className="space-y-6">
             <p className="text-sm text-gray-500">
               {userMode === 'healthcare' ? 'Common requests from healthcare professionals:' : 'Try these technical examples:'}
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
               {examplePrompts.map((example, index) => (
                 <button
                   key={index}
                   onClick={() => setPrompt(example)}
-                  className="text-left p-4 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg transition-colors text-sm text-gray-300 hover:text-white"
+                  className="text-left p-5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl transition-all hover:border-green-500 text-sm text-gray-300 hover:text-white group"
                 >
-                  <div className="flex items-start space-x-2">
-                    <Terminal className="w-4 h-4 mt-0.5 text-green-500 flex-shrink-0" />
-                    <span>{example}</span>
+                  <div className="flex items-start space-x-3">
+                    <Terminal className="w-4 h-4 mt-1 text-green-500 flex-shrink-0 group-hover:text-green-400" />
+                    <span className="leading-relaxed">{example}</span>
                   </div>
                 </button>
               ))}
@@ -212,10 +225,10 @@ export default function Landing() {
           </div>
 
           {/* Quick Access Features */}
-          <div className="mt-16">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
-                <CardContent className="p-6 text-center">
+          <div className="mt-20">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all hover:border-green-500/50 hover:shadow-lg">
+                <CardContent className="p-8 text-center">
                   <Shield className="w-8 h-8 text-green-500 mx-auto mb-3" />
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {userMode === 'healthcare' ? 'Secure & Private' : 'HIPAA Compliant'}
@@ -229,8 +242,8 @@ export default function Landing() {
                 </CardContent>
               </Card>
               
-              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
-                <CardContent className="p-6 text-center">
+              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all hover:border-green-500/50 hover:shadow-lg">
+                <CardContent className="p-8 text-center">
                   <Zap className="w-8 h-8 text-blue-500 mx-auto mb-3" />
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {userMode === 'healthcare' ? 'No Coding Needed' : 'AI-Powered'}
@@ -244,8 +257,8 @@ export default function Landing() {
                 </CardContent>
               </Card>
               
-              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
-                <CardContent className="p-6 text-center">
+              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all hover:border-green-500/50 hover:shadow-lg">
+                <CardContent className="p-8 text-center">
                   <Code className="w-8 h-8 text-purple-500 mx-auto mb-3" />
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {userMode === 'healthcare' ? 'Ready to Use' : 'Full Stack'}
@@ -395,7 +408,7 @@ export default function Landing() {
                             </div>
                           ) : (
                             <div className="space-y-3">
-                              {trainingJobs?.slice(0, 2).map((job: any, index: number) => (
+                              {trainingJobs?.activeJobs?.slice(0, 2).map((job: any, index: number) => (
                                 <div key={index} className="space-y-2">
                                   <div className="flex justify-between items-center text-sm">
                                     <span className="text-gray-300">{job.modelName || `Training Job ${index + 1}`}</span>
@@ -457,7 +470,7 @@ export default function Landing() {
                             </div>
                           ) : (
                             <div className="space-y-2">
-                              {deployedModels?.slice(0, 3).map((model: any, index: number) => (
+                              {deployedModels?.availableModels?.slice(0, 3).map((model: any, index: number) => (
                                 <div key={index} className="flex justify-between items-center p-2 bg-gray-900 rounded text-sm">
                                   <div>
                                     <div className="text-white font-medium">{model.name}</div>
