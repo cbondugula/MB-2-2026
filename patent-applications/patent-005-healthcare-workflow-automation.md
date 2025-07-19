@@ -1,7 +1,7 @@
-# Patent Application 005: Dynamic Healthcare Workflow Automation System
+# Patent Application 005: Dynamic Healthcare Workflow Automation System with Predictive Resource Allocation
 
 ## TITLE OF THE INVENTION
-**Dynamic Healthcare Workflow Automation System**
+**Dynamic Healthcare Workflow Automation System with Predictive Resource Allocation**
 
 ## FIELD OF THE INVENTION
 

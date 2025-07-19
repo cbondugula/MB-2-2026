@@ -35,11 +35,11 @@
 - **Value:** $20-35M
 - **Coverage:** 12+ specialized BERT models, medical AI validation
 
-### Patent 005: Dynamic Healthcare Workflow Automation
-- **Status:** ✅ Complete with comprehensive diagrams
+### Patent 005: Dynamic Healthcare Workflow Automation System with Predictive Resource Allocation
+- **Status:** ✅ Complete with comprehensive diagrams  
 - **Claims:** 15
 - **Value:** $15-25M
-- **Coverage:** AI workflow automation, predictive analytics, process mining
+- **Coverage:** AI workflow automation, predictive resource allocation, real-time process adaptation, global compliance automation
 
 ---
 
