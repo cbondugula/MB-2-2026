@@ -4,13 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Zap, Shield, Star, ArrowRight, Users, Building, Crown } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Pricing() {
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
 
   // Fetch dynamic pricing plans from API
@@ -109,33 +110,19 @@ export default function Pricing() {
   // Use dynamic plans if available, fallback to static for offline demo
   const activePlans = plans.length > 0 ? plans : staticPlans;
 
-  const handleSubscribe = async (planId: string) => {
+  const handleSubscribe = (planId: string) => {
     if (!isAuthenticated) {
+      // Store the selected plan and redirect to login
+      localStorage.setItem('selectedPlan', planId);
+      localStorage.setItem('selectedBilling', billingPeriod);
       window.location.href = '/api/login';
       return;
     }
 
-    try {
-      const response = await fetch('/api/create-subscription', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          planId,
-          billingPeriod,
-        }),
-      });
-
-      if (response.ok) {
-        const { checkoutUrl } = await response.json();
-        window.location.href = checkoutUrl;
-      } else {
-        console.error('Failed to create subscription');
-      }
-    } catch (error) {
-      console.error('Error creating subscription:', error);
-    }
+    // Navigate to contract onboarding with the selected plan
+    localStorage.setItem('selectedPlan', planId);
+    localStorage.setItem('selectedBilling', billingPeriod);
+    setLocation('/contract-onboarding');
   };
 
   return (

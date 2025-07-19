@@ -43,6 +43,10 @@ export default function ContractOnboarding() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
+  
+  // Get selected plan from localStorage (from pricing page)
+  const selectedPlan = localStorage.getItem('selectedPlan') || 'starter';
+  const selectedBilling = localStorage.getItem('selectedBilling') || 'monthly';
   const [formData, setFormData] = useState<OrganizationData>({
     name: "",
     type: "",
@@ -80,10 +84,11 @@ export default function ContractOnboarding() {
         description: "Your organization has been registered successfully.",
       });
       
-      // Generate contract automatically
+      // Generate contract automatically using selected plan
       const contractResponse = await apiRequest("POST", "/api/contracts/generate", {
         organizationId: organization.id,
-        planId: "custom", // This comes from the pricing calculator
+        planId: selectedPlan,
+        billingPeriod: selectedBilling,
         customPricing: organization.requirements
       });
       
