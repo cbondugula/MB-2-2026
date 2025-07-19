@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,11 +9,60 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-// Removed stepper import - using Badge for step indicator
 import { Building, Users, Shield, FileText, CreditCard, Signature, CheckCircle } from "lucide-react";
-import { useMutation, queryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
+
+// Stepper Component
+interface StepperProps {
+  currentStep: number;
+  steps: Array<{
+    number: number;
+    title: string;
+    icon: React.ComponentType<any>;
+  }>;
+}
+
+function Stepper({ currentStep, steps }: StepperProps) {
+  return (
+    <div className="flex justify-center">
+      <div className="flex items-center space-x-4">
+        {steps.map((step, index) => {
+          const Icon = step.icon;
+          const isActive = step.number === currentStep;
+          const isCompleted = step.number < currentStep;
+          
+          return (
+            <div key={step.number} className="flex items-center">
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${
+                isActive 
+                  ? 'bg-blue-600 text-white' 
+                  : isCompleted 
+                    ? 'bg-green-600 text-white' 
+                    : 'bg-gray-700 text-gray-400'
+              }`}>
+                <Icon className="w-5 h-5" />
+              </div>
+              <div className="ml-2">
+                <div className={`text-sm font-medium ${
+                  isActive ? 'text-blue-400' : isCompleted ? 'text-green-400' : 'text-gray-400'
+                }`}>
+                  {step.title}
+                </div>
+              </div>
+              {index < steps.length - 1 && (
+                <div className={`mx-4 h-0.5 w-8 ${
+                  isCompleted ? 'bg-green-600' : 'bg-gray-700'
+                }`} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 interface OrganizationData {
   name: string;
@@ -158,26 +207,25 @@ export default function ContractOnboarding() {
     });
   };
 
-  const organizationTypes = [
-    "Hospital", "Health System", "Clinic", "Medical Practice", 
-    "Laboratory", "Pharmacy", "Telehealth Provider", "Research Institution",
-    "Medical Device Company", "Pharmaceutical Company", "Health Tech Startup"
-  ];
+  // Fetch dynamic organization types from API
+  const { data: organizationTypes = [] } = useQuery({
+    queryKey: ['/api/organizations/types'],
+  });
 
-  const organizationSizes = [
-    "Small (1-50 employees)", "Medium (51-250 employees)", 
-    "Large (251-1000 employees)", "Enterprise (1000+ employees)"
-  ];
+  // Fetch dynamic organization sizes from API
+  const { data: organizationSizes = [] } = useQuery({
+    queryKey: ['/api/organizations/sizes'],
+  });
 
-  const complianceOptions = [
-    "HIPAA", "GDPR", "SOC 2", "FDA 21 CFR Part 11", "HITECH", 
-    "ISO 27001", "FedRAMP", "State Regulations"
-  ];
+  // Fetch dynamic compliance options from API
+  const { data: complianceOptions = [] } = useQuery({
+    queryKey: ['/api/compliance/options'],
+  });
 
-  const integrationOptions = [
-    "Epic", "Cerner", "AllScripts", "eClinicalWorks", "athenahealth",
-    "FHIR R4", "HL7", "Custom APIs", "Cloud Storage", "Analytics Platforms"
-  ];
+  // Fetch dynamic integration options from API
+  const { data: integrationOptions = [] } = useQuery({
+    queryKey: ['/api/integrations/options'],
+  });
 
   const steps = [
     { number: 1, title: "Organization Details", icon: Building },

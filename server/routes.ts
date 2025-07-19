@@ -637,6 +637,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Dynamic contract onboarding data endpoints
+  app.get('/api/organizations/types', async (req, res) => {
+    try {
+      const organizationTypes = [
+        "Hospital", "Health System", "Clinic", "Medical Practice", 
+        "Laboratory", "Pharmacy", "Telehealth Provider", "Research Institution",
+        "Medical Device Company", "Pharmaceutical Company", "Health Tech Startup",
+        "Insurance Company", "Government Agency", "Non-Profit Health Organization",
+        "Academic Medical Center", "Ambulatory Surgery Center", "Urgent Care Center"
+      ];
+      res.json(organizationTypes);
+    } catch (error) {
+      console.error('Error fetching organization types:', error);
+      res.status(500).json({ message: 'Failed to fetch organization types' });
+    }
+  });
+
+  app.get('/api/organizations/sizes', async (req, res) => {
+    try {
+      const organizationSizes = [
+        "Small (1-50 employees)", 
+        "Medium (51-250 employees)", 
+        "Large (251-1000 employees)", 
+        "Enterprise (1000+ employees)",
+        "Startup (Pre-Revenue)",
+        "Growth Stage (Series A-B)",
+        "Mature Enterprise (1000+ employees)"
+      ];
+      res.json(organizationSizes);
+    } catch (error) {
+      console.error('Error fetching organization sizes:', error);
+      res.status(500).json({ message: 'Failed to fetch organization sizes' });
+    }
+  });
+
+  app.get('/api/compliance/options', async (req, res) => {
+    try {
+      const complianceOptions = [
+        "HIPAA", "GDPR", "SOC 2", "FDA 21 CFR Part 11", "HITECH", 
+        "ISO 27001", "FedRAMP", "State Regulations", "CCPA", "PCI DSS",
+        "ISO 13485 (Medical Devices)", "GxP (Good Practice)", "NIST Framework",
+        "Joint Commission Standards", "CMS Requirements"
+      ];
+      res.json(complianceOptions);
+    } catch (error) {
+      console.error('Error fetching compliance options:', error);
+      res.status(500).json({ message: 'Failed to fetch compliance options' });
+    }
+  });
+
+  app.get('/api/integrations/options', async (req, res) => {
+    try {
+      const integrationOptions = [
+        "Epic", "Cerner", "AllScripts", "eClinicalWorks", "athenahealth",
+        "FHIR R4", "HL7", "Custom APIs", "Cloud Storage", "Analytics Platforms",
+        "Salesforce Health Cloud", "Microsoft Azure Health Data Services",
+        "AWS HealthLake", "Google Cloud Healthcare API", "Veracyte Platform",
+        "Meditech", "NextGen", "Practice Fusion", "Kareo"
+      ];
+      res.json(integrationOptions);
+    } catch (error) {
+      console.error('Error fetching integration options:', error);
+      res.status(500).json({ message: 'Failed to fetch integration options' });
+    }
+  });
+
   app.post('/api/healthcare-organizations', isAuthenticated, async (req: any, res) => {
     try {
       const orgData = insertHealthcareOrganizationSchema.parse(req.body);
