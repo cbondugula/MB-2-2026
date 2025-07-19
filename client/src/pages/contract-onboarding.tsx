@@ -47,6 +47,14 @@ export default function ContractOnboarding() {
   // Get selected plan from localStorage (from pricing page)
   const selectedPlan = localStorage.getItem('selectedPlan') || 'starter';
   const selectedBilling = localStorage.getItem('selectedBilling') || 'monthly';
+  
+  // Get custom pricing data if available
+  const customPricingFactors = localStorage.getItem('customPricingFactors') 
+    ? JSON.parse(localStorage.getItem('customPricingFactors')!) 
+    : null;
+  const customPricingResult = localStorage.getItem('customPricingResult') 
+    ? JSON.parse(localStorage.getItem('customPricingResult')!) 
+    : null;
   const [formData, setFormData] = useState<OrganizationData>({
     name: "",
     type: "",
@@ -89,7 +97,8 @@ export default function ContractOnboarding() {
         organizationId: organization.id,
         planId: selectedPlan,
         billingPeriod: selectedBilling,
-        customPricing: organization.requirements
+        customPricing: customPricingResult || organization.requirements,
+        customFactors: customPricingFactors
       });
       
       setContractPreview(contractResponse);

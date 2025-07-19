@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { MessageSquare, Calculator, CheckCircle, ArrowLeft, Sparkles } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 interface PricingFactors {
   organizationType: string;
@@ -23,6 +23,7 @@ interface PricingFactors {
 }
 
 export default function CustomPricing() {
+  const [, setLocation] = useLocation();
   const [step, setStep] = useState(1);
   const [factors, setFactors] = useState<PricingFactors>({
     organizationType: '',
@@ -533,7 +534,18 @@ export default function CustomPricing() {
                     <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
                       Recalculate
                     </Button>
-                    <Button className="flex-1 bg-green-600 hover:bg-green-700">
+                    <Button 
+                      onClick={() => {
+                        // Store the custom pricing details for contract generation
+                        localStorage.setItem('selectedPlan', 'custom');
+                        localStorage.setItem('selectedBilling', 'monthly');
+                        localStorage.setItem('customPricingFactors', JSON.stringify(factors));
+                        localStorage.setItem('customPricingResult', JSON.stringify(calculatedPrice));
+                        // Navigate to contract onboarding
+                        setLocation('/contract-onboarding');
+                      }}
+                      className="flex-1 bg-green-600 hover:bg-green-700"
+                    >
                       Get Started with This Plan
                     </Button>
                   </div>
