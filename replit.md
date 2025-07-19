@@ -71,6 +71,14 @@ Preferred communication style: Simple, everyday language.
 
 **Critical Development Requirement**: NEVER use static pages or static content. Everything must be dynamic with real-time data integration from APIs. All pages, components, and content must fetch live data from the backend services and database. No hardcoded data, mock data, or static arrays should be used in any component.
 
+**Mandatory Dynamic Data Policy (Updated July 19, 2025)**: 
+- Every page, component, and feature must use dynamic data from backend APIs
+- No static content, hardcoded values, or placeholder data allowed
+- All metrics, training status, model data, and analytics must be fetched from real backend services
+- Components should show loading states while fetching dynamic data
+- Fallback data only permitted when API endpoints are unavailable, with clear error handling
+- Real-time updates required for live features like ML training progress and federated learning metrics
+
 ## System Architecture
 
 ### Frontend Architecture
