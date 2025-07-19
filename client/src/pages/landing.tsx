@@ -11,6 +11,7 @@ export default function Landing() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
+  const [userMode, setUserMode] = useState<'healthcare' | 'developer'>('healthcare');
 
   // Fetch dynamic ML data when demo is shown
   const { data: mlMetrics, isLoading: mlLoading } = useQuery({
@@ -33,7 +34,16 @@ export default function Landing() {
     retry: false,
   });
 
-  const examplePrompts = [
+  const healthcarePrompts = [
+    "I need an app to schedule patient appointments and send reminders",
+    "Create a simple form for patients to update their medical history",
+    "Build a medication tracker that alerts patients when to take pills",
+    "I want to track patient vitals and create progress reports",
+    "Create a secure messaging app for my clinic staff",
+    "Build a tool to manage patient referrals between doctors"
+  ];
+
+  const developerPrompts = [
     "Create a HIPAA-compliant patient registration form with real-time validation",
     "Build a telemedicine platform with video calling and secure messaging",
     "Generate an EHR integration dashboard with FHIR R4 support",
@@ -41,6 +51,8 @@ export default function Landing() {
     "Create a medical device data collection app with IoT sensors",
     "Build a pharmaceutical drug tracking system with blockchain"
   ];
+
+  const examplePrompts = userMode === 'healthcare' ? healthcarePrompts : developerPrompts;
 
   const handleGenerateApp = () => {
     if (!prompt.trim()) return;
@@ -94,20 +106,57 @@ export default function Landing() {
           {/* Title */}
           <div className="space-y-4">
             <h1 className="text-4xl md:text-6xl font-bold">
-              Build Healthcare Apps with
-              <span className="text-green-400 block">AI-Powered Code</span>
+              Turn Your Healthcare Ideas Into
+              <span className="text-green-400 block">Real Apps</span>
             </h1>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Describe your healthcare application and get production-ready, HIPAA-compliant code instantly.
-              From EHR systems to telemedicine platforms.
+              Simply describe what you need - patient tracking, appointment scheduling, or treatment plans.
+              Our AI creates secure, professional apps instantly. No coding required.
             </p>
+            <div className="flex flex-col items-center space-y-4">
+              <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
+                <Shield className="w-4 h-4 text-blue-400" />
+                <span>Used by 2,500+ healthcare professionals</span>
+                <span>•</span>
+                <span>HIPAA compliant</span>
+                <span>•</span>
+                <span>Ready in minutes</span>
+              </div>
+              
+              {/* User Mode Toggle */}
+              <div className="flex items-center space-x-1 bg-gray-800 rounded-lg p-1">
+                <button
+                  onClick={() => setUserMode('healthcare')}
+                  className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                    userMode === 'healthcare' 
+                      ? 'bg-green-600 text-white' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Healthcare Professional
+                </button>
+                <button
+                  onClick={() => setUserMode('developer')}
+                  className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                    userMode === 'developer' 
+                      ? 'bg-green-600 text-white' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Developer
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Central Prompt Input */}
           <div className="space-y-6">
             <div className="relative">
               <Textarea
-                placeholder="Describe the healthcare application you want to build..."
+                placeholder={userMode === 'healthcare' 
+                  ? "Tell me what you need for your practice...\n\nExample: I'm a family doctor and need an app where patients can book appointments, fill out forms before visits, and I can track their health progress over time."
+                  : "Describe your healthcare application...\n\nExample: Create a HIPAA-compliant patient portal with secure messaging, appointment scheduling, and EHR integration using FHIR R4 standards."
+                }
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 className="w-full h-32 bg-gray-800 border-gray-600 text-white placeholder-gray-400 text-lg resize-none focus:border-green-500 focus:ring-green-500 font-mono"
@@ -143,7 +192,9 @@ export default function Landing() {
 
           {/* Example Prompts */}
           <div className="space-y-4">
-            <p className="text-sm text-gray-500">Try these examples:</p>
+            <p className="text-sm text-gray-500">
+              {userMode === 'healthcare' ? 'Common requests from healthcare professionals:' : 'Try these technical examples:'}
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl mx-auto">
               {examplePrompts.map((example, index) => (
                 <button
@@ -166,24 +217,45 @@ export default function Landing() {
               <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
                 <CardContent className="p-6 text-center">
                   <Shield className="w-8 h-8 text-green-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-white mb-2">HIPAA Compliant</h3>
-                  <p className="text-gray-400 text-sm">Built-in compliance checking and security scanning</p>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {userMode === 'healthcare' ? 'Secure & Private' : 'HIPAA Compliant'}
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    {userMode === 'healthcare' 
+                      ? 'Your patient data stays safe with medical-grade security'
+                      : 'Built-in compliance checking and security scanning'
+                    }
+                  </p>
                 </CardContent>
               </Card>
               
               <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
                 <CardContent className="p-6 text-center">
                   <Zap className="w-8 h-8 text-blue-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-white mb-2">AI-Powered</h3>
-                  <p className="text-gray-400 text-sm">Claude Sonnet 4 and Med-Gemma models for medical AI</p>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {userMode === 'healthcare' ? 'No Coding Needed' : 'AI-Powered'}
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    {userMode === 'healthcare' 
+                      ? 'Just describe what you need - we handle all the technical stuff'
+                      : 'Claude Sonnet 4 and Med-Gemma models for medical AI'
+                    }
+                  </p>
                 </CardContent>
               </Card>
               
               <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
                 <CardContent className="p-6 text-center">
                   <Code className="w-8 h-8 text-purple-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-white mb-2">Full Stack</h3>
-                  <p className="text-gray-400 text-sm">Frontend, backend, database, and deployment included</p>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {userMode === 'healthcare' ? 'Ready to Use' : 'Full Stack'}
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    {userMode === 'healthcare' 
+                      ? 'Works on phones, tablets, and computers right away'
+                      : 'Frontend, backend, database, and deployment included'
+                    }
+                  </p>
                 </CardContent>
               </Card>
             </div>
