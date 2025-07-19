@@ -286,11 +286,11 @@ export default function ContractOnboarding() {
                     <Label htmlFor="type" className="text-white">Organization Type *</Label>
                     <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
                       <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                        <SelectValue placeholder="Select type" />
+                        <SelectValue placeholder={organizationTypes.length > 0 ? "Select type" : "Loading..."} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-gray-700 border-gray-600">
                         {organizationTypes.map((type) => (
-                          <SelectItem key={type} value={type}>{type}</SelectItem>
+                          <SelectItem key={type} value={type} className="text-white hover:bg-gray-600">{type}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -300,11 +300,11 @@ export default function ContractOnboarding() {
                     <Label htmlFor="size" className="text-white">Organization Size *</Label>
                     <Select value={formData.size} onValueChange={(value) => setFormData({...formData, size: value})}>
                       <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                        <SelectValue placeholder="Select size" />
+                        <SelectValue placeholder={organizationSizes.length > 0 ? "Select size" : "Loading..."} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-gray-700 border-gray-600">
                         {organizationSizes.map((size) => (
-                          <SelectItem key={size} value={size}>{size}</SelectItem>
+                          <SelectItem key={size} value={size} className="text-white hover:bg-gray-600">{size}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -422,59 +422,67 @@ export default function ContractOnboarding() {
                 {/* Compliance Requirements */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-white">Compliance Requirements</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {complianceOptions.map((option) => (
-                      <div key={option} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={option}
-                          checked={formData.complianceNeeds.includes(option)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setFormData({
-                                ...formData,
-                                complianceNeeds: [...formData.complianceNeeds, option]
-                              });
-                            } else {
-                              setFormData({
-                                ...formData,
-                                complianceNeeds: formData.complianceNeeds.filter(item => item !== option)
-                              });
-                            }
-                          }}
-                        />
-                        <Label htmlFor={option} className="text-white text-sm">{option}</Label>
-                      </div>
-                    ))}
-                  </div>
+                  {complianceOptions.length === 0 ? (
+                    <div className="text-gray-400">Loading compliance options...</div>
+                  ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {complianceOptions.map((option) => (
+                        <div key={option} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={option}
+                            checked={formData.complianceNeeds.includes(option)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setFormData({
+                                  ...formData,
+                                  complianceNeeds: [...formData.complianceNeeds, option]
+                                });
+                              } else {
+                                setFormData({
+                                  ...formData,
+                                  complianceNeeds: formData.complianceNeeds.filter(item => item !== option)
+                                });
+                              }
+                            }}
+                          />
+                          <Label htmlFor={option} className="text-white text-sm cursor-pointer">{option}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Integration Requirements */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-white">Integration Requirements</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {integrationOptions.map((option) => (
-                      <div key={option} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={option}
-                          checked={formData.integrationNeeds.includes(option)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setFormData({
-                                ...formData,
-                                integrationNeeds: [...formData.integrationNeeds, option]
-                              });
-                            } else {
-                              setFormData({
-                                ...formData,
-                                integrationNeeds: formData.integrationNeeds.filter(item => item !== option)
-                              });
-                            }
-                          }}
-                        />
-                        <Label htmlFor={option} className="text-white text-sm">{option}</Label>
-                      </div>
-                    ))}
-                  </div>
+                  {integrationOptions.length === 0 ? (
+                    <div className="text-gray-400">Loading integration options...</div>
+                  ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {integrationOptions.map((option) => (
+                        <div key={option} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={option}
+                            checked={formData.integrationNeeds.includes(option)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setFormData({
+                                  ...formData,
+                                  integrationNeeds: [...formData.integrationNeeds, option]
+                                });
+                              } else {
+                                setFormData({
+                                  ...formData,
+                                  integrationNeeds: formData.integrationNeeds.filter(item => item !== option)
+                                });
+                              }
+                            }}
+                          />
+                          <Label htmlFor={option} className="text-white text-sm cursor-pointer">{option}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <Button
