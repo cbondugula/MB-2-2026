@@ -84,9 +84,18 @@ export default function ContractOnboarding() {
   // Organization creation mutation
   const createOrganizationMutation = useMutation({
     mutationFn: async (data: OrganizationData) => {
+      // If not authenticated, redirect to login first
+      if (!isAuthenticated) {
+        // Store the organization data for after login
+        localStorage.setItem('pendingOrganization', JSON.stringify(data));
+        window.location.href = '/api/login';
+        return null;
+      }
       return await apiRequest("POST", "/api/organizations", data);
     },
     onSuccess: async (organization) => {
+      if (!organization) return; // Login redirect case
+      
       toast({
         title: "Organization Created",
         description: "Your organization has been registered successfully.",
@@ -178,23 +187,8 @@ export default function ContractOnboarding() {
     { number: 5, title: "Complete", icon: CheckCircle }
   ];
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <Card className="bg-gray-800 border-gray-700 p-8">
-          <CardHeader className="text-center">
-            <CardTitle className="text-white">Authentication Required</CardTitle>
-            <CardDescription>Please log in to access contract onboarding.</CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
-            <Button onClick={() => window.location.href = '/api/login'}>
-              Log In
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // Allow access for both authenticated and unauthenticated users
+  // The authentication flow will happen during the contract process
 
   return (
     <div className="min-h-screen bg-gray-900 py-12">
@@ -440,7 +434,12 @@ export default function ContractOnboarding() {
                   disabled={createOrganizationMutation.isPending}
                   className="w-full bg-green-600 hover:bg-green-700"
                 >
-                  {createOrganizationMutation.isPending ? "Processing..." : "Generate Contract"}
+                  {createOrganizationMutation.isPending 
+                    ? "Processing..." 
+                    : isAuthenticated 
+                      ? "Generate Contract" 
+                      : "Continue with Login & Generate Contract"
+                  }
                 </Button>
               </form>
             </CardContent>
