@@ -276,10 +276,10 @@ export default function Dashboard() {
                       HIPAA Tools
                     </Button>
                   </Link>
-                  <Link href="/standards-builder">
+                  <Link href="/ml-dashboard">
                     <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
-                      <FileText className="w-4 h-4 mr-2" />
-                      Standards
+                      <Activity className="w-4 h-4 mr-2" />
+                      ML Platform
                     </Button>
                   </Link>
                 </div>

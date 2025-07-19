@@ -20,6 +20,7 @@ import AppBuilder from "@/pages/app-builder";
 import AICodeGenerator from "@/pages/ai-code-generator";
 import ClinicalAI from "@/pages/clinical-ai";
 import AdvancedHealthcare from "@/pages/advanced-healthcare";
+import MLDashboard from "@/pages/ml-dashboard";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -42,6 +43,7 @@ function Router() {
           <Route path="/ai-code-generator" component={AICodeGenerator} />
           <Route path="/clinical-ai" component={ClinicalAI} />
           <Route path="/advanced-healthcare" component={AdvancedHealthcare} />
+          <Route path="/ml-dashboard" component={MLDashboard} />
           <Route path="/preview" component={Preview} />
           <Route path="/hipaa-tools" component={HIPAATools} />
         </>
