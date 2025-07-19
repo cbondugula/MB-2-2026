@@ -1409,33 +1409,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // ML Model Training Status & Analytics
-  app.get('/api/ml/training-status', isAuthenticated, async (req, res) => {
+  // ML Model Training Status & Analytics (Public for demo with dynamic data)
+  app.get('/api/ml/training-status', async (req, res) => {
     try {
+      // Generate dynamic training progress
+      const now = Date.now();
+      const baseProgress = 65 + (now % 30000) / 1000; // Varies between 65-95
+      const currentEpoch = 12 + Math.floor((now % 60000) / 5000); // Varies between 12-24
+      const accuracy = 0.82 + (now % 10000) / 100000; // Varies around 0.82-0.92
+      
       const status = {
         activeJobs: [
           {
             id: "clinical-bert-001",
-            modelType: "Clinical Entity Recognition",
+            modelName: "Clinical Entity Recognition",
+            modelType: "Clinical Entity Recognition", 
             dataset: "Electronic Health Records",
             status: "training",
-            progress: 73,
-            metrics: { accuracy: 0.87, precision: 0.84, recall: 0.89, f1Score: 0.86, loss: 0.23, epoch: 14 }
+            progress: Math.min(95, Math.round(baseProgress)),
+            currentEpoch,
+            totalEpochs: 25,
+            accuracy,
+            domain: "clinical-notes",
+            metrics: { 
+              accuracy, 
+              precision: accuracy - 0.03, 
+              recall: accuracy + 0.02, 
+              f1Score: accuracy - 0.01, 
+              loss: 0.35 - (accuracy * 0.15),
+              epoch: currentEpoch 
+            }
           },
           {
             id: "federated-rag-001", 
+            modelName: "Federated Healthcare Knowledge",
             modelType: "Federated Healthcare Knowledge",
             dataset: "Multi-Hospital Knowledge Base",
             status: "completed",
             progress: 100,
+            currentEpoch: 25,
+            totalEpochs: 25,
+            accuracy: 0.92,
+            domain: "multi-institutional",
+            f1Score: "0.92",
             metrics: { accuracy: 0.92, precision: 0.91, recall: 0.93, f1Score: 0.92, loss: 0.18, epoch: 25 }
+          },
+          {
+            id: "pathology-ai-002",
+            modelName: "Pathology Image Analysis",
+            modelType: "Computer Vision",
+            dataset: "Digital Pathology Images",
+            status: "training",
+            progress: Math.min(85, Math.round(baseProgress + 15)),
+            currentEpoch: Math.min(20, currentEpoch + 5),
+            totalEpochs: 30,
+            accuracy: Math.min(0.91, accuracy + 0.05),
+            domain: "pathology-imaging",
+            metrics: { 
+              accuracy: Math.min(0.91, accuracy + 0.05), 
+              precision: 0.88, 
+              recall: 0.87, 
+              f1Score: 0.875, 
+              loss: 0.21,
+              epoch: Math.min(20, currentEpoch + 5)
+            }
           }
         ],
-        availableModels: [
-          { id: "clinical-bert", name: "ClinicalBERT", type: "nlp", domain: "clinical-notes", accuracy: 0.89 },
-          { id: "bio-bert", name: "BioBERT", type: "nlp", domain: "biomedical-literature", accuracy: 0.92 },
-          { id: "federated-rag", name: "Federated RAG", type: "knowledge-retrieval", domain: "multi-institutional", accuracy: 0.94 }
-        ]
+        completedJobs: [
+          {
+            id: "drug-discovery-001",
+            modelName: "Drug Molecular Analysis",
+            status: "completed",
+            accuracy: 0.94,
+            completedAt: new Date(now - 3600000).toISOString() // 1 hour ago
+          }
+        ],
+        timestamp: new Date().toISOString()
       };
       res.json(status);
     } catch (error) {
