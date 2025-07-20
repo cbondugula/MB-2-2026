@@ -67,6 +67,13 @@ export default function PowerEnhancementBanner() {
                 </Button>
               </Link>
               
+              <Link href="/scalability-dashboard">
+                <Button variant="outline" className="border-yellow-600 text-yellow-300 hover:bg-yellow-900">
+                  <ArrowRight className="w-4 h-4 mr-2" />
+                  100M+ Goal Tracker
+                </Button>
+              </Link>
+              
               <div className="flex items-center space-x-2 text-sm text-gray-400">
                 <Code className="w-4 h-4" />
                 <span>Patent 005 Implementation</span>

@@ -26,6 +26,7 @@ import MLDashboard from "@/pages/ml-dashboard";
 import ContractOnboarding from "@/pages/contract-onboarding";
 import LegalDocuments from "@/pages/legal-documents";
 import SuperAgent from "@/pages/super-agent";
+import ScalabilityDashboard from "@/pages/scalability-dashboard";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -62,6 +63,7 @@ function Router() {
           <Route path="/contract-onboarding" component={ContractOnboarding} />
           <Route path="/legal-documents" component={LegalDocuments} />
           <Route path="/super-agent" component={SuperAgent} />
+          <Route path="/scalability-dashboard" component={ScalabilityDashboard} />
         </>
       )}
       <Route component={NotFound} />
