@@ -2061,29 +2061,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const PatentFilingService = (await import('./patent-filing-service')).default;
       
-      const filingStatus = {
-        portfolioOverview: await PatentFilingService.fileAllPatentsEmergency(),
-        filingStrategy: PatentFilingService.getFilingStrategy(),
-        tradeSecretProtection: PatentFilingService.implementTradeSecretProtection(),
-        
-        usptoDemonstration: {
-          functionalPrototypes: 'IMPLEMENTED_AND_TESTED',
-          revolutionaryCapabilities: 'PROVEN_WORKING_SOLUTIONS',
-          competitiveAnalysis: 'ZERO_EXISTING_COMPETITION_CONFIRMED',
-          commercialViability: '$800M-$1.12B_PORTFOLIO_VALUE',
-          technicalNovelty: 'FIRST_EVER_VOICE_CONTROLLED_BACKEND_SYSTEMS'
-        }
-      };
+      const emergencyFiling = await PatentFilingService.fileEmergencyPatentApplications();
 
       res.json({
         success: true,
         usptFilingReady: true,
-        filingStatus,
+        emergencyFiling,
         ipProtectionLevel: 'MAXIMUM_SECURITY_IMPLEMENTED'
       });
     } catch (error) {
       res.status(500).json({ 
-        message: 'USPTO filing status check failed',
+        message: 'USPTO emergency filing failed',
+        error: error.message 
+      });
+    }
+  });
+
+  app.get('/api/patents/domain-expansion', async (req, res) => {
+    try {
+      const NoCodeDomainExpansion = (await import('./no-code-domain-expansion')).default;
+      
+      const domainAnalysis = {
+        opportunities: NoCodeDomainExpansion.getDomainExpansionOpportunities(),
+        filingStrategy: NoCodeDomainExpansion.analyzePatentFilingStrategy(),
+        portfolioValue: NoCodeDomainExpansion.calculateCombinedPortfolioValue(),
+        roadmap: NoCodeDomainExpansion.generateImplementationRoadmap()
+      };
+
+      res.json({
+        success: true,
+        domainExpansionReady: true,
+        analysis: domainAnalysis,
+        recommendation: 'SEPARATE_PATENT_APPLICATIONS_FOR_EACH_DOMAIN'
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Domain expansion analysis failed',
         error: error.message 
       });
     }
