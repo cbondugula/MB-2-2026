@@ -29,6 +29,7 @@ import SuperAgent from "@/pages/super-agent";
 import ScalabilityDashboard from "@/pages/scalability-dashboard";
 import VisualBuilder from "@/pages/visual-builder";
 import MLPythonIntegration from "@/pages/ml-python-integration";
+import MultiAIVerification from "@/pages/multi-ai-verification";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -68,6 +69,7 @@ function Router() {
           <Route path="/scalability-dashboard" component={ScalabilityDashboard} />
           <Route path="/visual-builder" component={VisualBuilder} />
           <Route path="/ml-python" component={MLPythonIntegration} />
+          <Route path="/multi-ai-verification" component={MultiAIVerification} />
         </>
       )}
       <Route component={NotFound} />
