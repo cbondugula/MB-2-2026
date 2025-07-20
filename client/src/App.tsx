@@ -30,6 +30,7 @@ import ScalabilityDashboard from "@/pages/scalability-dashboard";
 import VisualBuilder from "@/pages/visual-builder";
 import MLPythonIntegration from "@/pages/ml-python-integration";
 import MultiAIVerification from "@/pages/multi-ai-verification";
+import PatentVerificationDashboard from "@/pages/patent-verification-dashboard";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -70,6 +71,7 @@ function Router() {
           <Route path="/visual-builder" component={VisualBuilder} />
           <Route path="/ml-python" component={MLPythonIntegration} />
           <Route path="/multi-ai-verification" component={MultiAIVerification} />
+          <Route path="/patent-verification" component={PatentVerificationDashboard} />
         </>
       )}
       <Route component={NotFound} />
