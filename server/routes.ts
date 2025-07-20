@@ -22,6 +22,8 @@ import { standardsIntegrationService } from "./standards-integration-service";
 import { PATENTABLE_INNOVATIONS, PatentDocumentationService } from "./patent-documentation";
 import { healthcareMLService } from "./ml-service";
 import { z } from "zod";
+import { superAgentService } from "./super-agent-service";
+import { workflowAutomationService } from "./workflow-automation-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -700,6 +702,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error fetching integration options:', error);
       res.status(500).json({ message: 'Failed to fetch integration options' });
+    }
+  });
+
+  // Super Agent API Endpoints
+  app.post('/api/super-agent/orchestrate', async (req, res) => {
+    try {
+      const request = req.body;
+      const result = await superAgentService.orchestrateAI(request);
+      res.json(result);
+    } catch (error) {
+      console.error('Super agent orchestration failed:', error);
+      res.status(500).json({ 
+        success: false,
+        message: 'Super agent orchestration failed',
+        error: error.message 
+      });
+    }
+  });
+
+  // Workflow Automation API Endpoints (Patent 005)
+  app.post('/api/workflows/optimize', async (req, res) => {
+    try {
+      const { workflowId, currentMetrics } = req.body;
+      const optimization = await workflowAutomationService.optimizeWorkflowWithAI(workflowId, currentMetrics);
+      res.json(optimization);
+    } catch (error) {
+      console.error('Workflow optimization failed:', error);
+      res.status(500).json({ message: 'Workflow optimization failed', error: error.message });
+    }
+  });
+
+  app.post('/api/workflows/predict-resources', async (req, res) => {
+    try {
+      const { workflowId, timeWindow, organizationType } = req.body;
+      const predictions = await workflowAutomationService.predictResourceAllocation(workflowId, timeWindow, organizationType);
+      res.json(predictions);
+    } catch (error) {
+      console.error('Resource prediction failed:', error);
+      res.status(500).json({ message: 'Resource prediction failed', error: error.message });
+    }
+  });
+
+  app.post('/api/workflows/adapt-realtime', async (req, res) => {
+    try {
+      const { workflowId, triggerEvent, currentState } = req.body;
+      const adaptation = await workflowAutomationService.adaptProcessInRealTime(workflowId, triggerEvent, currentState);
+      res.json(adaptation);
+    } catch (error) {
+      console.error('Real-time adaptation failed:', error);
+      res.status(500).json({ message: 'Real-time adaptation failed', error: error.message });
+    }
+  });
+
+  app.post('/api/workflows/compliance-automation', async (req, res) => {
+    try {
+      const { workflowId, countries, regulations } = req.body;
+      const compliance = await workflowAutomationService.automateGlobalCompliance(workflowId, countries, regulations);
+      res.json(compliance);
+    } catch (error) {
+      console.error('Compliance automation failed:', error);
+      res.status(500).json({ message: 'Compliance automation failed', error: error.message });
+    }
+  });
+
+  app.post('/api/workflows/create-intelligent', async (req, res) => {
+    try {
+      const { workflowTemplate, organizationContext, complianceRequirements } = req.body;
+      const intelligentWorkflow = await workflowAutomationService.createIntelligentWorkflow(
+        workflowTemplate, 
+        organizationContext, 
+        complianceRequirements
+      );
+      res.json(intelligentWorkflow);
+    } catch (error) {
+      console.error('Intelligent workflow creation failed:', error);
+      res.status(500).json({ message: 'Intelligent workflow creation failed', error: error.message });
+    }
+  });
+
+  app.get('/api/workflows/:workflowId/performance', async (req, res) => {
+    try {
+      const { workflowId } = req.params;
+      const performance = await workflowAutomationService.analyzeWorkflowPerformance(workflowId);
+      res.json(performance);
+    } catch (error) {
+      console.error('Workflow performance analysis failed:', error);
+      res.status(500).json({ message: 'Workflow performance analysis failed', error: error.message });
     }
   });
 

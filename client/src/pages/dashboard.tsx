@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import PowerEnhancementBanner from "@/components/power-enhancement-banner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -188,6 +189,9 @@ export default function Dashboard() {
             </div>
 
             <div className="flex-1 p-6 space-y-6">
+              {/* Power Enhancement Banner */}
+              <PowerEnhancementBanner />
+              
               {/* AI Prompt Input */}
               <div className="space-y-3">
                 <label className="text-sm text-gray-400">Describe your healthcare application</label>
@@ -274,6 +278,12 @@ export default function Dashboard() {
                     <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
                       <Shield className="w-4 h-4 mr-2" />
                       HIPAA Tools
+                    </Button>
+                  </Link>
+                  <Link href="/super-agent">
+                    <Button variant="outline" size="sm" className="w-full border-yellow-600 text-yellow-300 hover:bg-yellow-900 bg-yellow-900/20">
+                      <Zap className="w-4 h-4 mr-2" />
+                      Super Agent
                     </Button>
                   </Link>
                   <Link href="/ml-dashboard">
