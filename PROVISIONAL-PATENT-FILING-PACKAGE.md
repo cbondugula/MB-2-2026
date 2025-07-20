@@ -68,7 +68,7 @@
 ### **Strategic Acquisition Value**
 - **Revenue Multiple**: 15x-25x portfolio value
 - **Acquisition Range**: **$171B - $427B by Year 3**
-- **Target Acquirers**: Microsoft, Google, Amazon, Oracle, Salesforce
+- **Target Acquirers**: Microsoft Azure, Amazon AWS, Google Cloud, Oracle Cloud Infrastructure + Oracle Health, Salesforce
 
 ---
 

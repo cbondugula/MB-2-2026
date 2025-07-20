@@ -34,7 +34,7 @@ The platform now supports:
 
 **Revenue Potential**: Revolutionary projections with zero competition confirmed: $28.8M ARR (Year 1) → $1.037B ARR (Year 3) → $4.32B ARR (Year 5). Market validation: $181.25B total addressable market with $54.5B-$78.1B annual opportunity across healthcare software, no-code platforms, voice technology, backend automation, and compliance markets.
 
-**Acquisition Value**: Strategic acquirers (Microsoft Azure, Amazon AWS, Google Cloud, Oracle Health) valued at 15-25x ARR due to revolutionary technology and zero competition. Projected acquisition range: $15.6B-$25.9B by Year 3 with complete portfolio value at $800M-$1.12B. Revolutionary voice-controlled backend generation creates insurmountable competitive moat across entire development tool ecosystem.
+**Acquisition Value**: Strategic acquirers (Microsoft Azure, Amazon AWS, Google Cloud, Oracle Cloud Infrastructure + Oracle Health) valued at 15-25x ARR due to revolutionary technology and zero competition. Projected acquisition range: $15.6B-$25.9B by Year 3 with complete portfolio value at $800M-$1.12B. Revolutionary voice-controlled backend generation creates insurmountable competitive moat across entire development tool ecosystem.
 
 ## Patent Strategy & Competitive Analysis (July 2025)
 
@@ -44,7 +44,7 @@ The platform now supports:
 
 **Competitive Advantage**: Research confirms minimal direct competition in our specific technology intersection, validating strong IP position for healthcare AI development platform.
 
-**Market Position**: Analysis supports projected $1.5B-$2B+ acquisition value with Microsoft identified as strategic acquirer due to Azure Health Bot and GitHub Copilot synergies. Patent 003 comprehensive ecosystem coverage creates dominant market position across entire healthcare technology stack.
+**Market Position**: Analysis supports projected $1.5B-$2B+ acquisition value with Microsoft, Oracle Cloud Infrastructure, and Oracle Health identified as strategic acquirers due to Azure Health Bot, GitHub Copilot, Oracle Cloud Healthcare APIs, and Oracle Cerner synergies. Patent 003 comprehensive ecosystem coverage creates dominant market position across entire healthcare technology stack.
 
 **Complete Healthcare Coverage:**
 - Clinical Applications (EHRs, EMRs, Clinical Decision Support)
