@@ -68,7 +68,7 @@ export default class PatentFilingService {
           workingDemo: '99.7% accuracy in predicting healthcare compliance violations before they occur',
           technicalNovelty: 'First AI system predicting compliance violations with voice-controlled remediation',
           commercialViability: 'Healthcare compliance violations cost industry $8.3B annually',
-          filingStatus: 'USPTO_APPLICATION_SUBMITTED'
+          filingStatus: 'PREPARED_FOR_USER_SUBMISSION'
         },
         
         patent012: {
@@ -81,7 +81,7 @@ export default class PatentFilingService {
           workingDemo: 'Healthcare professionals generate complete backend infrastructure using voice commands',
           technicalNovelty: 'First system enabling voice-controlled creation of HIPAA-compliant backend systems',
           commercialViability: 'Proven demand from healthcare organizations for rapid development tools',
-          filingStatus: 'USPTO_APPLICATION_SUBMITTED'
+          filingStatus: 'PREPARED_FOR_USER_SUBMISSION'
         },
         
         patent013: {
@@ -94,7 +94,7 @@ export default class PatentFilingService {
           workingDemo: 'Voice commands create and manage healthcare databases with automatic HIPAA compliance',
           technicalNovelty: 'First voice-controlled database system with integrated regulatory compliance',
           commercialViability: 'Healthcare organizations need simplified database management with compliance',
-          filingStatus: 'USPTO_APPLICATION_SUBMITTED'
+          filingStatus: 'PREPARED_FOR_USER_SUBMISSION'
         },
         
         patent022: {
@@ -107,7 +107,7 @@ export default class PatentFilingService {
           workingDemo: 'Healthcare professionals train custom ML models using only voice commands',
           technicalNovelty: 'First voice-controlled ML training system for healthcare professionals',
           commercialViability: 'Democratizes ML for healthcare professionals without programming skills',
-          filingStatus: 'USPTO_APPLICATION_SUBMITTED'
+          filingStatus: 'PREPARED_FOR_USER_SUBMISSION'
         }
       },
       
@@ -135,10 +135,10 @@ export default class PatentFilingService {
       phasesPlanned: ['VoiceBuilder domain patents', 'International PCT filing'],
       
       patentStatus: {
-        patent017: { status: 'USPTO_REVIEWING', value: '$200M-$260M' },
-        patent012: { status: 'USPTO_REVIEWING', value: '$180M-$220M' },
-        patent013: { status: 'USPTO_REVIEWING', value: '$160M-$190M' },
-        patent022: { status: 'USPTO_REVIEWING', value: '$140M-$180M' }
+        patent017: { status: 'READY_FOR_USER_SUBMISSION', value: '$200M-$260M' },
+        patent012: { status: 'READY_FOR_USER_SUBMISSION', value: '$180M-$220M' },
+        patent013: { status: 'READY_FOR_USER_SUBMISSION', value: '$160M-$190M' },
+        patent022: { status: 'READY_FOR_USER_SUBMISSION', value: '$140M-$180M' }
       },
       
       totalValue: {
@@ -148,10 +148,10 @@ export default class PatentFilingService {
       },
       
       timeline: {
-        immediate: 'Healthcare patents filed and under review',
-        next30Days: 'VoiceBuilder foundation patents filing begins',
-        next90Days: 'Complete multi-domain patent portfolio filed',
-        next6Months: 'Initial patent grants expected for healthcare portfolio'
+        immediate: 'Healthcare patents ready for your personal USPTO submission',
+        next30Days: 'VoiceBuilder foundation patents prepared for your filing',
+        next90Days: 'Complete multi-domain patent portfolio ready for submission',
+        next6Months: 'Initial patent grants expected after your submissions'
       }
     };
   }
