@@ -24,6 +24,7 @@ import { healthcareMLService } from "./ml-service";
 import { z } from "zod";
 import { superAgentService } from "./super-agent-service";
 import { visualBuilderService } from "./visual-builder-service";
+import { pythonMLService } from "./python-ml-service";
 import { workflowAutomationService } from "./workflow-automation-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -923,6 +924,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Code generation failed:', error);
       res.status(500).json({ message: 'Code generation failed', error: error.message });
+    }
+  });
+
+  // Python ML Service API Endpoints
+  app.get('/api/ml/libraries/:domain', async (req, res) => {
+    try {
+      const { domain } = req.params;
+      const libraries = pythonMLService.getAvailableLibraries(domain);
+      res.json({
+        domain,
+        libraries,
+        count: libraries.length
+      });
+    } catch (error) {
+      console.error('Failed to fetch ML libraries:', error);
+      res.status(500).json({ message: 'Failed to fetch ML libraries', error: error.message });
+    }
+  });
+
+  app.post('/api/ml/generate-pipeline', async (req, res) => {
+    try {
+      const requirements = req.body;
+      const pipeline = await pythonMLService.generateMLPipeline(requirements);
+      res.json({
+        success: true,
+        pipeline,
+        pythonReady: true,
+        deploymentReady: true
+      });
+    } catch (error) {
+      console.error('ML pipeline generation failed:', error);
+      res.status(500).json({ message: 'ML pipeline generation failed', error: error.message });
+    }
+  });
+
+  app.post('/api/ml/execute-python', async (req, res) => {
+    try {
+      const { pythonCode, inputData } = req.body;
+      const result = await pythonMLService.executePythonML(pythonCode, inputData);
+      res.json({
+        success: true,
+        result,
+        executionTime: Date.now()
+      });
+    } catch (error) {
+      console.error('Python execution failed:', error);
+      res.status(500).json({ message: 'Python execution failed', error: error.message });
+    }
+  });
+
+  app.post('/api/ml/deploy-model', async (req, res) => {
+    try {
+      const { pipeline } = req.body;
+      const deployment = await pythonMLService.deployMLModel(pipeline);
+      res.json({
+        success: true,
+        deployment,
+        apiEndpoints: deployment.endpoints,
+        documentation: deployment.documentation
+      });
+    } catch (error) {
+      console.error('ML model deployment failed:', error);
+      res.status(500).json({ message: 'ML model deployment failed', error: error.message });
+    }
+  });
+
+  app.post('/api/ml/generate-healthcare-model', async (req, res) => {
+    try {
+      const config = req.body;
+      const modelCode = await pythonMLService.generateHealthcareModel(config);
+      res.json({
+        success: true,
+        pythonCode: modelCode,
+        framework: config.framework,
+        domain: config.healthcareDomain,
+        readyToExecute: true
+      });
+    } catch (error) {
+      console.error('Healthcare model generation failed:', error);
+      res.status(500).json({ message: 'Healthcare model generation failed', error: error.message });
     }
   });
 

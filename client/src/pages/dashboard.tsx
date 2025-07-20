@@ -292,6 +292,12 @@ export default function Dashboard() {
                       No-Code Builder
                     </Button>
                   </Link>
+                  <Link href="/ml-python">
+                    <Button variant="outline" size="sm" className="w-full border-orange-600 text-orange-300 hover:bg-orange-900 bg-orange-900/20">
+                      <Code className="w-4 h-4 mr-2" />
+                      Python ML
+                    </Button>
+                  </Link>
                   <Link href="/ml-dashboard">
                     <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
                       <Activity className="w-4 h-4 mr-2" />

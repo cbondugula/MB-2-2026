@@ -28,6 +28,7 @@ import LegalDocuments from "@/pages/legal-documents";
 import SuperAgent from "@/pages/super-agent";
 import ScalabilityDashboard from "@/pages/scalability-dashboard";
 import VisualBuilder from "@/pages/visual-builder";
+import MLPythonIntegration from "@/pages/ml-python-integration";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -66,6 +67,7 @@ function Router() {
           <Route path="/super-agent" component={SuperAgent} />
           <Route path="/scalability-dashboard" component={ScalabilityDashboard} />
           <Route path="/visual-builder" component={VisualBuilder} />
+          <Route path="/ml-python" component={MLPythonIntegration} />
         </>
       )}
       <Route component={NotFound} />
