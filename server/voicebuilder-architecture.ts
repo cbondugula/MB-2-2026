@@ -6,10 +6,48 @@
 
 export interface VoiceBuilderArchitecture {
   platformName: 'VoiceBuilder';
-  tagline: 'Voice-Controlled Development for Every Industry';
+  fullName: 'VoiceBuilder: No-Code Development with Voice Control';
+  tagline: 'Revolutionary No-Code Platform with Voice-Controlled Development';
+  coreInnovation: 'First platform combining comprehensive no-code tools with voice-controlled development';
+  developmentModes: DevelopmentModes;
   coreCapabilities: VoicePlatformCapabilities;
   domainModules: DomainSpecificModules;
   sharedInfrastructure: SharedInfrastructure;
+}
+
+export interface DevelopmentModes {
+  visualNoCode: {
+    description: 'Traditional drag-and-drop visual development interface';
+    capabilities: [
+      'Visual component library with drag-and-drop interface',
+      'Form builders and workflow designers', 
+      'Database schema visual design tools',
+      'API integration through visual connectors',
+      'Responsive design preview and testing'
+    ];
+  };
+  
+  voiceControlled: {
+    description: 'Revolutionary voice commands for complete application creation';
+    capabilities: [
+      'Natural language application requirements to full implementation',
+      'Voice-controlled database design and management',
+      'Spoken API integrations and business logic creation',
+      'Voice-commanded deployment and DevOps automation',
+      'Real-time voice-guided debugging and optimization'
+    ];
+  };
+  
+  hybridDevelopment: {
+    description: 'Seamless combination of visual and voice development modes';
+    capabilities: [
+      'Start with voice commands, refine with visual tools',
+      'Visual design with voice-controlled logic implementation',
+      'Voice modifications to visually created components',
+      'Context-aware switching between development modes',
+      'Collaborative development with mixed input methods'
+    ];
+  };
 }
 
 export interface VoicePlatformCapabilities {
@@ -21,10 +59,28 @@ export interface VoicePlatformCapabilities {
   };
   
   noCodeGeneration: {
-    frontendGeneration: 'voice_to_ui_components';
-    backendGeneration: 'voice_to_api_endpoints';
-    databaseDesign: 'voice_to_schema_generation';
-    deploymentPipelines: 'voice_to_devops_automation';
+    visualNoCodeTools: {
+      dragDropInterface: 'comprehensive_visual_component_library';
+      formBuilders: 'advanced_form_and_workflow_designers';
+      databaseVisualDesign: 'visual_schema_and_relationship_tools';
+      apiVisualIntegration: 'drag_drop_api_connectors';
+      responsiveDesign: 'visual_responsive_design_tools';
+    };
+    
+    voiceControlledGeneration: {
+      frontendGeneration: 'voice_to_ui_components_and_layouts';
+      backendGeneration: 'voice_to_complete_api_infrastructure';
+      databaseDesign: 'voice_to_schema_and_data_management';
+      deploymentPipelines: 'voice_to_devops_and_automation';
+      integrationLogic: 'voice_to_business_logic_implementation';
+    };
+    
+    hybridCapabilities: {
+      seamlessTransition: 'switch_between_visual_and_voice_modes';
+      contextAwareness: 'understand_current_development_state';
+      collaborativeEditing: 'multiple_developers_different_input_methods';
+      realTimeSync: 'visual_changes_reflect_in_voice_context';
+    };
   };
   
   industrySpecialization: {
