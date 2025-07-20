@@ -22,7 +22,7 @@ import {
   BarChart3,
   Cpu,
   Layers,
-  Flask,
+
   Terminal,
   CheckCircle,
   AlertCircle,
@@ -280,7 +280,7 @@ export default function MLPythonIntegration() {
                   })}
                   disabled={generateHealthcareModelMutation.isPending}
                 >
-                  <Flask className="w-4 h-4 mr-2" />
+                  <Brain className="w-4 h-4 mr-2" />
                   Generate Healthcare Model
                 </Button>
                 
