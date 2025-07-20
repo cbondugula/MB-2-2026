@@ -2255,6 +2255,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // INDIVIDUAL PATENT ENDPOINTS
+  app.get('/api/patents/individual/:patentId', async (req, res) => {
+    try {
+      const { patentId } = req.params;
+      const IndividualPatentService = (await import('./individual-patent-service')).default;
+      const patent = await IndividualPatentService.getIndividualPatent(patentId);
+      
+      res.json({
+        success: true,
+        patent,
+        disclaimer: 'DOCUMENTATION PREPARED - YOU MUST PERSONALLY SUBMIT TO USPTO WITH REQUIRED FEES AND SIGNATURE'
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Individual patent preparation failed',
+        error: error.message 
+      });
+    }
+  });
+
+  // ALL PATENTS STATUS
+  app.get('/api/patents/all-status', async (req, res) => {
+    try {
+      const IndividualPatentService = (await import('./individual-patent-service')).default;
+      const status = await IndividualPatentService.getAllPatientsStatus();
+      
+      res.json({
+        success: true,
+        status,
+        reminder: 'ALL PATENTS READY FOR DR. CHANDRA SEKHAR BONDUGULA TO REVIEW AND SUBMIT PERSONALLY'
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Patent status check failed',
+        error: error.message 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // Setup WebSocket for real-time collaboration
