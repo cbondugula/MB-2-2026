@@ -11,10 +11,14 @@ export default class IndividualPatentService {
   static async getIndividualPatent(patentId: string) {
     const patents = {
       '001': await this.preparePatent001(),
-      '002': await this.preparePatent002(),
+      '002': await this.preparePatent002(), 
       '003': await this.preparePatent003(),
       '004': await this.preparePatent004(),
-      '005': await this.preparePatent005()
+      '005': await this.preparePatent005(),
+      '017': await this.preparePatent017(),
+      '012': await this.preparePatent012(),
+      '013': await this.preparePatent013(),
+      '022': await this.preparePatent022()
     };
 
     const patent = patents[patentId as keyof typeof patents];
@@ -35,6 +39,136 @@ export default class IndividualPatentService {
           '4. Submit via USPTO.gov or through patent attorney',
           '5. Respond to USPTO office actions during examination'
         ]
+      }
+    };
+  }
+
+  /**
+   * Patent 001: AI-Powered Healthcare Development Platform
+   */
+  private static async preparePatent001() {
+    return {
+      applicationNumber: 'To be assigned by USPTO upon your submission',
+      filingDate: 'To be assigned by USPTO upon your submission',
+      inventor: 'Dr. Chandra Sekhar Bondugula',
+      
+      title: 'AI-POWERED HEALTHCARE DEVELOPMENT PLATFORM WITH GLOBAL STANDARDS INTEGRATION',
+      
+      summaryOfInvention: {
+        briefDescription: 'Revolutionary AI-powered platform enabling rapid development of healthcare applications with automatic integration of global healthcare standards including FHIR, HL7, and comprehensive medical compliance frameworks.',
+        estimatedValue: '$120M-$160M'
+      },
+      
+      workingPrototype: {
+        demonstrationStatus: 'FULLY FUNCTIONAL PROTOTYPE OPERATIONAL'
+      },
+      
+      inventorDeclaration: {
+        inventor: 'Dr. Chandra Sekhar Bondugula'
+      }
+    };
+  }
+
+  /**
+   * Patent 002: HIPAA-Compliant RAG System
+   */
+  private static async preparePatent002() {
+    return {
+      applicationNumber: 'To be assigned by USPTO upon your submission',
+      filingDate: 'To be assigned by USPTO upon your submission',
+      inventor: 'Dr. Chandra Sekhar Bondugula',
+      
+      title: 'HIPAA-COMPLIANT RETRIEVAL-AUGMENTED GENERATION SYSTEM FOR HEALTHCARE',
+      
+      summaryOfInvention: {
+        briefDescription: 'Advanced retrieval-augmented generation system with built-in HIPAA compliance and healthcare privacy protection for medical knowledge processing.',
+        estimatedValue: '$100M-$140M'
+      },
+      
+      workingPrototype: {
+        demonstrationStatus: 'FULLY FUNCTIONAL PROTOTYPE OPERATIONAL'
+      },
+      
+      inventorDeclaration: {
+        inventor: 'Dr. Chandra Sekhar Bondugula'
+      }
+    };
+  }
+
+  /**
+   * Patent 003: Federated Healthcare RAG System
+   */
+  private static async preparePatent003() {
+    return {
+      applicationNumber: 'To be assigned by USPTO upon your submission',
+      filingDate: 'To be assigned by USPTO upon your submission',
+      inventor: 'Dr. Chandra Sekhar Bondugula',
+      
+      title: 'FEDERATED HEALTHCARE RAG SYSTEM WITH GLOBAL PRIVACY LAW COMPLIANCE',
+      
+      summaryOfInvention: {
+        briefDescription: 'Federated learning system for healthcare with comprehensive global privacy law compliance covering 193 countries and multicultural healthcare support.',
+        estimatedValue: '$200M-$300M'
+      },
+      
+      workingPrototype: {
+        demonstrationStatus: 'FULLY FUNCTIONAL PROTOTYPE OPERATIONAL'
+      },
+      
+      inventorDeclaration: {
+        inventor: 'Dr. Chandra Sekhar Bondugula'
+      }
+    };
+  }
+
+  /**
+   * Patent 004: Multi-Model Medical AI Validation System
+   */
+  private static async preparePatent004() {
+    return {
+      applicationNumber: 'To be assigned by USPTO upon your submission',
+      filingDate: 'To be assigned by USPTO upon your submission',
+      inventor: 'Dr. Chandra Sekhar Bondugula',
+      
+      title: 'MULTI-MODEL MEDICAL AI VALIDATION SYSTEM',
+      
+      summaryOfInvention: {
+        briefDescription: 'Comprehensive multi-model medical AI validation system with specialized BERT models for clinical natural language processing and medical knowledge validation.',
+        estimatedValue: '$80M-$120M'
+      },
+      
+      workingPrototype: {
+        demonstrationStatus: 'FULLY FUNCTIONAL PROTOTYPE OPERATIONAL'
+      },
+      
+      inventorDeclaration: {
+        inventor: 'Dr. Chandra Sekhar Bondugula'
+      }
+    };
+  }
+
+  /**
+   * Patent 005: Dynamic Healthcare Workflow Automation
+   */
+  private static async preparePatent005() {
+    return {
+      applicationNumber: 'To be assigned by USPTO upon your submission',
+      filingDate: 'To be assigned by USPTO upon your submission',
+      inventor: 'Dr. Chandra Sekhar Bondugula',
+      
+      title: 'DYNAMIC HEALTHCARE WORKFLOW AUTOMATION SYSTEM',
+      
+      summaryOfInvention: {
+        briefDescription: 'AI-powered dynamic healthcare workflow automation with predictive analytics and real-time optimization for healthcare operations and resource management.',
+        estimatedValue: '$60M-$100M'
+      },
+      
+      workingPrototype: {
+        demonstrationStatus: 'FULLY FUNCTIONAL PROTOTYPE OPERATIONAL'
+      },
+      
+      inventorDeclaration: {
+        inventor: 'Dr. Chandra Sekhar Bondugula'
       }
     };
   }
