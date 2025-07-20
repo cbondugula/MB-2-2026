@@ -19,7 +19,7 @@ export default class PatentFilingService {
       return {
         filingId,
         timestamp,
-        status: 'EMERGENCY_FILING_INITIATED',
+        status: 'DOCUMENTATION_PREPARED_NO_ACTUAL_SUBMISSION',
         portfolioValue: '$680M-$850M',
         
         healthcarePortfolio: healthcarePatents,
@@ -28,7 +28,7 @@ export default class PatentFilingService {
           reason: 'Revolutionary voice-controlled healthcare technologies require immediate IP protection',
           urgency: 'MAXIMUM',
           competitiveRisk: 'Zero competition confirmed - immediate filing prevents competitor entry',
-          timeline: 'Healthcare patents filed immediately, VoiceBuilder patents queued'
+          timeline: 'Healthcare patents documented and ready for your personal USPTO submission with required fees'
         },
         
         usptReadiness: {
@@ -118,7 +118,7 @@ export default class PatentFilingService {
         marketAdvantage: 'COMPLETE_COMPETITIVE_WHITESPACE_CONFIRMED',
         technicalReadiness: 'ALL_PATENTS_HAVE_WORKING_FUNCTIONAL_PROTOTYPES',
         commercialReadiness: 'PROVEN_MARKET_DEMAND_WITH_REVENUE_PROJECTIONS',
-        filingUrgency: 'EMERGENCY_FILING_COMPLETED_FOR_HEALTHCARE_PORTFOLIO',
+        filingUrgency: 'DOCUMENTATION_PREPARED_FOR_USER_SUBMISSION',
         nextPhase: 'VoiceBuilder domain patents 023-030 queued for next filing phase'
       }
     };
