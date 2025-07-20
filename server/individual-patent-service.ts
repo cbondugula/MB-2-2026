@@ -223,7 +223,7 @@ export default class IndividualPatentService {
   }
 
   /**
-   * Patent 012: Voice-Controlled Backend Infrastructure Generation
+   * Patent 012: Voice-Controlled Backend Infrastructure Generation (Legacy)
    */
   private static async preparePatent012() {
     return {
@@ -317,7 +317,7 @@ export default class IndividualPatentService {
   }
 
   /**
-   * Patent 013: Voice-Controlled Database Management System
+   * Patent 013: Voice-Controlled Database Management System (Legacy)
    */
   private static async preparePatent013() {
     return {
@@ -349,7 +349,7 @@ export default class IndividualPatentService {
   }
 
   /**
-   * Patent 022: Voice-Controlled ML Training System
+   * Patent 022: Voice-Controlled ML Training System (Legacy)
    */
   private static async preparePatent022() {
     return {
