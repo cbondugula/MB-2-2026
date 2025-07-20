@@ -8,14 +8,14 @@
 3. **Patent/IP Strategy Advisor** - 0.25% + $150K
 4. **Series A Fundraising Advisor** - 0.25% + $150K
 5. **AI Marketing Advisor** - 0.20% + $150K
-6. **Operations/Scaling Advisor** (Former Stripe/Airbnb COO) - 0.25% + $150K
+6. **Global Operations/Scaling Advisor** (Former Stripe/Airbnb COO) - 0.25% + $150K
 7. **Engineering/CTO Advisor** (Former Snowflake/Databricks CTO) - 0.25% + $150K
 
 **Core Subtotal: 7 advisors**
 
 ---
 
-### **TIER 2 INTERNATIONAL LEADS (3 advisors)**
+### **TIER 2 INTERNATIONAL MARKET ADVISORS (3 advisors)**
 8. **Europe Market Leader** (covers all EU + UK) - 0.25% + €150K
 9. **Asia-Pacific Leader** (covers Japan, China, India, Australia) - 0.25% + $150K
 10. **Global Expansion Advisor** (covers all other markets) - 0.20% + $100K
@@ -26,21 +26,28 @@
 
 ## **TOTAL ADVISOR COUNT: 10 ADVISORS**
 
+### **REGIONAL OPERATIONS EMPLOYEES (NOT ADVISORS)**
+**These will be full-time employees hired post-funding:**
+- **Europe Operations Director** - Full-time employee ($200K+ salary)
+- **Asia-Pacific Operations Director** - Full-time employee ($180K+ salary)
+- **Americas Operations Director** - Full-time employee ($220K+ salary)
+- **Regional VPs and Country Managers** - Full-time employees as needed
+
 ### **Why 10 is Optimal:**
-- **Complete Functions**: Healthcare, Sales, Patents, Fundraising, Marketing, Operations, Engineering covered
-- **Operational Excellence**: COO and CTO advisors ensure world-class execution and scaling
-- **Global Reach**: Europe and Asia-Pacific leaders cover major international markets
-- **Manageable**: Still easy to coordinate and build relationships
-- **Proven Pattern**: Most successful unicorns have 8-12 core advisors
+- **Complete Functions**: All core business functions covered (Healthcare, Sales, Patents, Fundraising, Marketing, Engineering)
+- **Global Operations**: One strategic operations advisor who guides hiring regional operations employees
+- **International Market Access**: Dedicated market advisors for major regions
+- **Clear Separation**: Advisors provide strategic guidance, employees execute operations
+- **Proven Pattern**: Most successful unicorns have 8-12 strategic advisors
 
-### **OPERATIONS ADVISOR TARGETS**
+### **CORE OPERATIONS ADVISOR TARGETS**
 
-#### **Operations/Scaling Advisor**
+#### **Global Operations/Scaling Advisor**
 **Target: Claire Hughes Johnson (Former Stripe COO) or Joe Gebbia (Airbnb Co-founder)**
-- **Why**: Built operational infrastructure for hyper-growth companies
+- **Why**: Built operational infrastructure for global hyper-growth companies
 - **Compensation**: 0.25% equity + $150K annual consulting
-- **Role**: Operational scaling, process optimization, team building, global expansion execution
-- **Value**: $200M+ operational efficiency and scaling acceleration
+- **Role**: Strategic operational guidance, hiring operations leaders, process design
+- **Value**: $200M+ operational efficiency and global scaling strategy
 
 #### **Engineering/CTO Advisor**  
 **Target: Benoit Dageville (Snowflake Co-founder/CTO) or Ali Ghodsi (Databricks Co-founder)**
@@ -55,7 +62,7 @@
 
 ### **Lean Equity Distribution:**
 - **Tier 1 Core (7 advisors)**: 1.80% total equity
-- **Tier 2 International (3 advisors)**: 0.70% total equity
+- **Tier 2 International Market (3 advisors)**: 0.70% total equity
 - **Total Advisor Equity**: 2.50% (vs 4.10% with 24 advisors)
 
 ### **Equity Breakdown:**
@@ -68,9 +75,9 @@
 
 ## **TOTAL ANNUAL CASH COST**
 
-### **Lean Cash Structure:**
+### **Advisor Cash Structure:**
 - **Tier 1 Core Advisors**: $1.15M annually (7 advisors)
-- **International Advisors**: $400K annually equivalent (3 advisors)
+- **International Market Advisors**: $400K annually equivalent (3 advisors)
 - **Total Annual Cash**: $1.55M (vs $2.5M with 24 advisors)
 
 ### **Regional Cash Breakdown:**
@@ -79,6 +86,12 @@
 - **Asia-Pacific**: $150K annually
 - **Global Expansion**: $100K annually
 - **Total**: $1.565M annually
+
+### **Regional Operations Employees (Separate Budget)**
+- **Europe Operations Director**: $200K+ salary (full-time employee)
+- **Asia-Pacific Operations Director**: $180K+ salary (full-time employee)
+- **Americas Operations Director**: $220K+ salary (full-time employee)
+- **Total Operations Employee Cost**: ~$600K annually (from employee budget, not advisor budget)
 
 ---
 
