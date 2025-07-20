@@ -23,6 +23,7 @@ import { PATENTABLE_INNOVATIONS, PatentDocumentationService } from "./patent-doc
 import { healthcareMLService } from "./ml-service";
 import { z } from "zod";
 import { superAgentService } from "./super-agent-service";
+import { visualBuilderService } from "./visual-builder-service";
 import { workflowAutomationService } from "./workflow-automation-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -857,6 +858,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Batch application generation failed:', error);
       res.status(500).json({ message: 'Batch application generation failed', error: error.message });
+    }
+  });
+
+  // Visual Builder API Endpoints - No-Code Healthcare Development
+  app.get('/api/visual-builder/components', async (req, res) => {
+    try {
+      const components = await visualBuilderService.getHealthcareComponents();
+      res.json(components);
+    } catch (error) {
+      console.error('Failed to fetch visual components:', error);
+      res.status(500).json({ message: 'Failed to fetch visual components', error: error.message });
+    }
+  });
+
+  app.get('/api/visual-builder/templates', async (req, res) => {
+    try {
+      const templates = await visualBuilderService.getVisualTemplates();
+      res.json(templates);
+    } catch (error) {
+      console.error('Failed to fetch visual templates:', error);
+      res.status(500).json({ message: 'Failed to fetch visual templates', error: error.message });
+    }
+  });
+
+  app.post('/api/visual-builder/generate-app', async (req, res) => {
+    try {
+      const { description } = req.body;
+      const generatedApp = await visualBuilderService.generateApplicationFromDescription(description);
+      res.json(generatedApp);
+    } catch (error) {
+      console.error('Visual app generation failed:', error);
+      res.status(500).json({ message: 'Visual app generation failed', error: error.message });
+    }
+  });
+
+  app.post('/api/visual-builder/deploy', async (req, res) => {
+    try {
+      const { application } = req.body;
+      const deployment = await visualBuilderService.deployApplication(application);
+      res.json(deployment);
+    } catch (error) {
+      console.error('Visual app deployment failed:', error);
+      res.status(500).json({ message: 'Visual app deployment failed', error: error.message });
+    }
+  });
+
+  app.post('/api/visual-builder/generate-code', async (req, res) => {
+    try {
+      const { components, configuration } = req.body;
+      const generatedCode = {
+        frontend: await visualBuilderService.generateFrontendFromComponents(components, configuration),
+        backend: await visualBuilderService.generateBackendFromComponents(components, configuration),
+        database: await visualBuilderService.generateDatabaseFromComponents(components, configuration),
+        tests: await visualBuilderService.generateTestsFromComponents(components, configuration),
+        deployment: await visualBuilderService.generateDeploymentFromComponents(components, configuration)
+      };
+      res.json({
+        success: true,
+        code: generatedCode,
+        readyForDeploy: true,
+        hipaaCompliant: true
+      });
+    } catch (error) {
+      console.error('Code generation failed:', error);
+      res.status(500).json({ message: 'Code generation failed', error: error.message });
     }
   });
 

@@ -286,6 +286,12 @@ export default function Dashboard() {
                       Super Agent
                     </Button>
                   </Link>
+                  <Link href="/visual-builder">
+                    <Button variant="outline" size="sm" className="w-full border-purple-600 text-purple-300 hover:bg-purple-900 bg-purple-900/20">
+                      <Palette className="w-4 h-4 mr-2" />
+                      No-Code Builder
+                    </Button>
+                  </Link>
                   <Link href="/ml-dashboard">
                     <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
                       <Activity className="w-4 h-4 mr-2" />

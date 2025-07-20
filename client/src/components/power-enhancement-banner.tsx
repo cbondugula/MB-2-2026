@@ -74,6 +74,13 @@ export default function PowerEnhancementBanner() {
                 </Button>
               </Link>
               
+              <Link href="/visual-builder">
+                <Button variant="outline" className="border-purple-600 text-purple-300 hover:bg-purple-900">
+                  <Zap className="w-4 h-4 mr-2" />
+                  No-Code Builder
+                </Button>
+              </Link>
+              
               <div className="flex items-center space-x-2 text-sm text-gray-400">
                 <Code className="w-4 h-4" />
                 <span>Patent 005 Implementation</span>
