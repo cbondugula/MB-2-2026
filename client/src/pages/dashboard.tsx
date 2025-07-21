@@ -33,7 +33,8 @@ import {
   FileText,
   Atom,
   Building,
-  Bot
+  Bot,
+  TestTube
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -394,6 +395,12 @@ export default function Dashboard() {
                     <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
                       <Activity className="w-4 h-4 mr-2" />
                       ML Platform
+                    </Button>
+                  </Link>
+                  <Link href="/healthcare-testing">
+                    <Button variant="outline" size="sm" className="w-full border-green-600 text-green-300 hover:bg-green-900 bg-green-900/20">
+                      <TestTube className="w-4 h-4 mr-2" />
+                      Advanced Testing
                     </Button>
                   </Link>
                 </div>

@@ -34,6 +34,7 @@ import PatentVerificationDashboard from "@/pages/patent-verification-dashboard";
 import PatentLinks from "@/pages/patent-links";
 import TJCCompliance from "@/pages/tjc-compliance";
 import QuantumAI from "@/pages/quantum-ai";
+import HealthcareTesting from "@/pages/healthcare-testing";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -78,6 +79,7 @@ function Router() {
           <Route path="/patent-links" component={PatentLinks} />
           <Route path="/tjc-compliance" component={TJCCompliance} />
           <Route path="/quantum-ai" component={QuantumAI} />
+          <Route path="/healthcare-testing" component={HealthcareTesting} />
         </>
       )}
       <Route component={NotFound} />

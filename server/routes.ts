@@ -36,6 +36,7 @@ import { quantumAIRouter } from "./quantum-ai-service";
 import { autonomousBusinessRouter } from "./autonomous-business-creator";
 import { bciRouter } from "./brain-computer-interface";
 import { tjcComplianceRouter } from "./tjc-compliance-service";
+import { healthcareTestingRouter } from "./healthcare-testing-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -2224,12 +2225,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { autonomousBusinessRouter } = await import('./autonomous-business-creator');
   const { bciRouter } = await import('./brain-computer-interface');
   const { tjcComplianceRouter } = await import('./tjc-compliance-service');
+  const { healthcareTestingRouter } = await import('./healthcare-testing-service');
 
   // Revolutionary Technology API Routes
   app.use('/api/quantum', quantumAIRouter);
   app.use('/api/business', autonomousBusinessRouter);
   app.use('/api/bci', bciRouter);
   app.use('/api/tjc', tjcComplianceRouter);
+  app.use('/api/healthcare-testing', healthcareTestingRouter);
+  app.use('/api/healthcare-testing', healthcareTestingRouter);
 
   app.post('/api/super-agent/convert-static-to-dynamic', async (req, res) => {
     try {
