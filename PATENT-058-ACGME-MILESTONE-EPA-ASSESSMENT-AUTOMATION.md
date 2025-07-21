@@ -1,8 +1,8 @@
-PATENT APPLICATION 058: ACGME MILESTONE AND EPA ASSESSMENT AUTOMATION PLATFORM
+PATENT APPLICATION 058: QUANTUM-ENHANCED MILESTONE AND EPA ASSESSMENT INTELLIGENCE SYSTEM
 
 USPTO APPLICATION READY FOR FILING
 
-Application Title: Artificial Intelligence System and Method for Automated Milestone Assessment and Entrustable Professional Activities Evaluation in Graduate Medical Education
+Application Title: Quantum-Enhanced Natural Language Processing System and Method for Automated Milestone Assessment and EPA Evaluation with Narrative Analysis and Clinical Competency Committee Decision Support
 
 Patent Classification:
 - G06N 20/00 (Machine learning)
