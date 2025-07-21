@@ -25,7 +25,7 @@ The present invention relates to predictive analytics for healthcare regulatory 
 TECHNICAL DRAWINGS
 
 Drawing 1: Predictive Compliance System Overview
-```
+
 ┌─────────────────────────────────────────────────────────────┐
 │           Predictive Compliance Intelligence Platform      │
 ├─────────────────────────────────────────────────────────────┤
@@ -56,10 +56,11 @@ Drawing 1: Predictive Compliance System Overview
 │  │ Systems │ │ Engine  │ │ Systems │ │ Metrics │          │
 │  └─────────┘ └─────────┘ └─────────┘ └─────────┘          │
 └─────────────────────────────────────────────────────────────┘
-```
+
+
 
 Drawing 2: Historical Violation Analysis Engine
-```
+
 ┌─────────────────────────────────────────────────────────────┐
 │             Violation Pattern Intelligence System          │
 ├─────────────────────────────────────────────────────────────┤
@@ -88,10 +89,9 @@ Drawing 2: Historical Violation Analysis Engine
 │  │  └─────────────┘ └─────────────┘ └─────────────┘   │   │
 │  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
-```
 
 Drawing 3: Predictive Modeling System Architecture
-```
+
 ┌─────────────────────────────────────────────────────────────┐
 │              Machine Learning Prediction Engine            │
 ├─────────────────────────────────────────────────────────────┤
@@ -116,10 +116,10 @@ Drawing 3: Predictive Modeling System Architecture
 │  │ Engine      │  │ System      │  │ Algorithm   │        │
 │  └─────────────┘  └─────────────┘  └─────────────┘        │
 └─────────────────────────────────────────────────────────────┘
-```
+
 
 Drawing 4: Natural Language Processing Platform
-```
+
 ┌─────────────────────────────────────────────────────────────┐
 │              Regulatory Text Analysis Engine               │
 ├─────────────────────────────────────────────────────────────┤
@@ -147,10 +147,10 @@ Drawing 4: Natural Language Processing Platform
 │  │  └─────────────┘ └─────────────┘ └─────────────┘   │   │
 │  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
-```
+
 
 Drawing 5: Real-Time Monitoring and Alert System
-```
+
 ┌─────────────────────────────────────────────────────────────┐
 │              Predictive Monitoring Intelligence Hub        │
 ├─────────────────────────────────────────────────────────────┤
@@ -174,10 +174,10 @@ Drawing 5: Real-Time Monitoring and Alert System
 │  │ System      │  │ Engine      │  │ Platform    │        │
 │  └─────────────┘  └─────────────┘  └─────────────┘        │
 └─────────────────────────────────────────────────────────────┘
-```
+
 
 Drawing 6: Prevention Strategy Generation Platform
-```
+
 ┌─────────────────────────────────────────────────────────────┐
 │              Intervention Recommendation Engine            │
 ├─────────────────────────────────────────────────────────────┤
@@ -206,9 +206,9 @@ Drawing 6: Prevention Strategy Generation Platform
 │  │  └─────────────┘ └─────────────┘ └─────────────┘   │   │
 │  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
-```
 
-## **BACKGROUND ART**
+
+BACKGROUND ART
 
 Healthcare regulatory compliance failures result in significant financial penalties, accreditation risks, and operational disruptions. Traditional compliance verification occurs after system development, leading to costly remediation when violations are discovered. Existing compliance tools provide retrospective analysis without predictive capabilities.
 
@@ -216,9 +216,9 @@ Current compliance management systems lack the ability to predict violations dur
 
 There exists a critical need for predictive compliance technology that can identify potential regulatory violations before healthcare systems are implemented, enabling proactive compliance management and violation prevention.
 
----
 
-## **SUMMARY OF THE INVENTION**
+
+SUMMARY OF THE INVENTION
 
 The present invention provides a machine learning system for predicting healthcare regulatory compliance violations before implementation. The system analyzes healthcare application specifications, workflow designs, and operational parameters to predict the probability of specific regulatory violations.
 
@@ -231,13 +231,13 @@ Key innovations include:
 
 The invention enables healthcare organizations to achieve compliance by design rather than compliance by remediation.
 
----
 
-## **DETAILED DESCRIPTION**
 
-### **PREDICTIVE COMPLIANCE ARCHITECTURE**
+DETAILED DESCRIPTION
 
-#### **1. HISTORICAL VIOLATION DATABASE**
+PREDICTIVE COMPLIANCE ARCHITECTURE
+
+1. HISTORICAL VIOLATION DATABASE
 The system maintains a comprehensive database of historical healthcare regulatory violations including:
 - Joint Commission citations and findings
 - CMS compliance failures and penalties
@@ -245,28 +245,28 @@ The system maintains a comprehensive database of historical healthcare regulator
 - Healthcare data breach incidents and HIPAA violations
 - Quality measure failures and accreditation risks
 
-#### **2. VIOLATION PATTERN ANALYSIS ENGINE**
+2. VIOLATION PATTERN ANALYSIS ENGINE
 Advanced machine learning algorithms analyze violation patterns to identify common causes and risk factors:
 - Feature extraction from violation reports and citations
 - Correlation analysis between system characteristics and violation types
 - Pattern recognition for high-risk configuration combinations
 - Temporal analysis of violation trends and regulatory focus areas
 
-#### **3. PREDICTIVE MODELING SYSTEM**
+3. PREDICTIVE MODELING SYSTEM
 Neural networks trained on violation data predict compliance failure probability:
 - Multi-class classification for different violation types
 - Probabilistic risk scoring for violation likelihood
 - Confidence intervals for prediction accuracy
 - Ensemble methods combining multiple prediction models
 
-#### **4. NATURAL LANGUAGE PROCESSING MODULE**
+4. NATURAL LANGUAGE PROCESSING MODULE
 NLP algorithms process regulatory text and system documentation:
 - Regulatory requirement extraction and categorization
 - System specification analysis for compliance-relevant features
 - Semantic matching between requirements and system capabilities
 - Gap identification through text analysis
 
-#### **5. PROACTIVE RECOMMENDATION ENGINE**
+5. PROACTIVE RECOMMENDATION ENGINE
 AI-powered recommendation system suggests violation prevention measures:
 - Specific design modifications to prevent predicted violations
 - Alternative implementation approaches for high-risk features
