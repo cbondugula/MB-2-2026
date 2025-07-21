@@ -32,6 +32,10 @@ import { healthcareAIValidationService } from "./healthcare-ai-validation";
 import { NO_CODE_BACKEND_PATENTS } from "./no-code-backend-patents";
 import { workflowAutomationService } from "./workflow-automation-service";
 import { registerAIChatRoutes } from "./routes/ai-chat";
+import { quantumAIRouter } from "./quantum-ai-service";
+import { autonomousBusinessRouter } from "./autonomous-business-creator";
+import { bciRouter } from "./brain-computer-interface";
+import { tjcComplianceRouter } from "./tjc-compliance-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -2215,6 +2219,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // SUPER SC AGENT - STATIC TO DYNAMIC CONVERSION ENDPOINT
+  // Import revolutionary technology routers
+  const { quantumAIRouter } = await import('./quantum-ai-service');
+  const { autonomousBusinessRouter } = await import('./autonomous-business-creator');
+  const { bciRouter } = await import('./brain-computer-interface');
+  const { tjcComplianceRouter } = await import('./tjc-compliance-service');
+
+  // Revolutionary Technology API Routes
+  app.use('/api/quantum', quantumAIRouter);
+  app.use('/api/business', autonomousBusinessRouter);
+  app.use('/api/bci', bciRouter);
+  app.use('/api/tjc', tjcComplianceRouter);
+
   app.post('/api/super-agent/convert-static-to-dynamic', async (req, res) => {
     try {
       const SuperSCAgent = (await import('./super-agent-service')).default;

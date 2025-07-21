@@ -32,6 +32,8 @@ import MLPythonIntegration from "@/pages/ml-python-integration";
 import MultiAIVerification from "@/pages/multi-ai-verification";
 import PatentVerificationDashboard from "@/pages/patent-verification-dashboard";
 import PatentLinks from "@/pages/patent-links";
+import TJCCompliance from "@/pages/tjc-compliance";
+import QuantumAI from "@/pages/quantum-ai";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -74,6 +76,8 @@ function Router() {
           <Route path="/multi-ai-verification" component={MultiAIVerification} />
           <Route path="/patent-verification" component={PatentVerificationDashboard} />
           <Route path="/patent-links" component={PatentLinks} />
+          <Route path="/tjc-compliance" component={TJCCompliance} />
+          <Route path="/quantum-ai" component={QuantumAI} />
         </>
       )}
       <Route component={NotFound} />

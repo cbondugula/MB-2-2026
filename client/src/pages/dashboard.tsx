@@ -30,7 +30,10 @@ import {
   Cpu,
   Globe,
   Brain,
-  FileText
+  FileText,
+  Atom,
+  Building,
+  Bot
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -307,9 +310,49 @@ export default function Dashboard() {
                 </Card>
               </div>
 
+              {/* Revolutionary Technologies */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-green-300 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  Revolutionary Technologies
+                </h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link href="/quantum-ai">
+                    <Button variant="outline" size="sm" className="w-full border-blue-600 text-blue-300 hover:bg-blue-900 bg-blue-900/20">
+                      <Atom className="w-4 h-4 mr-2" />
+                      Quantum-AI
+                    </Button>
+                  </Link>
+                  <Link href="/tjc-compliance">
+                    <Button variant="outline" size="sm" className="w-full border-green-600 text-green-300 hover:bg-green-900 bg-green-900/20">
+                      <Shield className="w-4 h-4 mr-2" />
+                      TJC Compliance
+                    </Button>
+                  </Link>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full border-purple-600 text-purple-300 hover:bg-purple-900 bg-purple-900/20"
+                    onClick={() => window.open('/api/bci/capabilities', '_blank')}
+                  >
+                    <Brain className="w-4 h-4 mr-2" />
+                    Brain Interface
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full border-orange-600 text-orange-300 hover:bg-orange-900 bg-orange-900/20"
+                    onClick={() => window.open('/api/business/create-business-plan', '_blank')}
+                  >
+                    <Building className="w-4 h-4 mr-2" />
+                    Auto Business
+                  </Button>
+                </div>
+              </div>
+
               {/* Quick Tools */}
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-300">Quick Tools</h3>
+                <h3 className="text-sm font-medium text-gray-300">Healthcare Tools</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/global-healthcare">
                     <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
