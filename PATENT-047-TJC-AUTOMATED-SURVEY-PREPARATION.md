@@ -3,7 +3,7 @@ PATENT APPLICATION 047: AUTOMATED JOINT COMMISSION SURVEY PREPARATION SYSTEM
 
 USPTO APPLICATION READY FOR FILING
 
-Application Title: Artificial Intelligence System and Method for Automated Healthcare Accreditation Survey Preparation and Documentation Generation
+Application Title: AI System and Method for Automated Healthcare Survey Preparation and Documentation
 
 Patent Classification: 
 - G06F 17/27 (Natural language processing)
