@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PowerEnhancementBanner from "@/components/power-enhancement-banner";
+import ConversationalInterface from "@/components/conversational-interface";
+import AccessibilityToolbar from "@/components/accessibility-toolbar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +39,8 @@ export default function Dashboard() {
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeProject, setActiveProject] = useState(null);
+  const [showConversationalInterface, setShowConversationalInterface] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -79,9 +83,17 @@ export default function Dashboard() {
     const pendingPrompt = localStorage.getItem('pendingPrompt');
     if (pendingPrompt && isAuthenticated) {
       setAiPrompt(pendingPrompt);
+      setShowConversationalInterface(true);
       localStorage.removeItem('pendingPrompt');
     }
   }, [isAuthenticated]);
+
+  // Check if user needs onboarding
+  useEffect(() => {
+    if (isAuthenticated && userStats && !userStats.hasCompletedOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, [isAuthenticated, userStats]);
 
   const handleGenerateApp = async () => {
     if (!aiPrompt.trim()) return;
@@ -192,36 +204,73 @@ export default function Dashboard() {
               {/* Power Enhancement Banner */}
               <PowerEnhancementBanner />
               
-              {/* AI Prompt Input */}
-              <div className="space-y-3">
-                <label className="text-sm text-gray-400">Describe your healthcare application</label>
-                <div className="relative">
-                  <Textarea
-                    placeholder="Create a HIPAA-compliant patient portal with secure messaging, appointment scheduling, and lab results viewing..."
-                    value={aiPrompt}
-                    onChange={(e) => setAiPrompt(e.target.value)}
-                    className="bg-gray-800 border-gray-600 text-white placeholder-gray-500 min-h-[120px] resize-none focus:border-green-500 focus:ring-green-500"
-                  />
-                  <Button
-                    onClick={handleGenerateApp}
-                    disabled={!aiPrompt.trim() || isGenerating}
-                    className="absolute bottom-3 right-3 bg-green-600 hover:bg-green-700"
-                    size="sm"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Cpu className="w-4 h-4 mr-2 animate-spin" />
-                        Generating...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4 mr-2" />
-                        Generate
-                      </>
-                    )}
-                  </Button>
-                </div>
+              {/* Conversational Interface Toggle */}
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Build with AI</h3>
+                <Button
+                  onClick={() => setShowConversationalInterface(!showConversationalInterface)}
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  {showConversationalInterface ? 'Simple Mode' : 'Chat Mode'}
+                </Button>
               </div>
+
+              {showConversationalInterface ? (
+                <div className="h-96 border border-gray-600 rounded-lg overflow-hidden">
+                  <ConversationalInterface
+                    mode="compact"
+                    initialPrompt={aiPrompt}
+                    onProjectCreated={(projectId) => {
+                      setActiveProject({ id: projectId, name: 'New Project', status: 'active' });
+                      toast({
+                        title: "Project Created!",
+                        description: "Your project is ready. Continue building!",
+                      });
+                    }}
+                    onCodeGenerated={(code) => {
+                      toast({
+                        title: "Code Generated!",
+                        description: "Your application code has been generated.",
+                      });
+                    }}
+                  />
+                </div>
+              ) : (
+                <>
+                  {/* AI Prompt Input */}
+                  <div className="space-y-3">
+                    <label className="text-sm text-gray-400">Describe your healthcare application</label>
+                    <div className="relative">
+                      <Textarea
+                        placeholder="Create a HIPAA-compliant patient portal with secure messaging, appointment scheduling, and lab results viewing..."
+                        value={aiPrompt}
+                        onChange={(e) => setAiPrompt(e.target.value)}
+                        className="bg-gray-800 border-gray-600 text-white placeholder-gray-500 min-h-[120px] resize-none focus:border-green-500 focus:ring-green-500"
+                      />
+                      <Button
+                        onClick={handleGenerateApp}
+                        disabled={!aiPrompt.trim() || isGenerating}
+                        className="absolute bottom-3 right-3 bg-green-600 hover:bg-green-700"
+                        size="sm"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Cpu className="w-4 h-4 mr-2 animate-spin" />
+                            Generating...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Generate
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* Quick Stats */}
               <div className="grid grid-cols-2 gap-4">
@@ -288,7 +337,7 @@ export default function Dashboard() {
                   </Link>
                   <Link href="/visual-builder">
                     <Button variant="outline" size="sm" className="w-full border-purple-600 text-purple-300 hover:bg-purple-900 bg-purple-900/20">
-                      <Palette className="w-4 h-4 mr-2" />
+                      <Eye className="w-4 h-4 mr-2" />
                       No-Code Builder
                     </Button>
                   </Link>
@@ -450,6 +499,9 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Accessibility Toolbar */}
+      <AccessibilityToolbar />
     </div>
   );
 }

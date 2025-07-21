@@ -31,10 +31,14 @@ import { grokVerificationService } from "./grok-verification-service";
 import { healthcareAIValidationService } from "./healthcare-ai-validation";
 import { NO_CODE_BACKEND_PATENTS } from "./no-code-backend-patents";
 import { workflowAutomationService } from "./workflow-automation-service";
+import { registerAIChatRoutes } from "./routes/ai-chat";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
+
+  // Register AI Chat routes
+  registerAIChatRoutes(app);
 
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
