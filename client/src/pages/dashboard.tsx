@@ -324,6 +324,12 @@ export default function Dashboard() {
                       Quantum-AI
                     </Button>
                   </Link>
+                  <Link href="/dual-quantum-classical">
+                    <Button variant="outline" size="sm" className="w-full border-cyan-600 text-cyan-300 hover:bg-cyan-900 bg-cyan-900/20">
+                      <Zap className="w-4 h-4 mr-2" />
+                      Dual Patents
+                    </Button>
+                  </Link>
                   <Link href="/tjc-compliance">
                     <Button variant="outline" size="sm" className="w-full border-green-600 text-green-300 hover:bg-green-900 bg-green-900/20">
                       <Shield className="w-4 h-4 mr-2" />
@@ -348,6 +354,12 @@ export default function Dashboard() {
                     <Building className="w-4 h-4 mr-2" />
                     Auto Business
                   </Button>
+                  <Link href="/healthcare-testing">
+                    <Button variant="outline" size="sm" className="w-full border-pink-600 text-pink-300 hover:bg-pink-900 bg-pink-900/20">
+                      <TestTube className="w-4 h-4 mr-2" />
+                      AI Testing
+                    </Button>
+                  </Link>
                 </div>
               </div>
 

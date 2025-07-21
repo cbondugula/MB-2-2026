@@ -37,6 +37,7 @@ import { autonomousBusinessRouter } from "./autonomous-business-creator";
 import { bciRouter } from "./brain-computer-interface";
 import { tjcComplianceRouter } from "./tjc-compliance-service";
 import { healthcareTestingRouter } from "./healthcare-testing-service";
+import { dualQuantumClassicalService } from "./dual-quantum-classical-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -2765,6 +2766,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error calculating pricing:', error);
       res.status(500).json({ message: 'Failed to calculate pricing' });
+    }
+  });
+
+  // Dual Quantum-Classical Patent Implementation Routes
+  app.post('/api/dual-processing/international-accreditation', isAuthenticated, async (req, res) => {
+    try {
+      const { countries, requirements, useQuantum } = req.body;
+      const result = await dualQuantumClassicalService.processInternationalAccreditation(countries, requirements, useQuantum);
+      res.json(result);
+    } catch (error) {
+      console.error("Error in dual international accreditation:", error);
+      res.status(500).json({ message: "Failed to process international accreditation" });
+    }
+  });
+
+  app.post('/api/dual-processing/fellowship-programs', isAuthenticated, async (req, res) => {
+    try {
+      const { subspecialties, requirements, useQuantum } = req.body;
+      const result = await dualQuantumClassicalService.processFellowshipPrograms(subspecialties, requirements, useQuantum);
+      res.json(result);
+    } catch (error) {
+      console.error("Error in dual fellowship processing:", error);
+      res.status(500).json({ message: "Failed to process fellowship programs" });
+    }
+  });
+
+  app.post('/api/dual-processing/continuous-monitoring', isAuthenticated, async (req, res) => {
+    try {
+      const { institutions, realTimeData, useQuantum } = req.body;
+      const result = await dualQuantumClassicalService.continuousAccreditationMonitoring(institutions, realTimeData, useQuantum);
+      res.json(result);
+    } catch (error) {
+      console.error("Error in dual continuous monitoring:", error);
+      res.status(500).json({ message: "Failed to process continuous monitoring" });
+    }
+  });
+
+  app.post('/api/dual-processing/milestone-epa', isAuthenticated, async (req, res) => {
+    try {
+      const { narratives, milestoneData, useQuantum } = req.body;
+      const result = await dualQuantumClassicalService.milestoneEPAAssessment(narratives, milestoneData, useQuantum);
+      res.json(result);
+    } catch (error) {
+      console.error("Error in dual milestone EPA assessment:", error);
+      res.status(500).json({ message: "Failed to process milestone EPA assessment" });
+    }
+  });
+
+  app.get('/api/dual-processing/patent-status', isAuthenticated, async (req, res) => {
+    try {
+      const status = await dualQuantumClassicalService.getPatentImplementationStatus();
+      res.json(status);
+    } catch (error) {
+      console.error("Error fetching patent implementation status:", error);
+      res.status(500).json({ message: "Failed to fetch patent status" });
     }
   });
 
