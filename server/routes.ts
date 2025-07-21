@@ -2226,6 +2226,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { bciRouter } = await import('./brain-computer-interface');
   const { tjcComplianceRouter } = await import('./tjc-compliance-service');
   const { healthcareTestingRouter } = await import('./healthcare-testing-service');
+  const { tjcPatentAnalysisRouter } = await import('./tjc-patent-analysis-service');
 
   // Revolutionary Technology API Routes
   app.use('/api/quantum', quantumAIRouter);
@@ -2233,7 +2234,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use('/api/bci', bciRouter);
   app.use('/api/tjc', tjcComplianceRouter);
   app.use('/api/healthcare-testing', healthcareTestingRouter);
-  app.use('/api/healthcare-testing', healthcareTestingRouter);
+  app.use('/api/tjc-patent', tjcPatentAnalysisRouter);
 
   app.post('/api/super-agent/convert-static-to-dynamic', async (req, res) => {
     try {
