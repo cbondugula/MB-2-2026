@@ -2,7 +2,7 @@ PATENT APPLICATION 046: PREDICTIVE HEALTHCARE COMPLIANCE VIOLATION DETECTION SYS
 
 USPTO APPLICATION READY FOR FILING
 
-Application Title: Machine Learning System and Method for Predicting Healthcare Regulatory Compliance Violations Before Implementation
+Application Title: Artificial Intelligence System and Method for Predicting Healthcare Regulatory Compliance Violations Before Implementation
 
 Patent Classification: 
 - G06N 20/00 (Machine learning)
@@ -16,7 +16,7 @@ Filing Date: July 21, 2025
 
 ABSTRACT
 
-A machine learning system for predicting healthcare regulatory compliance violations uses trained neural networks to analyze healthcare application specifications and predict compliance failure probability before system implementation. The system employs natural language processing, historical violation data analysis, and pattern recognition to predict Joint Commission compliance violations. The invention enables proactive compliance management and prevents regulatory failures.
+An artificial intelligence system for predicting healthcare regulatory compliance violations uses trained neural networks to analyze healthcare application specifications and predict compliance failure probability before system implementation. The system employs natural language processing, historical violation data analysis, and pattern recognition to predict Joint Commission compliance violations. The invention enables proactive compliance management and prevents regulatory failures.
 
 TECHNICAL FIELD
 
