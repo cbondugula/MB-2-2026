@@ -2229,6 +2229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { tjcPatentAnalysisRouter } = await import('./tjc-patent-analysis-service');
   const { patentValuationRouter } = await import('./patent-valuation-comparison');
   const { tjcPatentFilingRouter } = await import('./tjc-patent-filing-service');
+  const { patentDrawingsRouter } = await import('./patent-drawings-service');
 
   // Revolutionary Technology API Routes
   app.use('/api/quantum', quantumAIRouter);
@@ -2239,6 +2240,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use('/api/tjc-patent', tjcPatentAnalysisRouter);
   app.use('/api/patent-value', patentValuationRouter);
   app.use('/api/tjc-filing', tjcPatentFilingRouter);
+  app.use('/api/patent-drawings', patentDrawingsRouter);
 
   app.post('/api/super-agent/convert-static-to-dynamic', async (req, res) => {
     try {

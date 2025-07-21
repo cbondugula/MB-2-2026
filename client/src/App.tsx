@@ -32,6 +32,7 @@ import MLPythonIntegration from "@/pages/ml-python-integration";
 import MultiAIVerification from "@/pages/multi-ai-verification";
 import PatentVerificationDashboard from "@/pages/patent-verification-dashboard";
 import PatentLinks from "@/pages/patent-links";
+import PatentDrawings from "@/pages/patent-drawings";
 import TJCCompliance from "@/pages/tjc-compliance";
 import QuantumAI from "@/pages/quantum-ai";
 import HealthcareTesting from "@/pages/healthcare-testing";
@@ -77,6 +78,7 @@ function Router() {
           <Route path="/multi-ai-verification" component={MultiAIVerification} />
           <Route path="/patent-verification" component={PatentVerificationDashboard} />
           <Route path="/patent-links" component={PatentLinks} />
+          <Route path="/patent-drawings" component={PatentDrawings} />
           <Route path="/tjc-compliance" component={TJCCompliance} />
           <Route path="/quantum-ai" component={QuantumAI} />
           <Route path="/healthcare-testing" component={HealthcareTesting} />
