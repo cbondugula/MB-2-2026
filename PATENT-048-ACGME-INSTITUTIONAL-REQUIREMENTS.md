@@ -2,6 +2,7 @@ PATENT APPLICATION 048: AI-POWERED ACGME INSTITUTIONAL REQUIREMENTS COMPLIANCE A
 
 PATENT SUMMARY
 - Title: AI-Powered ACGME Institutional Requirements Compliance Automation System
+- Inventor: Dr. Chandra Sekhar Bondugula
 - Filing Priority: High (institutional foundation for all programs)
 - Patent Strength: Strong (novel AI application to ACGME institutional standards)
 - Implementation: Working prototype with real-time compliance monitoring
