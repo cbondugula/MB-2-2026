@@ -2,13 +2,14 @@
 
 ## **USPTO FILING STATUS: READY FOR SUBMISSION**
 
+**Inventor(s)**: Dr. Chandra Sekhar Bondugula  
 **Filing Date**: July 21, 2025  
 **Application Type**: Provisional Patent Application  
 **Patent Classification**: G06F 19/00 (Healthcare Informatics), G06N 10/00 (Quantum Computing)  
 **Priority**: Emergency Filing (Companion to Patents 055-057)  
 
 ## **PATENT TITLE**
-"Dual Quantum-Classical System for Automated Medical Education Milestone Assessment and Entrustable Professional Activities Evaluation"
+"Dual Quantum-Classical AI System for Automated Medical Education Milestone and EPA Assessment"
 
 ## **TECHNICAL FIELD**
 This invention relates to automated medical education assessment systems, specifically a dual quantum-classical processing architecture for milestone-based competency assessment, EPA evaluation, and narrative analysis automation.

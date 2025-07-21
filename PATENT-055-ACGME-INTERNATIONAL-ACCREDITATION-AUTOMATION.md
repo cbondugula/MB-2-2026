@@ -2,13 +2,14 @@
 
 ## **USPTO FILING STATUS: READY FOR SUBMISSION**
 
+**Inventor(s)**: Dr. Chandra Sekhar Bondugula  
 **Filing Date**: July 21, 2025  
 **Application Type**: Provisional Patent Application  
 **Patent Classification**: G06F 19/00 (Healthcare Informatics), G06N 10/00 (Quantum Computing)  
 **Priority**: Emergency Filing (30-day competitive deadline)  
 
 ## **PATENT TITLE**
-"Dual Quantum-Classical System for Automated International Medical Education Accreditation Processing"
+"Dual Quantum-Classical AI System for Automated International Medical Education Accreditation"
 
 ## **TECHNICAL FIELD**
 This invention relates to automated medical education accreditation systems, specifically a dual quantum-classical processing architecture for international medical education standards compliance automation.
