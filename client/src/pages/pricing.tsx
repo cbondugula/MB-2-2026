@@ -116,12 +116,12 @@ export default function Pricing() {
               <div key={plan.id} className="relative">
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                    <Badge className="bg-blue-600 text-white px-4 py-1 text-sm font-medium">
+                    <Badge className="bg-green-600 text-white px-4 py-1 text-sm font-medium">
                       Most Popular
                     </Badge>
                   </div>
                 )}
-                <Card className={`bg-slate-800 border-slate-700 h-full ${plan.popular ? 'ring-2 ring-blue-500' : ''}`}>
+                <Card className={`bg-slate-800 border-slate-700 h-full ${plan.popular ? 'ring-2 ring-green-500' : ''}`}>
                   <CardHeader className="text-center pb-8">
                     <CardTitle className="text-2xl font-bold text-white mb-2">
                       {plan.name}
@@ -146,7 +146,7 @@ export default function Pricing() {
                     <Button 
                       className={`w-full py-3 text-sm font-medium ${
                         plan.popular 
-                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          ? 'bg-green-600 hover:bg-green-700 text-white' 
                           : 'bg-slate-700 hover:bg-slate-600 text-white border-slate-600'
                       }`}
                       onClick={() => {
