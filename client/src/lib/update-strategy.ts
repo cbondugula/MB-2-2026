@@ -54,24 +54,60 @@ export const UPDATE_CONFIGS: Record<string, UpdateConfig> = {
     description: 'Project status and progress'
   },
 
-  // IP Protected - Manual only for trade secret protection
+  // IP Protected - HIGHLY PROTECTED - Manual only for trade secret protection
   '/api/patents/portfolio': {
     tier: UpdateTier.IP_PROTECTED,
     intervalMinutes: -1, // Never auto-update
     criticalAlerts: false,
-    description: 'Patent information - manual refresh only'
+    description: 'CLASSIFIED: Patent information - manual refresh only'
+  },
+  '/api/patents/filing-status': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: -1,
+    criticalAlerts: false,
+    description: 'CLASSIFIED: Patent filing status - highly protected'
+  },
+  '/api/patents/domain-expansion': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: -1,
+    criticalAlerts: false,
+    description: 'CLASSIFIED: Domain expansion strategy - trade secret'
   },
   '/api/competitive/analysis': {
     tier: UpdateTier.IP_PROTECTED,
     intervalMinutes: -1,
     criticalAlerts: false,
-    description: 'Competitive intelligence - IP protected'
+    description: 'CLASSIFIED: Competitive intelligence - highly protected'
   },
   '/api/revenue/projections': {
     tier: UpdateTier.IP_PROTECTED,
     intervalMinutes: -1,
     criticalAlerts: false,
-    description: 'Strategic valuations - trade secret protected'
+    description: 'CLASSIFIED: Strategic valuations - trade secret protected'
+  },
+  '/api/acquisition/valuations': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: -1,
+    criticalAlerts: false,
+    description: 'CLASSIFIED: Acquisition values - highly sensitive'
+  },
+  '/api/voice-backend/generate': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: -1,
+    criticalAlerts: false,
+    description: 'CLASSIFIED: Voice backend technology - proprietary'
+  },
+  '/api/voice-database/manage': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: -1,
+    criticalAlerts: false,
+    description: 'CLASSIFIED: Voice database technology - proprietary'
+  },
+  '/api/ml/voice-training': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: -1,
+    criticalAlerts: false,
+    description: 'CLASSIFIED: Voice ML training - proprietary technology'
   }
 };
 

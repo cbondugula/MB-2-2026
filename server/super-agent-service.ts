@@ -91,37 +91,37 @@ export default class SuperSCAgent {
       
       strategicEndpoints: {
         '/api/revenue/projections': {
-          purpose: 'Smart revenue forecasting with user-controlled updates',
-          dataSource: 'Revenue projection engine with market feedback integration',
-          updateFrequency: 'Manual refresh + optional background updates for critical changes only'
+          purpose: 'CLASSIFIED: Revenue forecasting - manual access only',
+          dataSource: 'PROTECTED: Revenue projection engine - restricted access',
+          updateFrequency: 'MANUAL ONLY - No automatic updates - IP protection enforced'
         },
         '/api/competitive/analysis': {
-          purpose: 'Intelligent competitive intelligence with selective updates',
-          dataSource: 'Competitive analysis engine with latest market data',
-          updateFrequency: 'User-initiated + automatic updates for significant market changes'
+          purpose: 'CLASSIFIED: Competitive intelligence - highly protected',
+          dataSource: 'PROTECTED: Competitive analysis engine - trade secret protection',
+          updateFrequency: 'MANUAL ONLY - No background monitoring - complete IP protection'
         },
         '/api/acquisition/valuations': {
-          purpose: 'Smart acquisition value calculations with threshold updates',
-          dataSource: 'Acquisition valuation engine with current market conditions',
-          updateFrequency: 'Manual refresh + automatic updates when values change >10%'
+          purpose: 'CLASSIFIED: Acquisition value calculations - highly sensitive',
+          dataSource: 'PROTECTED: Acquisition valuation engine - restricted access',
+          updateFrequency: 'MANUAL ONLY - No automatic calculations - maximum IP protection'
         }
       },
       
       developmentEndpoints: {
         '/api/voice-backend/status': {
-          purpose: 'Smart voice-controlled backend capabilities with selective updates',
-          dataSource: 'Voice backend service with functional demonstrations',
-          updateFrequency: 'Manual refresh + automatic alerts for system status changes'
+          purpose: 'CLASSIFIED: Voice-controlled backend technology - proprietary IP',
+          dataSource: 'PROTECTED: Voice backend service - trade secret technology',
+          updateFrequency: 'MANUAL ONLY - No automatic alerts - complete IP protection'
         },
         '/api/voice-database/status': {
-          purpose: 'Intelligent voice-controlled database management with threshold monitoring',
-          dataSource: 'Voice database service with current performance metrics',
-          updateFrequency: 'User-initiated + automatic updates for performance issues'
+          purpose: 'CLASSIFIED: Voice-controlled database management - proprietary',
+          dataSource: 'PROTECTED: Voice database service - revolutionary technology',
+          updateFrequency: 'MANUAL ONLY - No background monitoring - IP protection enforced'
         },
         '/api/compliance/predictions': {
-          purpose: 'Smart compliance predictions with critical violation alerts',
+          purpose: 'Healthcare compliance predictions with critical violation alerts',
           dataSource: 'Compliance prediction service with current data analysis',
-          updateFrequency: 'Manual refresh + immediate alerts for high-risk violations'
+          updateFrequency: 'Real-time alerts for high-risk violations - healthcare safety priority'
         }
       }
     };
@@ -159,11 +159,12 @@ export default class SuperSCAgent {
       },
       
       implementationStrategy: {
-        dataFetching: 'TanStack Query with smart update strategy - manual primary, selective automatic secondary',
+        dataFetching: 'TanStack Query with tier-based strategy - IP data MANUAL ONLY, healthcare data real-time',
         errorHandling: 'Comprehensive error states with authentication handling',
-        loadingStates: 'Progressive loading with skeleton screens for both manual and automatic updates',
-        updateTriggers: 'Manual refresh buttons + selective automatic updates for critical healthcare data',
-        cacheStrategy: 'Smart cache with manual refresh + automatic invalidation for healthcare-critical data only'
+        loadingStates: 'Progressive loading with clear tier indicators for data sensitivity',
+        updateTriggers: 'HIGHLY PROTECTED IP data manual-only + healthcare data real-time for safety',
+        cacheStrategy: 'Maximum IP protection: patent/competitive data never cached or auto-updated',
+        ipProtection: 'CLASSIFIED data endpoints completely isolated from automatic update systems'
       }
     };
   }

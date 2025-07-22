@@ -103,11 +103,11 @@ export function SmartRefresh({
       >
         {config.tier === UpdateTier.HEALTHCARE_CRITICAL && <Activity className="w-3 h-3" />}
         {config.tier === UpdateTier.USER_EXPERIENCE && <Clock className="w-3 h-3" />}
-        {config.tier === UpdateTier.IP_PROTECTED && <Lock className="w-3 h-3" />}
+        {config.tier === UpdateTier.IP_PROTECTED && <Shield className="w-3 h-3" />}
         <span>
           {config.tier === UpdateTier.HEALTHCARE_CRITICAL ? 'Real-time' :
            config.tier === UpdateTier.USER_EXPERIENCE ? 'Smart Updates' :
-           'IP Protected'}
+           'HIGHLY PROTECTED'}
         </span>
       </Badge>
     </div>
