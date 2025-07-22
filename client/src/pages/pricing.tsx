@@ -27,14 +27,14 @@ export default function Pricing() {
 
   if (plansLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-medical-blue-50 via-white to-trust-green-50 flex items-center justify-center">
         <div className="animate-spin w-12 h-12 border-4 border-medical-blue-500 border-t-transparent rounded-full shadow-medical" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-medical-blue-50 via-white to-trust-green-50">
       {/* Enhanced Header */}
       <div className="bg-white/90 backdrop-blur-md border-b border-gray-300/50 shadow-strong">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">

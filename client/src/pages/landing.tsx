@@ -63,9 +63,9 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-medical-blue-50 via-white to-trust-green-50 font-sans">
       {/* Enhanced Header */}
-      <header className="bg-gray-800/80 backdrop-blur-xl border-b border-gray-600/50 sticky top-0 z-50 shadow-strong">
+      <header className="bg-white/95 backdrop-blur-xl border-b border-medical-blue-200 sticky top-0 z-50 shadow-medical">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -73,8 +73,8 @@ export default function Landing() {
                 <Code className="w-6 h-6 text-white" />
               </div>
               <div>
-                <span className="text-2xl font-bold text-white">MedBuilder</span>
-                <Badge variant="secondary" className="ml-3 text-sm bg-trust-green-700 text-trust-green-50 shadow-green">
+                <span className="text-2xl font-bold text-medical-blue-800">MedBuilder</span>
+                <Badge variant="secondary" className="ml-3 text-sm bg-trust-green-500 text-white shadow-green">
                   Healthcare AI Platform
                 </Badge>
               </div>
@@ -84,7 +84,7 @@ export default function Landing() {
               <Button 
                 onClick={() => setShowDemo(!showDemo)}
                 variant="outline"
-                className="border-gray-500 text-gray-200 hover:bg-gray-700 transition-strong shadow-hover"
+                className="border-medical-blue-500 text-medical-blue-600 hover:bg-medical-blue-50 transition-strong shadow-medical"
                 size="sm"
               >
                 {showDemo ? 'Hide Demo' : 'View Demo'}
@@ -92,7 +92,7 @@ export default function Landing() {
               <Button 
                 asChild
                 variant="outline"
-                className="border-trust-green-500 text-trust-green-200 hover:bg-trust-green-700 transition-strong shadow-green"
+                className="border-trust-green-500 text-trust-green-600 hover:bg-trust-green-50 transition-strong shadow-green"
                 size="sm"
               >
                 <Link href="/pricing">Pricing</Link>
@@ -100,14 +100,14 @@ export default function Landing() {
               <Button 
                 asChild
                 variant="outline"
-                className="border-medical-blue-500 text-medical-blue-200 hover:bg-medical-blue-700 transition-strong shadow-medical"
+                className="border-healthcare-teal-500 text-healthcare-teal-600 hover:bg-healthcare-teal-50 transition-strong shadow-medical"
                 size="sm"
               >
                 <Link href="/legal-documents">Legal Docs</Link>
               </Button>
               <Button 
                 onClick={() => window.location.href = '/api/login'}
-                className="gradient-trust text-white hover:bg-trust-green-700 transition-strong shadow-green scale-hover"
+                className="gradient-medical text-white hover:bg-medical-blue-600 transition-strong shadow-medical scale-hover"
                 size="sm"
               >
                 Sign in
@@ -123,36 +123,36 @@ export default function Landing() {
           {/* Title */}
           <div className="space-y-10">
             <div className="space-y-8">
-              <h1 className="text-6xl md:text-8xl font-black leading-tight bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+              <h1 className="text-6xl md:text-8xl font-black leading-tight bg-gradient-to-r from-medical-blue-800 via-medical-blue-600 to-trust-green-600 bg-clip-text text-transparent">
                 Turn Your Healthcare Ideas Into
-                <span className="gradient-trust bg-clip-text text-transparent block mt-3">Real Apps</span>
+                <span className="gradient-medical bg-clip-text text-transparent block mt-3">Real Apps</span>
               </h1>
-              <p className="text-2xl md:text-3xl text-gray-200 leading-relaxed max-w-5xl mx-auto font-medium">
+              <p className="text-2xl md:text-3xl text-medical-blue-700 leading-relaxed max-w-5xl mx-auto font-medium">
                 Simply describe what you need - patient tracking, appointment scheduling, or treatment plans.
                 Our AI creates secure, professional apps instantly. No coding required.
               </p>
             </div>
             
             <div className="flex flex-col items-center space-y-8">
-              <div className="flex items-center justify-center space-x-8 text-lg text-gray-300">
+              <div className="flex items-center justify-center space-x-8 text-lg text-medical-blue-600">
                 <div className="flex items-center space-x-3">
-                  <Shield className="w-6 h-6 text-medical-blue-400" />
+                  <Shield className="w-6 h-6 text-medical-blue-500" />
                   <span className="font-medium">2,500+ healthcare professionals</span>
                 </div>
-                <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                <span className="font-medium text-trust-green-400">HIPAA compliant</span>
-                <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                <span className="font-medium text-healthcare-teal-400">Ready in minutes</span>
+                <div className="w-2 h-2 bg-medical-blue-300 rounded-full"></div>
+                <span className="font-medium text-trust-green-600">HIPAA compliant</span>
+                <div className="w-2 h-2 bg-medical-blue-300 rounded-full"></div>
+                <span className="font-medium text-healthcare-teal-600">Ready in minutes</span>
               </div>
               
               {/* Enhanced User Mode Toggle */}
-              <div className="flex items-center space-x-3 bg-gray-800/80 backdrop-blur-sm rounded-2xl p-2 border border-gray-600/50 shadow-strong">
+              <div className="flex items-center space-x-3 bg-white/80 backdrop-blur-sm rounded-2xl p-2 border border-medical-blue-200 shadow-medical">
                 <button
                   onClick={() => setUserMode('healthcare')}
                   className={`px-8 py-4 rounded-xl text-lg font-semibold transition-strong scale-hover ${
                     userMode === 'healthcare' 
                       ? 'gradient-trust text-white shadow-green' 
-                      : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                      : 'text-medical-blue-600 hover:text-medical-blue-800 hover:bg-medical-blue-50'
                   }`}
                 >
                   Healthcare Professional
@@ -162,7 +162,7 @@ export default function Landing() {
                   className={`px-8 py-4 rounded-xl text-lg font-semibold transition-strong scale-hover ${
                     userMode === 'developer' 
                       ? 'gradient-medical text-white shadow-medical' 
-                      : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                      : 'text-medical-blue-600 hover:text-medical-blue-800 hover:bg-medical-blue-50'
                   }`}
                 >
                   Developer
@@ -173,7 +173,7 @@ export default function Landing() {
 
           {/* Enhanced Central Prompt Input */}
           <div className="max-w-5xl mx-auto">
-            <div className="relative bg-gray-800/90 backdrop-blur-md rounded-3xl border border-gray-600/50 p-8 shadow-strong">
+            <div className="relative bg-white/90 backdrop-blur-md rounded-3xl border border-medical-blue-200 p-8 shadow-medical">
               <Textarea
                 placeholder={userMode === 'healthcare' 
                   ? "Tell me what you need for your practice...\n\nExample: I'm a family doctor and need an app where patients can book appointments, fill out forms before visits, and I can track their health progress over time."
@@ -181,15 +181,15 @@ export default function Landing() {
                 }
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="w-full h-40 bg-transparent border-none text-white placeholder-gray-300 text-xl resize-none focus:outline-none font-medium"
+                className="w-full h-40 bg-transparent border-none text-medical-blue-800 placeholder-medical-blue-400 text-xl resize-none focus:outline-none font-medium"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                     handleGenerateApp();
                   }
                 }}
               />
-              <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-600/50">
-                <span className="text-lg text-gray-400 font-medium">Ctrl+Enter to generate</span>
+              <div className="flex items-center justify-between mt-6 pt-6 border-t border-medical-blue-200">
+                <span className="text-lg text-medical-blue-500 font-medium">Ctrl+Enter to generate</span>
                 <Button
                   onClick={handleGenerateApp}
                   disabled={!prompt.trim() || isGenerating}
@@ -217,7 +217,7 @@ export default function Landing() {
 
           {/* Enhanced Example Prompts */}
           <div className="space-y-8">
-            <p className="text-xl text-gray-300 font-medium">
+            <p className="text-xl text-medical-blue-600 font-medium">
               {userMode === 'healthcare' ? 'Common requests from healthcare professionals:' : 'Try these technical examples:'}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
@@ -225,7 +225,7 @@ export default function Landing() {
                 <button
                   key={index}
                   onClick={() => setPrompt(example)}
-                  className="text-left p-6 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 border border-gray-600/50 rounded-2xl transition-strong hover:border-trust-green-500 text-lg text-gray-300 hover:text-white group shadow-strong scale-hover"
+                  className="text-left p-6 bg-white/80 backdrop-blur-sm hover:bg-medical-blue-50 border border-medical-blue-200 rounded-2xl transition-strong hover:border-trust-green-500 text-lg text-medical-blue-600 hover:text-medical-blue-800 group shadow-medical scale-hover"
                 >
                   <div className="flex items-start space-x-4">
                     <Terminal className="w-6 h-6 mt-1 text-trust-green-500 flex-shrink-0 group-hover:text-trust-green-400" />
@@ -239,13 +239,13 @@ export default function Landing() {
           {/* Enhanced Quick Access Features */}
           <div className="mt-24">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-              <Card className="bg-gray-800/90 backdrop-blur-md border-gray-600/50 hover:bg-gray-700/90 transition-strong hover:border-trust-green-500/70 shadow-strong scale-hover">
+              <Card className="bg-white/90 backdrop-blur-md border-medical-blue-200 hover:bg-white transition-strong hover:border-trust-green-500 shadow-medical scale-hover">
                 <CardContent className="p-10 text-center">
                   <Shield className="w-12 h-12 text-trust-green-500 mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold text-white mb-4">
+                  <h3 className="text-2xl font-bold text-medical-blue-800 mb-4">
                     {userMode === 'healthcare' ? 'Secure & Private' : 'HIPAA Compliant'}
                   </h3>
-                  <p className="text-gray-300 text-lg leading-relaxed">
+                  <p className="text-medical-blue-600 text-lg leading-relaxed">
                     {userMode === 'healthcare' 
                       ? 'Your patient data stays safe with medical-grade security'
                       : 'Built-in compliance checking and security scanning'
@@ -254,13 +254,13 @@ export default function Landing() {
                 </CardContent>
               </Card>
               
-              <Card className="bg-gray-800/90 backdrop-blur-md border-gray-600/50 hover:bg-gray-700/90 transition-strong hover:border-medical-blue-500/70 shadow-strong scale-hover">
+              <Card className="bg-white/90 backdrop-blur-md border-medical-blue-200 hover:bg-white transition-strong hover:border-medical-blue-500 shadow-medical scale-hover">
                 <CardContent className="p-10 text-center">
                   <Zap className="w-12 h-12 text-medical-blue-500 mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold text-white mb-4">
+                  <h3 className="text-2xl font-bold text-medical-blue-800 mb-4">
                     {userMode === 'healthcare' ? 'No Coding Needed' : 'AI-Powered'}
                   </h3>
-                  <p className="text-gray-300 text-lg leading-relaxed">
+                  <p className="text-medical-blue-600 text-lg leading-relaxed">
                     {userMode === 'healthcare' 
                       ? 'Just describe what you need - we handle all the technical stuff'
                       : 'Claude Sonnet 4 and Med-Gemma models for medical AI'
@@ -269,13 +269,13 @@ export default function Landing() {
                 </CardContent>
               </Card>
               
-              <Card className="bg-gray-800/90 backdrop-blur-md border-gray-600/50 hover:bg-gray-700/90 transition-strong hover:border-professional-purple-500/70 shadow-strong scale-hover">
+              <Card className="bg-white/90 backdrop-blur-md border-medical-blue-200 hover:bg-white transition-strong hover:border-professional-purple-500 shadow-medical scale-hover">
                 <CardContent className="p-10 text-center">
                   <Code className="w-12 h-12 text-professional-purple-500 mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold text-white mb-4">
+                  <h3 className="text-2xl font-bold text-medical-blue-800 mb-4">
                     {userMode === 'healthcare' ? 'Ready to Use' : 'Full Stack'}
                   </h3>
-                  <p className="text-gray-300 text-lg leading-relaxed">
+                  <p className="text-medical-blue-600 text-lg leading-relaxed">
                     {userMode === 'healthcare' 
                       ? 'Works on phones, tablets, and computers right away'
                       : 'Frontend, backend, database, and deployment included'
@@ -290,42 +290,42 @@ export default function Landing() {
 
       {/* Demo Section */}
       {showDemo && (
-        <div className="bg-gray-800 border-t border-gray-700 py-12">
+        <div className="bg-white/95 border-t border-medical-blue-200 py-12">
           <div className="container mx-auto px-6">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-white mb-4">Platform Demo</h2>
-                <p className="text-gray-400">Experience our comprehensive healthcare AI development platform</p>
+                <h2 className="text-3xl font-bold text-medical-blue-800 mb-4">Platform Demo</h2>
+                <p className="text-medical-blue-600">Experience our comprehensive healthcare AI development platform</p>
               </div>
 
               {/* ML Dashboard Preview */}
               <div className="space-y-8">
-                <Card className="bg-gray-900 border-gray-600">
+                <Card className="bg-white border-medical-blue-200">
                   <CardContent className="p-6">
                     <div className="flex items-center space-x-3 mb-6">
-                      <Activity className="h-8 w-8 text-purple-400" />
-                      <h3 className="text-2xl font-bold text-white">Machine Learning Platform</h3>
-                      <Badge className="bg-purple-900 text-purple-300">Live Demo</Badge>
+                      <Activity className="h-8 w-8 text-professional-purple-500" />
+                      <h3 className="text-2xl font-bold text-medical-blue-800">Machine Learning Platform</h3>
+                      <Badge className="bg-professional-purple-500 text-white">Live Demo</Badge>
                     </div>
 
                     {/* Key Metrics - Dynamic Data */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                      <Card className="bg-gray-800 border-gray-700">
+                      <Card className="bg-medical-blue-50 border-medical-blue-200">
                         <CardContent className="p-4">
                           <div className="flex items-center space-x-2">
-                            <Brain className="h-6 w-6 text-blue-400" />
+                            <Brain className="h-6 w-6 text-medical-blue-500" />
                             <div>
                               {mlLoading ? (
                                 <div className="animate-pulse">
-                                  <div className="h-6 bg-gray-600 rounded w-16 mb-1"></div>
-                                  <div className="h-3 bg-gray-600 rounded w-20"></div>
+                                  <div className="h-6 bg-medical-blue-200 rounded w-16 mb-1"></div>
+                                  <div className="h-3 bg-medical-blue-200 rounded w-20"></div>
                                 </div>
                               ) : (
                                 <>
-                                  <p className="text-xl font-bold text-white">
+                                  <p className="text-xl font-bold text-medical-blue-800">
                                     {mlMetrics?.totalPredictions?.toLocaleString() || '15,847'}
                                   </p>
-                                  <p className="text-xs text-gray-400">ML Predictions</p>
+                                  <p className="text-xs text-medical-blue-600">ML Predictions</p>
                                 </>
                               )}
                             </div>
@@ -333,22 +333,22 @@ export default function Landing() {
                         </CardContent>
                       </Card>
 
-                      <Card className="bg-gray-800 border-gray-700">
+                      <Card className="bg-trust-green-50 border-trust-green-200">
                         <CardContent className="p-4">
                           <div className="flex items-center space-x-2">
-                            <TrendingUp className="h-6 w-6 text-green-400" />
+                            <TrendingUp className="h-6 w-6 text-trust-green-500" />
                             <div>
                               {mlLoading ? (
                                 <div className="animate-pulse">
-                                  <div className="h-6 bg-gray-600 rounded w-12 mb-1"></div>
-                                  <div className="h-3 bg-gray-600 rounded w-20"></div>
+                                  <div className="h-6 bg-trust-green-200 rounded w-12 mb-1"></div>
+                                  <div className="h-3 bg-trust-green-200 rounded w-20"></div>
                                 </div>
                               ) : (
                                 <>
-                                  <p className="text-xl font-bold text-white">
+                                  <p className="text-xl font-bold text-trust-green-800">
                                     {mlMetrics?.averageAccuracy ? `${Math.round(mlMetrics.averageAccuracy * 100)}%` : '89%'}
                                   </p>
-                                  <p className="text-xs text-gray-400">Model Accuracy</p>
+                                  <p className="text-xs text-trust-green-600">Model Accuracy</p>
                                 </>
                               )}
                             </div>
@@ -356,22 +356,22 @@ export default function Landing() {
                         </CardContent>
                       </Card>
 
-                      <Card className="bg-gray-800 border-gray-700">
+                      <Card className="bg-healthcare-teal-50 border-healthcare-teal-200">
                         <CardContent className="p-4">
                           <div className="flex items-center space-x-2">
-                            <Network className="h-6 w-6 text-purple-400" />
+                            <Network className="h-6 w-6 text-healthcare-teal-500" />
                             <div>
                               {mlLoading ? (
                                 <div className="animate-pulse">
-                                  <div className="h-6 bg-gray-600 rounded w-8 mb-1"></div>
-                                  <div className="h-3 bg-gray-600 rounded w-24"></div>
+                                  <div className="h-6 bg-healthcare-teal-200 rounded w-8 mb-1"></div>
+                                  <div className="h-3 bg-healthcare-teal-200 rounded w-24"></div>
                                 </div>
                               ) : (
                                 <>
-                                  <p className="text-xl font-bold text-white">
+                                  <p className="text-xl font-bold text-healthcare-teal-800">
                                     {mlMetrics?.federatedNodes || '8'}
                                   </p>
-                                  <p className="text-xs text-gray-400">Federated Hospitals</p>
+                                  <p className="text-xs text-healthcare-teal-600">Federated Hospitals</p>
                                 </>
                               )}
                             </div>
