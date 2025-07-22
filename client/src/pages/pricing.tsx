@@ -21,7 +21,7 @@ export default function Pricing() {
   });
 
   // Use dynamic data instead of static plans
-  const plans = pricingData?.tiers || [];
+  const plans = (pricingData as any)?.tiers || [];
 
   const getPrice = (plan: any) => billingPeriod === 'annual' ? plan.price * 0.8 : plan.price;
 
@@ -104,7 +104,7 @@ export default function Pricing() {
       {/* Pricing Cards */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
+          {plans.map((plan: any) => (
             <Card key={plan.id} className={`relative ${plan.popular ? 'ring-2 ring-blue-500 shadow-lg' : ''}`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -123,7 +123,7 @@ export default function Pricing() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 mb-6">
-                  {plan.features?.map((feature, index) => (
+                  {plan.features?.map((feature: any, index: number) => (
                     <li key={index} className="flex items-start">
                       <Check className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-gray-600">{feature}</span>
@@ -154,7 +154,7 @@ export default function Pricing() {
       </div>
 
       {/* Features Section */}
-      {pricingData?.features && (
+      {(pricingData as any)?.features && (
         <div className="bg-white py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -172,7 +172,7 @@ export default function Pricing() {
                   AI Development
                 </h3>
                 <ul className="space-y-2">
-                  {pricingData.features.aiDevelopment?.map((feature, index) => (
+                  {(pricingData as any).features.aiDevelopment?.map((feature: any, index: number) => (
                     <li key={index} className="text-gray-600">• {feature}</li>
                   ))}
                 </ul>
@@ -183,7 +183,7 @@ export default function Pricing() {
                   Compliance
                 </h3>
                 <ul className="space-y-2">
-                  {pricingData.features.compliance?.map((feature, index) => (
+                  {(pricingData as any).features.compliance?.map((feature: any, index: number) => (
                     <li key={index} className="text-gray-600">• {feature}</li>
                   ))}
                 </ul>
@@ -194,7 +194,7 @@ export default function Pricing() {
                   Collaboration
                 </h3>
                 <ul className="space-y-2">
-                  {pricingData.features.collaboration?.map((feature, index) => (
+                  {(pricingData as any).features.collaboration?.map((feature: any, index: number) => (
                     <li key={index} className="text-gray-600">• {feature}</li>
                   ))}
                 </ul>
