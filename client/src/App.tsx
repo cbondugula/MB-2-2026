@@ -39,6 +39,7 @@ import HealthcareTesting from "@/pages/healthcare-testing";
 import DualQuantumClassical from "@/pages/dual-quantum-classical";
 import HealthcareAppBuilder from "@/pages/healthcare-app-builder";
 import HealthcareDemo from "@/pages/healthcare-demo";
+import Documentation from "@/pages/documentation";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -52,6 +53,7 @@ function Router() {
           <Route path="/custom-pricing" component={CustomPricing} />
           <Route path="/contract-onboarding" component={ContractOnboarding} />
           <Route path="/legal-documents" component={LegalDocuments} />
+          <Route path="/documentation" component={Documentation} />
         </>
       ) : (
         <>
@@ -87,6 +89,7 @@ function Router() {
           <Route path="/healthcare-testing" component={HealthcareTesting} />
           <Route path="/dual-quantum-classical" component={DualQuantumClassical} />
           <Route path="/healthcare-app-builder" component={HealthcareDemo} />
+          <Route path="/documentation" component={Documentation} />
         </>
       )}
       <Route component={NotFound} />
