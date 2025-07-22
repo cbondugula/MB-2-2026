@@ -164,6 +164,30 @@ export const OWNER_LIVE_ENDPOINTS = {
     intervalMinutes: 1, // Immediate threat detection
     criticalAlerts: true,
     description: 'LIVE: Competitive threat monitoring with instant alerts'
+  },
+  '/api/competitive/bigtech': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 1, // Big Tech activity monitoring
+    criticalAlerts: true,
+    description: 'LIVE: Big Tech competitor activity tracking'
+  },
+  '/api/innovation/pipeline': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 2, // Innovation development tracking
+    criticalAlerts: true,
+    description: 'LIVE: Innovation pipeline and development progress'
+  },
+  '/api/patents/race': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 1, // Patent filing race monitoring
+    criticalAlerts: true,
+    description: 'LIVE: Real-time patent race against competitors'
+  },
+  '/api/opportunities/firstmover': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 2, // First-mover opportunity detection
+    criticalAlerts: true,
+    description: 'LIVE: Emerging market opportunities for first-mover advantage'
   }
 };
 

@@ -5,7 +5,7 @@ import { SmartRefresh } from "@/components/ui/smart-refresh";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRefreshInterval } from "@/lib/update-strategy";
 import { useAuth } from "@/hooks/useAuth";
-import { TrendingUp, DollarSign, Target, Shield, Crown, Eye } from "lucide-react";
+import { TrendingUp, DollarSign, Target, Shield, Crown, Eye, Lightning } from "lucide-react";
 
 export default function OwnerDashboard() {
   const { isAuthenticated } = useAuth();
@@ -285,9 +285,25 @@ export default function OwnerDashboard() {
                     <Eye className="h-6 w-6 text-red-500" />
                   </div>
                 </a>
+                
+                <a 
+                  href="/competitive-advantage" 
+                  className="block p-4 bg-white dark:bg-gray-800 rounded-lg border hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold text-blue-600">Competitive Advantage Engine</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-300">
+                        Big Tech monitoring with innovation acceleration tools
+                      </div>
+                    </div>
+                    <Lightning className="h-6 w-6 text-blue-500" />
+                  </div>
+                </a>
+                
                 <div className="text-xs text-gray-500">
-                  Features: 1-minute competitive updates, market funding tracking, 
-                  dynamic strategic guidance, threat monitoring with instant alerts
+                  Features: Big Tech activity tracking, innovation pipeline management,
+                  patent race dashboard, first-mover opportunity detection
                 </div>
               </div>
             </CardContent>
