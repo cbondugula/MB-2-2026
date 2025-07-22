@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SmartRefresh, useSmartRefresh } from "@/components/ui/smart-refresh";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getRefreshInterval } from "@/lib/update-strategy";
+import { getRefreshInterval, isPlatformOwner } from "@/lib/update-strategy";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";

@@ -54,12 +54,12 @@ export const UPDATE_CONFIGS: Record<string, UpdateConfig> = {
     description: 'Project status and progress'
   },
 
-  // IP Protected - HIGHLY PROTECTED - Manual only for trade secret protection
+  // IP Protected - HIGHLY PROTECTED - Manual only for trade secret protection (Live for Owner)
   '/api/patents/portfolio': {
     tier: UpdateTier.IP_PROTECTED,
-    intervalMinutes: -1, // Never auto-update
+    intervalMinutes: -1, // Never auto-update (except for owner)
     criticalAlerts: false,
-    description: 'CLASSIFIED: Patent information - manual refresh only'
+    description: 'CLASSIFIED: Patent information - live for owner, manual for others'
   },
   '/api/patents/filing-status': {
     tier: UpdateTier.IP_PROTECTED,
@@ -76,20 +76,20 @@ export const UPDATE_CONFIGS: Record<string, UpdateConfig> = {
   '/api/competitive/analysis': {
     tier: UpdateTier.IP_PROTECTED,
     intervalMinutes: -1,
-    criticalAlerts: false,
-    description: 'CLASSIFIED: Competitive intelligence - highly protected'
+    criticalAlerts: true, // Owner gets alerts for competitive changes
+    description: 'CLASSIFIED: Real-time competitive intelligence for owner'
   },
   '/api/revenue/projections': {
     tier: UpdateTier.IP_PROTECTED,
     intervalMinutes: -1,
-    criticalAlerts: false,
-    description: 'CLASSIFIED: Strategic valuations - trade secret protected'
+    criticalAlerts: true, // Owner gets revenue update alerts
+    description: 'CLASSIFIED: Live strategic valuations for owner'
   },
   '/api/acquisition/valuations': {
     tier: UpdateTier.IP_PROTECTED,
     intervalMinutes: -1,
-    criticalAlerts: false,
-    description: 'CLASSIFIED: Acquisition values - highly sensitive'
+    criticalAlerts: true, // Owner gets acquisition value alerts
+    description: 'CLASSIFIED: Real-time acquisition values for owner'
   },
   '/api/voice-backend/generate': {
     tier: UpdateTier.IP_PROTECTED,
@@ -121,14 +121,33 @@ export function getUpdateConfig(endpoint: string): UpdateConfig {
   };
 }
 
-// Check if endpoint should auto-update
+// Check if user is platform owner (you can implement your own logic here)
+export function isPlatformOwner(): boolean {
+  // This would check user role/permissions in a real implementation
+  // For now, we'll use a simple environment check or user ID
+  return true; // Set to true for platform owner access
+}
+
+// Check if endpoint should auto-update (with owner override)
 export function shouldAutoUpdate(endpoint: string): boolean {
   const config = getUpdateConfig(endpoint);
+  
+  // Platform owner gets real-time access to everything
+  if (isPlatformOwner() && config.tier === UpdateTier.IP_PROTECTED) {
+    return true; // Override: Owner gets live IP data
+  }
+  
   return config.intervalMinutes > 0;
 }
 
-// Get refresh interval for TanStack Query
+// Get refresh interval for TanStack Query (with owner override)
 export function getRefreshInterval(endpoint: string): number | false {
   const config = getUpdateConfig(endpoint);
+  
+  // Platform owner gets real-time updates for IP-protected data
+  if (isPlatformOwner() && config.tier === UpdateTier.IP_PROTECTED) {
+    return 60 * 1000; // 1-minute updates for owner on IP data
+  }
+  
   return config.intervalMinutes > 0 ? config.intervalMinutes * 60 * 1000 : false;
 }

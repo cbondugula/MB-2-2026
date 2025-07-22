@@ -3,7 +3,7 @@ import { Button } from './button';
 import { Badge } from './badge';
 import { RefreshCw, Clock, AlertTriangle, Shield, Activity, Lock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { UpdateTier, getUpdateConfig } from '@/lib/update-strategy';
+import { UpdateTier, getUpdateConfig, isPlatformOwner } from '@/lib/update-strategy';
 
 interface SmartRefreshProps {
   onManualRefresh: () => void;
@@ -25,7 +25,8 @@ export function SmartRefresh({
   const { toast } = useToast();
   
   const config = getUpdateConfig(endpoint);
-  const autoRefreshEnabled = config.intervalMinutes > 0;
+  const isOwner = isPlatformOwner();
+  const autoRefreshEnabled = config.intervalMinutes > 0 || (isOwner && config.tier === UpdateTier.IP_PROTECTED);
   const criticalData = config.tier === UpdateTier.HEALTHCARE_CRITICAL;
 
   // Update time display
@@ -107,7 +108,7 @@ export function SmartRefresh({
         <span>
           {config.tier === UpdateTier.HEALTHCARE_CRITICAL ? 'Real-time' :
            config.tier === UpdateTier.USER_EXPERIENCE ? 'Smart Updates' :
-           'HIGHLY PROTECTED'}
+           isOwner ? 'OWNER LIVE ACCESS' : 'HIGHLY PROTECTED'}
         </span>
       </Badge>
     </div>

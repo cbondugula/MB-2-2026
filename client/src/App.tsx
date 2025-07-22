@@ -33,6 +33,7 @@ import MultiAIVerification from "@/pages/multi-ai-verification";
 import PatentVerificationDashboard from "@/pages/patent-verification-dashboard";
 import PatentLinks from "@/pages/patent-links";
 import PatentDrawings from "@/pages/patent-drawings";
+import OwnerDashboard from "@/pages/owner-dashboard";
 import TJCCompliance from "@/pages/tjc-compliance";
 import QuantumAI from "@/pages/quantum-ai";
 import HealthcareTesting from "@/pages/healthcare-testing";
@@ -90,6 +91,7 @@ function Router() {
           <Route path="/dual-quantum-classical" component={DualQuantumClassical} />
           <Route path="/healthcare-app-builder" component={HealthcareDemo} />
           <Route path="/documentation" component={Documentation} />
+          <Route path="/owner" component={OwnerDashboard} />
         </>
       )}
       <Route component={NotFound} />
