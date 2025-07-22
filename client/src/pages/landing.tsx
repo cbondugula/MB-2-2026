@@ -14,6 +14,12 @@ export default function Landing() {
   const [showDemo, setShowDemo] = useState(false);
   const [userMode, setUserMode] = useState<'healthcare' | 'developer'>('healthcare');
 
+  // Fetch dynamic platform statistics
+  const { data: platformStats, isLoading: statsLoading } = useQuery({
+    queryKey: ['/api/platform/stats'],
+    refetchInterval: 60000, // Refresh every minute
+  });
+
   // Fetch dynamic ML data when demo is shown
   const { data: mlMetrics, isLoading: mlLoading } = useQuery({
     queryKey: ['/api/ml/metrics'],
@@ -137,12 +143,12 @@ export default function Landing() {
               <div className="flex items-center justify-center space-x-8 text-lg text-medical-blue-600">
                 <div className="flex items-center space-x-3">
                   <Shield className="w-6 h-6 text-medical-blue-500" />
-                  <span className="font-medium">2,500+ healthcare professionals</span>
+                  <span className="font-medium">{platformStats?.totalUsers?.toLocaleString() || '2,500+'}+ healthcare professionals</span>
                 </div>
                 <div className="w-2 h-2 bg-medical-blue-300 rounded-full"></div>
-                <span className="font-medium text-trust-green-600">HIPAA compliant</span>
+                <span className="font-medium text-trust-green-600">{platformStats?.complianceStatus || 'HIPAA compliant'}</span>
                 <div className="w-2 h-2 bg-medical-blue-300 rounded-full"></div>
-                <span className="font-medium text-healthcare-teal-600">Ready in minutes</span>
+                <span className="font-medium text-healthcare-teal-600">{platformStats?.avgSetupTime || 'Ready in minutes'}</span>
               </div>
               
               {/* Enhanced User Mode Toggle */}
