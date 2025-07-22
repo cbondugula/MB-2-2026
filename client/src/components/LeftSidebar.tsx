@@ -15,7 +15,8 @@ import {
   Globe,
   Building,
   Rocket,
-  Sparkles
+  Sparkles,
+  Stethoscope
 } from "lucide-react";
 
 export default function LeftSidebar() {
@@ -23,6 +24,7 @@ export default function LeftSidebar() {
 
   const menuItems = [
     { path: "/", label: "Dashboard", icon: Home },
+    { path: "/healthcare-app-builder", label: "Healthcare Apps", icon: Stethoscope },
     { path: "/ai-workspace", label: "AI Workspace", icon: Brain },
     { path: "/app-builder", label: "App Builder", icon: Rocket },
     { path: "/ai-code-generator", label: "AI Code Generator", icon: Sparkles },

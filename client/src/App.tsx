@@ -37,6 +37,8 @@ import TJCCompliance from "@/pages/tjc-compliance";
 import QuantumAI from "@/pages/quantum-ai";
 import HealthcareTesting from "@/pages/healthcare-testing";
 import DualQuantumClassical from "@/pages/dual-quantum-classical";
+import HealthcareAppBuilder from "@/pages/healthcare-app-builder";
+import HealthcareDemo from "@/pages/healthcare-demo";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -84,6 +86,7 @@ function Router() {
           <Route path="/quantum-ai" component={QuantumAI} />
           <Route path="/healthcare-testing" component={HealthcareTesting} />
           <Route path="/dual-quantum-classical" component={DualQuantumClassical} />
+          <Route path="/healthcare-app-builder" component={HealthcareDemo} />
         </>
       )}
       <Route component={NotFound} />

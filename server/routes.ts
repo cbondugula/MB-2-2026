@@ -3292,5 +3292,142 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Healthcare app builder routes
+  app.get('/api/templates/healthcare-builder', isAuthenticated, async (req: any, res) => {
+    try {
+      const healthcareTemplates = [
+        {
+          id: "ehr-system",
+          name: "Electronic Health Records",
+          description: "Complete EHR system with patient management, medical records, and clinical workflows",
+          category: "Clinical Management",
+          features: ["Patient Management", "Medical Records", "Clinical Workflows", "HIPAA Compliant"]
+        },
+        {
+          id: "telemedicine",
+          name: "Telemedicine Platform", 
+          description: "Video consultations, appointment scheduling, and remote patient monitoring",
+          category: "Remote Care",
+          features: ["Video Consultations", "Appointment Scheduling", "Remote Monitoring", "Multi-platform"]
+        },
+        {
+          id: "clinical-decision",
+          name: "Clinical Decision Support",
+          description: "AI-powered diagnostic assistance and treatment recommendations",
+          category: "AI Healthcare",
+          features: ["AI Diagnostics", "Treatment Recommendations", "Medical NLP", "Evidence-based"]
+        },
+        {
+          id: "patient-portal",
+          name: "Patient Portal",
+          description: "Self-service portal for appointments, results, and communication",
+          category: "Patient Engagement", 
+          features: ["Self-service", "Appointment Booking", "Results Access", "Secure Messaging"]
+        }
+      ];
+      res.json(healthcareTemplates);
+    } catch (error) {
+      console.error("Error fetching healthcare templates:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare templates" });
+    }
+  });
+
+  app.get('/api/healthcare/stacks', isAuthenticated, async (req: any, res) => {
+    try {
+      const healthcareStacks = [
+        { 
+          id: "react-node", 
+          name: "React + Node.js", 
+          description: "Modern web application with React frontend and Node.js backend",
+          features: ["Real-time UI", "RESTful APIs", "PostgreSQL", "HIPAA Ready"]
+        },
+        { 
+          id: "flutter-firebase", 
+          name: "Flutter + Firebase", 
+          description: "Cross-platform mobile app with Firebase backend",
+          features: ["iOS & Android", "Real-time Database", "Authentication", "Cloud Functions"]
+        },
+        { 
+          id: "vue-python", 
+          name: "Vue.js + Python", 
+          description: "ML-powered healthcare app with Vue frontend and Python ML backend",
+          features: ["Vue.js UI", "Python ML", "TensorFlow", "Medical AI Models"]
+        },
+        { 
+          id: "angular-dotnet", 
+          name: "Angular + .NET", 
+          description: "Enterprise healthcare system with Angular frontend and .NET backend",
+          features: ["Enterprise Scale", "Angular UI", ".NET Core", "SQL Server"]
+        }
+      ];
+      res.json(healthcareStacks);
+    } catch (error) {
+      console.error("Error fetching healthcare stacks:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare stacks" });
+    }
+  });
+
+  app.post('/api/healthcare/apps/initialize', isAuthenticated, async (req: any, res) => {
+    try {
+      const { name, description, template, stack, compliance } = req.body;
+      const projectId = `healthcare_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      res.json({ 
+        projectId,
+        status: 'initialized',
+        message: 'Healthcare app project initialized successfully'
+      });
+    } catch (error) {
+      console.error("Error initializing healthcare app:", error);
+      res.status(500).json({ message: "Failed to initialize healthcare app" });
+    }
+  });
+
+  app.post('/api/healthcare/apps/architecture', isAuthenticated, async (req: any, res) => {
+    try {
+      const architecture = {
+        frontend: { framework: 'React', components: ['PatientDashboard', 'MedicalRecords'] },
+        backend: { framework: 'Node.js + Express', apis: ['Patient API', 'Medical Records API'] }
+      };
+      res.json({ architecture, status: 'architecture_generated' });
+    } catch (error) {
+      console.error("Error generating architecture:", error);
+      res.status(500).json({ message: "Failed to generate architecture" });
+    }
+  });
+
+  app.post('/api/healthcare/apps/schema', isAuthenticated, async (req: any, res) => {
+    try {
+      const medicalSchema = { tables: ['patients', 'medical_records', 'appointments', 'audit_logs'] };
+      res.json({ schema: medicalSchema, status: 'schema_generated' });
+    } catch (error) {
+      console.error("Error generating schema:", error);
+      res.status(500).json({ message: "Failed to generate schema" });
+    }
+  });
+
+  app.post('/api/healthcare/apps/frontend', isAuthenticated, async (req: any, res) => {
+    try {
+      const frontendComponents = { pages: ['PatientDashboard', 'MedicalRecords', 'AppointmentScheduler'] };
+      res.json({ frontend: frontendComponents, status: 'frontend_generated' });
+    } catch (error) {
+      console.error("Error generating frontend:", error);
+      res.status(500).json({ message: "Failed to generate frontend" });
+    }
+  });
+
+  app.post('/api/healthcare/apps/ai-features', isAuthenticated, async (req: any, res) => {
+    try {
+      const aiImplementation = { 
+        clinicalDecisionSupport: 'Medical BERT integration',
+        complianceMonitoring: 'Real-time compliance checking'
+      };
+      res.json({ aiFeatures: aiImplementation, status: 'ai_features_added' });
+    } catch (error) {
+      console.error("Error adding AI features:", error);
+      res.status(500).json({ message: "Failed to add AI features" });
+    }
+  });
+
   return httpServer;
 }

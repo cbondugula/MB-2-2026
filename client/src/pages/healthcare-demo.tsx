@@ -1,0 +1,319 @@
+import { useState } from "react";
+import TopNavigation from "@/components/TopNavigation";
+import LeftSidebar from "@/components/LeftSidebar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Stethoscope, 
+  Shield, 
+  Brain, 
+  Mic,
+  Zap,
+  FileText,
+  Activity,
+  Heart,
+  Users,
+  Settings,
+  Play,
+  Code,
+  Sparkles
+} from "lucide-react";
+
+export default function HealthcareDemo() {
+  const [selectedTemplate, setSelectedTemplate] = useState("ehr-system");
+  const [appName, setAppName] = useState("MediCare Portal");
+  const [selectedStack, setSelectedStack] = useState("react-node");
+  const [buildingApp, setBuildingApp] = useState(false);
+  const [buildProgress, setBuildProgress] = useState(0);
+
+  const templates = [
+    {
+      id: "ehr-system",
+      name: "Electronic Health Records",
+      description: "Complete EHR system with patient management, medical records, and clinical workflows",
+      icon: FileText,
+      category: "Clinical Management"
+    },
+    {
+      id: "telemedicine",
+      name: "Telemedicine Platform",
+      description: "Video consultations, appointment scheduling, and remote patient monitoring",
+      icon: Heart,
+      category: "Remote Care"
+    },
+    {
+      id: "clinical-decision",
+      name: "Clinical Decision Support",
+      description: "AI-powered diagnostic assistance and treatment recommendations",
+      icon: Brain,
+      category: "AI Healthcare"
+    },
+    {
+      id: "patient-portal",
+      name: "Patient Portal",
+      description: "Self-service portal for appointments, results, and communication",
+      icon: Users,
+      category: "Patient Engagement"
+    }
+  ];
+
+  const stacks = [
+    { id: "react-node", name: "React + Node.js", description: "Modern web application" },
+    { id: "flutter-firebase", name: "Flutter + Firebase", description: "Cross-platform mobile app" },
+    { id: "vue-python", name: "Vue.js + Python", description: "ML-powered healthcare app" },
+    { id: "angular-dotnet", name: "Angular + .NET", description: "Enterprise healthcare system" }
+  ];
+
+  const handleBuildApp = async () => {
+    setBuildingApp(true);
+    setBuildProgress(0);
+
+    // Simulate building process
+    const steps = [
+      { progress: 20, message: "Initializing healthcare project..." },
+      { progress: 40, message: "Generating HIPAA-compliant architecture..." },
+      { progress: 60, message: "Creating medical database schema..." },
+      { progress: 80, message: "Building healthcare UI components..." },
+      { progress: 100, message: "Adding AI-powered clinical features..." }
+    ];
+
+    for (const step of steps) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setBuildProgress(step.progress);
+    }
+
+    setBuildingApp(false);
+    setBuildProgress(0);
+  };
+
+  return (
+    <div className="flex h-screen bg-gray-50">
+      <LeftSidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TopNavigation />
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-8">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <Stethoscope className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-slate-900">MedBuilder Healthcare App Development</h1>
+                  <p className="text-slate-600">Create HIPAA-compliant healthcare applications with AI-powered features</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4 text-sm text-slate-500">
+                <div className="flex items-center space-x-1">
+                  <Shield className="w-4 h-4 text-green-500" />
+                  <span>HIPAA Compliant</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Brain className="w-4 h-4 text-purple-500" />
+                  <span>AI-Powered</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Mic className="w-4 h-4 text-blue-500" />
+                  <span>Voice-Controlled</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Configuration Panel */}
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Settings className="w-5 h-5" />
+                      <span>Healthcare App Configuration</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* Basic Information */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold">Application Details</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Application Name</label>
+                          <Input
+                            value={appName}
+                            onChange={(e) => setAppName(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Technology Stack</label>
+                          <Select value={selectedStack} onValueChange={setSelectedStack}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select technology stack" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {stacks.map((stack) => (
+                                <SelectItem key={stack.id} value={stack.id}>
+                                  {stack.name} - {stack.description}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Template Selection */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold">Choose Healthcare Template</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {templates.map((template) => {
+                          const IconComponent = template.icon;
+                          return (
+                            <div
+                              key={template.id}
+                              className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                                selectedTemplate === template.id
+                                  ? 'border-blue-500 bg-blue-50'
+                                  : 'border-gray-200 hover:border-gray-300'
+                              }`}
+                              onClick={() => setSelectedTemplate(template.id)}
+                            >
+                              <div className="flex items-start space-x-3">
+                                <div className="p-2 bg-white rounded-lg shadow-sm">
+                                  <IconComponent className="w-5 h-5 text-blue-600" />
+                                </div>
+                                <div className="flex-1">
+                                  <h4 className="font-medium text-slate-900">{template.name}</h4>
+                                  <p className="text-sm text-slate-600 mt-1">{template.description}</p>
+                                  <Badge variant="outline" className="mt-2 text-xs">
+                                    {template.category}
+                                  </Badge>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Build Button */}
+                    <div className="pt-4">
+                      <Button
+                        onClick={handleBuildApp}
+                        disabled={buildingApp}
+                        className="w-full"
+                        size="lg"
+                      >
+                        {buildingApp ? (
+                          <div className="flex items-center space-x-2">
+                            <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                            <span>Building Healthcare App... {buildProgress}%</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center space-x-2">
+                            <Zap className="w-4 h-4" />
+                            <span>Build Healthcare App</span>
+                          </div>
+                        )}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Features Panel */}
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Sparkles className="w-5 h-5" />
+                      <span>AI Features Included</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-2 text-sm">
+                        <Brain className="w-4 h-4 text-purple-500" />
+                        <span>Clinical Decision Support</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm">
+                        <Activity className="w-4 h-4 text-green-500" />
+                        <span>Medical NER & Classification</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm">
+                        <Shield className="w-4 h-4 text-blue-500" />
+                        <span>HIPAA Compliance Monitoring</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm">
+                        <Mic className="w-4 h-4 text-orange-500" />
+                        <span>Voice-Controlled Interface</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Code className="w-5 h-5" />
+                      <span>Generated Components</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <span>React Components</span>
+                        <Badge variant="outline">Auto-generated</Badge>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span>API Endpoints</span>
+                        <Badge variant="outline">HIPAA Secure</Badge>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span>Database Schema</span>
+                        <Badge variant="outline">Medical Data Types</Badge>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span>Authentication</span>
+                        <Badge variant="outline">Multi-factor</Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {buildingApp && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <Play className="w-5 h-5" />
+                        <span>Build Progress</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${buildProgress}%` }}
+                          />
+                        </div>
+                        <div className="text-sm text-center">
+                          {buildProgress < 30 && "Initializing healthcare project..."}
+                          {buildProgress >= 30 && buildProgress < 50 && "Generating HIPAA architecture..."}
+                          {buildProgress >= 50 && buildProgress < 70 && "Creating medical database schema..."}
+                          {buildProgress >= 70 && buildProgress < 90 && "Building healthcare UI..."}
+                          {buildProgress >= 90 && "Adding AI clinical features..."}
+                          {buildProgress === 100 && "Healthcare app ready!"}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
