@@ -16,7 +16,7 @@ import {
   Shield,
   Clock,
   Award,
-  Zap as Lightning,
+  Zap,
   Brain,
   Globe,
   Users
@@ -82,7 +82,7 @@ export default function CompetitiveAdvantage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
-                <Lightning className="mr-3 h-8 w-8 text-blue-500" />
+                <Zap className="mr-3 h-8 w-8 text-blue-500" />
                 Competitive Advantage Engine
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300">
@@ -382,7 +382,7 @@ export default function CompetitiveAdvantage() {
                         onClick={() => handleAccelerateInnovation(`Dominate ${opp.market}`)}
                         className="w-full"
                       >
-                        <Lightning className="mr-2 h-4 w-4" />
+                        <Zap className="mr-2 h-4 w-4" />
                         Capture Market
                       </Button>
                     </div>
