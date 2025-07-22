@@ -38,6 +38,7 @@ import { bciRouter } from "./brain-computer-interface";
 import { tjcComplianceRouter } from "./tjc-compliance-service";
 import { healthcareTestingRouter } from "./healthcare-testing-service";
 import { dualQuantumClassicalService } from "./dual-quantum-classical-service";
+import { superCSAgentRoutes } from "./routes/super-cs-agent";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -1990,6 +1991,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use('/api/bci', bciRouter);
   app.use('/api/tjc', tjcComplianceRouter);
   app.use('/api/healthcare-testing', healthcareTestingRouter);
+  
+  // Super CS Agent Routes
+  app.use('/api/super-cs-agent', superCSAgentRoutes);
 
   app.post('/api/super-agent/convert-static-to-dynamic', async (req, res) => {
     try {

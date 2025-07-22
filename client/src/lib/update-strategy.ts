@@ -188,6 +188,18 @@ export const OWNER_LIVE_ENDPOINTS = {
     intervalMinutes: 2, // First-mover opportunity detection
     criticalAlerts: true,
     description: 'LIVE: Emerging market opportunities for first-mover advantage'
+  },
+  '/api/super-cs-agent/status': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 1, // Super CS Agent status monitoring
+    criticalAlerts: true,
+    description: 'LIVE: Super CS Agent performance and capability tracking'
+  },
+  '/api/super-cs-agent/technologies': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 60, // Technology integration updates
+    criticalAlerts: true,
+    description: 'LIVE: Latest technology integration and pipeline status'
   }
 };
 

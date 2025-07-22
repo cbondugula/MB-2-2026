@@ -5,7 +5,7 @@ import { SmartRefresh } from "@/components/ui/smart-refresh";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRefreshInterval } from "@/lib/update-strategy";
 import { useAuth } from "@/hooks/useAuth";
-import { TrendingUp, DollarSign, Target, Shield, Crown, Eye, Lightning } from "lucide-react";
+import { TrendingUp, DollarSign, Target, Shield, Crown, Eye, Zap, Brain } from "lucide-react";
 
 export default function OwnerDashboard() {
   const { isAuthenticated } = useAuth();
@@ -297,13 +297,28 @@ export default function OwnerDashboard() {
                         Big Tech monitoring with innovation acceleration tools
                       </div>
                     </div>
-                    <Lightning className="h-6 w-6 text-blue-500" />
+                    <Zap className="h-6 w-6 text-blue-500" />
+                  </div>
+                </a>
+
+                <a 
+                  href="/super-cs-agent" 
+                  className="block p-4 bg-white dark:bg-gray-800 rounded-lg border hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold text-purple-600">Super CS Agent</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-300">
+                        Self-improving AI with hourly technology updates
+                      </div>
+                    </div>
+                    <Brain className="h-6 w-6 text-purple-500" />
                   </div>
                 </a>
                 
                 <div className="text-xs text-gray-500">
-                  Features: Big Tech activity tracking, innovation pipeline management,
-                  patent race dashboard, first-mover opportunity detection
+                  Features: Hourly self-improvement, latest technology integration,
+                  competitive intelligence enhancement, automatic capability upgrades
                 </div>
               </div>
             </CardContent>

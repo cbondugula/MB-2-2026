@@ -16,7 +16,7 @@ import {
   Shield,
   Clock,
   Award,
-  Lightning,
+  Zap as Lightning,
   Brain,
   Globe,
   Users

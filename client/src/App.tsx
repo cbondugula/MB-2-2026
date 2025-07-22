@@ -36,6 +36,7 @@ import PatentDrawings from "@/pages/patent-drawings";
 import OwnerDashboard from "@/pages/owner-dashboard";
 import CompetitiveIntelligence from "@/pages/competitive-intelligence";
 import CompetitiveAdvantage from "@/pages/competitive-advantage";
+import SuperCSAgent from "@/pages/super-cs-agent";
 import TJCCompliance from "@/pages/tjc-compliance";
 import QuantumAI from "@/pages/quantum-ai";
 import HealthcareTesting from "@/pages/healthcare-testing";
@@ -96,6 +97,7 @@ function Router() {
           <Route path="/owner" component={OwnerDashboard} />
           <Route path="/competitive-intelligence" component={CompetitiveIntelligence} />
           <Route path="/competitive-advantage" component={CompetitiveAdvantage} />
+          <Route path="/super-cs-agent" component={SuperCSAgent} />
         </>
       )}
       <Route component={NotFound} />
