@@ -55,7 +55,7 @@ export default function Pricing() {
         'Advanced security features',
         'API access & integrations'
       ],
-      cta: 'Contact Sales'
+      cta: 'Start Enterprise Trial'
     }
   ];
 
@@ -151,7 +151,7 @@ export default function Pricing() {
                       }`}
                       onClick={() => {
                         if (plan.id === 'enterprise') {
-                          window.location.href = 'mailto:sales@medbuilder.com';
+                          window.location.href = '/api/login?enterprise=true';
                         } else {
                           window.location.href = '/api/login';
                         }
@@ -175,8 +175,8 @@ export default function Pricing() {
               Automated Enterprise Sales Process
             </h2>
             <p className="text-slate-300 text-lg max-w-3xl mx-auto">
-              Skip the traditional sales process. Our AI-powered enterprise solution automatically assesses your needs, 
-              configures your platform, and gets you started in minutes.
+              No sales calls. No demos. No waiting. Our revolutionary AI completely automates enterprise onboarding - 
+              from needs assessment to full deployment in under 5 minutes.
             </p>
           </div>
 
@@ -185,10 +185,10 @@ export default function Pricing() {
               <div className="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">AI Assessment</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">Instant AI Analysis</h3>
               <p className="text-slate-300">
-                Our AI analyzes your healthcare organization's needs, compliance requirements, 
-                and technical infrastructure in under 60 seconds.
+                Advanced AI instantly analyzes your organization, automatically determines requirements, 
+                and eliminates all manual sales qualification processes.
               </p>
             </div>
             
@@ -196,10 +196,10 @@ export default function Pricing() {
               <div className="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Auto-Configuration</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">Zero-Touch Setup</h3>
               <p className="text-slate-300">
-                Platform automatically configures HIPAA compliance, integrations, 
-                team access, and custom AI models based on your specific requirements.
+                Complete enterprise platform configuration happens automatically - 
+                compliance, integrations, teams, and custom AI models without human intervention.
               </p>
             </div>
             
@@ -207,10 +207,10 @@ export default function Pricing() {
               <div className="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Instant Deployment</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">Automated Deployment</h3>
               <p className="text-slate-300">
-                Get your complete enterprise healthcare development environment 
-                deployed and ready for your team in under 5 minutes.
+                Your complete enterprise environment deploys automatically - 
+                no waiting, no sales teams, no manual processes. Just instant access.
               </p>
             </div>
           </div>
@@ -219,7 +219,7 @@ export default function Pricing() {
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-4">
-                  Enterprise Features Included
+                  Everything Automated & Included
                 </h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">
@@ -251,18 +251,18 @@ export default function Pricing() {
               
               <div className="text-center">
                 <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-lg p-6">
-                  <h4 className="text-xl font-bold text-white mb-2">Start Enterprise Trial</h4>
+                  <h4 className="text-xl font-bold text-white mb-2">Instant Enterprise Access</h4>
                   <p className="text-green-100 mb-4">
-                    Full platform access for 14 days
+                    Complete automated deployment in 5 minutes
                   </p>
                   <Button 
                     className="w-full bg-white text-green-700 hover:bg-gray-100 font-semibold py-3"
                     onClick={() => window.location.href = '/api/login?enterprise=true'}
                   >
-                    Begin Automated Setup
+                    Deploy Enterprise Now
                   </Button>
                   <p className="text-green-100 text-sm mt-3">
-                    No credit card required • Setup in under 5 minutes
+                    No sales calls • No demos • No waiting • Fully automated
                   </p>
                 </div>
               </div>
