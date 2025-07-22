@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Zap, Shield, Users, Code } from "lucide-react";
+import { Check, Code } from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
 
@@ -14,7 +14,6 @@ export default function Pricing() {
       name: 'Starter',
       description: 'Perfect for small healthcare practices getting started with AI development',
       price: billingPeriod === 'monthly' ? 29 : 24,
-      icon: Zap,
       features: [
         'Up to 5 AI-powered applications',
         'Basic HIPAA compliance tools',
@@ -22,15 +21,13 @@ export default function Pricing() {
         'Email support',
         'Single user access'
       ],
-      cta: 'Start Building',
-      ctaVariant: 'outline' as const
+      cta: 'Start Building'
     },
     {
       id: 'professional',
       name: 'Professional',
       description: 'Advanced AI development for growing healthcare organizations',
       price: billingPeriod === 'monthly' ? 99 : 82,
-      icon: Users,
       popular: true,
       features: [
         'Up to 50 AI-powered applications',
@@ -41,15 +38,13 @@ export default function Pricing() {
         'Custom integrations',
         'Advanced analytics'
       ],
-      cta: 'Go Professional',
-      ctaVariant: 'default' as const
+      cta: 'Go Professional'
     },
     {
       id: 'enterprise',
       name: 'Enterprise',
       description: 'Complete AI development platform for large healthcare enterprises',
       price: billingPeriod === 'monthly' ? 299 : 249,
-      icon: Shield,
       features: [
         'Unlimited AI-powered applications',
         'Enterprise-grade compliance suite',
@@ -60,8 +55,7 @@ export default function Pricing() {
         'Advanced security features',
         'API access & integrations'
       ],
-      cta: 'Contact Sales',
-      ctaVariant: 'outline' as const
+      cta: 'Contact Sales'
     }
   ];
 
@@ -93,17 +87,17 @@ export default function Pricing() {
         </div>
       </header>
 
-      {/* Pricing Header */}
+      {/* Pricing Section */}
       <div className="bg-gray-900 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Billing Toggle */}
-          <div className="flex justify-center items-center space-x-4 mb-8">
-            <span className={`text-sm ${billingPeriod === 'monthly' ? 'text-white font-medium' : 'text-gray-400'}`}>
+          <div className="flex justify-center items-center space-x-4 mb-12">
+            <span className={`text-sm font-medium ${billingPeriod === 'monthly' ? 'text-white' : 'text-gray-400'}`}>
               Monthly
             </span>
             <button
               onClick={() => setBillingPeriod(billingPeriod === 'monthly' ? 'annual' : 'monthly')}
-              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600 transition-colors focus:outline-none"
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -111,64 +105,65 @@ export default function Pricing() {
                 }`}
               />
             </button>
-            <span className={`text-sm ${billingPeriod === 'annual' ? 'text-white font-medium' : 'text-gray-400'}`}>
+            <span className={`text-sm font-medium ${billingPeriod === 'annual' ? 'text-white' : 'text-gray-400'}`}>
               Annual
             </span>
-            {billingPeriod === 'annual' && (
-              <Badge variant="secondary" className="ml-2">20% Off</Badge>
-            )}
           </div>
-        </div>
-      </div>
 
-      {/* Pricing Cards */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan) => {
-            const IconComponent = plan.icon;
-            return (
-              <Card key={plan.id} className={`relative bg-gray-800 border-gray-700 text-white ${plan.popular ? 'ring-2 ring-blue-500 shadow-lg' : ''}`}>
+          {/* Pricing Cards */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {plans.map((plan) => (
+              <div key={plan.id} className="relative">
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-blue-500 text-white px-4 py-1">Most Popular</Badge>
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                    <Badge className="bg-blue-600 text-white px-4 py-1 text-sm font-medium">
+                      Most Popular
+                    </Badge>
                   </div>
                 )}
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl font-bold text-white">{plan.name}</CardTitle>
-                  <CardDescription className="text-gray-300">
-                    {plan.description}
-                  </CardDescription>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold text-white">${plan.price}</span>
-                    <span className="text-gray-400">/month</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3 mb-6">
-                    {plan.features?.map((feature, index) => (
-                      <li key={index} className="flex items-start">
-                        <Check className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm text-gray-300">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button 
-                    className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-700 hover:bg-gray-600 text-white border-gray-600'}`}
-                    variant={plan.ctaVariant}
-                    onClick={() => {
-                      if (plan.id === 'enterprise') {
-                        window.location.href = 'mailto:sales@medbuilder.com';
-                      } else {
-                        window.location.href = '/api/login';
-                      }
-                    }}
-                  >
-                    {plan.cta}
-                  </Button>
-                </CardContent>
-              </Card>
-            );
-          })}
+                <Card className={`bg-slate-800 border-slate-700 h-full ${plan.popular ? 'ring-2 ring-blue-500' : ''}`}>
+                  <CardHeader className="text-center pb-8">
+                    <CardTitle className="text-2xl font-bold text-white mb-2">
+                      {plan.name}
+                    </CardTitle>
+                    <CardDescription className="text-slate-300 text-sm leading-relaxed px-4">
+                      {plan.description}
+                    </CardDescription>
+                    <div className="mt-6">
+                      <span className="text-4xl font-bold text-white">${plan.price}</span>
+                      <span className="text-slate-400 ml-1">/month</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="px-6">
+                    <ul className="space-y-4 mb-8">
+                      {plan.features.map((feature, index) => (
+                        <li key={index} className="flex items-start">
+                          <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                          <span className="text-slate-300 text-sm leading-relaxed">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button 
+                      className={`w-full py-3 text-sm font-medium ${
+                        plan.popular 
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          : 'bg-slate-700 hover:bg-slate-600 text-white border-slate-600'
+                      }`}
+                      onClick={() => {
+                        if (plan.id === 'enterprise') {
+                          window.location.href = 'mailto:sales@medbuilder.com';
+                        } else {
+                          window.location.href = '/api/login';
+                        }
+                      }}
+                    >
+                      {plan.cta}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
