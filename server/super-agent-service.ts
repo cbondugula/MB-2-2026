@@ -91,37 +91,37 @@ export default class SuperSCAgent {
       
       strategicEndpoints: {
         '/api/revenue/projections': {
-          purpose: 'On-demand revenue forecasting based on current development progress',
+          purpose: 'Smart revenue forecasting with user-controlled updates',
           dataSource: 'Revenue projection engine with market feedback integration',
-          updateFrequency: 'Calculated when requested - no continuous polling'
+          updateFrequency: 'Manual refresh + optional background updates for critical changes only'
         },
         '/api/competitive/analysis': {
-          purpose: 'On-demand competitive intelligence and market positioning',
+          purpose: 'Intelligent competitive intelligence with selective updates',
           dataSource: 'Competitive analysis engine with latest market data',
-          updateFrequency: 'Generated when requested - no background monitoring'
+          updateFrequency: 'User-initiated + automatic updates for significant market changes'
         },
         '/api/acquisition/valuations': {
-          purpose: 'On-demand acquisition value calculations',
+          purpose: 'Smart acquisition value calculations with threshold updates',
           dataSource: 'Acquisition valuation engine with current market conditions',
-          updateFrequency: 'Calculated when requested - no continuous updates'
+          updateFrequency: 'Manual refresh + automatic updates when values change >10%'
         }
       },
       
       developmentEndpoints: {
         '/api/voice-backend/status': {
-          purpose: 'On-demand voice-controlled backend generation capabilities',
+          purpose: 'Smart voice-controlled backend capabilities with selective updates',
           dataSource: 'Voice backend service with functional demonstrations',
-          updateFrequency: 'Generated when requested - no background processing'
+          updateFrequency: 'Manual refresh + automatic alerts for system status changes'
         },
         '/api/voice-database/status': {
-          purpose: 'On-demand voice-controlled database management capabilities',
+          purpose: 'Intelligent voice-controlled database management with threshold monitoring',
           dataSource: 'Voice database service with current performance metrics',
-          updateFrequency: 'Generated when requested - no continuous monitoring'
+          updateFrequency: 'User-initiated + automatic updates for performance issues'
         },
         '/api/compliance/predictions': {
-          purpose: 'On-demand compliance predictions and violation analysis',
+          purpose: 'Smart compliance predictions with critical violation alerts',
           dataSource: 'Compliance prediction service with current data analysis',
-          updateFrequency: 'Calculated when requested - no continuous scanning'
+          updateFrequency: 'Manual refresh + immediate alerts for high-risk violations'
         }
       }
     };
@@ -159,11 +159,11 @@ export default class SuperSCAgent {
       },
       
       implementationStrategy: {
-        dataFetching: 'All components use TanStack Query for on-demand server requests',
+        dataFetching: 'TanStack Query with smart update strategy - manual primary, selective automatic secondary',
         errorHandling: 'Comprehensive error states with authentication handling',
-        loadingStates: 'Progressive loading with skeleton screens during user-initiated requests',
-        updateTriggers: 'Manual refresh buttons - no automatic background updates',
-        cacheStrategy: 'Cache data until user manually refreshes - no automatic invalidation'
+        loadingStates: 'Progressive loading with skeleton screens for both manual and automatic updates',
+        updateTriggers: 'Manual refresh buttons + selective automatic updates for critical healthcare data',
+        cacheStrategy: 'Smart cache with manual refresh + automatic invalidation for healthcare-critical data only'
       }
     };
   }

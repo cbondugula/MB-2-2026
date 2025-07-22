@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useQuery } from "@tanstack/react-query";
+import { SmartRefresh, useSmartRefresh } from "@/components/ui/smart-refresh";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -39,11 +40,16 @@ import {
 
 export default function Dashboard() {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const { isAuthenticated, isLoading, user } = useAuth();
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeProject, setActiveProject] = useState(null);
   const [showConversationalInterface, setShowConversationalInterface] = useState(false);
+  
+  // Smart refresh for user stats (critical healthcare data)
+  const userStatsRefresh = useSmartRefresh('/api/users/stats', true, 10);
+  const activitiesRefresh = useSmartRefresh('/api/activities/recent', false, 30);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Redirect to login if not authenticated
@@ -68,19 +74,30 @@ export default function Dashboard() {
     retry: false,
   });
 
-  // Fetch user statistics dynamically
-  const { data: userStats, isLoading: statsLoading } = useQuery({
+  // Fetch user statistics dynamically with smart refresh
+  const { data: userStats, isLoading: statsLoading, refetch: refetchStats } = useQuery({
     queryKey: ["/api/users/stats"],
     enabled: isAuthenticated,
     retry: false,
   });
 
-  // Fetch recent activities dynamically
-  const { data: activities, isLoading: activitiesLoading } = useQuery({
+  // Fetch recent activities dynamically with smart refresh
+  const { data: activities, isLoading: activitiesLoading, refetch: refetchActivities } = useQuery({
     queryKey: ["/api/activities/recent"],
     enabled: isAuthenticated,
     retry: false,
   });
+
+  // Manual refresh handlers
+  const handleStatsRefresh = async () => {
+    await refetchStats();
+    userStatsRefresh.markUpdated();
+  };
+
+  const handleActivitiesRefresh = async () => {
+    await refetchActivities();
+    activitiesRefresh.markUpdated();
+  };
 
   // Handle pending prompt from localStorage (from landing page)
   useEffect(() => {
