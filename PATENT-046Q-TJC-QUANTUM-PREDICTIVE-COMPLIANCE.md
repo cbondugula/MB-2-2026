@@ -5,7 +5,7 @@
 **Application Number**: To be assigned by USPTO  
 **Filing Date**: July 21, 2025  
 **Inventor**: Dr. Chandra Sekhar Bondugula  
-**Title**: Dual Quantum-Classical AI System for Predictive Joint Commission Compliance Violation Detection and Prevention Optimization  
+**Title**: Quantum AI TJC Predictive Compliance Engine  
 
 ---
 

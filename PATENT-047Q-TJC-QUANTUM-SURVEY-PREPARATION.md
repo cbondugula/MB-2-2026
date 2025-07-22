@@ -5,7 +5,7 @@
 **Application Number**: To be assigned by USPTO  
 **Filing Date**: July 21, 2025  
 **Inventor**: Dr. Chandra Sekhar Bondugula  
-**Title**: Dual Quantum-Classical AI System for Automated Joint Commission Survey Preparation and Documentation Optimization  
+**Title**: Quantum AI TJC Survey Preparation System  
 
 ---
 

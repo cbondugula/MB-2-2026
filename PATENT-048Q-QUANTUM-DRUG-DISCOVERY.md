@@ -6,7 +6,7 @@
 **Filing Date**: July 22, 2025  
 **Inventor**: Dr. Chandra Sekhar Bondugula, Ph.D.  
 **Assignee**: MedBuilder Quantum Healthcare Platform  
-**Title**: Dual Quantum-Classical AI System for Accelerated Drug Discovery and Molecular Optimization  
+**Title**: Quantum AI Drug Discovery System  
 
 ---
 

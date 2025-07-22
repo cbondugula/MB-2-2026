@@ -5,7 +5,7 @@
 **Application Number**: To be assigned by USPTO  
 **Filing Date**: July 21, 2025  
 **Inventor**: Dr. Chandra Sekhar Bondugula  
-**Title**: Dual Quantum-Classical AI System for Automated Joint Commission Institutional Standards Compliance Verification and Optimization  
+**Title**: Quantum AI TJC Institutional Standards System  
 
 ---
 
