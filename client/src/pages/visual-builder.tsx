@@ -75,7 +75,7 @@ export default function VisualBuilder() {
     mutationFn: async (description: string) => {
       return apiRequest('POST', '/api/visual-builder/generate-app', { description });
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       setCurrentApp(data.application);
       toast({
         title: "Application Generated",
@@ -137,7 +137,7 @@ export default function VisualBuilder() {
       'lab-results': { autoRefresh: true, criticalAlerts: true },
       'telehealth-video': { hdQuality: true, recording: false, hipaaCompliant: true }
     };
-    return defaults[componentType] || {};
+    return (defaults as any)[componentType] || {};
   };
 
   if (componentsLoading || templatesLoading) {
@@ -326,8 +326,8 @@ export default function VisualBuilder() {
                           ${selectedComponent === component.id ? 'bg-blue-50' : 'bg-gray-50'}
                         `}
                         style={{
-                          left: component.position.x,
-                          top: component.position.y,
+                          left: component.position?.x || 0,
+                          top: component.position?.y || 0,
                           minWidth: '200px',
                           minHeight: '100px'
                         }}
