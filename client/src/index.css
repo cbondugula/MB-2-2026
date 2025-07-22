@@ -6,78 +6,66 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0, 0%, 98%);
-  --foreground: hsl(220, 25%, 15%);
-  --muted: hsl(60, 4.8%, 92%);
-  --muted-foreground: hsl(25, 8%, 35%);
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
   --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(220, 25%, 15%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(220, 25%, 15%);
-  --border: hsl(220, 13%, 85%);
-  --input: hsl(220, 13%, 88%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
   --primary: hsl(207, 90%, 54%);
-  --primary-foreground: hsl(210, 100%, 98%);
-  --secondary: hsl(210, 40%, 92%);
-  --secondary-foreground: hsl(220, 25%, 20%);
-  --accent: hsl(210, 40%, 90%);
-  --accent-foreground: hsl(220, 25%, 20%);
-  --destructive: hsl(0, 84%, 60%);
-  --destructive-foreground: hsl(60, 9%, 98%);
-  --ring: hsl(220, 25%, 25%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
-  /* Healthcare-specific color variables - Strengthened */
-  --medical-blue-50: hsl(214, 100%, 95%);
-  --medical-blue-100: hsl(214, 95%, 88%);
+  /* Healthcare-specific color variables */
+  --medical-blue-50: hsl(214, 100%, 97%);
+  --medical-blue-100: hsl(214, 95%, 93%);
   --medical-blue-500: hsl(207, 90%, 54%);
-  --medical-blue-600: hsl(208, 85%, 48%);
-  --medical-blue-700: hsl(211, 80%, 40%);
-  --medical-blue-800: hsl(213, 85%, 32%);
-  --medical-blue-900: hsl(215, 90%, 25%);
+  --medical-blue-600: hsl(208, 79%, 51%);
+  --medical-blue-700: hsl(211, 74%, 45%);
   
-  --trust-green-50: hsl(151, 85%, 92%);
-  --trust-green-100: hsl(149, 85%, 82%);
-  --trust-green-200: hsl(152, 80%, 72%);
-  --trust-green-500: hsl(160, 90%, 35%);
-  --trust-green-600: hsl(158, 75%, 45%);
-  --trust-green-700: hsl(158, 80%, 35%);
-  --trust-green-800: hsl(158, 85%, 28%);
-  --trust-green-900: hsl(158, 90%, 22%);
+  --trust-green-50: hsl(151, 81%, 96%);
+  --trust-green-100: hsl(149, 80%, 90%);
+  --trust-green-200: hsl(152, 76%, 80%);
+  --trust-green-500: hsl(160, 84%, 39%);
+  --trust-green-600: hsl(158, 64%, 52%);
+  --trust-green-700: hsl(158, 64%, 42%);
   
-  --healthcare-teal-50: hsl(185, 95%, 90%);
-  --healthcare-teal-100: hsl(185, 96%, 82%);
-  --healthcare-teal-500: hsl(188, 85%, 38%);
-  --healthcare-teal-600: hsl(186, 85%, 42%);
-  --healthcare-teal-700: hsl(186, 90%, 35%);
-  
-  /* Professional accent colors */
-  --professional-purple-500: hsl(262, 80%, 50%);
-  --professional-purple-600: hsl(262, 85%, 45%);
-  --professional-indigo-500: hsl(231, 85%, 55%);
-  --professional-indigo-600: hsl(231, 90%, 50%);
+  --healthcare-teal-100: hsl(185, 96%, 90%);
+  --healthcare-teal-500: hsl(188, 78%, 41%);
+  --healthcare-teal-600: hsl(186, 77%, 47%);
 }
 
 .dark {
-  --background: hsl(240, 12%, 8%);
-  --foreground: hsl(0, 0%, 95%);
-  --muted: hsl(240, 8%, 18%);
-  --muted-foreground: hsl(240, 10%, 70%);
-  --popover: hsl(240, 12%, 10%);
-  --popover-foreground: hsl(0, 0%, 95%);
-  --card: hsl(240, 12%, 12%);
-  --card-foreground: hsl(0, 0%, 95%);
-  --border: hsl(240, 8%, 22%);
-  --input: hsl(240, 8%, 20%);
-  --primary: hsl(207, 90%, 58%);
-  --primary-foreground: hsl(210, 100%, 98%);
-  --secondary: hsl(240, 8%, 20%);
-  --secondary-foreground: hsl(0, 0%, 95%);
-  --accent: hsl(240, 8%, 22%);
-  --accent-foreground: hsl(0, 0%, 95%);
-  --destructive: hsl(0, 75%, 55%);
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
   --destructive-foreground: hsl(0, 0%, 98%);
-  --ring: hsl(240, 10%, 75%);
+  --ring: hsl(240, 4.9%, 83.9%);
   --radius: 0.5rem;
   
   /* Dark mode healthcare colors */
@@ -148,32 +136,6 @@
 }
 
 @layer utilities {
-  /* Enhanced shadows and effects - Improved contrast */
-  .shadow-strong {
-    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-  }
-  
-  .shadow-medical {
-    box-shadow: 0 8px 25px -3px rgba(52, 131, 235, 0.25), 0 4px 6px -2px rgba(52, 131, 235, 0.15);
-  }
-  
-  .shadow-green {
-    box-shadow: 0 8px 25px -3px rgba(34, 197, 94, 0.25), 0 4px 6px -2px rgba(34, 197, 94, 0.15);
-  }
-  
-  .gradient-medical {
-    background: linear-gradient(135deg, var(--medical-blue-500) 0%, var(--medical-blue-700) 100%);
-  }
-  
-  .gradient-trust {
-    background: linear-gradient(135deg, var(--trust-green-500) 0%, var(--trust-green-700) 100%);
-  }
-  
-  .gradient-professional {
-    background: linear-gradient(135deg, var(--professional-purple-500) 0%, var(--professional-indigo-500) 100%);
-  }
-  
-  /* Background colors */
   .medical-blue-50 {
     background-color: var(--medical-blue-50);
   }
@@ -188,12 +150,6 @@
   }
   .medical-blue-700 {
     background-color: var(--medical-blue-700);
-  }
-  .medical-blue-800 {
-    background-color: var(--medical-blue-800);
-  }
-  .medical-blue-900 {
-    background-color: var(--medical-blue-900);
   }
   
   .trust-green-50 {
@@ -214,16 +170,7 @@
   .trust-green-700 {
     background-color: var(--trust-green-700);
   }
-  .trust-green-800 {
-    background-color: var(--trust-green-800);
-  }
-  .trust-green-900 {
-    background-color: var(--trust-green-900);
-  }
   
-  .healthcare-teal-50 {
-    background-color: var(--healthcare-teal-50);
-  }
   .healthcare-teal-100 {
     background-color: var(--healthcare-teal-100);
   }
@@ -232,22 +179,6 @@
   }
   .healthcare-teal-600 {
     background-color: var(--healthcare-teal-600);
-  }
-  .healthcare-teal-700 {
-    background-color: var(--healthcare-teal-700);
-  }
-  
-  .professional-purple-500 {
-    background-color: var(--professional-purple-500);
-  }
-  .professional-purple-600 {
-    background-color: var(--professional-purple-600);
-  }
-  .professional-indigo-500 {
-    background-color: var(--professional-indigo-500);
-  }
-  .professional-indigo-600 {
-    background-color: var(--professional-indigo-600);
   }
   
   .text-medical-blue-50 {
@@ -264,12 +195,6 @@
   }
   .text-medical-blue-700 {
     color: var(--medical-blue-700);
-  }
-  .text-medical-blue-800 {
-    color: var(--medical-blue-800);
-  }
-  .text-medical-blue-900 {
-    color: var(--medical-blue-900);
   }
   
   .text-trust-green-50 {
@@ -290,16 +215,7 @@
   .text-trust-green-700 {
     color: var(--trust-green-700);
   }
-  .text-trust-green-800 {
-    color: var(--trust-green-800);
-  }
-  .text-trust-green-900 {
-    color: var(--trust-green-900);
-  }
   
-  .text-healthcare-teal-50 {
-    color: var(--healthcare-teal-50);
-  }
   .text-healthcare-teal-100 {
     color: var(--healthcare-teal-100);
   }
@@ -308,22 +224,6 @@
   }
   .text-healthcare-teal-600 {
     color: var(--healthcare-teal-600);
-  }
-  .text-healthcare-teal-700 {
-    color: var(--healthcare-teal-700);
-  }
-  
-  .text-professional-purple-500 {
-    color: var(--professional-purple-500);
-  }
-  .text-professional-purple-600 {
-    color: var(--professional-purple-600);
-  }
-  .text-professional-indigo-500 {
-    color: var(--professional-indigo-500);
-  }
-  .text-professional-indigo-600 {
-    color: var(--professional-indigo-600);
   }
   
   .border-medical-blue-200 {
@@ -343,17 +243,7 @@
   .border-healthcare-teal-200 {
     border-color: hsl(185, 96%, 80%);
   }
-  .border-healthcare-teal-500 {
-    border-color: var(--healthcare-teal-500);
-  }
-  .border-professional-purple-500 {
-    border-color: var(--professional-purple-500);
-  }
-  .border-professional-indigo-500 {
-    border-color: var(--professional-indigo-500);
-  }
   
-  /* Enhanced hover effects */
   .hover\:bg-medical-blue-50:hover {
     background-color: var(--medical-blue-50);
   }
@@ -363,9 +253,6 @@
   .hover\:bg-medical-blue-600:hover {
     background-color: var(--medical-blue-600);
   }
-  .hover\:bg-medical-blue-700:hover {
-    background-color: var(--medical-blue-700);
-  }
   
   .hover\:bg-trust-green-100:hover {
     background-color: var(--trust-green-100);
@@ -373,71 +260,12 @@
   .hover\:bg-trust-green-600:hover {
     background-color: var(--trust-green-600);
   }
-
-  /* Contrast improvements - Better readability while preserving original colors */
-  .text-contrast-high {
-    color: rgba(0, 0, 0, 0.9) !important;
-  }
-  
-  .text-contrast-medium {
-    color: rgba(0, 0, 0, 0.75) !important;
-  }
-  
-  .text-white-contrast {
-    color: rgba(255, 255, 255, 0.95) !important;
-  }
-  
-  .text-light-contrast {
-    color: rgba(255, 255, 255, 0.85) !important;
-  }
-
-  /* Enhanced text shadows for better readability on colored backgrounds */
-  .text-shadow-light {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  
-  .text-shadow-medium {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  }
-  
-  .text-shadow-strong {
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  }
-  .hover\:bg-trust-green-700:hover {
-    background-color: var(--trust-green-700);
-  }
   
   .hover\:bg-healthcare-teal-600:hover {
     background-color: var(--healthcare-teal-600);
   }
-  .hover\:bg-healthcare-teal-700:hover {
-    background-color: var(--healthcare-teal-700);
-  }
-  
-  .hover\:bg-professional-purple-600:hover {
-    background-color: var(--professional-purple-600);
-  }
-  .hover\:bg-professional-indigo-600:hover {
-    background-color: var(--professional-indigo-600);
-  }
   
   .hover\:text-medical-blue-600:hover {
     color: var(--medical-blue-600);
-  }
-  .hover\:text-medical-blue-700:hover {
-    color: var(--medical-blue-700);
-  }
-  
-  /* Enhanced transitions */
-  .transition-strong {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .scale-hover:hover {
-    transform: scale(1.02);
-  }
-  
-  .shadow-hover:hover {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
   }
 }
