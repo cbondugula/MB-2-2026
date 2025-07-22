@@ -63,28 +63,28 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-mono">
-      {/* Replit-style Header */}
-      <header className="bg-gray-800/50 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-3">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white font-sans">
+      {/* Enhanced Header */}
+      <header className="bg-gray-800/80 backdrop-blur-xl border-b border-gray-600/50 sticky top-0 z-50 shadow-strong">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                <Code className="w-5 h-5 text-white" />
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 gradient-medical rounded-lg flex items-center justify-center shadow-medical">
+                <Code className="w-6 h-6 text-white" />
               </div>
               <div>
-                <span className="text-xl font-semibold text-white">MedBuilder</span>
-                <Badge variant="secondary" className="ml-2 text-xs bg-green-900 text-green-300">
-                  Healthcare AI
+                <span className="text-2xl font-bold text-white">MedBuilder</span>
+                <Badge variant="secondary" className="ml-3 text-sm bg-trust-green-700 text-trust-green-50 shadow-green">
+                  Healthcare AI Platform
                 </Badge>
               </div>
             </div>
             
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <Button 
                 onClick={() => setShowDemo(!showDemo)}
                 variant="outline"
-                className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                className="border-gray-500 text-gray-200 hover:bg-gray-700 transition-strong shadow-hover"
                 size="sm"
               >
                 {showDemo ? 'Hide Demo' : 'View Demo'}
@@ -92,7 +92,7 @@ export default function Landing() {
               <Button 
                 asChild
                 variant="outline"
-                className="border-green-600 text-green-300 hover:bg-green-700"
+                className="border-trust-green-500 text-trust-green-200 hover:bg-trust-green-700 transition-strong shadow-green"
                 size="sm"
               >
                 <Link href="/pricing">Pricing</Link>
@@ -100,14 +100,14 @@ export default function Landing() {
               <Button 
                 asChild
                 variant="outline"
-                className="border-blue-600 text-blue-300 hover:bg-blue-700"
+                className="border-medical-blue-500 text-medical-blue-200 hover:bg-medical-blue-700 transition-strong shadow-medical"
                 size="sm"
               >
                 <Link href="/legal-documents">Legal Docs</Link>
               </Button>
               <Button 
                 onClick={() => window.location.href = '/api/login'}
-                className="bg-green-600 hover:bg-green-700 text-white"
+                className="gradient-trust text-white hover:bg-trust-green-700 transition-strong shadow-green scale-hover"
                 size="sm"
               >
                 Sign in
@@ -117,52 +117,52 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* Main Content - Clean centered layout */}
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[85vh] px-6 py-12">
-        <div className="max-w-5xl mx-auto text-center space-y-12">
+      {/* Main Content - Enhanced centered layout */}
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[85vh] px-6 py-16">
+        <div className="max-w-6xl mx-auto text-center space-y-16">
           {/* Title */}
-          <div className="space-y-8">
-            <div className="space-y-6">
-              <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+          <div className="space-y-10">
+            <div className="space-y-8">
+              <h1 className="text-6xl md:text-8xl font-black leading-tight bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
                 Turn Your Healthcare Ideas Into
-                <span className="text-green-400 block mt-2">Real Apps</span>
+                <span className="gradient-trust bg-clip-text text-transparent block mt-3">Real Apps</span>
               </h1>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-2xl md:text-3xl text-gray-200 leading-relaxed max-w-5xl mx-auto font-medium">
                 Simply describe what you need - patient tracking, appointment scheduling, or treatment plans.
                 Our AI creates secure, professional apps instantly. No coding required.
               </p>
             </div>
             
-            <div className="flex flex-col items-center space-y-6">
-              <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
-                <div className="flex items-center space-x-2">
-                  <Shield className="w-4 h-4 text-blue-400" />
-                  <span>2,500+ healthcare professionals</span>
+            <div className="flex flex-col items-center space-y-8">
+              <div className="flex items-center justify-center space-x-8 text-lg text-gray-300">
+                <div className="flex items-center space-x-3">
+                  <Shield className="w-6 h-6 text-medical-blue-400" />
+                  <span className="font-medium">2,500+ healthcare professionals</span>
                 </div>
-                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                <span>HIPAA compliant</span>
-                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                <span>Ready in minutes</span>
+                <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                <span className="font-medium text-trust-green-400">HIPAA compliant</span>
+                <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                <span className="font-medium text-healthcare-teal-400">Ready in minutes</span>
               </div>
               
-              {/* User Mode Toggle */}
-              <div className="flex items-center space-x-2 bg-gray-800 rounded-xl p-1.5 border border-gray-700">
+              {/* Enhanced User Mode Toggle */}
+              <div className="flex items-center space-x-3 bg-gray-800/80 backdrop-blur-sm rounded-2xl p-2 border border-gray-600/50 shadow-strong">
                 <button
                   onClick={() => setUserMode('healthcare')}
-                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+                  className={`px-8 py-4 rounded-xl text-lg font-semibold transition-strong scale-hover ${
                     userMode === 'healthcare' 
-                      ? 'bg-green-600 text-white shadow-lg' 
-                      : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                      ? 'gradient-trust text-white shadow-green' 
+                      : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
                   }`}
                 >
                   Healthcare Professional
                 </button>
                 <button
                   onClick={() => setUserMode('developer')}
-                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+                  className={`px-8 py-4 rounded-xl text-lg font-semibold transition-strong scale-hover ${
                     userMode === 'developer' 
-                      ? 'bg-green-600 text-white shadow-lg' 
-                      : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                      ? 'gradient-medical text-white shadow-medical' 
+                      : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
                   }`}
                 >
                   Developer
@@ -171,9 +171,9 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Central Prompt Input */}
-          <div className="max-w-4xl mx-auto">
-            <div className="relative bg-gray-800 rounded-2xl border border-gray-700 p-6 shadow-2xl">
+          {/* Enhanced Central Prompt Input */}
+          <div className="max-w-5xl mx-auto">
+            <div className="relative bg-gray-800/90 backdrop-blur-md rounded-3xl border border-gray-600/50 p-8 shadow-strong">
               <Textarea
                 placeholder={userMode === 'healthcare' 
                   ? "Tell me what you need for your practice...\n\nExample: I'm a family doctor and need an app where patients can book appointments, fill out forms before visits, and I can track their health progress over time."
@@ -181,28 +181,32 @@ export default function Landing() {
                 }
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="w-full h-36 bg-transparent border-none text-white placeholder-gray-400 text-lg resize-none focus:outline-none"
+                className="w-full h-40 bg-transparent border-none text-white placeholder-gray-300 text-xl resize-none focus:outline-none font-medium"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                     handleGenerateApp();
                   }
                 }}
               />
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-700">
-                <span className="text-sm text-gray-500">Ctrl+Enter to generate</span>
+              <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-600/50">
+                <span className="text-lg text-gray-400 font-medium">Ctrl+Enter to generate</span>
                 <Button
                   onClick={handleGenerateApp}
                   disabled={!prompt.trim() || isGenerating}
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
+                  className={`px-8 py-4 text-lg font-semibold rounded-xl transition-strong scale-hover shadow-strong ${
+                    userMode === 'healthcare' 
+                      ? 'gradient-trust text-white shadow-green' 
+                      : 'gradient-medical text-white shadow-medical'
+                  }`}
                 >
                   {isGenerating ? (
                     <>
-                      <Cpu className="w-4 h-4 mr-2 animate-spin" />
+                      <Cpu className="w-6 h-6 mr-3 animate-spin" />
                       Generating...
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4 mr-2" />
+                      <Sparkles className="w-6 h-6 mr-3" />
                       Generate App
                     </>
                   )}
@@ -211,37 +215,37 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Example Prompts */}
-          <div className="space-y-6">
-            <p className="text-sm text-gray-500">
+          {/* Enhanced Example Prompts */}
+          <div className="space-y-8">
+            <p className="text-xl text-gray-300 font-medium">
               {userMode === 'healthcare' ? 'Common requests from healthcare professionals:' : 'Try these technical examples:'}
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
               {examplePrompts.map((example, index) => (
                 <button
                   key={index}
                   onClick={() => setPrompt(example)}
-                  className="text-left p-5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl transition-all hover:border-green-500 text-sm text-gray-300 hover:text-white group"
+                  className="text-left p-6 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 border border-gray-600/50 rounded-2xl transition-strong hover:border-trust-green-500 text-lg text-gray-300 hover:text-white group shadow-strong scale-hover"
                 >
-                  <div className="flex items-start space-x-3">
-                    <Terminal className="w-4 h-4 mt-1 text-green-500 flex-shrink-0 group-hover:text-green-400" />
-                    <span className="leading-relaxed">{example}</span>
+                  <div className="flex items-start space-x-4">
+                    <Terminal className="w-6 h-6 mt-1 text-trust-green-500 flex-shrink-0 group-hover:text-trust-green-400" />
+                    <span className="leading-relaxed font-medium">{example}</span>
                   </div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Quick Access Features */}
-          <div className="mt-20">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all hover:border-green-500/50 hover:shadow-lg">
-                <CardContent className="p-8 text-center">
-                  <Shield className="w-8 h-8 text-green-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-white mb-2">
+          {/* Enhanced Quick Access Features */}
+          <div className="mt-24">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+              <Card className="bg-gray-800/90 backdrop-blur-md border-gray-600/50 hover:bg-gray-700/90 transition-strong hover:border-trust-green-500/70 shadow-strong scale-hover">
+                <CardContent className="p-10 text-center">
+                  <Shield className="w-12 h-12 text-trust-green-500 mx-auto mb-6" />
+                  <h3 className="text-2xl font-bold text-white mb-4">
                     {userMode === 'healthcare' ? 'Secure & Private' : 'HIPAA Compliant'}
                   </h3>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-gray-300 text-lg leading-relaxed">
                     {userMode === 'healthcare' 
                       ? 'Your patient data stays safe with medical-grade security'
                       : 'Built-in compliance checking and security scanning'
@@ -250,13 +254,13 @@ export default function Landing() {
                 </CardContent>
               </Card>
               
-              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all hover:border-green-500/50 hover:shadow-lg">
-                <CardContent className="p-8 text-center">
-                  <Zap className="w-8 h-8 text-blue-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-white mb-2">
+              <Card className="bg-gray-800/90 backdrop-blur-md border-gray-600/50 hover:bg-gray-700/90 transition-strong hover:border-medical-blue-500/70 shadow-strong scale-hover">
+                <CardContent className="p-10 text-center">
+                  <Zap className="w-12 h-12 text-medical-blue-500 mx-auto mb-6" />
+                  <h3 className="text-2xl font-bold text-white mb-4">
                     {userMode === 'healthcare' ? 'No Coding Needed' : 'AI-Powered'}
                   </h3>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-gray-300 text-lg leading-relaxed">
                     {userMode === 'healthcare' 
                       ? 'Just describe what you need - we handle all the technical stuff'
                       : 'Claude Sonnet 4 and Med-Gemma models for medical AI'
@@ -265,13 +269,13 @@ export default function Landing() {
                 </CardContent>
               </Card>
               
-              <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all hover:border-green-500/50 hover:shadow-lg">
-                <CardContent className="p-8 text-center">
-                  <Code className="w-8 h-8 text-purple-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-white mb-2">
+              <Card className="bg-gray-800/90 backdrop-blur-md border-gray-600/50 hover:bg-gray-700/90 transition-strong hover:border-professional-purple-500/70 shadow-strong scale-hover">
+                <CardContent className="p-10 text-center">
+                  <Code className="w-12 h-12 text-professional-purple-500 mx-auto mb-6" />
+                  <h3 className="text-2xl font-bold text-white mb-4">
                     {userMode === 'healthcare' ? 'Ready to Use' : 'Full Stack'}
                   </h3>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-gray-300 text-lg leading-relaxed">
                     {userMode === 'healthcare' 
                       ? 'Works on phones, tablets, and computers right away'
                       : 'Frontend, backend, database, and deployment included'

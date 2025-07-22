@@ -27,29 +27,37 @@ export default function Pricing() {
 
   if (plansLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+        <div className="animate-spin w-12 h-12 border-4 border-medical-blue-500 border-t-transparent rounded-full shadow-medical" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <Link to="/" className="text-2xl font-bold text-blue-600">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-100">
+      {/* Enhanced Header */}
+      <div className="bg-white/90 backdrop-blur-md border-b border-gray-300/50 shadow-strong">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+          <div className="flex justify-between items-center py-6">
+            <Link to="/" className="text-3xl font-black text-medical-blue-600 hover:text-medical-blue-700 transition-strong">
               MedBuilder
             </Link>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               {!isAuthenticated ? (
-                <Button onClick={() => window.location.href = '/api/login'}>
+                <Button 
+                  onClick={() => window.location.href = '/api/login'}
+                  className="gradient-medical text-white px-6 py-3 text-lg font-semibold shadow-medical scale-hover transition-strong"
+                >
                   Sign In
                 </Button>
               ) : (
                 <Link to="/dashboard">
-                  <Button variant="outline">Dashboard</Button>
+                  <Button 
+                    variant="outline" 
+                    className="border-medical-blue-500 text-medical-blue-600 hover:bg-medical-blue-50 px-6 py-3 text-lg font-semibold shadow-medical transition-strong"
+                  >
+                    Dashboard
+                  </Button>
                 </Link>
               )}
             </div>
@@ -57,14 +65,15 @@ export default function Pricing() {
         </div>
       </div>
 
-      {/* Pricing Header */}
-      <div className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Choose Your Healthcare AI Development Plan
+      {/* Enhanced Pricing Header */}
+      <div className="bg-gradient-to-r from-white via-medical-blue-50 to-white py-24">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 text-center">
+          <h1 className="text-6xl md:text-7xl font-black text-gray-900 mb-8 leading-tight">
+            Choose Your Healthcare AI 
+            <span className="text-medical-blue-600 block">Development Plan</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Build HIPAA-compliant healthcare applications with AI-powered tools
+          <p className="text-2xl md:text-3xl text-gray-700 mb-12 font-medium max-w-4xl mx-auto leading-relaxed">
+            Build HIPAA-compliant healthcare applications with AI-powered tools and comprehensive compliance features
           </p>
           
           {/* Billing Toggle */}
