@@ -6,7 +6,7 @@
 **Filing Date**: July 22, 2025  
 **Inventor**: Dr. Chandra Sekhar Bondugula, Ph.D.  
 **Assignee**: MedBuilder Quantum Healthcare Platform  
-**Title**: Quantum Enhanced Medical Education Compliance Verification System  
+**Title**: Quantum Enhanced AI Medical Education Compliance Verification System  
 
 ---
 
