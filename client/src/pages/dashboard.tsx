@@ -94,7 +94,7 @@ export default function Dashboard() {
 
   // Check if user needs onboarding
   useEffect(() => {
-    if (isAuthenticated && userStats && !userStats.hasCompletedOnboarding) {
+    if (isAuthenticated && userStats && !(userStats as any)?.hasCompletedOnboarding) {
       setShowOnboarding(true);
     }
   }, [isAuthenticated, userStats]);
@@ -112,11 +112,11 @@ export default function Dashboard() {
       setTimeout(() => {
         setIsGenerating(false);
         setActiveProject({
-          id: Date.now(),
+          id: Date.now().toString(),
           name: "Generated Healthcare App",
           type: "healthcare-platform",
           status: "ready"
-        });
+        } as any);
       }, 3000);
     } catch (error) {
       setIsGenerating(false);
@@ -173,7 +173,7 @@ export default function Dashboard() {
             <div className="flex items-center space-x-3 text-lg text-gray-300">
               <span>Welcome back,</span>
               <span className="text-white font-semibold">
-                {user?.firstName || user?.email || 'Developer'}
+                {(user as any)?.firstName || (user as any)?.email || 'Developer'}
               </span>
             </div>
             <Button 
@@ -286,7 +286,7 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <p className="text-lg font-semibold text-white">
-                          {statsLoading ? "..." : userStats?.totalProjects || 0}
+                          {statsLoading ? "..." : (userStats as any)?.totalProjects || 0}
                         </p>
                         <p className="text-xs text-gray-400">Projects</p>
                       </div>
@@ -302,7 +302,7 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <p className="text-lg font-semibold text-white">
-                          {statsLoading ? "..." : userStats?.deploymentsCount || 0}
+                          {statsLoading ? "..." : (userStats as any)?.deploymentsCount || 0}
                         </p>
                         <p className="text-xs text-gray-400">Deployments</p>
                       </div>
@@ -424,8 +424,8 @@ export default function Dashboard() {
                 <div className="space-y-2">
                   {projectsLoading ? (
                     <div className="text-gray-500 text-sm">Loading projects...</div>
-                  ) : projects && projects.length > 0 ? (
-                    projects.slice(0, 5).map((project) => (
+                  ) : projects && (projects as any)?.length > 0 ? (
+                    (projects as any).slice(0, 5).map((project: any) => (
                       <div 
                         key={project.id}
                         className="p-3 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-750 cursor-pointer transition-colors"
@@ -506,8 +506,8 @@ export default function Dashboard() {
                     <div className="space-y-3">
                       {activitiesLoading ? (
                         <div className="text-gray-500 text-sm">Loading activities...</div>
-                      ) : activities && activities.length > 0 ? (
-                        activities.map((activity) => (
+                      ) : activities && (activities as any)?.length > 0 ? (
+                        (activities as any).map((activity: any) => (
                           <div key={activity.id} className="flex items-start space-x-3 p-3 bg-gray-800 rounded-lg">
                             <div className="w-6 h-6 bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                               <Activity className="w-3 h-3 text-blue-400" />

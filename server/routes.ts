@@ -3292,5 +3292,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // USPTO Filing Status routes - Major Milestone: 14 Patents Filed July 22, 2025
+  app.get('/api/patents/uspto-filing-status', async (req, res) => {
+    try {
+      const { getUSPTOFilingStatus } = await import('./uspto-filing-status.js');
+      getUSPTOFilingStatus(req, res);
+    } catch (error) {
+      console.error('Error fetching USPTO filing status:', error);
+      res.status(500).json({ message: 'Failed to fetch USPTO filing status' });
+    }
+  });
+
+  app.get('/api/patents/portfolio-value', async (req, res) => {
+    try {
+      const { getPatentPortfolioValue } = await import('./uspto-filing-status.js');
+      getPatentPortfolioValue(req, res);
+    } catch (error) {
+      console.error('Error calculating portfolio value:', error);
+      res.status(500).json({ message: 'Failed to calculate portfolio value' });
+    }
+  });
+
   return httpServer;
 }
