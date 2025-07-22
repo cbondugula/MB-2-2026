@@ -21,7 +21,11 @@ import {
   RefreshCw,
   Star,
   Cpu,
-  Target
+  Target,
+  BookOpen,
+  FileText,
+  AlertTriangle,
+  CheckCircle
 } from "lucide-react";
 
 export default function SuperCSAgent() {
@@ -43,6 +47,14 @@ export default function SuperCSAgent() {
     enabled: isAuthenticated,
     retry: false,
     refetchInterval: 3600000, // Hourly updates
+  });
+
+  // Learning report for owner
+  const { data: learningReport, isLoading: learningLoading, refetch: refetchLearning } = useQuery({
+    queryKey: ["/api/super-cs-agent/learning-report"],
+    enabled: isAuthenticated,
+    retry: false,
+    refetchInterval: 3600000, // Hourly learning updates
   });
 
   // Enhancement mutation
@@ -388,6 +400,112 @@ export default function SuperCSAgent() {
                 </AlertDescription>
               </Alert>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Owner Learning Report */}
+        <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <BookOpen className="mr-2 h-5 w-5 text-purple-600" />
+              Owner Learning Report
+              <Badge variant="secondary" className="ml-2">Hourly Updates</Badge>
+            </CardTitle>
+            <CardDescription>
+              What your Super CS Agent has learned and discovered
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {learningLoading ? (
+              <div className="flex items-center justify-center p-8">
+                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                Generating learning report...
+              </div>
+            ) : learningReport ? (
+              <div className="space-y-6">
+                {/* Technical Discoveries */}
+                <div>
+                  <h4 className="font-semibold mb-3 flex items-center">
+                    <Cpu className="mr-2 h-4 w-4" />
+                    Technical Discoveries
+                  </h4>
+                  <div className="grid gap-3">
+                    {learningReport.learningReport?.technicalDiscoveries?.map((discovery: any, index: number) => (
+                      <div key={index} className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
+                        <div className="flex items-start justify-between mb-2">
+                          <span className="font-medium text-sm">{discovery.category}</span>
+                          <Badge variant="outline">{discovery.confidence}</Badge>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
+                          {discovery.discovery}
+                        </p>
+                        <p className="text-xs text-green-600 dark:text-green-400">
+                          Impact: {discovery.impact}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Competitive Intelligence */}
+                <div>
+                  <h4 className="font-semibold mb-3 flex items-center">
+                    <Target className="mr-2 h-4 w-4" />
+                    Competitive Intelligence
+                  </h4>
+                  <div className="grid gap-3">
+                    {learningReport.learningReport?.competitiveIntelligence?.map((intel: any, index: number) => (
+                      <div key={index} className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
+                        <div className="font-medium text-sm mb-1">{intel.area}</div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
+                          {intel.insight}
+                        </p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400">
+                          Our Position: {intel.ourPosition || intel.ourAdvantage}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Owner Recommendations */}
+                <div>
+                  <h4 className="font-semibold mb-3 flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                    Owner Recommendations
+                  </h4>
+                  <div className="space-y-2">
+                    {learningReport.learningReport?.ownerRecommendations?.map((rec: string, index: number) => (
+                      <Alert key={index} className="border-green-200 dark:border-green-800">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <AlertDescription className="text-sm">
+                          {rec}
+                        </AlertDescription>
+                      </Alert>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Next Learning Cycle */}
+                <div className="p-4 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 rounded-lg">
+                  <h4 className="font-semibold mb-2 flex items-center">
+                    <Brain className="mr-2 h-4 w-4" />
+                    Next Learning Cycle
+                  </h4>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                    Focus: {learningReport.learningReport?.nextLearningCycle?.focus}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Next Update: {new Date(learningReport.learningReport?.nextLearningCycle?.scheduledUpdate).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <FileText className="mx-auto h-12 w-12 mb-4 opacity-50" />
+                <p>Learning report will be available after first improvement cycle</p>
+              </div>
+            )}
           </CardContent>
         </Card>
         </div>
