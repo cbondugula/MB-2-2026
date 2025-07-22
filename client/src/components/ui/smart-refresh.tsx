@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './button';
 import { Badge } from './badge';
-import { RefreshCw, Clock, AlertTriangle } from 'lucide-react';
+import { RefreshCw, Clock, AlertTriangle, Shield, Activity, Lock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { UpdateTier, getUpdateConfig } from '@/lib/update-strategy';
 
 interface SmartRefreshProps {
   onManualRefresh: () => void;
   isLoading: boolean;
   lastUpdated?: Date;
-  autoRefreshEnabled?: boolean;
-  criticalData?: boolean;
+  endpoint: string;
   className?: string;
 }
 
@@ -17,13 +17,16 @@ export function SmartRefresh({
   onManualRefresh,
   isLoading,
   lastUpdated,
-  autoRefreshEnabled = false,
-  criticalData = false,
+  endpoint,
   className = ""
 }: SmartRefreshProps) {
   const [timeAgo, setTimeAgo] = useState<string>('');
   const [showStaleWarning, setShowStaleWarning] = useState(false);
   const { toast } = useToast();
+  
+  const config = getUpdateConfig(endpoint);
+  const autoRefreshEnabled = config.intervalMinutes > 0;
+  const criticalData = config.tier === UpdateTier.HEALTHCARE_CRITICAL;
 
   // Update time display
   useEffect(() => {
@@ -96,9 +99,16 @@ export function SmartRefresh({
       {/* Update Strategy Badge */}
       <Badge 
         variant={autoRefreshEnabled ? "secondary" : "outline"}
-        className="text-xs"
+        className="text-xs flex items-center space-x-1"
       >
-        {autoRefreshEnabled ? 'Smart Updates' : 'Manual Only'}
+        {config.tier === UpdateTier.HEALTHCARE_CRITICAL && <Activity className="w-3 h-3" />}
+        {config.tier === UpdateTier.USER_EXPERIENCE && <Clock className="w-3 h-3" />}
+        {config.tier === UpdateTier.IP_PROTECTED && <Lock className="w-3 h-3" />}
+        <span>
+          {config.tier === UpdateTier.HEALTHCARE_CRITICAL ? 'Real-time' :
+           config.tier === UpdateTier.USER_EXPERIENCE ? 'Smart Updates' :
+           'IP Protected'}
+        </span>
       </Badge>
     </div>
   );

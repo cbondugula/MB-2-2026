@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SmartRefresh, useSmartRefresh } from "@/components/ui/smart-refresh";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getRefreshInterval } from "@/lib/update-strategy";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -74,18 +75,20 @@ export default function Dashboard() {
     retry: false,
   });
 
-  // Fetch user statistics dynamically with smart refresh
+  // Fetch user statistics with tier-based updates (USER_EXPERIENCE tier)
   const { data: userStats, isLoading: statsLoading, refetch: refetchStats } = useQuery({
     queryKey: ["/api/users/stats"],
     enabled: isAuthenticated,
     retry: false,
+    refetchInterval: getRefreshInterval("/api/users/stats"), // 30 minute auto-refresh
   });
 
-  // Fetch recent activities dynamically with smart refresh
+  // Fetch recent activities with tier-based updates (USER_EXPERIENCE tier)
   const { data: activities, isLoading: activitiesLoading, refetch: refetchActivities } = useQuery({
     queryKey: ["/api/activities/recent"],
     enabled: isAuthenticated,
     retry: false,
+    refetchInterval: getRefreshInterval("/api/activities/recent"), // 60 minute auto-refresh
   });
 
   // Manual refresh handlers
