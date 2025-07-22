@@ -6,7 +6,7 @@
 **Filing Date**: July 22, 2025  
 **Inventor**: Dr. Chandra Sekhar Bondugula, Ph.D.  
 **Assignee**: MedBuilder Quantum Healthcare Platform  
-**Title**: Dual Quantum-Classical AI System for Automated ACGME Institutional Requirements Compliance Verification  
+**Title**: Quantum Enhanced Medical Education Compliance Verification System  
 
 ---
 
