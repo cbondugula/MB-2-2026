@@ -204,25 +204,25 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="flex-1 p-8 space-y-8">
+            <div className="flex-1 p-6 space-y-6">
               {/* Power Enhancement Banner */}
               <PowerEnhancementBanner />
               
-              {/* Enhanced Conversational Interface Toggle */}
+              {/* Conversational Interface Toggle */}
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold">Build with AI</h3>
+                <h3 className="text-lg font-semibold">Build with AI</h3>
                 <Button
                   onClick={() => setShowConversationalInterface(!showConversationalInterface)}
                   variant="outline"
                   size="sm"
-                  className="border-gray-500 text-gray-200 hover:bg-gray-700 transition-strong shadow-hover px-4 py-2"
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
                 >
                   {showConversationalInterface ? 'Simple Mode' : 'Chat Mode'}
                 </Button>
               </div>
 
               {showConversationalInterface ? (
-                <div className="h-96 border border-gray-600/50 rounded-2xl overflow-hidden shadow-strong backdrop-blur-sm">
+                <div className="h-96 border border-gray-600 rounded-lg overflow-hidden">
                   <ConversationalInterface
                     mode="compact"
                     initialPrompt={aiPrompt}
@@ -243,30 +243,30 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <>
-                  {/* Enhanced AI Prompt Input */}
-                  <div className="space-y-4">
-                    <label className="text-lg text-gray-300 font-medium">Describe your healthcare application</label>
+                  {/* AI Prompt Input */}
+                  <div className="space-y-3">
+                    <label className="text-sm text-gray-400">Describe your healthcare application</label>
                     <div className="relative">
                       <Textarea
                         placeholder="Create a HIPAA-compliant patient portal with secure messaging, appointment scheduling, and lab results viewing..."
                         value={aiPrompt}
                         onChange={(e) => setAiPrompt(e.target.value)}
-                        className="bg-gray-800/90 border-gray-600/50 text-white placeholder-gray-400 min-h-[140px] resize-none focus:border-trust-green-500 focus:ring-trust-green-500 text-lg p-4 rounded-2xl shadow-strong backdrop-blur-sm"
+                        className="bg-gray-800 border-gray-600 text-white placeholder-gray-500 min-h-[120px] resize-none focus:border-green-500 focus:ring-green-500"
                       />
                       <Button
                         onClick={handleGenerateApp}
                         disabled={!aiPrompt.trim() || isGenerating}
-                        className="absolute bottom-4 right-4 gradient-trust hover:bg-trust-green-700 px-6 py-3 shadow-green transition-strong scale-hover"
+                        className="absolute bottom-3 right-3 bg-green-600 hover:bg-green-700"
                         size="sm"
                       >
                         {isGenerating ? (
                           <>
-                            <Cpu className="w-5 h-5 mr-2 animate-spin" />
+                            <Cpu className="w-4 h-4 mr-2 animate-spin" />
                             Generating...
                           </>
                         ) : (
                           <>
-                            <Sparkles className="w-5 h-5 mr-2" />
+                            <Sparkles className="w-4 h-4 mr-2" />
                             Generate
                           </>
                         )}
@@ -276,48 +276,48 @@ export default function Dashboard() {
                 </>
               )}
 
-              {/* Enhanced Quick Stats */}
-              <div className="grid grid-cols-2 gap-6">
-                <Card className="bg-gray-800/90 border-gray-600/50 hover:bg-gray-700/90 transition-strong shadow-strong scale-hover backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-14 h-14 bg-medical-blue-900 rounded-2xl flex items-center justify-center shadow-medical">
-                        <Code className="w-7 h-7 text-medical-blue-400" />
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 gap-4">
+                <Card className="bg-gray-800 border-gray-700">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center">
+                        <Code className="w-5 h-5 text-blue-400" />
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-white">
+                        <p className="text-lg font-semibold text-white">
                           {statsLoading ? "..." : userStats?.totalProjects || 0}
                         </p>
-                        <p className="text-sm text-gray-400 font-medium">Projects</p>
+                        <p className="text-xs text-gray-400">Projects</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gray-800/90 border-gray-600/50 hover:bg-gray-700/90 transition-strong shadow-strong scale-hover backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-14 h-14 bg-trust-green-900 rounded-2xl flex items-center justify-center shadow-green">
-                        <TrendingUp className="w-7 h-7 text-trust-green-400" />
+                <Card className="bg-gray-800 border-gray-700">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-green-900 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-green-400" />
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-white">
+                        <p className="text-lg font-semibold text-white">
                           {statsLoading ? "..." : userStats?.deploymentsCount || 0}
                         </p>
-                        <p className="text-sm text-gray-400 font-medium">Deployments</p>
+                        <p className="text-xs text-gray-400">Deployments</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Enhanced Revolutionary Technologies */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold text-trust-green-300 flex items-center gap-3">
-                  <Sparkles className="w-6 h-6" />
+              {/* Revolutionary Technologies */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-green-300 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
                   Revolutionary Technologies
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2">
                   <Link href="/quantum-ai">
                     <Button variant="outline" size="sm" className="w-full border-medical-blue-600 text-medical-blue-300 hover:bg-medical-blue-900 bg-medical-blue-900/30 transition-strong scale-hover shadow-medical py-3">
                       <Atom className="w-5 h-5 mr-2" />
@@ -363,10 +363,10 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Enhanced Healthcare Tools */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold text-gray-200">Healthcare Tools</h3>
-                <div className="grid grid-cols-2 gap-3">
+              {/* Quick Tools */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-gray-300">Healthcare Tools</h3>
+                <div className="grid grid-cols-2 gap-2">
                   <Link href="/global-healthcare">
                     <Button variant="outline" size="sm" className="w-full border-gray-500 text-gray-200 hover:bg-gray-700/80 transition-strong scale-hover shadow-hover py-3">
                       <Globe className="w-5 h-5 mr-2" />
@@ -418,34 +418,34 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Enhanced Recent Projects */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold text-gray-200">Recent Projects</h3>
-                <div className="space-y-3">
+              {/* Recent Projects */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-gray-300">Recent Projects</h3>
+                <div className="space-y-2">
                   {projectsLoading ? (
-                    <div className="text-gray-400 text-lg">Loading projects...</div>
+                    <div className="text-gray-500 text-sm">Loading projects...</div>
                   ) : projects && projects.length > 0 ? (
                     projects.slice(0, 5).map((project) => (
                       <div 
                         key={project.id}
-                        className="p-4 bg-gray-800/90 border border-gray-600/50 rounded-2xl hover:bg-gray-700/90 cursor-pointer transition-strong scale-hover shadow-strong backdrop-blur-sm"
+                        className="p-3 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-750 cursor-pointer transition-colors"
                         onClick={() => setActiveProject(project)}
                       >
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
-                            <div className="w-10 h-10 bg-purple-900 rounded-xl flex items-center justify-center shadow-hover">
-                              <GitBranch className="w-5 h-5 text-purple-400" />
+                          <div className="flex items-center space-x-3">
+                            <div className="w-6 h-6 bg-purple-900 rounded flex items-center justify-center">
+                              <GitBranch className="w-3 h-3 text-purple-400" />
                             </div>
-                            <span className="text-lg text-white font-medium">{project.name}</span>
+                            <span className="text-sm text-white">{project.name}</span>
                           </div>
-                          <Badge className="bg-gray-700/80 text-gray-200 text-sm px-3 py-1">
+                          <Badge className="bg-gray-700 text-gray-300 text-xs">
                             {project.type}
                           </Badge>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <div className="text-gray-400 text-lg">No projects yet. Generate your first app!</div>
+                    <div className="text-gray-500 text-sm">No projects yet. Generate your first app!</div>
                   )}
                 </div>
               </div>
@@ -453,23 +453,23 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Enhanced Right Side - Preview & Analytics */}
+        {/* Right Side - Preview & Analytics */}
         <div className="w-1/2 flex flex-col">
-          {/* Enhanced Preview Panel Header */}
-          <div className="bg-gray-800/90 border-b border-gray-600/50 px-8 py-6 shadow-strong">
+          {/* Preview Panel Header */}
+          <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <Eye className="w-8 h-8 text-medical-blue-400" />
-                <h2 className="text-2xl font-bold">Preview & Analytics</h2>
+              <div className="flex items-center space-x-3">
+                <Eye className="w-6 h-6 text-blue-400" />
+                <h2 className="text-lg font-semibold">Preview & Analytics</h2>
               </div>
               
-              <div className="flex items-center space-x-3">
-                <Button variant="outline" size="sm" className="border-gray-500 text-gray-200 hover:bg-gray-700 transition-strong shadow-hover px-4 py-2">
-                  <Play className="w-5 h-5 mr-2" />
+              <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-700">
+                  <Play className="w-4 h-4 mr-2" />
                   Run
                 </Button>
-                <Button variant="outline" size="sm" className="border-gray-500 text-gray-200 hover:bg-gray-700 transition-strong shadow-hover px-4 py-2">
-                  <Cloud className="w-5 h-5 mr-2" />
+                <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-700">
+                  <Cloud className="w-4 h-4 mr-2" />
                   Deploy
                 </Button>
               </div>
@@ -478,19 +478,19 @@ export default function Dashboard() {
 
           <div className="flex-1 flex flex-col">
             {activeProject ? (
-              <div className="flex-1 p-8">
-                <div className="bg-gray-800/90 border border-gray-600/50 rounded-2xl h-full flex items-center justify-center shadow-strong backdrop-blur-sm">
-                  <div className="text-center space-y-6">
-                    <div className="w-24 h-24 gradient-trust rounded-2xl flex items-center justify-center mx-auto shadow-green">
-                      <Eye className="w-12 h-12 text-white" />
+              <div className="flex-1 p-6">
+                <div className="bg-gray-800 border border-gray-700 rounded-lg h-full flex items-center justify-center">
+                  <div className="text-center space-y-4">
+                    <div className="w-16 h-16 bg-green-900 rounded-lg flex items-center justify-center mx-auto">
+                      <Eye className="w-8 h-8 text-green-400" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-white">{activeProject.name}</h3>
-                      <p className="text-gray-300 text-lg">Application preview will appear here</p>
+                      <h3 className="text-lg font-semibold text-white">{activeProject.name}</h3>
+                      <p className="text-gray-400 text-sm">Application preview will appear here</p>
                     </div>
-                    <div className="flex items-center justify-center space-x-3">
-                      <Button className="gradient-trust hover:bg-trust-green-700 px-6 py-3 text-lg shadow-green transition-strong scale-hover">
-                        <Play className="w-5 h-5 mr-2" />
+                    <div className="flex items-center justify-center space-x-2">
+                      <Button className="bg-green-600 hover:bg-green-700">
+                        <Play className="w-4 h-4 mr-2" />
                         Start Preview
                       </Button>
                     </div>
@@ -498,47 +498,47 @@ export default function Dashboard() {
                 </div>
               </div>
             ) : (
-              <div className="flex-1 p-8 space-y-8">
-                {/* Enhanced Activity Feed */}
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-gray-200">Recent Activity</h3>
-                  <ScrollArea className="h-72">
-                    <div className="space-y-4">
+              <div className="flex-1 p-6 space-y-6">
+                {/* Activity Feed */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium text-gray-300">Recent Activity</h3>
+                  <ScrollArea className="h-64">
+                    <div className="space-y-3">
                       {activitiesLoading ? (
-                        <div className="text-gray-400 text-lg">Loading activities...</div>
+                        <div className="text-gray-500 text-sm">Loading activities...</div>
                       ) : activities && activities.length > 0 ? (
                         activities.map((activity) => (
-                          <div key={activity.id} className="flex items-start space-x-4 p-4 bg-gray-800/90 rounded-2xl border border-gray-600/50 hover:bg-gray-700/90 transition-strong shadow-strong backdrop-blur-sm">
-                            <div className="w-10 h-10 bg-medical-blue-900 rounded-xl flex items-center justify-center flex-shrink-0 mt-1 shadow-medical">
-                              <Activity className="w-5 h-5 text-medical-blue-400" />
+                          <div key={activity.id} className="flex items-start space-x-3 p-3 bg-gray-800 rounded-lg">
+                            <div className="w-6 h-6 bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                              <Activity className="w-3 h-3 text-blue-400" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-lg text-white font-medium">{activity.description}</p>
-                              <p className="text-sm text-gray-400 mt-1">
+                              <p className="text-sm text-white">{activity.description}</p>
+                              <p className="text-xs text-gray-400 mt-1">
                                 {new Date(activity.timestamp).toLocaleString()}
                               </p>
                             </div>
                           </div>
                         ))
                       ) : (
-                        <div className="text-gray-400 text-lg">No recent activity</div>
+                        <div className="text-gray-500 text-sm">No recent activity</div>
                       )}
                     </div>
                   </ScrollArea>
                 </div>
 
-                {/* Enhanced Healthcare Metrics */}
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-gray-200">Healthcare Compliance</h3>
-                  <div className="grid grid-cols-1 gap-4">
-                    <Card className="bg-gray-800/90 border-gray-600/50 hover:bg-gray-700/90 transition-strong shadow-strong backdrop-blur-sm">
-                      <CardContent className="p-6">
+                {/* Healthcare Metrics */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium text-gray-300">Healthcare Compliance</h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    <Card className="bg-gray-800 border-gray-700">
+                      <CardContent className="p-4">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <Shield className="w-6 h-6 text-trust-green-400" />
-                            <span className="text-lg text-white font-medium">HIPAA Compliance</span>
+                          <div className="flex items-center space-x-2">
+                            <Shield className="w-4 h-4 text-green-400" />
+                            <span className="text-sm text-white">HIPAA Compliance</span>
                           </div>
-                          <Badge className="bg-trust-green-900 text-trust-green-300 text-sm px-3 py-1 shadow-green">100%</Badge>
+                          <Badge className="bg-green-900 text-green-300 text-xs">100%</Badge>
                         </div>
                       </CardContent>
                     </Card>
