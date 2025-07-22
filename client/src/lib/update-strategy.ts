@@ -113,6 +113,11 @@ export const UPDATE_CONFIGS: Record<string, UpdateConfig> = {
 
 // Get update config for an endpoint
 export function getUpdateConfig(endpoint: string): UpdateConfig {
+  // Check owner live endpoints first
+  if (isPlatformOwner() && OWNER_LIVE_ENDPOINTS[endpoint]) {
+    return OWNER_LIVE_ENDPOINTS[endpoint];
+  }
+  
   return UPDATE_CONFIGS[endpoint] || {
     tier: UpdateTier.USER_EXPERIENCE,
     intervalMinutes: 60,
@@ -127,6 +132,40 @@ export function isPlatformOwner(): boolean {
   // For now, we'll use a simple environment check or user ID
   return true; // Set to true for platform owner access
 }
+
+// Enhanced owner configuration for live competitive intelligence
+export const OWNER_LIVE_ENDPOINTS = {
+  '/api/competitive/realtime': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 1, // Real-time competitive monitoring
+    criticalAlerts: true,
+    description: 'LIVE: Real-time competitive analysis with immediate alerts'
+  },
+  '/api/market/funding': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 2, // Live funding tracking
+    criticalAlerts: true,
+    description: 'LIVE: Market funding levels and investment activity'
+  },
+  '/api/market/intelligence': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 1, // Market intelligence updates
+    criticalAlerts: true,
+    description: 'LIVE: Dynamic market intelligence and trend analysis'
+  },
+  '/api/strategic/guidance': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 1, // Strategic guidance updates
+    criticalAlerts: true,
+    description: 'LIVE: Dynamic strategic guidance and action recommendations'
+  },
+  '/api/competitive/threats': {
+    tier: UpdateTier.IP_PROTECTED,
+    intervalMinutes: 1, // Immediate threat detection
+    criticalAlerts: true,
+    description: 'LIVE: Competitive threat monitoring with instant alerts'
+  }
+};
 
 // Check if endpoint should auto-update (with owner override)
 export function shouldAutoUpdate(endpoint: string): boolean {
@@ -146,7 +185,7 @@ export function getRefreshInterval(endpoint: string): number | false {
   
   // Platform owner gets real-time updates for IP-protected data
   if (isPlatformOwner() && config.tier === UpdateTier.IP_PROTECTED) {
-    return 60 * 1000; // 1-minute updates for owner on IP data
+    return config.intervalMinutes * 60 * 1000; // Use config interval for live data
   }
   
   return config.intervalMinutes > 0 ? config.intervalMinutes * 60 * 1000 : false;

@@ -234,34 +234,65 @@ export default function OwnerDashboard() {
           </Card>
         </div>
 
-        {/* Owner Benefits */}
-        <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20">
-          <CardHeader>
-            <CardTitle className="text-xl">Owner Dashboard Benefits</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600 mb-2">Real-time Updates</div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  1-minute refresh intervals for all IP and strategic data
+        {/* Owner Benefits & Navigation */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20">
+            <CardHeader>
+              <CardTitle className="text-xl">Owner Dashboard Benefits</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600 mb-2">Real-time Updates</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">
+                    1-minute refresh intervals for all IP and strategic data
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600 mb-2">Complete Access</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">
+                    Full visibility into patents, competitive intelligence, and valuations
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600 mb-2">Protected Privacy</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">
+                    All other users see only public healthcare information
+                  </div>
                 </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600 mb-2">Complete Access</div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  Full visibility into patents, competitive intelligence, and valuations
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20">
+            <CardHeader>
+              <CardTitle className="text-xl">Advanced Intelligence</CardTitle>
+              <CardDescription>Access specialized competitive monitoring tools</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <a 
+                  href="/competitive-intelligence" 
+                  className="block p-4 bg-white dark:bg-gray-800 rounded-lg border hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold text-red-600">Live Competitive Intelligence</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-300">
+                        Real-time competitor analysis with market funding intelligence
+                      </div>
+                    </div>
+                    <Eye className="h-6 w-6 text-red-500" />
+                  </div>
+                </a>
+                <div className="text-xs text-gray-500">
+                  Features: 1-minute competitive updates, market funding tracking, 
+                  dynamic strategic guidance, threat monitoring with instant alerts
                 </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600 mb-2">Protected Privacy</div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  All other users see only public healthcare information
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
