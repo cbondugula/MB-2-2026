@@ -236,25 +236,25 @@ export default function DualQuantumClassical() {
                       <Card className="p-4">
                         <h4 className="font-semibold mb-2">Quantum Processing</h4>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          Advantage: {accreditationMutation.data.performanceComparison.quantumAdvantage}x speedup
+                          Advantage: {accreditationMutation.data?.performanceComparison?.quantumAdvantage || 'N/A'}x speedup
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          States: {accreditationMutation.data.quantumEnhanced.quantumStates || 'N/A'}
+                          States: {accreditationMutation.data?.quantumEnhanced?.quantumStates || 'N/A'}
                         </p>
                       </Card>
                       <Card className="p-4">
                         <h4 className="font-semibold mb-2">Classical Processing</h4>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          Efficiency: {accreditationMutation.data.performanceComparison.classicalEfficiency * 100}%
+                          Efficiency: {((accreditationMutation.data?.performanceComparison?.classicalEfficiency || 0) * 100).toFixed(1)}%
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          Threads: {accreditationMutation.data.classicalImplementation.parallelThreads || 'N/A'}
+                          Threads: {accreditationMutation.data?.classicalImplementation?.parallelThreads || 'N/A'}
                         </p>
                       </Card>
                     </div>
                     <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                       <h4 className="font-semibold mb-2">Recommendation</h4>
-                      <p className="text-sm">{accreditationMutation.data.hybridRecommendation}</p>
+                      <p className="text-sm">{accreditationMutation.data?.hybridRecommendation || 'Processing complete'}</p>
                     </div>
                   </div>
                 )}
@@ -441,13 +441,13 @@ export default function DualQuantumClassical() {
                       <Card className="p-4">
                         <h4 className="font-semibold mb-2">Quantum NLP</h4>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          {milestoneMutation.data.quantumEnhanced.quantumNLPAdvantage}
+                          {milestoneMutation.data?.quantumEnhanced?.quantumNLPAdvantage || 'Quantum processing advantage available'}
                         </p>
                       </Card>
                       <Card className="p-4">
                         <h4 className="font-semibold mb-2">Classical NLP</h4>
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                          Models: {milestoneMutation.data.classicalImplementation.transformerModels?.join(', ') || 'ClinicalBERT, BioBERT'}
+                          Models: {milestoneMutation.data?.classicalImplementation?.transformerModels?.join(', ') || 'ClinicalBERT, BioBERT'}
                         </p>
                       </Card>
                     </div>
