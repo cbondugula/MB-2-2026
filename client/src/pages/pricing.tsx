@@ -166,6 +166,110 @@ export default function Pricing() {
           </div>
         </div>
       </div>
+
+      {/* Automated Enterprise Sales Process Section */}
+      <div className="bg-slate-800 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Automated Enterprise Sales Process
+            </h2>
+            <p className="text-slate-300 text-lg max-w-3xl mx-auto">
+              Skip the traditional sales process. Our AI-powered enterprise solution automatically assesses your needs, 
+              configures your platform, and gets you started in minutes.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="text-center">
+              <div className="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-white">1</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">AI Assessment</h3>
+              <p className="text-slate-300">
+                Our AI analyzes your healthcare organization's needs, compliance requirements, 
+                and technical infrastructure in under 60 seconds.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-white">2</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Auto-Configuration</h3>
+              <p className="text-slate-300">
+                Platform automatically configures HIPAA compliance, integrations, 
+                team access, and custom AI models based on your specific requirements.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-white">3</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Instant Deployment</h3>
+              <p className="text-slate-300">
+                Get your complete enterprise healthcare development environment 
+                deployed and ready for your team in under 5 minutes.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-slate-900 rounded-lg p-8 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  Enterprise Features Included
+                </h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-slate-300">Unlimited healthcare applications</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-slate-300">Advanced AI model training & deployment</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-slate-300">Multi-region HIPAA compliance automation</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-slate-300">White-label platform customization</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-slate-300">24/7 dedicated support & success manager</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-slate-300">Custom integrations & API access</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="text-center">
+                <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-lg p-6">
+                  <h4 className="text-xl font-bold text-white mb-2">Start Enterprise Trial</h4>
+                  <p className="text-green-100 mb-4">
+                    Full platform access for 14 days
+                  </p>
+                  <Button 
+                    className="w-full bg-white text-green-700 hover:bg-gray-100 font-semibold py-3"
+                    onClick={() => window.location.href = '/api/login?enterprise=true'}
+                  >
+                    Begin Automated Setup
+                  </Button>
+                  <p className="text-green-100 text-sm mt-3">
+                    No credit card required • Setup in under 5 minutes
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
