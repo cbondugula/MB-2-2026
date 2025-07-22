@@ -148,17 +148,17 @@
 }
 
 @layer utilities {
-  /* Enhanced shadows and effects */
+  /* Enhanced shadows and effects - Improved contrast */
   .shadow-strong {
-    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
   }
   
   .shadow-medical {
-    box-shadow: 0 8px 25px -3px rgba(52, 131, 235, 0.15), 0 4px 6px -2px rgba(52, 131, 235, 0.1);
+    box-shadow: 0 8px 25px -3px rgba(52, 131, 235, 0.25), 0 4px 6px -2px rgba(52, 131, 235, 0.15);
   }
   
   .shadow-green {
-    box-shadow: 0 8px 25px -3px rgba(34, 197, 94, 0.15), 0 4px 6px -2px rgba(34, 197, 94, 0.1);
+    box-shadow: 0 8px 25px -3px rgba(34, 197, 94, 0.25), 0 4px 6px -2px rgba(34, 197, 94, 0.15);
   }
   
   .gradient-medical {
@@ -372,6 +372,36 @@
   }
   .hover\:bg-trust-green-600:hover {
     background-color: var(--trust-green-600);
+  }
+
+  /* Contrast improvements - Better readability while preserving original colors */
+  .text-contrast-high {
+    color: rgba(0, 0, 0, 0.9) !important;
+  }
+  
+  .text-contrast-medium {
+    color: rgba(0, 0, 0, 0.75) !important;
+  }
+  
+  .text-white-contrast {
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+  
+  .text-light-contrast {
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
+
+  /* Enhanced text shadows for better readability on colored backgrounds */
+  .text-shadow-light {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .text-shadow-medium {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+  
+  .text-shadow-strong {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   }
   .hover\:bg-trust-green-700:hover {
     background-color: var(--trust-green-700);
