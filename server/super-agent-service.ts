@@ -59,16 +59,14 @@ export default class SuperSCAgent {
   private static async analyzeStaticContent() {
     return {
       staticContentFound: {
-        patentData: 'Hardcoded patent information detected in components',
         revenueProjections: 'Static revenue numbers found in multiple files',
         competitiveAnalysis: 'Fixed competitive data in analysis components',
         marketMetrics: 'Static market size and growth data detected',
-        portfolioValues: 'Hardcoded patent portfolio valuations found'
+        portfolioValues: 'Hardcoded portfolio valuations found'
       },
       
       conversionTargets: {
-        patentFilingStatus: 'Convert to /api/patents/filing-status endpoint',
-        domainExpansion: 'Convert to /api/patents/domain-expansion endpoint',
+        domainExpansion: 'Convert to /api/domain-expansion endpoint',
         revenueProjections: 'Convert to /api/revenue/projections endpoint',
         competitiveIntelligence: 'Convert to /api/competitive/analysis endpoint',
         portfolioValuations: 'Convert to /api/acquisition/valuations endpoint'
@@ -89,23 +87,7 @@ export default class SuperSCAgent {
    */
   private static async generateDynamicEndpoints() {
     return {
-      patentEndpoints: {
-        '/api/patents/filing-status': {
-          purpose: 'Real-time patent filing progress and USPTO status',
-          dataSource: 'Patent filing service with live calculation engines',
-          updateFrequency: 'Real-time updates every 30 seconds'
-        },
-        '/api/patents/domain-expansion': {
-          purpose: 'Live domain expansion analysis and strategic recommendations',
-          dataSource: 'Domain expansion service with market intelligence',
-          updateFrequency: 'Daily strategic analysis updates'
-        },
-        '/api/patents/portfolio-value': {
-          purpose: 'Dynamic patent portfolio valuations based on market conditions',
-          dataSource: 'Portfolio valuation engine with competitive intelligence',
-          updateFrequency: 'Real-time market-based valuations'
-        }
-      },
+
       
       strategicEndpoints: {
         '/api/revenue/projections': {
@@ -151,15 +133,9 @@ export default class SuperSCAgent {
   private static async convertComponentsToDynamic() {
     return {
       componentConversions: {
-        patentFilingDashboard: {
-          before: 'Static patent status and filing information',
-          after: 'Dynamic data from /api/patents/filing-status with real-time updates',
-          implementation: 'useQuery hook with 30-second refetch interval'
-        },
-        
         domainExpansionAnalysis: {
           before: 'Hardcoded domain analysis and strategic recommendations',
-          after: 'Live data from /api/patents/domain-expansion with daily updates',
+          after: 'Live data from /api/domain-expansion with daily updates',
           implementation: 'TanStack Query with cache invalidation on strategic changes'
         },
         
@@ -176,7 +152,7 @@ export default class SuperSCAgent {
         },
         
         portfolioValuations: {
-          before: 'Static patent portfolio values',
+          before: 'Static portfolio values',
           after: 'Dynamic valuations from /api/acquisition/valuations',
           implementation: 'Real-time valuation updates based on market conditions'
         }
@@ -198,11 +174,7 @@ export default class SuperSCAgent {
   private static async implementRealTimeUpdates() {
     return {
       realTimeCapabilities: {
-        patentFilingProgress: {
-          technology: 'WebSocket connection for USPTO filing status updates',
-          frequency: 'Real-time updates as filing status changes',
-          notifications: 'Push notifications for critical patent milestones'
-        },
+
         
         competitiveMonitoring: {
           technology: 'Server-sent events for competitive intelligence alerts',
