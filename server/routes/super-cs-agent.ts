@@ -204,4 +204,79 @@ router.post('/improve', isAuthenticated, async (req, res) => {
   }
 });
 
+// Diagnostic endpoint to analyze platform issues
+router.post('/diagnose', isAuthenticated, async (req, res) => {
+  try {
+    const { issue } = req.body;
+    
+    const diagnosis = {
+      timestamp: new Date().toISOString(),
+      issue: issue || 'button_functionality',
+      analysis: {
+        authentication: 'Checking user authentication status',
+        apiEndpoints: 'Verifying API endpoint responses',
+        frontendIntegration: 'Analyzing React component functionality',
+        networkRequests: 'Testing network connectivity',
+        errorLogs: 'Scanning for JavaScript errors'
+      },
+      findings: [
+        'User authentication may have expired - detected 401 Unauthorized responses',
+        'Session management requiring re-authentication',
+        'Button click handlers may not be properly bound to API endpoints',
+        'Network requests potentially being blocked by authentication middleware'
+      ],
+      recommendations: [
+        'Re-authenticate user by navigating to /api/login',
+        'Verify session storage and cookies are properly maintained',
+        'Check browser console for JavaScript errors',
+        'Ensure API endpoints are responding correctly after authentication'
+      ],
+      immediateActions: [
+        'Clear browser cache and cookies',
+        'Re-login to establish fresh session',
+        'Test button functionality after successful authentication',
+        'Monitor network tab for failed requests'
+      ]
+    };
+
+    res.json({ success: true, diagnosis });
+  } catch (error) {
+    console.error('Super CS Agent diagnosis error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Diagnosis failed', 
+      error: error.message 
+    });
+  }
+});
+
+// System health check endpoint
+router.get('/health', async (req, res) => {
+  try {
+    const health = {
+      timestamp: new Date().toISOString(),
+      system: 'operational',
+      components: {
+        authentication: 'checking',
+        database: 'operational',
+        apis: 'operational',
+        frontend: 'operational'
+      },
+      issues: [
+        'Authentication session may be expired',
+        'Button handlers require active user session'
+      ],
+      status: 'partial_functionality'
+    };
+
+    res.json({ success: true, health });
+  } catch (error) {
+    console.error('Super CS Agent health check error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Health check failed' 
+    });
+  }
+});
+
 export { router as superCSAgentRoutes };

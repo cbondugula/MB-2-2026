@@ -6,6 +6,7 @@ import { SmartRefresh } from "@/components/ui/smart-refresh";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getRefreshInterval } from "@/lib/update-strategy";
 import { useAuth } from "@/hooks/useAuth";
+import { AuthCheck } from "@/components/ui/auth-check";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { 
@@ -99,8 +100,9 @@ export default function SuperCSAgent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-8">
+    <AuthCheck>
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -388,7 +390,8 @@ export default function SuperCSAgent() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
-    </div>
+    </AuthCheck>
   );
 }

@@ -6,6 +6,7 @@ import { SmartRefresh } from "@/components/ui/smart-refresh";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRefreshInterval } from "@/lib/update-strategy";
 import { useAuth } from "@/hooks/useAuth";
+import { AuthCheck } from "@/components/ui/auth-check";
 import { useToast } from "@/hooks/use-toast";
 import { 
   Zap, 
@@ -74,8 +75,9 @@ export default function CompetitiveAdvantage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-8">
+    <AuthCheck>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -455,7 +457,8 @@ export default function CompetitiveAdvantage() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
-    </div>
+    </AuthCheck>
   );
 }
