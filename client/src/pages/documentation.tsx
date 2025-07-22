@@ -105,137 +105,7 @@ export default function Documentation() {
 
   const pricing = calculatePrice();
 
-  const docSections = [
-    {
-      id: 'platform-overview',
-      title: 'Platform Overview',
-      description: 'Complete guide to MedBuilder\'s revolutionary AI-powered healthcare development platform',
-      icon: BookOpen,
-      color: 'blue',
-      sections: [
-        'Getting Started',
-        'Architecture Overview', 
-        'Core Features',
-        'Automated Enterprise Sales Process',
-        'Patent Portfolio & Innovation'
-      ]
-    },
-    {
-      id: 'ai-development',
-      title: 'AI Development Tools',
-      description: 'Documentation for AI-powered code generation, analysis, and healthcare-specific features',
-      icon: Brain,
-      color: 'purple',
-      sections: [
-        'AI Code Generator',
-        'Multi-AI Verification',
-        'Clinical AI Platform',
-        'Healthcare BERT Models',
-        'Voice-Controlled Development'
-      ]
-    },
-    {
-      id: 'compliance-security',
-      title: 'Compliance & Security',
-      description: 'HIPAA compliance, global privacy laws, and security documentation',
-      icon: Shield,
-      color: 'green',
-      sections: [
-        'HIPAA Compliance Tools',
-        'Global Privacy Laws (193 Countries)',
-        'Security Framework',
-        'Audit & Monitoring',
-        'TJC Compliance Standards'
-      ]
-    },
-    {
-      id: 'healthcare-standards',
-      title: 'Healthcare Standards',
-      description: 'Integration with FHIR, HL7, SNOMED, ICD-10, LOINC, and DICOM standards',
-      icon: Stethoscope,
-      color: 'emerald',
-      sections: [
-        'Standards Translation Engine',
-        'FHIR R4 Implementation',
-        'HL7 Message Processing',
-        'SNOMED CT Integration',
-        'Multi-Country Compliance'
-      ]
-    },
-    {
-      id: 'global-healthcare',
-      title: 'Global Healthcare Platform',
-      description: 'Multicultural healthcare, alternative medicine systems, and global compliance',
-      icon: Globe,
-      color: 'teal',
-      sections: [
-        'Multicultural Healthcare Profiles',
-        'Alternative Medicine Integration',
-        'Traditional Chinese Medicine',
-        'Ayurveda & Unani Systems',
-        'Indigenous Medicine Support'
-      ]
-    },
-    {
-      id: 'developer-tools',
-      title: 'Developer Tools',
-      description: 'Code editors, templates, components, and development environment',
-      icon: Code,
-      color: 'indigo',
-      sections: [
-        'AI-Enhanced Code Editor',
-        'Healthcare Component Library',
-        'Template Marketplace',
-        'Visual Builder Interface',
-        'Python ML Integration'
-      ]
-    }
-  ];
-
-  const quickLinks = [
-    { title: 'API Reference', href: '/api-docs', icon: Database },
-    { title: 'Healthcare Demo', href: '/healthcare-app-builder', icon: Stethoscope },
-    { title: 'Patent Portfolio', href: '/patent-verification', icon: Shield },
-    { title: 'TJC Compliance', href: '/tjc-compliance', icon: FileText },
-    { title: 'Global Standards', href: '/standards-builder', icon: Globe },
-    { title: 'AI Workspace', href: '/ai-workspace', icon: Brain }
-  ];
-
-  const automatedFeatures = [
-    {
-      title: 'Automated Enterprise Sales',
-      description: 'Complete elimination of traditional sales processes through AI automation',
-      features: [
-        'Instant AI Assessment (60 seconds)',
-        'Zero-Touch Configuration', 
-        'Automated Deployment (5 minutes)',
-        'No sales calls or demos required',
-        'Self-service enterprise onboarding'
-      ]
-    },
-    {
-      title: 'Automated Compliance',
-      description: '99.7% accuracy in predicting and preventing compliance violations',
-      features: [
-        'Predictive Compliance Engine',
-        'Real-time HIPAA monitoring',
-        'Global privacy law automation',
-        'Automated audit trail generation',
-        'Multi-country compliance verification'
-      ]
-    },
-    {
-      title: 'Voice-Controlled Development',
-      description: 'Revolutionary voice commands for complete application creation',
-      features: [
-        'Voice-controlled backend generation',
-        'Natural language database management',
-        'Voice-powered ML model training',
-        'Spoken architecture design',
-        'Conversational AI development'
-      ]
-    }
-  ];
+  // Pricing-focused content only
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -245,11 +115,11 @@ export default function Documentation() {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                <Code className="w-5 h-5 text-white" />
+                <DollarSign className="w-5 h-5 text-white" />
               </div>
               <div>
                 <div className="text-xl font-bold text-white">MedBuilder</div>
-                <div className="text-xs text-gray-400">Documentation Center</div>
+                <div className="text-xs text-gray-400">Pricing Plans</div>
               </div>
             </Link>
             <div className="flex items-center space-x-4">
@@ -274,135 +144,85 @@ export default function Documentation() {
             </div>
           </div>
           <h1 className="text-4xl font-bold text-white mb-4">
-            MedBuilder Documentation
+            Pricing Plans & Enterprise Solutions
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-            Complete documentation for the world's most advanced AI-powered healthcare development platform. 
-            Everything automated, everything intelligent, everything compliant.
+            Tiered pricing where enterprises select multiple functionalities and get charged based on their specific requirements. 
+            Complete automated enterprise onboarding with transparent, module-based pricing.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Badge className="bg-green-600 text-white px-4 py-2">
-              Zero Sales Calls Required
+              Pay-Per-Feature Model
             </Badge>
             <Badge className="bg-blue-600 text-white px-4 py-2">
-              Voice-Controlled Development
+              Custom Enterprise Pricing
             </Badge>
             <Badge className="bg-purple-600 text-white px-4 py-2">
-              193 Countries Supported
+              Automated Billing & Setup
             </Badge>
           </div>
         </div>
       </div>
 
-      {/* Quick Links */}
+      {/* Pricing Overview Cards */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className="text-2xl font-bold text-white mb-6">Quick Access</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
-          {quickLinks.map((link) => {
-            const IconComponent = link.icon;
-            return (
-              <Link key={link.href} to={link.href}>
-                <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors cursor-pointer text-center">
-                  <CardContent className="p-4">
-                    <IconComponent className="h-8 w-8 text-green-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-300 font-medium">{link.title}</p>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <Card className="bg-gradient-to-br from-green-900/20 to-green-800/20 border-green-500">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Calculator className="h-6 w-6" />
+                Interactive Configurator
+              </CardTitle>
+              <CardDescription>
+                Real-time pricing based on selected features
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li className="flex items-center"><ArrowRight className="h-4 w-4 text-green-500 mr-2" />Select only needed features</li>
+                <li className="flex items-center"><ArrowRight className="h-4 w-4 text-green-500 mr-2" />Organization-specific multipliers</li>
+                <li className="flex items-center"><ArrowRight className="h-4 w-4 text-green-500 mr-2" />Instant price calculation</li>
+              </ul>
+            </CardContent>
+          </Card>
 
-        {/* Automated Features Showcase */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-white mb-6">Revolutionary Automation</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {automatedFeatures.map((feature, index) => (
-              <Card key={index} className="bg-gray-800 border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-green-400 flex items-center gap-2">
-                    <Zap className="h-5 w-5" />
-                    {feature.title}
-                  </CardTitle>
-                  <CardDescription className="text-gray-300">
-                    {feature.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {feature.features.map((item, idx) => (
-                      <li key={idx} className="flex items-center text-sm text-gray-300">
-                        <ArrowRight className="h-4 w-4 text-green-500 mr-2" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+          <Card className="bg-gradient-to-br from-blue-900/20 to-blue-800/20 border-blue-500">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <DollarSign className="h-6 w-6" />
+                Transparent Pricing
+              </CardTitle>
+              <CardDescription>
+                No hidden costs, pay for what you use
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li className="flex items-center"><ArrowRight className="h-4 w-4 text-blue-500 mr-2" />Detailed cost breakdown</li>
+                <li className="flex items-center"><ArrowRight className="h-4 w-4 text-blue-500 mr-2" />Module-based pricing</li>
+                <li className="flex items-center"><ArrowRight className="h-4 w-4 text-blue-500 mr-2" />Scale as you grow</li>
+              </ul>
+            </CardContent>
+          </Card>
 
-        {/* Main Documentation Sections */}
-        <div className="space-y-8">
-          <h2 className="text-2xl font-bold text-white">Documentation Sections</h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {docSections.map((section) => {
-              const IconComponent = section.icon;
-              const colorClasses = {
-                blue: 'border-blue-500 bg-blue-500/10',
-                purple: 'border-purple-500 bg-purple-500/10',
-                green: 'border-green-500 bg-green-500/10',
-                emerald: 'border-emerald-500 bg-emerald-500/10',
-                teal: 'border-teal-500 bg-teal-500/10',
-                indigo: 'border-indigo-500 bg-indigo-500/10'
-              };
-              
-              return (
-                <Card key={section.id} className={`bg-gray-800 border-gray-700 hover:${colorClasses[section.color]} transition-all cursor-pointer`}>
-                  <CardHeader>
-                    <div className="flex items-center space-x-3 mb-2">
-                      <IconComponent className={`h-6 w-6 text-${section.color}-400`} />
-                      <CardTitle className="text-lg text-white">{section.title}</CardTitle>
-                    </div>
-                    <CardDescription className="text-gray-300">
-                      {section.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {section.sections.map((item, index) => (
-                        <li key={index} className="text-sm text-gray-400 flex items-center">
-                          <ArrowRight className="h-3 w-3 mr-2 text-gray-500" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    <Button 
-                      className="w-full mt-4" 
-                      variant="outline"
-                      onClick={() => {
-                        // Navigate to specific documentation section
-                        const routes = {
-                          'platform-overview': '/dashboard',
-                          'ai-development': '/ai-workspace',
-                          'compliance-security': '/hipaa-tools',
-                          'healthcare-standards': '/standards-builder',
-                          'global-healthcare': '/global-healthcare',
-                          'developer-tools': '/code-editor'
-                        };
-                        window.location.href = routes[section.id] || '/dashboard';
-                      }}
-                    >
-                      Explore Section
-                      <ExternalLink className="h-4 w-4 ml-2" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+          <Card className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border-purple-500">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Zap className="h-6 w-6" />
+                Automated Setup
+              </CardTitle>
+              <CardDescription>
+                Deploy enterprise environment instantly
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li className="flex items-center"><ArrowRight className="h-4 w-4 text-purple-500 mr-2" />Zero-touch configuration</li>
+                <li className="flex items-center"><ArrowRight className="h-4 w-4 text-purple-500 mr-2" />5-minute deployment</li>
+                <li className="flex items-center"><ArrowRight className="h-4 w-4 text-purple-500 mr-2" />No sales calls needed</li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Enterprise Tiered Pricing Documentation */}
