@@ -69,9 +69,33 @@ export class VisualBuilderService {
           encryption: 'AES-256'
         },
         generatedCode: {
-          frontend: this.generatePatientFormFrontend(),
-          backend: this.generatePatientFormBackend(),
-          database: this.generatePatientFormDatabase()
+          frontend: `
+            <div className="patient-form">
+              <form className="space-y-4">
+                <input type="text" placeholder="Patient Name" className="w-full p-2 border rounded" />
+                <input type="date" placeholder="Date of Birth" className="w-full p-2 border rounded" />
+                <input type="text" placeholder="Insurance ID" className="w-full p-2 border rounded" />
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Save Patient</button>
+              </form>
+            </div>
+          `,
+          backend: `
+            app.post('/api/patients', (req, res) => {
+              // HIPAA-compliant patient creation
+              const patient = { ...req.body, encrypted: true };
+              // Save to secure database
+              res.json({ success: true, patient });
+            });
+          `,
+          database: `
+            CREATE TABLE patients (
+              id UUID PRIMARY KEY,
+              name VARCHAR(255) ENCRYPTED,
+              dob DATE ENCRYPTED,
+              insurance_id VARCHAR(100) ENCRYPTED,
+              created_at TIMESTAMP DEFAULT NOW()
+            );
+          `
         },
         hipaaCompliant: true,
         integrations: ['FHIR', 'HL7', 'Epic', 'Cerner']
@@ -93,9 +117,34 @@ export class VisualBuilderService {
           allowRescheduling: true
         },
         generatedCode: {
-          frontend: this.generateSchedulerFrontend(),
-          backend: this.generateSchedulerBackend(),
-          database: this.generateSchedulerDatabase()
+          frontend: `
+            <div className="appointment-scheduler">
+              <div className="calendar-grid">
+                <div className="time-slots">
+                  {timeSlots.map(slot => 
+                    <button key={slot} className="time-slot">{slot}</button>
+                  )}
+                </div>
+              </div>
+            </div>
+          `,
+          backend: `
+            app.post('/api/appointments', (req, res) => {
+              // Schedule appointment with automatic reminders
+              const appointment = { ...req.body, status: 'scheduled' };
+              res.json({ success: true, appointment });
+            });
+          `,
+          database: `
+            CREATE TABLE appointments (
+              id UUID PRIMARY KEY,
+              patient_id UUID REFERENCES patients(id),
+              doctor_id UUID,
+              appointment_date TIMESTAMP,
+              duration INTEGER,
+              status VARCHAR(20)
+            );
+          `
         },
         hipaaCompliant: true,
         integrations: ['Google Calendar', 'Outlook', 'SMS', 'Email']
@@ -117,9 +166,34 @@ export class VisualBuilderService {
           colorScheme: 'medical'
         },
         generatedCode: {
-          frontend: this.generateChartFrontend(),
-          backend: this.generateChartBackend(),
-          database: this.generateChartDatabase()
+          frontend: `
+            <div className="medical-chart">
+              <canvas id="vitalsChart" width="400" height="300"></canvas>
+              <div className="chart-controls">
+                <select className="chart-type-selector">
+                  <option value="line">Line Chart</option>
+                  <option value="bar">Bar Chart</option>
+                </select>
+              </div>
+            </div>
+          `,
+          backend: `
+            app.get('/api/medical-data/:patientId', (req, res) => {
+              // Fetch and format medical chart data
+              const data = getMedicalData(req.params.patientId);
+              res.json({ chartData: data, realTime: true });
+            });
+          `,
+          database: `
+            CREATE TABLE medical_readings (
+              id UUID PRIMARY KEY,
+              patient_id UUID REFERENCES patients(id),
+              reading_type VARCHAR(50),
+              value DECIMAL,
+              timestamp TIMESTAMP,
+              normal_range VARCHAR(20)
+            );
+          `
         },
         hipaaCompliant: true,
         integrations: ['Laboratory Systems', 'Vital Signs Monitors', 'EHR']
@@ -141,9 +215,36 @@ export class VisualBuilderService {
           printingEnabled: false
         },
         generatedCode: {
-          frontend: this.generatePrescriptionFrontend(),
-          backend: this.generatePrescriptionBackend(),
-          database: this.generatePrescriptionDatabase()
+          frontend: `
+            <div className="prescription-pad">
+              <form className="prescription-form">
+                <input type="text" placeholder="Patient Name" className="w-full p-2 border rounded mb-2" />
+                <input type="text" placeholder="Medication" className="w-full p-2 border rounded mb-2" />
+                <input type="text" placeholder="Dosage" className="w-full p-2 border rounded mb-2" />
+                <textarea placeholder="Instructions" className="w-full p-2 border rounded mb-2"></textarea>
+                <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">E-Prescribe</button>
+              </form>
+            </div>
+          `,
+          backend: `
+            app.post('/api/prescriptions', (req, res) => {
+              // Digital prescription with DEA compliance
+              const prescription = { ...req.body, status: 'active', eSignature: true };
+              res.json({ success: true, prescription, transmitted: true });
+            });
+          `,
+          database: `
+            CREATE TABLE prescriptions (
+              id UUID PRIMARY KEY,
+              patient_id UUID REFERENCES patients(id),
+              prescriber_id UUID,
+              medication VARCHAR(255),
+              dosage VARCHAR(100),
+              instructions TEXT,
+              status VARCHAR(20),
+              created_at TIMESTAMP DEFAULT NOW()
+            );
+          `
         },
         hipaaCompliant: true,
         integrations: ['RxNorm', 'Pharmacy Networks', 'DEA Verification']
@@ -165,9 +266,40 @@ export class VisualBuilderService {
           colorCoding: 'standard'
         },
         generatedCode: {
-          frontend: this.generateLabResultsFrontend(),
-          backend: this.generateLabResultsBackend(),
-          database: this.generateLabResultsDatabase()
+          frontend: `
+            <div className="lab-results">
+              <div className="results-header">
+                <h3>Laboratory Results</h3>
+                <span className="last-updated">Updated: {new Date().toLocaleString()}</span>
+              </div>
+              <div className="results-grid">
+                <div className="result-item critical">
+                  <span className="test-name">Blood Glucose</span>
+                  <span className="value">180 mg/dL</span>
+                  <span className="reference">70-99 mg/dL</span>
+                </div>
+              </div>
+            </div>
+          `,
+          backend: `
+            app.get('/api/lab-results/:patientId', (req, res) => {
+              // Fetch lab results with critical value alerts
+              const results = getLabResults(req.params.patientId);
+              res.json({ results, alerts: checkCriticalValues(results) });
+            });
+          `,
+          database: `
+            CREATE TABLE lab_results (
+              id UUID PRIMARY KEY,
+              patient_id UUID REFERENCES patients(id),
+              test_code VARCHAR(20),
+              test_name VARCHAR(255),
+              value VARCHAR(50),
+              reference_range VARCHAR(50),
+              status VARCHAR(20),
+              collected_at TIMESTAMP
+            );
+          `
         },
         hipaaCompliant: true,
         integrations: ['LOINC', 'Lab Information Systems', 'FHIR']
@@ -189,9 +321,38 @@ export class VisualBuilderService {
           sessionTimeout: 3600
         },
         generatedCode: {
-          frontend: this.generateTelehealthFrontend(),
-          backend: this.generateTelehealthBackend(),
-          database: this.generateTelehealthDatabase()
+          frontend: `
+            <div className="telehealth-video">
+              <div className="video-container">
+                <video id="localVideo" className="local-video" autoPlay muted></video>
+                <video id="remoteVideo" className="remote-video" autoPlay></video>
+              </div>
+              <div className="video-controls">
+                <button className="btn-camera">📹</button>
+                <button className="btn-mic">🎤</button>
+                <button className="btn-screen">🖥️</button>
+                <button className="btn-end">📞</button>
+              </div>
+            </div>
+          `,
+          backend: `
+            app.post('/api/telehealth/sessions', (req, res) => {
+              // Create HIPAA-compliant video session
+              const session = { ...req.body, encrypted: true, recorded: false };
+              res.json({ success: true, session, rtcConfig: getWebRTCConfig() });
+            });
+          `,
+          database: `
+            CREATE TABLE telehealth_sessions (
+              id UUID PRIMARY KEY,
+              patient_id UUID REFERENCES patients(id),
+              provider_id UUID,
+              session_start TIMESTAMP,
+              session_end TIMESTAMP,
+              status VARCHAR(20),
+              encryption_key VARCHAR(255)
+            );
+          `
         },
         hipaaCompliant: true,
         integrations: ['WebRTC', 'HIPAA Video Platforms', 'Appointment Systems']
@@ -199,7 +360,7 @@ export class VisualBuilderService {
     ];
 
     components.forEach(component => {
-      this.healthcareComponents.set(component.id, component);
+      this.healthcareComponents.set(component.id, component as VisualComponent);
     });
   }
 

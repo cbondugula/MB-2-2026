@@ -240,7 +240,7 @@ export default function VisualBuilder() {
             <TabsContent value="templates" className="space-y-4">
               <div className="space-y-2">
                 <h3 className="text-white font-semibold">Quick Start Templates</h3>
-                {visualTemplates.map((template: any) => (
+                {(visualTemplates as any[]).map((template: any) => (
                   <div
                     key={template.id}
                     className="bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-600"
