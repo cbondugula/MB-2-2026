@@ -6,7 +6,7 @@ import { Request, Response } from 'express';
 interface PatentFiling {
   patentId: string;
   title: string;
-  category: 'AAMC' | 'ACGME' | 'LCME' | 'TJC';
+  category: 'AAMC' | 'ACGME' | 'LCME' | 'TJC' | 'QUANT';
   filingDate: string;
   status: 'FILED' | 'PENDING' | 'UNDER_REVIEW' | 'APPROVED';
   value: string;
@@ -145,19 +145,31 @@ const FILED_PATENTS: PatentFiling[] = [
     status: 'FILED',
     value: '$320M-$480M',
     description: 'Advanced student progress tracking with predictive analytics'
+  },
+
+  // QUANT Drug Discovery Patent
+  {
+    patentId: 'QUANT-DRUG-001-2025',
+    title: 'Quantum-Enhanced Drug Discovery and Molecular Optimization Platform',
+    category: 'QUANT',
+    filingDate: '2025-07-22',
+    status: 'FILED',
+    value: '$800M-$1.2B',
+    description: 'Revolutionary quantum computing platform for accelerated pharmaceutical discovery with molecular simulation and drug optimization algorithms'
   }
 ];
 
 // Portfolio Summary
 const PORTFOLIO_SUMMARY = {
-  totalPatents: 14,
-  totalValue: '$3.92B-$6.71B',
+  totalPatents: 15,
+  totalValue: '$4.72B-$7.91B',
   filingDate: '2025-07-22',
   categories: {
     AAMC: { count: 4, value: '$1.55B-$2.325B' },
     ACGME: { count: 7, value: '$2.15B-$3.225B' },
     LCME: { count: 3, value: '$1.04B-$1.56B' },
-    TJC: { count: 0, value: '$0' } // TJC patents filed separately
+    TJC: { count: 0, value: '$0' }, // TJC patents filed separately
+    QUANT: { count: 1, value: '$800M-$1.2B' }
   },
   status: 'COMPREHENSIVE_FILING_COMPLETE',
   nextSteps: [
@@ -182,8 +194,14 @@ export function getUSPTOFilingStatus(req: Request, res: Response) {
         {
           date: '2025-07-22',
           milestone: 'USPTO Comprehensive Filing Complete',
-          description: 'Successfully submitted 14 core medical education patents',
-          significance: 'Major IP protection milestone establishing dominant market position'
+          description: 'Successfully submitted 15 core patents including quantum drug discovery',
+          significance: 'Major IP protection milestone establishing dominant market position across medical education and pharmaceutical discovery'
+        },
+        {
+          date: '2025-07-22',
+          milestone: 'Quantum Drug Discovery Patent Filed',
+          description: 'Revolutionary quantum-enhanced pharmaceutical discovery platform submitted',
+          significance: 'Breakthrough patent extending portfolio into $800B pharmaceutical market'
         }
       ]
     });
