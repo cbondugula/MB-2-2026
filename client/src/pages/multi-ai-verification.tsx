@@ -28,7 +28,7 @@ export default function MultiAIVerification() {
   const [activeValidation, setActiveValidation] = useState<string>('');
   const { toast } = useToast();
 
-  // Patent Attorney Agent (OpenAI GPT-4o)
+  // Legal Advisor Agent (OpenAI GPT-4o)
   const { data: patentStrategy } = useQuery({
     queryKey: ['/api/patents/portfolio-strategy']
   });
@@ -105,14 +105,14 @@ export default function MultiAIVerification() {
                   <Scale className="w-6 h-6 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium">Patent Attorney</h3>
+                  <h3 className="text-white font-medium">Legal Advisor</h3>
                   <p className="text-sm text-gray-400">OpenAI GPT-4o</p>
                 </div>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Specialization:</span>
-                  <span className="text-blue-400">Legal & Patent</span>
+                  <span className="text-blue-400">Legal & Compliance</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Status:</span>
@@ -333,7 +333,7 @@ export default function MultiAIVerification() {
                           </div>
                           
                           <div className="text-sm text-gray-300">
-                            <strong>Grok Assessment:</strong> Revolutionary technology with strong market potential and minimal competitive threats.
+                            <strong>Grok Assessment:</strong> Advanced technology with strong market potential and innovative features.
                           </div>
                         </div>
                       ) : (

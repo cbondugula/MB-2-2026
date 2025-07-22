@@ -77,7 +77,7 @@ export default function PatentVerificationDashboard() {
             <div>
               <h1 className="text-3xl font-bold text-white flex items-center">
                 <Scale className="w-8 h-8 mr-3 text-blue-400" />
-                Revolutionary Patent Portfolio Dashboard
+                Technology Portfolio Dashboard
               </h1>
               <p className="text-gray-400 mt-2">
                 Complete IP protection for healthcare development platform eliminating traditional tools
@@ -89,7 +89,7 @@ export default function PatentVerificationDashboard() {
                 $800M-$1.12B Portfolio Value
               </Badge>
               <Badge variant="outline" className="text-blue-400 border-blue-400">
-                Revolutionary Technology
+                Patent Pending Technology
               </Badge>
             </div>
           </div>
@@ -149,7 +149,7 @@ export default function PatentVerificationDashboard() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <Layers className="w-5 h-5 mr-2" />
-                  Revolutionary Patent Portfolio
+                  Technology Portfolio
                 </CardTitle>
                 <CardDescription>
                   Complete healthcare development ecosystem without traditional tools
@@ -179,7 +179,7 @@ export default function PatentVerificationDashboard() {
                             </div>
                             <div className="text-center">
                               <div className="text-2xl font-bold text-green-400">3</div>
-                              <div className="text-sm text-gray-400">Revolutionary Patents</div>
+                              <div className="text-sm text-gray-400">Patent Pending</div>
                             </div>
                           </div>
                           

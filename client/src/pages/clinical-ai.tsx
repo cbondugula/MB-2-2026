@@ -167,7 +167,7 @@ export default function ClinicalAI() {
             </h1>
             <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-300">
               <Award className="h-3 w-3 mr-1" />
-              Patent Protected
+              Patent Pending
             </Badge>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">

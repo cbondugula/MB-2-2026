@@ -128,9 +128,9 @@ export default function MLDashboard() {
           Advanced Machine Learning for Healthcare Applications
         </p>
         <div className="flex justify-center gap-2">
-          <Badge variant="secondary" className="text-xs">Patent 003: Federated Learning</Badge>
-          <Badge variant="secondary" className="text-xs">Patent 004: Multi-Model Validation</Badge>
-          <Badge variant="secondary" className="text-xs">Patent 005: Workflow Optimization</Badge>
+          <Badge variant="secondary" className="text-xs">Patent Pending</Badge>
+          <Badge variant="secondary" className="text-xs">Patent Pending</Badge>
+          <Badge variant="secondary" className="text-xs">Patent Pending</Badge>
         </div>
       </div>
 
@@ -252,7 +252,7 @@ export default function MLDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Multi-Model Medical Validation</CardTitle>
-              <CardDescription>Patent 004: Validate medical decisions using multiple AI models</CardDescription>
+              <CardDescription>Patent Pending: Validate medical decisions using multiple AI models</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -309,7 +309,7 @@ export default function MLDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Federated Healthcare Learning</CardTitle>
-              <CardDescription>Patent 003: Multi-institutional AI collaboration with privacy preservation</CardDescription>
+              <CardDescription>Patent Pending: Multi-institutional AI collaboration with privacy preservation</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -360,7 +360,7 @@ export default function MLDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Dynamic Workflow Optimization</CardTitle>
-              <CardDescription>Patent 005: AI-powered healthcare workflow automation</CardDescription>
+              <CardDescription>Patent Pending: AI-powered healthcare workflow automation</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
