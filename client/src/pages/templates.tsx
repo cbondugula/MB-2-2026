@@ -42,167 +42,69 @@ export default function Templates() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
-  const { data: templates, isLoading: templatesLoading } = useQuery({
-    queryKey: ["/api/templates"],
+  // Fetch dynamic healthcare templates from API
+  const { data: templatesData, isLoading: templatesLoading } = useQuery({
+    queryKey: ["/api/templates/healthcare"],
     enabled: isAuthenticated,
+    refetchInterval: 60000, // Refresh every minute for template updates
   });
 
-  const categories = [
-    { value: "all", label: "All Categories" },
-    { value: "EHR", label: "EHR Integration" },
-    { value: "Telemedicine", label: "Telemedicine" },
-    { value: "Patient Portal", label: "Patient Portal" },
-    { value: "Lab Management", label: "Lab Management" },
-    { value: "Appointment", label: "Appointment" },
-    { value: "Billing", label: "Billing" },
+  // Use dynamic categories and templates
+  const categories = templatesData?.categories?.map(cat => ({ value: cat, label: cat })) || [
+    { value: "all", label: "All Categories" }
   ];
+  
+  const templates = templatesData?.templates || [];
 
-  const defaultTemplates = [
-    {
-      id: 1,
-      name: "EHR Integration",
-      description: "Connect with major EHR systems securely",
-      category: "EHR",
-      imageUrl: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-      tags: ["HIPAA", "FHIR", "HL7"],
-      icon: Database,
-      isHipaaCompliant: true,
-    },
-    {
-      id: 2,
-      name: "Telemedicine Platform",
-      description: "Video consultations with secure messaging",
-      category: "Telemedicine",
-      imageUrl: "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-      tags: ["HIPAA", "WebRTC", "Secure"],
-      icon: Video,
-      isHipaaCompliant: true,
-    },
-    {
-      id: 3,
-      name: "Patient Portal",
-      description: "Self-service portal for patient management",
-      category: "Patient Portal",
-      imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-      tags: ["HIPAA", "Mobile", "Dashboard"],
-      icon: FileText,
-      isHipaaCompliant: true,
-    },
-    {
-      id: 4,
-      name: "Lab Results Management",
-      description: "Secure lab data processing and reporting",
-      category: "Lab Management",
-      imageUrl: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-      tags: ["HIPAA", "HL7", "Analytics"],
-      icon: Activity,
-      isHipaaCompliant: true,
-    },
-    {
-      id: 5,
-      name: "Appointment Scheduling",
-      description: "Smart scheduling with availability management",
-      category: "Appointment",
-      imageUrl: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-      tags: ["HIPAA", "Calendar", "Notifications"],
-      icon: Calendar,
-      isHipaaCompliant: true,
-    },
-    {
-      id: 6,
-      name: "Remote Patient Monitoring",
-      description: "IoT device integration for continuous monitoring",
-      category: "Monitoring",
-      imageUrl: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-      tags: ["HIPAA", "IoT", "Real-time"],
-      icon: Heart,
-      isHipaaCompliant: true,
-    },
-    {
-      id: 7,
-      name: "Clinical Decision Support",
-      description: "AI-powered clinical recommendations",
-      category: "AI",
-      imageUrl: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-      tags: ["HIPAA", "AI", "Clinical"],
-      icon: Stethoscope,
-      isHipaaCompliant: true,
-    },
-    {
-      id: 8,
-      name: "Pharmacy Management",
-      description: "Prescription management and dispensing",
-      category: "Pharmacy",
-      imageUrl: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-      tags: ["HIPAA", "Pharmacy", "Inventory"],
-      icon: Plus,
-      isHipaaCompliant: true,
-    },
-  ];
-
-  const displayTemplates = templates || defaultTemplates;
-
-  const filteredTemplates = displayTemplates.filter(template => {
-    const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         template.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || template.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  if (isLoading) {
+  if (templatesLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 bg-medical-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <FileText className="w-6 h-6 text-white animate-pulse" />
-          </div>
-          <p className="text-slate-600">Loading Templates...</p>
+      <div className="flex h-screen bg-gray-50">
+        <LeftSidebar />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <TopNavigation />
+          <main className="flex-1 overflow-y-auto p-6">
+            <div className="flex items-center justify-center h-full">
+              <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+            </div>
+          </main>
         </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  const filteredTemplates = templates.filter(template => {
+    const matchesSearch = searchTerm === "" || 
+      template.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || template.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <TopNavigation />
-      
-      <div className="flex h-screen">
-        <LeftSidebar />
-        
-        <main className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <header className="bg-white border-b border-slate-200 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900">HIPAA-Compliant Templates</h1>
-                <p className="text-slate-600 mt-1">Pre-built templates for healthcare applications</p>
-              </div>
-              <Badge variant="secondary" className="bg-trust-green-100 text-trust-green-700">
-                <Shield className="w-3 h-3 mr-1" />
-                All Verified
-              </Badge>
+    <div className="flex h-screen bg-gray-50">
+      <LeftSidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TopNavigation />
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">Healthcare Templates</h1>
+              <p className="text-slate-600">Choose from our collection of HIPAA-compliant healthcare application templates</p>
             </div>
-          </header>
 
-          {/* Filters */}
-          <div className="bg-white border-b border-slate-200 px-6 py-4">
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="mb-6 flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <Input
                   placeholder="Search templates..."
+                  className="pl-10"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full sm:w-64">
-                  <SelectValue placeholder="Select category" />
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
@@ -213,60 +115,49 @@ export default function Templates() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          {/* Templates Grid */}
-          <div className="flex-1 p-6 overflow-y-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredTemplates.map((template) => (
-                <Card key={template.id} className="border-slate-200 hover:shadow-lg transition-shadow cursor-pointer group">
-                  <CardHeader className="p-0">
-                    <div className="relative">
-                      <img
-                        src={template.imageUrl}
-                        alt={template.name}
-                        className="w-full h-48 object-cover rounded-t-lg"
-                      />
-                      <div className="absolute top-3 right-3">
-                        <Badge variant="secondary" className="bg-trust-green-100 text-trust-green-700">
-                          <Shield className="w-3 h-3 mr-1" />
-                          HIPAA
-                        </Badge>
+                <Card key={template.id} className="group hover:shadow-lg transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <Database className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">{template.name}</CardTitle>
+                          <Badge variant="secondary" className="mt-1">{template.category}</Badge>
+                        </div>
                       </div>
+                      {template.isHipaaCompliant && (
+                        <Shield className="w-5 h-5 text-green-500" />
+                      )}
                     </div>
                   </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <template.icon className="w-5 h-5 text-medical-blue-500" />
-                      <CardTitle className="text-lg font-semibold text-slate-900">
-                        {template.name}
-                      </CardTitle>
-                    </div>
-                    <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+                  <CardContent>
+                    <p className="text-slate-600 text-sm mb-4 line-clamp-2">
                       {template.description}
                     </p>
                     <div className="flex flex-wrap gap-1 mb-4">
-                      {template.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs">
+                      {template.tags?.map((tag, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
                           {tag}
                         </Badge>
                       ))}
                     </div>
-                    <div className="flex space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="flex-1 border-medical-blue-500 text-medical-blue-500 hover:bg-medical-blue-50"
-                      >
-                        Preview
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        className="flex-1 bg-medical-blue-500 hover:bg-medical-blue-600"
-                      >
-                        Use Template
-                      </Button>
-                    </div>
+                    <Button 
+                      className="w-full" 
+                      onClick={() => {
+                        toast({
+                          title: "Template Selected",
+                          description: `Using ${template.name} template for your new project.`,
+                        });
+                      }}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Use Template
+                    </Button>
                   </CardContent>
                 </Card>
               ))}

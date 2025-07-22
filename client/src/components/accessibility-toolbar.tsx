@@ -422,7 +422,8 @@ export default function AccessibilityToolbar() {
       )}
 
       {/* Add accessibility CSS */}
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .high-contrast {
           filter: contrast(150%) brightness(1.2);
         }
@@ -454,7 +455,8 @@ export default function AccessibilityToolbar() {
         * {
           font-size: calc(1em * var(--accessibility-font-scale, 1));
         }
-      `}</style>
+        `
+      }} />
     </>
   );
 }

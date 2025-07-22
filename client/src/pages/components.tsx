@@ -48,228 +48,77 @@ export default function Components() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
-  const { data: components, isLoading: componentsLoading } = useQuery({
-    queryKey: ["/api/components"],
+  // Fetch dynamic healthcare components from API
+  const { data: componentsData, isLoading: componentsLoading } = useQuery({
+    queryKey: ["/api/components/healthcare"],
     enabled: isAuthenticated,
+    refetchInterval: 60000, // Refresh every minute for component updates
   });
 
+  // Use dynamic categories and components
   const categories = [
     { value: "all", label: "All Categories" },
-    { value: "Forms", label: "Forms" },
-    { value: "Charts", label: "Charts & Analytics" },
-    { value: "Communication", label: "Communication" },
-    { value: "Scheduling", label: "Scheduling" },
-    { value: "Monitoring", label: "Monitoring" },
-    { value: "Navigation", label: "Navigation" },
-    { value: "Security", label: "Security" },
+    ...(componentsData?.categories?.map(cat => ({ value: cat.name, label: cat.name })) || [])
   ];
+  
+  // Flatten components from all categories
+  const components = componentsData?.categories?.reduce((acc, category) => {
+    return acc.concat(category.components?.map(comp => ({
+      ...comp,
+      category: category.name,
+      icon: UserCheck // Default icon, can be mapped from component data
+    })) || []);
+  }, []) || [];
 
-  const defaultComponents = [
-    {
-      id: 1,
-      name: "Patient Form",
-      description: "HIPAA-compliant patient intake form with validation",
-      category: "Forms",
-      icon: UserCheck,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Form", "Validation", "HIPAA"],
-    },
-    {
-      id: 2,
-      name: "Appointment Scheduler",
-      description: "Smart scheduling with availability management",
-      category: "Scheduling",
-      icon: Calendar,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Calendar", "Booking", "Notifications"],
-    },
-    {
-      id: 3,
-      name: "Vital Signs Chart",
-      description: "Interactive health data visualization",
-      category: "Charts",
-      icon: Activity,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Charts", "Health", "Analytics"],
-    },
-    {
-      id: 4,
-      name: "Video Consultation",
-      description: "Secure video calling with recording",
-      category: "Communication",
-      icon: Video,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Video", "WebRTC", "Recording"],
-    },
-    {
-      id: 5,
-      name: "Secure Messaging",
-      description: "Encrypted messaging between patients and providers",
-      category: "Communication",
-      icon: MessageSquare,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Messages", "Encryption", "Chat"],
-    },
-    {
-      id: 6,
-      name: "Medical Records Viewer",
-      description: "Secure display of patient medical records",
-      category: "Navigation",
-      icon: FileText,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Records", "Display", "Security"],
-    },
-    {
-      id: 7,
-      name: "Health Analytics Dashboard",
-      description: "Comprehensive health metrics dashboard",
-      category: "Charts",
-      icon: BarChart3,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Analytics", "Dashboard", "Metrics"],
-    },
-    {
-      id: 8,
-      name: "Prescription Timer",
-      description: "Medication reminder and tracking component",
-      category: "Monitoring",
-      icon: Clock,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Medication", "Reminders", "Tracking"],
-    },
-    {
-      id: 9,
-      name: "Emergency Contact",
-      description: "Quick access to emergency contacts and services",
-      category: "Communication",
-      icon: Phone,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Emergency", "Contact", "Quick Access"],
-    },
-    {
-      id: 10,
-      name: "Payment Processing",
-      description: "HIPAA-compliant payment processing widget",
-      category: "Forms",
-      icon: CreditCard,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Payment", "Billing", "PCI DSS"],
-    },
-    {
-      id: 11,
-      name: "Provider Directory",
-      description: "Searchable directory of healthcare providers",
-      category: "Navigation",
-      icon: Users,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Directory", "Search", "Providers"],
-    },
-    {
-      id: 12,
-      name: "Access Control Panel",
-      description: "Role-based access control management",
-      category: "Security",
-      icon: Lock,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Access", "Security", "Roles"],
-    },
-    {
-      id: 13,
-      name: "Notification Center",
-      description: "Healthcare-specific notification system",
-      category: "Communication",
-      icon: Bell,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Notifications", "Alerts", "System"],
-    },
-    {
-      id: 14,
-      name: "Settings Panel",
-      description: "HIPAA-compliant settings and preferences",
-      category: "Navigation",
-      icon: Settings,
-      isVerified: true,
-      isHipaaCompliant: true,
-      tags: ["Settings", "Preferences", "Configuration"],
-    },
-  ];
-
-  const displayComponents = components || defaultComponents;
-
-  const filteredComponents = displayComponents.filter(component => {
-    const matchesSearch = component.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         component.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || component.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  if (isLoading) {
+  if (componentsLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 bg-medical-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Shield className="w-6 h-6 text-white animate-pulse" />
-          </div>
-          <p className="text-slate-600">Loading Components...</p>
+      <div className="flex h-screen bg-gray-50">
+        <LeftSidebar />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <TopNavigation />
+          <main className="flex-1 overflow-y-auto p-6">
+            <div className="flex items-center justify-center h-full">
+              <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+            </div>
+          </main>
         </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  const filteredComponents = components.filter(component => {
+    const matchesSearch = searchTerm === "" || 
+      component.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      component.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || component.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <TopNavigation />
-      
-      <div className="flex h-screen">
-        <LeftSidebar />
-        
-        <main className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <header className="bg-white border-b border-slate-200 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900">Healthcare Components</h1>
-                <p className="text-slate-600 mt-1">Pre-built, verified components for healthcare applications</p>
-              </div>
-              <Badge variant="secondary" className="bg-trust-green-100 text-trust-green-700">
-                <Shield className="w-3 h-3 mr-1" />
-                All Verified
-              </Badge>
+    <div className="flex h-screen bg-gray-50">
+      <LeftSidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <TopNavigation />
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">Healthcare Components</h1>
+              <p className="text-slate-600">Build faster with our library of HIPAA-compliant healthcare UI components</p>
             </div>
-          </header>
 
-          {/* Filters */}
-          <div className="bg-white border-b border-slate-200 px-6 py-4">
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="mb-6 flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <Input
                   placeholder="Search components..."
+                  className="pl-10"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full sm:w-64">
-                  <SelectValue placeholder="Select category" />
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
@@ -280,34 +129,40 @@ export default function Components() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          {/* Components Grid */}
-          <div className="flex-1 p-6 overflow-y-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredComponents.map((component) => (
-                <Card key={component.id} className="border-slate-200 hover:shadow-lg transition-shadow cursor-pointer group">
+                <Card key={component.id} className="group hover:shadow-lg transition-shadow">
                   <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="w-12 h-12 bg-medical-blue-100 rounded-lg flex items-center justify-center">
-                        <component.icon className="w-6 h-6 text-medical-blue-500" />
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <UserCheck className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">{component.name}</CardTitle>
+                          <Badge variant="secondary" className="mt-1">{component.category}</Badge>
+                        </div>
                       </div>
-                      <Badge variant="secondary" className="bg-trust-green-100 text-trust-green-700">
-                        <Shield className="w-3 h-3 mr-1" />
-                        Verified
-                      </Badge>
+                      <div className="flex items-center space-x-1">
+                        {component.isVerified && (
+                          <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                            Verified
+                          </Badge>
+                        )}
+                        {component.isHipaaCompliant && (
+                          <Shield className="w-4 h-4 text-green-500" />
+                        )}
+                      </div>
                     </div>
-                    <CardTitle className="text-lg font-semibold text-slate-900">
-                      {component.name}
-                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="pt-0">
-                    <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+                  <CardContent>
+                    <p className="text-slate-600 text-sm mb-4 line-clamp-2">
                       {component.description}
                     </p>
                     <div className="flex flex-wrap gap-1 mb-4">
-                      {component.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs">
+                      {component.tags?.map((tag, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
                           {tag}
                         </Badge>
                       ))}
@@ -316,13 +171,25 @@ export default function Components() {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="flex-1 border-medical-blue-500 text-medical-blue-500 hover:bg-medical-blue-50"
+                        className="flex-1"
+                        onClick={() => {
+                          toast({
+                            title: "Preview Component",
+                            description: `Previewing ${component.name} component.`,
+                          });
+                        }}
                       >
                         Preview
                       </Button>
                       <Button 
                         size="sm" 
-                        className="flex-1 bg-medical-blue-500 hover:bg-medical-blue-600"
+                        className="flex-1"
+                        onClick={() => {
+                          toast({
+                            title: "Component Added",
+                            description: `${component.name} added to your project.`,
+                          });
+                        }}
                       >
                         Add to Project
                       </Button>

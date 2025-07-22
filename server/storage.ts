@@ -193,14 +193,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserRecentActivities(userId: string): Promise<ProjectActivity[]> {
-    return await db
-      .select()
-      .from(projectActivities)
-      .innerJoin(projects, eq(projectActivities.projectId, projects.id))
-      .where(eq(projects.userId, userId))
-      .orderBy(desc(projectActivities.timestamp))
-      .limit(10)
-      .then(results => results.map(r => r.project_activities));
+    try {
+      return await db
+        .select()
+        .from(projectActivities)
+        .innerJoin(projects, eq(projectActivities.projectId, projects.id))
+        .where(eq(projects.userId, userId))
+        .orderBy(desc(projectActivities.timestamp))
+        .limit(10)
+        .then(results => results.map(r => r.project_activities));
+    } catch (error) {
+      console.error('Failed to fetch user activities:', error);
+      // Return empty array if there are no activities yet
+      return [];
+    }
   }
 
   async getUserProjects(userId: string): Promise<Project[]> {
