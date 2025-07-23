@@ -240,7 +240,7 @@ router.post('/diagnose', isAuthenticated, async (req, res) => {
     };
 
     res.json({ success: true, diagnosis });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Super CS Agent diagnosis error:', error);
     res.status(500).json({ 
       success: false, 

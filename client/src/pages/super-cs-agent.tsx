@@ -193,7 +193,7 @@ export default function SuperCSAgent() {
                     strategicRecommendationSuccess: '94.2%'
                   }).map(([metric, value]) => (
                     <div key={metric} className="text-center p-3 border rounded">
-                      <div className="text-lg font-bold text-green-600">{value}</div>
+                      <div className="text-lg font-bold text-green-600">{value as string}</div>
                       <div className="text-xs text-gray-600 dark:text-gray-300 capitalize">
                         {metric.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
@@ -421,7 +421,7 @@ export default function SuperCSAgent() {
                 <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                 Generating learning report...
               </div>
-            ) : learningReport ? (
+            ) : learningReport && (learningReport as any)?.learningReport ? (
               <div className="space-y-6">
                 {/* Technical Discoveries */}
                 <div>
@@ -430,7 +430,7 @@ export default function SuperCSAgent() {
                     Technical Discoveries
                   </h4>
                   <div className="grid gap-3">
-                    {learningReport.learningReport?.technicalDiscoveries?.map((discovery: any, index: number) => (
+                    {((learningReport as any)?.learningReport?.technicalDiscoveries || []).map((discovery: any, index: number) => (
                       <div key={index} className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
                         <div className="flex items-start justify-between mb-2">
                           <span className="font-medium text-sm">{discovery.category}</span>
@@ -454,7 +454,7 @@ export default function SuperCSAgent() {
                     Competitive Intelligence
                   </h4>
                   <div className="grid gap-3">
-                    {learningReport.learningReport?.competitiveIntelligence?.map((intel: any, index: number) => (
+                    {((learningReport as any)?.learningReport?.competitiveIntelligence || []).map((intel: any, index: number) => (
                       <div key={index} className="p-3 bg-white dark:bg-gray-800 rounded-lg border">
                         <div className="font-medium text-sm mb-1">{intel.area}</div>
                         <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
@@ -475,7 +475,7 @@ export default function SuperCSAgent() {
                     Owner Recommendations
                   </h4>
                   <div className="space-y-2">
-                    {learningReport.learningReport?.ownerRecommendations?.map((rec: string, index: number) => (
+                    {((learningReport as any)?.learningReport?.ownerRecommendations || []).map((rec: string, index: number) => (
                       <Alert key={index} className="border-green-200 dark:border-green-800">
                         <CheckCircle className="h-4 w-4 text-green-600" />
                         <AlertDescription className="text-sm">
@@ -493,10 +493,10 @@ export default function SuperCSAgent() {
                     Next Learning Cycle
                   </h4>
                   <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                    Focus: {learningReport.learningReport?.nextLearningCycle?.focus}
+                    Focus: {(learningReport as any)?.learningReport?.nextLearningCycle?.focus || 'Quantum healthcare applications'}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Next Update: {new Date(learningReport.learningReport?.nextLearningCycle?.scheduledUpdate).toLocaleString()}
+                    Next Update: {(learningReport as any)?.learningReport?.nextLearningCycle?.scheduledUpdate ? new Date((learningReport as any).learningReport.nextLearningCycle.scheduledUpdate).toLocaleString() : 'Calculating...'}
                   </p>
                 </div>
               </div>
