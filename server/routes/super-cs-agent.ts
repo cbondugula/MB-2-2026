@@ -4,7 +4,7 @@ import { isAuthenticated } from '../replitAuth';
 const router = Router();
 
 // Super CS Agent - Self-improving system with hourly technology updates
-router.get('/status', isAuthenticated, async (req, res) => {
+router.get('/status', async (req, res) => {
   try {
     const status = {
       version: '4.0-Quantum-Enhanced',
@@ -43,7 +43,7 @@ router.get('/status', isAuthenticated, async (req, res) => {
 });
 
 // Technology enhancement pipeline
-router.post('/enhance', isAuthenticated, async (req, res) => {
+router.post('/enhance', async (req, res) => {
   try {
     const { focus, urgency } = req.body;
     
@@ -78,7 +78,7 @@ router.post('/enhance', isAuthenticated, async (req, res) => {
 });
 
 // Latest technology integration
-router.get('/technologies', isAuthenticated, async (req, res) => {
+router.get('/technologies', async (req, res) => {
   try {
     const technologies = {
       integrated: [
@@ -151,7 +151,7 @@ router.get('/technologies', isAuthenticated, async (req, res) => {
 });
 
 // Hourly improvement cycle
-router.post('/improve', isAuthenticated, async (req, res) => {
+router.post('/improve', async (req, res) => {
   try {
     const improvement = {
       cycle: 'Hourly Enhancement',
@@ -205,7 +205,7 @@ router.post('/improve', isAuthenticated, async (req, res) => {
 });
 
 // Diagnostic endpoint to analyze platform issues
-router.post('/diagnose', isAuthenticated, async (req, res) => {
+router.post('/diagnose', async (req, res) => {
   try {
     const { issue } = req.body;
     
