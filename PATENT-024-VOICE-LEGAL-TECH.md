@@ -1,5 +1,6 @@
-# PATENT APPLICATION 024: VOICE-CONTROLLED LEGAL TECHNOLOGY DEVELOPMENT PLATFORM
+# PROVISIONAL PATENT APPLICATION 024: VOICE-CONTROLLED LEGAL TECHNOLOGY DEVELOPMENT PLATFORM
 
+**Application Type:** Provisional Patent Application  
 **Application Number:** To be assigned by USPTO upon your submission  
 **Filing Date:** To be assigned by USPTO upon your submission  
 **Inventor:** Dr. Chandra Sekhar Bondugula  
@@ -441,4 +442,4 @@ START: Legal Professional Voice Command
 
 ---
 
-*This patent application is ready for USPTO submission.*
+*This provisional patent application is ready for USPTO submission.*
