@@ -1,5 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { registerMedicalRoutes } from "./routes/medical";
+import { registerExecutiveRoutes } from "./routes/executive";
 import { Server as SocketIOServer } from "socket.io";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
@@ -2531,6 +2533,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // Register stakeholder-specific routes
+  registerMedicalRoutes(app);
+  registerExecutiveRoutes(app);
 
   const httpServer = createServer(app);
   
