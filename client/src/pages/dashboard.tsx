@@ -411,6 +411,12 @@ export default function Dashboard() {
                       Super Agent
                     </Button>
                   </Link>
+                  <Link href="/cs-agent">
+                    <Button variant="outline" size="sm" className="w-full border-cyan-600 text-cyan-300 hover:bg-cyan-900 bg-cyan-900/20">
+                      <Brain className="w-4 h-4 mr-2" />
+                      CS Agent 100x
+                    </Button>
+                  </Link>
                   <Link href="/visual-builder">
                     <Button variant="outline" size="sm" className="w-full border-purple-600 text-purple-300 hover:bg-purple-900 bg-purple-900/20">
                       <Eye className="w-4 h-4 mr-2" />

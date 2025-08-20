@@ -40,6 +40,7 @@ import { healthcareTestingRouter } from "./healthcare-testing-service";
 import { dualQuantumClassicalService } from "./dual-quantum-classical-service";
 import { superCSAgentRoutes } from "./routes/super-cs-agent";
 import { multiAIPatentService } from "./multi-ai-patent-assessment";
+import { registerCSAgentRoutes, csAgent } from "./cs-agent-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -2450,6 +2451,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Failed to fetch patent portfolio status', error: error instanceof Error ? error.message : 'Unknown error' });
     }
   });
+
+  // Register CS Agent routes
+  registerCSAgentRoutes(app);
 
   const httpServer = createServer(app);
   

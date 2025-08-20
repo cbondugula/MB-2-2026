@@ -43,6 +43,7 @@ import HealthcareTesting from "@/pages/healthcare-testing";
 import DualQuantumClassical from "@/pages/dual-quantum-classical";
 import HealthcareAppBuilder from "@/pages/healthcare-app-builder";
 import HealthcareDemo from "@/pages/healthcare-demo";
+import CSAgentDashboard from "@/pages/CSAgentDashboard";
 import Documentation from "@/pages/documentation";
 
 function Router() {
@@ -98,6 +99,7 @@ function Router() {
           <Route path="/competitive-intelligence" component={CompetitiveIntelligence} />
           <Route path="/competitive-advantage" component={CompetitiveAdvantage} />
           <Route path="/super-cs-agent" component={SuperCSAgent} />
+          <Route path="/cs-agent" component={CSAgentDashboard} />
         </>
       )}
       <Route component={NotFound} />
