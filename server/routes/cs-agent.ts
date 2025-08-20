@@ -68,6 +68,17 @@ export function registerCSAgentRoutes(app: Express) {
     }
   });
 
+  // Comprehensive Platform Testing
+  app.post("/api/cs-agent/comprehensive-testing", async (req, res) => {
+    try {
+      const testReport = await csAgent.performComprehensiveTesting();
+      res.json(testReport);
+    } catch (error) {
+      console.error('CS Agent comprehensive testing failed:', error);
+      res.status(500).json({ error: 'Comprehensive testing failed' });
+    }
+  });
+
   // Comprehensive Optimization Report
   app.get("/api/cs-agent/optimization-report", async (req, res) => {
     try {
