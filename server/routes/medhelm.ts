@@ -2,27 +2,51 @@ import type { Express } from "express";
 import { medHELMService } from "../medhelm-service";
 
 export function registerMedHELMRoutes(app: Express) {
-  // Clinical Decision Support API
-  app.post("/api/medhelm/clinical-decision", async (req, res) => {
+  // MedHELM Model Recommendation API
+  app.post("/api/medhelm/recommend-model", async (req, res) => {
     try {
-      const { patientData } = req.body;
-      const result = await medHELMService.provideClinicalDecisionSupport(patientData);
+      const { medicalTask, specialty } = req.body;
+      const result = await medHELMService.recommendModelForTask(medicalTask, specialty);
       res.json(result);
     } catch (error) {
-      console.error('Clinical decision API error:', error);
-      res.status(500).json({ error: 'Clinical decision support failed' });
+      console.error('MedHELM model recommendation error:', error);
+      res.status(500).json({ error: 'Model recommendation failed' });
     }
   });
 
-  // Medical Knowledge Retrieval API
-  app.post("/api/medhelm/knowledge", async (req, res) => {
+  // Clinical Task Analysis API (with MedHELM-recommended model)
+  app.post("/api/medhelm/clinical-analysis", async (req, res) => {
     try {
-      const { query } = req.body;
-      const result = await medHELMService.retrieveMedicalKnowledge(query);
+      const { patientData } = req.body;
+      const result = await medHELMService.analyzeClinicalTask(patientData);
       res.json(result);
     } catch (error) {
-      console.error('Medical knowledge API error:', error);
-      res.status(500).json({ error: 'Medical knowledge retrieval failed' });
+      console.error('Clinical analysis API error:', error);
+      res.status(500).json({ error: 'Clinical analysis failed' });
+    }
+  });
+
+  // AI Response Quality Evaluation API
+  app.post("/api/medhelm/evaluate-response", async (req, res) => {
+    try {
+      const { medicalContent, taskType } = req.body;
+      const result = await medHELMService.evaluateResponseQuality(medicalContent, taskType);
+      res.json(result);
+    } catch (error) {
+      console.error('Response evaluation API error:', error);
+      res.status(500).json({ error: 'Response evaluation failed' });
+    }
+  });
+
+  // Medical Knowledge Query API (with MedHELM model selection)
+  app.post("/api/medhelm/knowledge-query", async (req, res) => {
+    try {
+      const { query } = req.body;
+      const result = await medHELMService.queryMedicalKnowledge(query);
+      res.json(result);
+    } catch (error) {
+      console.error('Medical knowledge query API error:', error);
+      res.status(500).json({ error: 'Medical knowledge query failed' });
     }
   });
 
