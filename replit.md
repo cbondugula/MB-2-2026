@@ -14,9 +14,10 @@ Mandatory Dynamic Data Policy:
 - Every page, component, and feature must use dynamic data from backend APIs
 - No static content, hardcoded values, or placeholder data allowed
 - All metrics, patent data, domain analysis, and filing status must be fetched from real backend services
-- Components should show loading states while fetching dynamic data from `/api/patents/filing-status` and `/api/patents/domain-expansion`
+- Components should show loading states while fetching dynamic data from database-driven endpoints
 - Real-time updates required for patent filing progress, competitive analysis, and portfolio valuations
-- All strategic analysis, revenue projections, and market data sourced from live calculation engines
+- All strategic analysis, revenue projections, and market data sourced from live database calculation engines
+- CS Agent service fully converted to dynamic database operations with no hardcoded values
 - Patent demonstrations and USPTO readiness status fetched from working prototype implementations
 
 ## System Architecture

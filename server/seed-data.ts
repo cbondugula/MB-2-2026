@@ -28,14 +28,14 @@ export async function seedDatabase() {
     
     console.log('✅ Existing data cleared, starting fresh seed...');
 
-    // Seed sample user for development
+    // Seed sample user for development (use upsert to handle existing)
     const [sampleUser] = await db.insert(users).values({
       id: 'dev-user-123',
       email: 'dev@medbuilder.ai',
       firstName: 'MedBuilder',
       lastName: 'Developer',
       profileImageUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=dev'
-    }).returning();
+    }).onConflictDoNothing().returning();
 
     // Seed healthcare domains
     const domains = [

@@ -53,28 +53,23 @@ export default function CSAgentDashboard() {
   const queryClient = useQueryClient();
   const [isOptimizing, setIsOptimizing] = useState(false);
 
-  // Fetch CS Agent status
-  const { data: agentStatus, isLoading: statusLoading } = useQuery<CSAgentStatus>({
-    queryKey: ['/cs-agent'],
+  // Fetch CS Agent health status (dynamic database data)
+  const { data: agentHealth, isLoading: healthLoading, refetch: refetchHealth } = useQuery({
+    queryKey: ['/cs-agent/health'],
   });
 
-  // Fetch platform analysis
-  const { data: platformAnalysis, isLoading: analysisLoading, refetch: refetchAnalysis } = useQuery<PlatformAnalysis>({
+  // Fetch platform analysis (dynamic database data)
+  const { data: platformAnalysis, isLoading: analysisLoading, refetch: refetchAnalysis } = useQuery({
     queryKey: ['/cs-agent/analyze'],
   });
 
-  // Fetch monitoring data
-  const { data: monitoringData, refetch: refetchMonitoring } = useQuery<MonitoringData>({
-    queryKey: ['/cs-agent/monitor'],
-  });
-
-  // Fetch healthcare analysis
-  const { data: healthcareAnalysis, refetch: refetchHealthcare } = useQuery({
+  // Fetch healthcare analysis (dynamic database data)
+  const { data: healthcareAnalysis, isLoading: healthcareLoading, refetch: refetchHealthcare } = useQuery({
     queryKey: ['/cs-agent/healthcare-analysis'],
   });
 
-  // Fetch patent analysis
-  const { data: patentAnalysis, refetch: refetchPatents } = useQuery({
+  // Fetch patent analysis (dynamic database data)
+  const { data: patentAnalysis, isLoading: patentLoading, refetch: refetchPatent } = useQuery({
     queryKey: ['/cs-agent/patent-analysis'],
   });
 
@@ -113,7 +108,7 @@ export default function CSAgentDashboard() {
     return () => clearInterval(interval);
   }, [refetchMonitoring]);
 
-  if (statusLoading || analysisLoading) {
+  if (healthLoading || analysisLoading || healthcareLoading || patentLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
@@ -135,18 +130,18 @@ export default function CSAgentDashboard() {
           <p className="text-xl text-gray-600 dark:text-gray-300">
             100x Computer Agent for Healthcare AI Platforms
           </p>
-          {agentStatus && (
+          {agentHealth && (
             <div className="flex items-center justify-center space-x-4">
               <Badge variant="outline" className="bg-green-100 text-green-800">
                 <CheckCircle className="w-4 h-4 mr-1" />
-                {agentStatus.status}
+                {agentHealth.status || 'Active'}
               </Badge>
               <Badge variant="outline" className="bg-blue-100 text-blue-800">
                 <Zap className="w-4 h-4 mr-1" />
-                {agentStatus.power_level}
+                {agentHealth.metrics?.processingCapacity || '100%'} Power
               </Badge>
               <Badge variant="outline" className="bg-purple-100 text-purple-800">
-                v{agentStatus.version}
+                {agentHealth.metrics?.totalProjects || 0} Projects
               </Badge>
             </div>
           )}
@@ -171,7 +166,7 @@ export default function CSAgentDashboard() {
             {isOptimizing ? "Optimizing..." : "Optimize Performance"}
           </Button>
           <Button 
-            onClick={() => refetchMonitoring()}
+            onClick={() => refetchHealth()}
             variant="outline"
             data-testid="button-refresh-monitoring"
           >

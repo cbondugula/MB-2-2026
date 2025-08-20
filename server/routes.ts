@@ -40,7 +40,7 @@ import { healthcareTestingRouter } from "./healthcare-testing-service";
 import { dualQuantumClassicalService } from "./dual-quantum-classical-service";
 import { superCSAgentRoutes } from "./routes/super-cs-agent";
 import { multiAIPatentService } from "./multi-ai-patent-assessment";
-import { registerCSAgentRoutes, csAgent } from "./cs-agent-service";
+import { csAgentService } from "./cs-agent-dynamic-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -2452,8 +2452,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Register CS Agent routes
-  registerCSAgentRoutes(app);
+  // CS Agent routes - 100x Computer Agent capabilities with dynamic database data
+  app.get('/cs-agent/health', async (req, res) => {
+    try {
+      const healthStatus = await csAgentService.getHealthStatus();
+      res.json(healthStatus);
+    } catch (error) {
+      console.error('CS Agent health check failed:', error);
+      res.status(500).json({ 
+        error: 'CS Agent health check failed',
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
+  app.get('/cs-agent/analyze', async (req, res) => {
+    try {
+      const analysis = await csAgentService.analyzePlatform();
+      res.json(analysis);
+    } catch (error) {
+      console.error('CS Agent platform analysis failed:', error);
+      res.status(500).json({ 
+        error: 'Platform analysis failed',
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
+  app.get('/cs-agent/healthcare-analysis', async (req, res) => {
+    try {
+      const analysis = await csAgentService.performHealthcareAnalysis();
+      res.json(analysis);
+    } catch (error) {
+      console.error('CS Agent healthcare analysis failed:', error);
+      res.status(500).json({ 
+        error: 'Healthcare analysis failed',
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
+  app.get('/cs-agent/patent-analysis', async (req, res) => {
+    try {
+      const analysis = await csAgentService.analyzePatentPortfolio();
+      res.json(analysis);
+    } catch (error) {
+      console.error('CS Agent patent analysis failed:', error);
+      res.status(500).json({ 
+        error: 'Patent analysis failed',
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
+  app.get('/cs-agent/optimize', async (req, res) => {
+    try {
+      const optimization = await csAgentService.optimizeSystem();
+      res.json(optimization);
+    } catch (error) {
+      console.error('CS Agent optimization failed:', error);
+      res.status(500).json({ 
+        error: 'System optimization failed',
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
+  app.post('/cs-agent/resolve-error', async (req, res) => {
+    try {
+      const { type, message } = req.body;
+      const resolution = await csAgentService.resolveError({ type, message });
+      res.json(resolution);
+    } catch (error) {
+      console.error('CS Agent error resolution failed:', error);
+      res.status(500).json({ 
+        error: 'Error resolution failed',
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
 
   const httpServer = createServer(app);
   
