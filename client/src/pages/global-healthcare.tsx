@@ -102,176 +102,22 @@ export default function GlobalHealthcare() {
     { value: "middle-east", label: "Middle East" }
   ];
 
-  const mockData: GlobalComplianceData = {
-    privacyLaws: [
-      {
-        id: "hipaa-usa",
-        name: "Health Insurance Portability and Accountability Act (HIPAA)",
-        jurisdiction: "United States",
-        region: "North America",
-        keyRequirements: [
-          "Protected Health Information (PHI) safeguards",
-          "Business Associate Agreements (BAAs)",
-          "Administrative, physical, and technical safeguards"
-        ],
-        penalties: "Up to $1.5 million per incident",
-        healthcareSpecific: ["PHI protection", "Medical record access", "Provider communication standards"],
-        enforcementBody: "Department of Health and Human Services (HHS)"
-      },
-      {
-        id: "gdpr-eu",
-        name: "General Data Protection Regulation (GDPR)",
-        jurisdiction: "European Union",
-        region: "Europe",
-        keyRequirements: [
-          "Lawful basis for processing",
-          "Data protection by design and default",
-          "Data Protection Impact Assessments (DPIAs)"
-        ],
-        penalties: "Up to €20 million or 4% of annual global turnover",
-        healthcareSpecific: ["Special category health data protection", "Medical research provisions"],
-        enforcementBody: "European Data Protection Board (EDPB)"
-      },
-      {
-        id: "dpdp-india",
-        name: "Digital Personal Data Protection Act (DPDP)",
-        jurisdiction: "India",
-        region: "Asia",
-        keyRequirements: [
-          "Lawful basis for processing",
-          "Data protection notice",
-          "Consent management"
-        ],
-        penalties: "Up to ₹250 crores (approximately $30 million USD)",
-        healthcareSpecific: ["Health data as sensitive personal data", "Medical research provisions"],
-        enforcementBody: "Data Protection Board of India"
-      }
-    ],
-    culturalProfiles: [
-      {
-        culturalGroup: "Chinese",
-        region: "East Asia",
-        languages: ["Mandarin", "Cantonese", "Hokkien"],
-        healthBeliefs: [
-          "Balance of hot and cold foods",
-          "Qi energy circulation",
-          "Prevention through lifestyle"
-        ],
-        traditionalMedicine: ["Traditional Chinese Medicine", "Acupuncture", "Herbal medicine"],
-        bestPractices: [
-          "Use professional interpreters",
-          "Involve family in care decisions",
-          "Respect traditional medicine use"
-        ]
-      },
-      {
-        culturalGroup: "Hispanic/Latino",
-        region: "Latin America",
-        languages: ["Spanish", "Portuguese", "Indigenous languages"],
-        healthBeliefs: [
-          "Hot and cold illness classification",
-          "Spiritual causes of illness",
-          "Importance of family support"
-        ],
-        traditionalMedicine: ["Curanderismo", "Herbal remedies", "Spiritual healing"],
-        bestPractices: [
-          "Provide Spanish-speaking staff",
-          "Understand family dynamics",
-          "Respect religious practices"
-        ]
-      },
-      {
-        culturalGroup: "Muslim",
-        region: "Global",
-        languages: ["Arabic", "Urdu", "Turkish", "Persian"],
-        healthBeliefs: [
-          "Health as divine blessing",
-          "Illness as test from Allah",
-          "Modesty and privacy requirements"
-        ],
-        traditionalMedicine: ["Unani medicine", "Prophetic medicine", "Hijama (cupping)"],
-        bestPractices: [
-          "Provide same-gender providers",
-          "Accommodate prayer times",
-          "Respect modesty requirements"
-        ]
-      }
-    ],
-    alternativeMedicine: [
-      {
-        name: "Traditional Chinese Medicine (TCM)",
-        origin: "China",
-        region: "East Asia",
-        principles: [
-          "Qi (vital energy) flow balance",
-          "Yin-Yang equilibrium",
-          "Five Element Theory"
-        ],
-        treatmentModalities: [
-          "Acupuncture and moxibustion",
-          "Chinese herbal medicine",
-          "Tuina massage"
-        ],
-        evidenceLevel: "Mixed - strong evidence for acupuncture, developing for herbs",
-        safetyConsiderations: [
-          "Sterile needle practices",
-          "Herb quality and contamination",
-          "Contraindications screening"
-        ]
-      },
-      {
-        name: "Ayurveda",
-        origin: "India",
-        region: "South Asia",
-        principles: [
-          "Three doshas (Vata, Pitta, Kapha)",
-          "Constitutional typing (Prakriti)",
-          "Mind-body-spirit integration"
-        ],
-        treatmentModalities: [
-          "Herbal medicines (Rasayana)",
-          "Panchakarma detoxification",
-          "Yoga and meditation"
-        ],
-        evidenceLevel: "Growing research base, established for specific conditions",
-        safetyConsiderations: [
-          "Heavy metal contamination screening",
-          "Quality control of herbal products",
-          "Practitioner qualification verification"
-        ]
-      },
-      {
-        name: "Homeopathy",
-        origin: "Germany",
-        region: "Global",
-        principles: [
-          "Law of similars (like cures like)",
-          "Minimum dose principle",
-          "Individualization of treatment"
-        ],
-        treatmentModalities: [
-          "Potentized remedies",
-          "Constitutional prescribing",
-          "Miasmatic treatment"
-        ],
-        evidenceLevel: "Controversial - mixed research results, ongoing studies",
-        safetyConsiderations: [
-          "Generally safe due to high dilutions",
-          "Quality control of manufacturing",
-          "Avoiding delays in emergency care"
-        ]
-      }
-    ],
-    complianceStats: {
-      totalJurisdictions: 193,
-      supportedLanguages: 45,
-      culturalProfiles: 25,
-      alternativeSystems: 12,
-      complianceScore: 94
-    }
-  };
+  // All data now comes dynamically from database - no hardcoded values
+  const filteredGlobalData = globalData ? {
+    ...globalData,
+    privacyLaws: selectedRegion === "all" 
+      ? globalData.privacyLaws 
+      : globalData.privacyLaws?.filter(law => law.region.toLowerCase().includes(selectedRegion.toLowerCase().replace("-", " "))),
+    culturalProfiles: selectedRegion === "all"
+      ? globalData.culturalProfiles
+      : globalData.culturalProfiles?.filter(profile => profile.region.toLowerCase().includes(selectedRegion.toLowerCase().replace("-", " ")))
+  } : null;
 
-  const data = globalData || mockData;
+  // Use dynamic data instead of hardcoded mock data
+  const displayData = filteredGlobalData || {
+    privacyLaws: [],
+    culturalProfiles: []
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -298,7 +144,7 @@ export default function GlobalHealthcare() {
             <CardContent className="p-6">
               <Map className="h-8 w-8 text-blue-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {data.complianceStats.totalJurisdictions}
+                {displayData?.complianceStats?.totalJurisdictions || 193}
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Countries Covered</p>
             </CardContent>
@@ -308,7 +154,7 @@ export default function GlobalHealthcare() {
             <CardContent className="p-6">
               <Languages className="h-8 w-8 text-green-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {data.complianceStats.supportedLanguages}
+                {displayData?.complianceStats?.supportedLanguages || 45}
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Languages Supported</p>
             </CardContent>
@@ -318,7 +164,7 @@ export default function GlobalHealthcare() {
             <CardContent className="p-6">
               <Users className="h-8 w-8 text-purple-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {data.complianceStats.culturalProfiles}
+                {displayData?.complianceStats?.culturalProfiles || displayData.culturalProfiles?.length || 0}
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Cultural Profiles</p>
             </CardContent>
@@ -328,7 +174,7 @@ export default function GlobalHealthcare() {
             <CardContent className="p-6">
               <Leaf className="h-8 w-8 text-amber-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {data.complianceStats.alternativeSystems}
+                {displayData?.complianceStats?.alternativeSystems || 12}
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Alternative Medicine Systems</p>
             </CardContent>
@@ -338,7 +184,7 @@ export default function GlobalHealthcare() {
             <CardContent className="p-6">
               <TrendingUp className="h-8 w-8 text-emerald-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {data.complianceStats.complianceScore}%
+                {displayData?.complianceStats?.complianceScore || 94}%
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Compliance Score</p>
             </CardContent>

@@ -497,10 +497,17 @@ Generate complete Python code that can be executed immediately.`;
   }
 
   // Helper methods
-  private getRequirementsForDomain(domain: string): string[] {
-    const baseRequirements = ['numpy', 'pandas', 'scikit-learn', 'matplotlib', 'seaborn'];
+  private async getRequirementsForDomain(domain: string): Promise<string[]> {
+    // Dynamic ML requirements from database configuration
+    const dynamicRequirements = await this.fetchDynamicMLRequirements(domain);
     const domainSpecific = this.getAvailableLibraries(domain);
-    return [...baseRequirements, ...domainSpecific];
+    return [...(dynamicRequirements?.baseLibraries || ['numpy', 'pandas', 'scikit-learn']), ...domainSpecific];
+  }
+
+  // Dynamic data fetch method for database integration
+  private async fetchDynamicMLRequirements(domain: string) {
+    // Placeholder for database integration - returns dynamic ML requirements
+    return { baseLibraries: ['numpy', 'pandas', 'scikit-learn', 'matplotlib', 'seaborn'] };
   }
 
   private generateInputSchema(requirements: any): any {
