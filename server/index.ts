@@ -2,6 +2,8 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { seedDatabase } from "./seed-data";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 app.use(express.json());

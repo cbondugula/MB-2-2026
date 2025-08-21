@@ -4,6 +4,7 @@ import { registerMedicalRoutes } from "./routes/medical";
 import { registerExecutiveRoutes } from "./routes/executive";
 import { registerMedHELMRoutes } from "./routes/medhelm";
 import { registerCSAgentRoutes } from "./routes/cs-agent";
+import { registerMonitoringRoutes } from "./routes/monitoring";
 import { Server as SocketIOServer } from "socket.io";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
