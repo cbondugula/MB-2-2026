@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { getPerformanceHealth, getPerformanceStats } from "../middleware/performance-monitoring.js";
 import { getFeatureFlags, updateFeatureFlag, requireFeatureFlag } from "../middleware/feature-flags.js";
+import { getGitHubStatus, toggleGitHubIntegration, configureBranchProtection, handleGitHubWebhook } from "../middleware/github-integration.js";
 
 export function registerMonitoringRoutes(app: Express): void {
   // Health Check Endpoints
@@ -23,6 +24,12 @@ export function registerMonitoringRoutes(app: Express): void {
   // Feature Flags
   app.get("/api/features", getFeatureFlags);
   app.post("/api/features/toggle", requireFeatureFlag("admin_access"), updateFeatureFlag);
+
+  // GitHub Integration
+  app.use(handleGitHubWebhook);
+  app.get("/api/github/status", getGitHubStatus);
+  app.post("/api/github/toggle", toggleGitHubIntegration);
+  app.post("/api/github/branch-protection", configureBranchProtection);
 
   // CI/CD Pipeline Status
   app.get("/api/cicd/status", (req, res) => {
