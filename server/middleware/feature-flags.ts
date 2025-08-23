@@ -37,7 +37,7 @@ const defaultFlags: FeatureFlags = {
   genomics_integration: false,
   
   // Business Features
-  patent_portfolio_tracking: true,
+  innovation_portfolio_tracking: true,
   revenue_analytics: true,
   competitive_analysis: true
 }

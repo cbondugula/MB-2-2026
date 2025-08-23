@@ -166,14 +166,6 @@ export interface IStorage {
     issues: Array<{type: string; severity: string; description: string}>;
     recommendations: string[];
   }>;
-  getPatentPortfolioData(): Promise<{
-    totalPatents: number;
-    pendingPatents: number;
-    approvedPatents: number;
-    totalValue: string;
-    conversionRate: number;
-    filingStatus: Array<{patent: string; status: string; value: string}>;
-  }>;
   getPlatformHealthData(): Promise<{
     status: 'healthy' | 'issues_detected' | 'critical';
     components: Array<{name: string; status: string; lastCheck: string}>;
@@ -2098,36 +2090,6 @@ This agreement incorporates organization-specific requirements and automatically
     }
   }
 
-  async getPatentPortfolioData(): Promise<{
-    totalPatents: number;
-    pendingPatents: number;
-    approvedPatents: number;
-    totalValue: string;
-    conversionRate: number;
-    filingStatus: Array<{patent: string; status: string; value: string}>;
-  }> {
-    try {
-      const [projectsResult] = await db.select({ count: sql<number>`cast(count(*) as int)` }).from(projects);
-      const totalProjects = projectsResult.count || 0;
-      const estimatedPatents = Math.min(89, Math.max(totalProjects * 2, 25));
-
-      return {
-        totalPatents: estimatedPatents,
-        pendingPatents: Math.round(estimatedPatents * 0.7),
-        approvedPatents: Math.round(estimatedPatents * 0.3),
-        totalValue: "$46.63B-$84.88B",
-        conversionRate: 87.5,
-        filingStatus: [
-          { patent: 'Healthcare AI Platform', status: 'Filed', value: '$2.1B-$3.8B' },
-          { patent: 'Voice-Controlled ML Training', status: 'Pending', value: '$1.5B-$2.2B' },
-          { patent: 'Quantum-AI Medical Education', status: 'Filing', value: '$3.2B-$4.1B' }
-        ]
-      };
-    } catch (error) {
-      console.error('Failed to fetch patent portfolio data:', error);
-      return { totalPatents: 0, pendingPatents: 0, approvedPatents: 0, totalValue: "Unknown", conversionRate: 0, filingStatus: [] };
-    }
-  }
 
   async getPlatformHealthData(): Promise<{
     status: 'healthy' | 'issues_detected' | 'critical';
