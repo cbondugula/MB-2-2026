@@ -24,17 +24,13 @@ import { healthcareDomainService } from "@shared/healthcare-domains";
 import { advancedCapabilitiesService } from "./advanced-capabilities-service";
 import { clinicalAIService } from "./clinical-ai-service";
 import { standardsIntegrationService } from "./standards-integration-service";
-import { PATENTABLE_INNOVATIONS, PatentDocumentationService } from "./patent-documentation";
 import { healthcareMLService } from "./ml-service";
 import { z } from "zod";
 import SuperSCAgent from "./super-agent-service";
 import { visualBuilderService } from "./visual-builder-service";
 import { pythonMLService } from "./python-ml-service";
-import { patentAttorneyAgent } from "./patent-attorney-agent";
-import { VOICE_NO_CODE_PATENTS } from "./voice-no-code-patents";
 import { grokVerificationService } from "./grok-verification-service";
 import { healthcareAIValidationService } from "./healthcare-ai-validation";
-import { NO_CODE_BACKEND_PATENTS } from "./no-code-backend-patents";
 import { workflowAutomationService } from "./workflow-automation-service";
 import { registerAIChatRoutes } from "./routes/ai-chat";
 import { quantumAIRouter } from "./quantum-ai-service";
@@ -44,7 +40,6 @@ import { tjcComplianceRouter } from "./tjc-compliance-service";
 import { healthcareTestingRouter } from "./healthcare-testing-service";
 import { dualQuantumClassicalService } from "./dual-quantum-classical-service";
 import { superCSAgentRoutes } from "./routes/super-cs-agent";
-import { multiAIPatentService } from "./multi-ai-patent-assessment";
 import { csAgentService } from "./cs-agent-dynamic-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -472,101 +467,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 
 
-  // Patent Conflict Analysis API
-  app.post('/api/patent-conflict-analysis', isAuthenticated, async (req: any, res) => {
-    try {
-      const { patentAttorneyAgent } = await import('./patent-attorney-agent');
-      
-      const filedPatents = [
-        "Patent 048: Traditional AI ACGME Institutional Requirements (classical ML, single institution)",
-        "Patent 049: Traditional AI ACGME Common Programs (standard verification, sequential processing)",
-        "Patent 050: Traditional AI ACGME Specialty Requirements (conventional analysis, linear scaling)"
-      ];
 
-      const newPatents = [
-        "Patent 055: Quantum International ACGME (quantum superposition, multi-institution parallel)",
-        "Patent 056: Quantum Multi-Specialty Fellowship (quantum correlation, integrated optimization)", 
-        "Patent 057: Quantum Continuous Monitoring (quantum analytics, predictive processing)",
-        "Patent 058: Quantum Milestone/EPA Assessment (quantum measurement, exponential scaling)"
-      ];
 
-      const conflictAnalysis = await patentAttorneyAgent.analyzePatentConflicts(filedPatents, newPatents);
-      
-      res.json({
-        success: true,
-        conflictAnalysis: conflictAnalysis,
-        analysisType: "patent-conflict-assessment",
-        recommendation: "Independent filing strategy with technical differentiation emphasis"
-      });
-      
-    } catch (error) {
-      console.error('Patent conflict analysis failed:', error);
-      res.status(500).json({ message: 'Patent conflict analysis failed', error: error.message });
-    }
-  });
-
-  // Prior Art Analysis API
-  app.post('/api/prior-art-analysis', isAuthenticated, async (req: any, res) => {
-    try {
-      const { patentAttorneyAgent } = await import('./patent-attorney-agent');
-      
-      const technologyArea = "Quantum-enhanced medical education compliance automation with dual quantum-classical processing architecture for ACGME/LCME accreditation standards verification";
-      
-      const priorArtAnalysis = await patentAttorneyAgent.providePriorArtAnalysis(technologyArea);
-      
-      res.json({
-        success: true,
-        priorArtAnalysis: priorArtAnalysis,
-        technologyArea: technologyArea,
-        patentabilityRecommendation: "Proceed with filing - strong novelty and non-obviousness"
-      });
-      
-    } catch (error) {
-      console.error('Prior art analysis failed:', error);
-      res.status(500).json({ message: 'Prior art analysis failed', error: error.message });
-    }
-  });
-
-  // Multi-AI Patent Portfolio Assessment
-  app.get('/api/multi-ai-patent-assessment', isAuthenticated, async (req: any, res) => {
-    try {
-      console.log('Initiating comprehensive multi-AI patent assessment...');
-      
-      const assessment = await multiAIPatentService.comprehensivePatentAssessment();
-      
-      res.json({
-        success: true,
-        timestamp: new Date().toISOString(),
-        portfolioOverview: {
-          totalPatents: 176,
-          totalValue: "$60.5B-$105B",
-          filedProvisional: 43,
-          acquisitionPotential: "$5T+"
-        },
-        multiAIAssessment: assessment,
-        executiveSummary: {
-          averagePlatformScore: Math.round(assessment.consensus.averagePlatformScore * 10) / 10,
-          averagePatentabilityScore: Math.round(assessment.consensus.averagePatentabilityScore * 10) / 10,
-          averageApprovalChance: Math.round(assessment.consensus.averageApprovalChance * 10) / 10,
-          consensusRecommendation: "IMMEDIATE STRATEGIC ACTION REQUIRED",
-          strategicOutcome: "Patent portfolio represents historic competitive advantage"
-        }
-      });
-      
-    } catch (error) {
-      console.error('Multi-AI patent assessment failed:', error);
-      res.status(500).json({ 
-        message: 'Multi-AI patent assessment failed', 
-        error: error.message,
-        fallbackAnalysis: {
-          platformValue: 95,
-          patentability: 88,
-          approvalPotential: 82,
-          recommendation: "Proceed with full portfolio development"
-        }
-      });
-    }
-  });
 
   // Ollama Local AI Routes
   app.get('/api/ai/ollama/status', isAuthenticated, async (req, res) => {
@@ -2001,13 +1903,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           nonDisclosureAgreements: 'ENFORCED',
           geographicRestrictions: 'IMPLEMENTED'
         },
-        patentPortfolioSecurity: {
-          portfolioValue: '$800M-$1.12B',
-          filingStatus: 'IMMEDIATE_EMERGENCY_FILING',
-          internationalProtection: 'PCT_STRATEGY_ACTIVE',
-          defensivePatents: 'PLANNED',
-          priorArtBarriers: 'ESTABLISHED'
-        }
       });
     } catch (error) {
       res.status(500).json({ 
@@ -2027,11 +1922,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { bciRouter } = await import('./brain-computer-interface');
   const { tjcComplianceRouter } = await import('./tjc-compliance-service');
   const { healthcareTestingRouter } = await import('./healthcare-testing-service');
-  const { tjcPatentAnalysisRouter } = await import('./tjc-patent-analysis-service');
-  const { patentValuationRouter } = await import('./patent-valuation-comparison');
-  const { tjcPatentFilingRouter } = await import('./tjc-patent-filing-service');
-  const { patentDrawingsRouter } = await import('./patent-drawings-service');
-  const { acgmePatentRouter } = await import('./acgme-patent-analysis-service');
 
   // Revolutionary Technology API Routes (Non-Patent)
   app.use('/api/quantum', quantumAIRouter);

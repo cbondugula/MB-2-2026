@@ -41,11 +41,9 @@ export function registerExecutiveRoutes(app: Express) {
   app.get("/api/executive/competitive-analysis", async (req, res) => {
     try {
       const competitiveData = {
-        patentPortfolio: "$46.63B-$84.88B",
         marketPosition: "Zero Direct Competition",
         technologyLead: "3-5 Year Head Start",
         complianceAutomation: 93,
-        patents: 89,
         acquisitionValue: "$15.6B-$25.9B"
       };
       res.json(competitiveData);
