@@ -1,7 +1,7 @@
 /**
  * VOICEBUILDER ARCHITECTURE SPECIFICATION
  * Multi-Domain Voice-Controlled No-Code Platform
- * Separate from MedBuilder for maximum patent value and market coverage
+ * Separate from MedBuilder for maximum innovation value and market coverage
  */
 
 export interface VoiceBuilderArchitecture {
@@ -103,7 +103,7 @@ export interface DomainSpecificModules {
 }
 
 export interface FinancialServicesModule {
-  patentReference: 'PATENT_023';
+  innovationReference: 'INNOVATION_023';
   voiceCapabilities: [
     'voice_controlled_trading_algorithm_generation',
     'automated_risk_assessment_via_voice',
@@ -131,11 +131,11 @@ export interface FinancialServicesModule {
   marketSize: '$89.2B';
   targetCustomers: ['Banks', 'Credit Unions', 'Fintech Companies', 'Investment Firms'];
   revenueProjection: '$15.8M-$45.2M_ARR';
-  patentValue: '$300M-500M';
+  innovationValue: '$300M-500M';
 }
 
 export interface LegalTechModule {
-  patentReference: 'PATENT_024';
+  innovationReference: 'INNOVATION_024';
   voiceCapabilities: [
     'voice_controlled_legal_document_generation',
     'automated_contract_analysis_and_risk_assessment',
@@ -164,11 +164,11 @@ export interface LegalTechModule {
   marketSize: '$47.8B';
   targetCustomers: ['Law Firms', 'Corporate Legal Departments', 'Legal Service Providers'];
   revenueProjection: '$12.3M-$38.7M_ARR';
-  patentValue: '$250M-400M';
+  innovationValue: '$250M-400M';
 }
 
 export interface EducationTechModule {
-  patentReference: 'PATENT_025';
+  innovationReference: 'INNOVATION_025';
   voiceCapabilities: [
     'voice_controlled_curriculum_design',
     'automated_assessment_system_creation',
@@ -197,11 +197,11 @@ export interface EducationTechModule {
   marketSize: '$123.4B';
   targetCustomers: ['Schools', 'Universities', 'Corporate Training', 'EdTech Companies'];
   revenueProjection: '$18.9M-$52.1M_ARR';
-  patentValue: '$320M-480M';
+  innovationValue: '$320M-480M';
 }
 
 export interface ManufacturingModule {
-  patentReference: 'PATENT_026';
+  innovationReference: 'INNOVATION_026';
   voiceCapabilities: [
     'voice_controlled_production_line_optimization',
     'automated_quality_control_system_generation',
@@ -230,11 +230,11 @@ export interface ManufacturingModule {
   marketSize: '$156.7B';
   targetCustomers: ['Manufacturing Companies', 'Industrial Automation', 'IoT Solution Providers'];
   revenueProjection: '$23.4M-$67.8M_ARR';
-  patentValue: '$400M-650M';
+  innovationValue: '$400M-650M';
 }
 
 export interface RetailEcommerceModule {
-  patentReference: 'PATENT_027';
+  innovationReference: 'INNOVATION_027';
   voiceCapabilities: [
     'voice_controlled_ecommerce_platform_generation',
     'automated_customer_behavior_analysis',
@@ -263,7 +263,7 @@ export interface RetailEcommerceModule {
   marketSize: '$198.3B';
   targetCustomers: ['Retailers', 'E-commerce Companies', 'Brand Manufacturers'];
   revenueProjection: '$28.7M-$78.9M_ARR';
-  patentValue: '$450M-700M';
+  innovationValue: '$450M-700M';
 }
 
 export interface SharedInfrastructure {

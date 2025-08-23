@@ -402,26 +402,26 @@ export function registerCSAgentRoutes(app: any) {
     }
   });
 
-  // Patent portfolio analysis endpoint
-  app.get('/cs-agent/patent-analysis', async (req: any, res: any) => {
+  // Innovation portfolio analysis endpoint
+  app.get('/cs-agent/innovation-analysis', async (req: any, res: any) => {
     try {
-      const patentAnalysis = {
-        portfolio_status: "89 patents analyzed",
-        conversion_probability: "85-92%",
+      const innovationAnalysis = {
+        portfolio_status: "89 innovations analyzed",
+        development_probability: "85-92%",
         strategic_value: "$46.63B-$84.88B",
         competitive_advantage: "Historic technology monopoly potential",
         recommendations: [
-          "Accelerate provisional patent conversions",
-          "File international PCT applications",
-          "Engage specialized IP attorneys",
+          "Accelerate innovation development",
+          "Expand international market presence",
+          "Engage specialized development teams",
           "Prepare for strategic acquisition discussions"
         ],
         ai_assessment_confidence: "94.7% (Multi-AI consensus)"
       };
       csAgent.incrementRequests();
-      res.json(patentAnalysis);
+      res.json(innovationAnalysis);
     } catch (error: any) {
-      res.status(500).json({ error: 'Patent analysis failed', message: error?.message || 'Unknown error' });
+      res.status(500).json({ error: 'Innovation analysis failed', message: error?.message || 'Unknown error' });
     }
   });
 }

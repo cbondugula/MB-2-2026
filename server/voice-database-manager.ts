@@ -1,7 +1,7 @@
 /**
- * PATENT 013 PROOF-OF-CONCEPT IMPLEMENTATION
+ * INNOVATION 013 PROOF-OF-CONCEPT IMPLEMENTATION
  * Voice-Controlled Database Management System for Healthcare
- * TRADE SECRET PROTECTED - ALGORITHM OBFUSCATION ACTIVE
+ * PROPRIETARY PROTECTED - ALGORITHM OBFUSCATION ACTIVE
  */
 
 // ████████ ENCRYPTED CORE ALGORITHMS ████████
@@ -18,7 +18,7 @@ const _vdbm = {
     return Array.from(_sqlPatterns.entries()).find(([_, pattern]) => pattern.test(cmd));
   },
   
-  // Healthcare Data Model Generator (TRADE SECRET)
+  // Healthcare Data Model Generator (PROPRIETARY)
   _healthcareSchemaGen: (entities: string[]) => {
     // [ENCRYPTED] Medical entity to database schema mapping
     const _medicalEntities = {
@@ -38,8 +38,8 @@ export class VoiceDatabaseManager {
   private static encryptionSeed = process.env.DB_ALGORITHM_KEY || 'SECURE_HEALTHCARE_KEY';
   
   /**
-   * PATENT 013 IMPLEMENTATION: Voice-Controlled Database Operations
-   * USPTO Demonstration Ready
+   * INNOVATION 013 IMPLEMENTATION: Voice-Controlled Database Operations
+   * Production Demonstration Ready
    */
   static async executeVoiceCommand(voiceCommand: string, userId?: string) {
     const timestamp = new Date().toISOString();

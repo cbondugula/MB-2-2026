@@ -1,5 +1,5 @@
-// Dual Quantum-Classical Patent Implementation Service
-// Patents 055-058: Comprehensive dual processing architecture
+// Dual Quantum-Classical Innovation Implementation Service
+// Innovations 055-058: Comprehensive dual processing architecture
 
 import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
@@ -20,7 +20,7 @@ export interface DualProcessingResult {
 
 export class DualQuantumClassicalService {
   
-  // Patent 055: International Medical Education Accreditation
+  // Innovation 055: International Medical Education Accreditation
   async processInternationalAccreditation(
     countries: string[],
     requirements: any,
@@ -42,7 +42,7 @@ export class DualQuantumClassicalService {
     };
   }
 
-  // Quantum-Enhanced Implementation (Primary Patent Claims)
+  // Quantum-Enhanced Implementation (Primary Innovation Claims)
   private async quantumEnhancedAccreditation(countries: string[], requirements: any) {
     // Simulate quantum state vector analysis for parallel country processing
     const response = await openai.chat.completions.create({

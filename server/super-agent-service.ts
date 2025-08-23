@@ -73,8 +73,8 @@ export default class SuperSCAgent {
       },
       
       identifiedFiles: [
-        'client/src/pages/patent-filing-dashboard.tsx',
-        'client/src/pages/patent-verification-dashboard.tsx', 
+        'client/src/pages/innovation-development-dashboard.tsx',
+        'client/src/pages/innovation-verification-dashboard.tsx', 
         'client/src/pages/dashboard.tsx',
         'client/src/pages/pricing.tsx',
         'client/src/components/*.tsx'
@@ -218,8 +218,8 @@ export default class SuperSCAgent {
       },
       
       dataSourceValidation: {
-        patentData: 'Sourced from /api/patents/filing-status - ✅ Active',
-        domainExpansion: 'Sourced from /api/patents/domain-expansion - ✅ Active',
+        innovationData: 'Sourced from /api/innovations/development-status - ✅ Active',
+        domainExpansion: 'Sourced from /api/innovations/domain-expansion - ✅ Active',
         revenueProjections: 'Sourced from /api/revenue/projections - ✅ Active',
         competitiveAnalysis: 'Sourced from /api/competitive/analysis - ✅ Active',
         portfolioValuations: 'Sourced from /api/acquisition/valuations - ✅ Active'

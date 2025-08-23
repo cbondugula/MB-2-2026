@@ -2385,14 +2385,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/cs-agent/patent-analysis', async (req, res) => {
+  app.get('/cs-agent/innovation-analysis', async (req, res) => {
     try {
-      const analysis = await csAgentService.analyzePatentPortfolio();
+      const analysis = await csAgentService.analyzeInnovationPortfolio();
       res.json(analysis);
     } catch (error) {
-      console.error('CS Agent patent analysis failed:', error);
+      console.error('CS Agent innovation analysis failed:', error);
       res.status(500).json({ 
-        error: 'Patent analysis failed',
+        error: 'Innovation analysis failed',
         timestamp: new Date().toISOString()
       });
     }
@@ -2500,7 +2500,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ===== COMPREHENSIVE MACHINE LEARNING API ENDPOINTS =====
-  // Multi-Model Medical AI Validation (Patent 004)
+  // Multi-Model Medical AI Validation
   app.post('/api/ml/medical-validation', isAuthenticated, async (req, res) => {
     try {
       const { input, patientData, models } = req.body;
@@ -2512,7 +2512,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Federated Learning for Healthcare (Patent 003)
+  // Federated Learning for Healthcare
   app.post('/api/ml/federated-training', isAuthenticated, async (req, res) => {
     try {
       const { hospitalData, globalModel } = req.body;
@@ -2524,7 +2524,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Dynamic Workflow Optimization (Patent 005)
+  // Dynamic Workflow Optimization
   app.post('/api/ml/optimize-workflow', isAuthenticated, async (req, res) => {
     try {
       const { workflowData, historicalData } = req.body;
@@ -2845,7 +2845,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Dual Quantum-Classical Patent Implementation Routes
+  // Dual Quantum-Classical Implementation Routes
   app.post('/api/dual-processing/international-accreditation', isAuthenticated, async (req, res) => {
     try {
       const { countries, requirements, useQuantum } = req.body;

@@ -1,5 +1,5 @@
 // Comprehensive Machine Learning Service for Healthcare Platform
-// Implements actual ML capabilities beyond BERT models for patent compliance
+// Implements actual ML capabilities beyond BERT models for healthcare compliance
 
 import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
@@ -8,7 +8,7 @@ import { GoogleGenAI } from "@google/genai";
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
-// Advanced ML Models for Healthcare AI Development Platform (Patent 001)
+// Advanced ML Models for Healthcare AI Development Platform
 export interface MLModel {
   id: string;
   name: string;
@@ -45,10 +45,10 @@ export interface TrainingMetrics {
   epoch: number;
 }
 
-// Clinical Decision Support ML (Patent 002 & 004)
+// Clinical Decision Support ML
 export class HealthcareMLService {
   
-  // Multi-Model Medical AI Validation System (Patent 004)
+  // Multi-Model Medical AI Validation System
   async validateMedicalPrediction(
     input: string,
     patientData: any,

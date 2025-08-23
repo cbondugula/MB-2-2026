@@ -13,19 +13,19 @@ router.get('/status', async (req, res) => {
         'Real-time technology monitoring',
         'Automatic capability enhancement',
         'Competitive intelligence integration',
-        'Patent filing optimization',
+        'Innovation development optimization',
         'Market trend prediction',
         'Strategic recommendation engine'
       ],
       improvements: {
         hourly: 'Technology stack updates and competitive analysis',
-        daily: 'Patent landscape evolution and market intelligence',
+        daily: 'Innovation landscape evolution and market intelligence',
         weekly: 'Strategic capability expansion and innovation acceleration',
         monthly: 'Complete system architecture optimization'
       },
       currentFocus: 'Big Tech competitive advantage and first-mover market capture',
       performanceMetrics: {
-        patentAnalysisAccuracy: '99.7%',
+        innovationAnalysisAccuracy: '99.7%',
         competitiveThreatDetection: '98.4%',
         marketOpportunityPrediction: '96.8%',
         strategicRecommendationSuccess: '94.2%'
