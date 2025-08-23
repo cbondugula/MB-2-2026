@@ -1,5 +1,4 @@
 import OpenAI from "openai";
-import { VOICE_NO_CODE_PATENTS } from "./voice-no-code-patents";
 
 /**
  * GROK INDEPENDENT VERIFICATION SERVICE

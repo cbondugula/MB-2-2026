@@ -43,13 +43,6 @@ export default function CompetitiveAdvantage() {
     refetchInterval: getRefreshInterval("/api/innovation/pipeline"),
   });
 
-  // Patent race monitoring
-  const { data: patentRace, isLoading: patentRaceLoading, refetch: refetchPatentRace } = useQuery({
-    queryKey: ["/api/patents/race"],
-    enabled: isAuthenticated,
-    retry: false,
-    refetchInterval: getRefreshInterval("/api/patents/race"),
-  });
 
   // First-mover opportunities
   const { data: firstMoverOps, isLoading: firstMoverLoading, refetch: refetchFirstMover } = useQuery({
@@ -69,7 +62,6 @@ export default function CompetitiveAdvantage() {
     Promise.all([
       refetchBigTech(),
       refetchInnovation(),
-      refetchPatentRace(),
       refetchFirstMover()
     ]);
   };
@@ -253,9 +245,9 @@ export default function CompetitiveAdvantage() {
                 <div>
                   <CardTitle className="text-xl flex items-center">
                     <Award className="mr-2 h-5 w-5 text-green-600" />
-                    Patent Race Dashboard
+                    Innovation Race Dashboard
                   </CardTitle>
-                  <CardDescription>Real-time patent filing competition</CardDescription>
+                  <CardDescription>Real-time innovation competition</CardDescription>
                 </div>
                 <SmartRefresh
                   onManualRefresh={() => refetchPatentRace()}

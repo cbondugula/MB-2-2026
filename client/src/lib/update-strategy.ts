@@ -55,24 +55,6 @@ export const UPDATE_CONFIGS: Record<string, UpdateConfig> = {
   },
 
   // IP Protected - HIGHLY PROTECTED - Manual only for trade secret protection (Live for Owner)
-  '/api/patents/portfolio': {
-    tier: UpdateTier.IP_PROTECTED,
-    intervalMinutes: -1, // Never auto-update (except for owner)
-    criticalAlerts: false,
-    description: 'CLASSIFIED: Patent information - live for owner, manual for others'
-  },
-  '/api/patents/filing-status': {
-    tier: UpdateTier.IP_PROTECTED,
-    intervalMinutes: -1,
-    criticalAlerts: false,
-    description: 'CLASSIFIED: Patent filing status - highly protected'
-  },
-  '/api/patents/domain-expansion': {
-    tier: UpdateTier.IP_PROTECTED,
-    intervalMinutes: -1,
-    criticalAlerts: false,
-    description: 'CLASSIFIED: Domain expansion strategy - trade secret'
-  },
   '/api/competitive/analysis': {
     tier: UpdateTier.IP_PROTECTED,
     intervalMinutes: -1,

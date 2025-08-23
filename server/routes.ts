@@ -1130,7 +1130,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // No-Code Backend Patent API Endpoints
 
 
   // IP Protection Status API
@@ -2293,7 +2292,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Patent Portfolio API - Dynamic patent filing status and valuations
   app.get('/api/portfolio-status', async (req, res) => {
     try {
       const portfolioData = {
@@ -2892,15 +2890,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/dual-processing/patent-status', isAuthenticated, async (req, res) => {
-    try {
-      const status = await dualQuantumClassicalService.getPatentImplementationStatus();
-      res.json(status);
-    } catch (error) {
-      console.error("Error fetching patent implementation status:", error);
-      res.status(500).json({ message: "Failed to fetch patent status" });
-    }
-  });
 
   // Healthcare app builder routes
   app.get('/api/templates/healthcare-builder', isAuthenticated, async (req: any, res) => {

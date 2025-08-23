@@ -11,13 +11,6 @@ export default function OwnerDashboard() {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
-  // Real-time IP data for platform owner
-  const { data: patentPortfolio, isLoading: patentLoading, refetch: refetchPatents } = useQuery({
-    queryKey: ["/api/patents/portfolio"],
-    enabled: isAuthenticated,
-    retry: false,
-    refetchInterval: getRefreshInterval("/api/patents/portfolio"), // 1-minute updates for owner
-  });
 
   const { data: competitiveAnalysis, isLoading: competitiveLoading, refetch: refetchCompetitive } = useQuery({
     queryKey: ["/api/competitive/analysis"],
@@ -80,9 +73,9 @@ export default function OwnerDashboard() {
                 <div>
                   <CardTitle className="text-xl flex items-center">
                     <Shield className="mr-2 h-5 w-5 text-purple-600" />
-                    Patent Portfolio Value
+                    Innovation Portfolio Value
                   </CardTitle>
-                  <CardDescription>Live patent valuation and filing status</CardDescription>
+                  <CardDescription>Live innovation valuation and development status</CardDescription>
                 </div>
                 <SmartRefresh
                   onManualRefresh={() => refetchPatents()}

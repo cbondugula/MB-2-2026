@@ -13,10 +13,6 @@ export default function Pricing() {
     retry: false,
   });
 
-  const { data: patentPortfolio, isLoading: patentLoading } = useQuery({
-    queryKey: ['/api/patents/valuation'],
-    retry: false,
-  });
 
   const automatedFeatures = [
     {
