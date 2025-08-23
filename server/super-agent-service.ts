@@ -163,7 +163,7 @@ export default class SuperSCAgent {
         errorHandling: 'Comprehensive error states with authentication handling',
         loadingStates: 'Progressive loading with clear tier indicators for data sensitivity',
         updateTriggers: 'HIGHLY PROTECTED IP data manual-only + healthcare data real-time for safety',
-        cacheStrategy: 'Maximum IP protection: patent/competitive data never cached or auto-updated',
+        cacheStrategy: 'Maximum IP protection: competitive data never cached or auto-updated',
         ipProtection: 'CLASSIFIED data endpoints completely isolated from automatic update systems'
       }
     };

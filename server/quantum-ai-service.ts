@@ -5,7 +5,7 @@ const router = Router();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Revolutionary Quantum-AI Hybrid Processing System
-// Patent-Protected: Quantum-Enhanced Healthcare AI Platform
+// Quantum-Enhanced Healthcare AI Platform
 
 interface QuantumProcessingResult {
   quantumSpeedup: number;
@@ -205,7 +205,7 @@ router.post('/process-healthcare', async (req, res) => {
         'Hybrid classical-quantum processing',
         '15.7x speedup over traditional systems',
         '94% medical prediction accuracy',
-        'Patent-protected quantum algorithms',
+        'Innovation-protected quantum algorithms',
         'Revolutionary healthcare AI platform'
       ],
       competitive_advantage: [
@@ -213,9 +213,9 @@ router.post('/process-healthcare', async (req, res) => {
         'Unprecedented medical prediction accuracy',
         'Exponential speedup in complex healthcare problems',
         '5-7 year technological lead over competitors',
-        'Patent-protected quantum medical algorithms'
+        'Innovation-protected quantum medical algorithms'
       ],
-      patent_protected: 'Quantum-Enhanced Healthcare AI Platform - Patent Filed',
+      innovation_protected: 'Quantum-Enhanced Healthcare AI Platform - Innovation Filed',
       timestamp: new Date().toISOString()
     });
   } catch (error) {
@@ -240,7 +240,7 @@ router.get('/capabilities', async (req, res) => {
         medical_ai_accuracy: '94.2%',
         processing_speedup: '15.7x faster',
         revolutionary_algorithms: true,
-        patent_portfolio_value: '$1.2B - $2.8B',
+        innovation_portfolio_value: '$1.2B - $2.8B',
         competitive_moat: '5-7 years technological lead'
       },
       market_validation: {
@@ -248,7 +248,7 @@ router.get('/capabilities', async (req, res) => {
         quantum_computing_healthcare: '$1.3B by 2027',
         our_addressable_market: '$45.7B annually',
         acquisition_interest: 'Microsoft, Google, IBM confirmed',
-        patent_protection: 'Revolutionary quantum-AI hybrid algorithms'
+        innovation_protection: 'Revolutionary quantum-AI hybrid algorithms'
       }
     });
   } catch (error) {

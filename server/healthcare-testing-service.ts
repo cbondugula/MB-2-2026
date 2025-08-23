@@ -5,7 +5,7 @@ const router = Router();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Advanced Healthcare Application Testing Framework
-// Patent-Protected: AI-Powered Healthcare Testing & Validation Platform
+// AI-Powered Healthcare Testing & Validation Platform
 
 interface TestSuite {
   id: string;
@@ -646,7 +646,7 @@ router.post('/execute-test-suite', async (req, res) => {
       success: true,
       advanced_healthcare_testing: true,
       testing_results: testingResults,
-      patent_protected_testing: [
+      proprietary_testing: [
         'AI-powered healthcare test automation',
         'Comprehensive HIPAA compliance validation',
         'Clinical workflow testing framework',
@@ -667,7 +667,7 @@ router.post('/execute-test-suite', async (req, res) => {
         compliance_automation_market: '$3.8B annually',
         addressable_market: '$1.2B (specialized healthcare testing)',
         competitive_advantage: '85% reduction in healthcare testing time',
-        patent_value: '$400M-$800M for healthcare testing IP'
+        innovation_value: '$400M-$800M for healthcare testing IP'
       },
       cost_benefits: {
         testing_time_reduction: '75% faster than manual testing',
@@ -786,7 +786,7 @@ router.get('/analytics/:applicationId?', async (req, res) => {
         'AI-powered test automation with 88% coverage',
         'Specialized HIPAA compliance validation',
         'Revolutionary clinical workflow testing',
-        'Patent-protected testing algorithms',
+        'Proprietary testing algorithms',
         'Unprecedented healthcare application validation'
       ]
     };

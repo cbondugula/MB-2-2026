@@ -2341,7 +2341,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(portfolioData);
     } catch (error) {
       console.error('Failed to fetch innovation portfolio status:', error);
-      res.status(500).json({ message: 'Failed to fetch patent portfolio status', error: error instanceof Error ? error.message : 'Unknown error' });
+      res.status(500).json({ message: 'Failed to fetch innovation portfolio status', error: error instanceof Error ? error.message : 'Unknown error' });
     }
   });
 

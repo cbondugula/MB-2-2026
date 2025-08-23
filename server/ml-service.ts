@@ -268,7 +268,7 @@ export class HealthcareMLService {
     return "Moderate confidence - consider additional testing";
   }
 
-  // Federated Learning for Healthcare Knowledge System (Patent 003)
+  // Federated Learning for Healthcare Knowledge System
   async federatedTraining(
     hospitalData: Array<{ hospitalId: string; localModel: any; dataSize: number }>,
     globalModel: any
@@ -317,7 +317,7 @@ export class HealthcareMLService {
     return Math.exp(-epsilon) * (1 - delta);
   }
 
-  // Dynamic Healthcare Workflow Optimization (Patent 005)
+  // Dynamic Healthcare Workflow Optimization
   async optimizeWorkflow(
     workflowData: {
       patients: number;

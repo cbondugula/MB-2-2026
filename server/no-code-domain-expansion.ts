@@ -225,10 +225,10 @@ export class NoCodeDomainExpansion {
    * COMBINED PORTFOLIO VALUATION
    */
   static calculateCombinedPortfolioValue() {
-    // Original healthcare patents: $800M-$1.12B
+    // Original healthcare innovations: $800M-$1.12B
     const healthcareValue = { min: 800, max: 1120 };
     
-    // Domain expansion patents: $2.8B-$4.1B
+    // Domain expansion innovations: $2.8B-$4.1B
     const domainExpansionValue = { min: 2800, max: 4100 };
     
     // Portfolio synergy bonus: 15-20%
@@ -278,7 +278,7 @@ export class NoCodeDomainExpansion {
         status: 'IMMEDIATE_IMPLEMENTATION',
         innovations: ['023-Financial', '025-Education', '026-Manufacturing'],
         estimatedValue: '$1.2B-$1.8B',
-        reasoning: 'Highest patent values and established market demand'
+        reasoning: 'Highest innovation values and established market demand'
       },
       
       phase3_MarketExpansion: {

@@ -5,7 +5,7 @@ const router = Router();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Revolutionary Autonomous Business Creation Engine
-// Patent-Protected: AI-Driven Autonomous Business Formation Platform
+// AI-Driven Autonomous Business Formation Platform
 
 interface BusinessPlan {
   companyName: string;
@@ -267,7 +267,7 @@ router.post('/create-business-plan', async (req, res) => {
         '75% autonomous business operations',
         'AI-driven compliance automation',
         'Revolutionary business creation technology',
-        'Patent-protected autonomous business platform',
+        'Innovation-protected autonomous business platform',
         'Complete AI workforce deployment'
       ],
       competitive_advantage: [
@@ -277,7 +277,7 @@ router.post('/create-business-plan', async (req, res) => {
         'Unprecedented business automation capabilities',
         '5-7 year technological lead in business automation'
       ],
-      patent_protected: 'AI-Driven Autonomous Business Formation Platform - Patent Filed',
+      innovation_protected: 'AI-Driven Autonomous Business Formation Platform - Innovation Filed',
       timestamp: new Date().toISOString()
     });
   } catch (error) {
@@ -389,7 +389,7 @@ router.get('/autonomous-operations/:businessId', async (req, res) => {
         autonomous_business_market: '$47.3B by 2028',
         ai_workforce_market: '$89.7B by 2030',
         business_automation_demand: '340% year-over-year growth',
-        patent_value: '$2.8B - $4.1B',
+        innovation_value: '$2.8B - $4.1B',
         acquisition_interest: 'Confirmed by Fortune 100 companies'
       }
     });

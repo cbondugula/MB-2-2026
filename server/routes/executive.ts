@@ -102,10 +102,10 @@ export function registerExecutiveRoutes(app: Express) {
           score: 45,
           description: "Stakeholder usability gaps identified"
         },
-        patent_risk: {
+        ip_risk: {
           level: "critical",
           score: 85,
-          description: "12-month deadline for provisional patent conversion"
+          description: "12-month deadline for provisional IP conversion"
         },
         overall_risk_score: 48
       };

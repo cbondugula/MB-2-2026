@@ -168,7 +168,7 @@ export class CSAgentService {
         recommendations: [
           "System operating at peak efficiency",
           "All healthcare compliance checks passed",
-          "Patent portfolio analysis complete"
+          "Innovation portfolio analysis complete"
         ]
       };
     } catch (error) {

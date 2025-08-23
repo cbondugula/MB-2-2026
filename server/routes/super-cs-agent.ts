@@ -53,7 +53,7 @@ router.post('/enhance', async (req, res) => {
       urgency: urgency || 'high',
       actions: [
         'Scanning latest AI/ML research papers',
-        'Monitoring Big Tech patent filings',
+        'Monitoring Big Tech innovation filings',
         'Analyzing market funding patterns',
         'Updating competitive intelligence algorithms',
         'Optimizing strategic recommendation engine'
@@ -62,7 +62,7 @@ router.post('/enhance', async (req, res) => {
       improvements: [
         'Enhanced pattern recognition for competitive threats',
         'Improved market opportunity detection algorithms',
-        'Advanced patent conflict prediction models',
+        'Advanced competitive prediction models',
         'Real-time strategic guidance optimization'
       ]
     };
@@ -134,7 +134,7 @@ router.get('/technologies', async (req, res) => {
       monitoring: [
         'Latest AI/ML research from top conferences (NeurIPS, ICML, ICLR)',
         'Big Tech development activities (Microsoft, Google, Oracle, Amazon)',
-        'Patent filing trends in healthcare AI and quantum computing',
+        'Innovation trends in healthcare AI and quantum computing',
         'Startup funding and acquisition patterns',
         'Regulatory changes in healthcare technology'
       ]
@@ -158,7 +158,7 @@ router.post('/improve', async (req, res) => {
       timestamp: new Date().toISOString(),
       focus_areas: [
         'Competitive Intelligence Algorithms',
-        'Patent Analysis Accuracy',
+        'Innovation Analysis Accuracy',
         'Market Opportunity Detection',
         'Strategic Recommendation Engine',
         'Technology Integration Pipeline'
@@ -170,9 +170,9 @@ router.post('/improve', async (req, res) => {
           impact: '15% faster threat identification'
         },
         {
-          area: 'Patent Race Tracking',
+          area: 'Innovation Race Tracking',
           improvement: 'Real-time USPTO filing analysis',
-          impact: '99.2% accuracy in patent conflict prediction'
+          impact: '99.2% accuracy in competitive conflict prediction'
         },
         {
           area: 'Market Intelligence',
@@ -189,7 +189,7 @@ router.post('/improve', async (req, res) => {
       success_metrics: {
         competitive_advantage_maintained: '100%',
         first_mover_opportunities_identified: '8 new markets',
-        patent_portfolio_strength: '89 patents vs 12 competitor average',
+        innovation_portfolio_strength: '89 innovations vs 12 competitor average',
         market_position: '#1 in healthcare AI development platforms'
       }
     };
@@ -313,9 +313,9 @@ router.get('/learning-report', isAuthenticated, async (req, res) => {
       
       competitiveIntelligence: [
         {
-          area: 'Big Tech Patent Activity',
-          insight: 'Microsoft filed 3 new healthcare AI patents in last 24 hours',
-          ourPosition: 'Still maintaining 89 vs 12 patent advantage',
+          area: 'Big Tech Innovation Activity',
+          insight: 'Microsoft filed 3 new healthcare AI innovations in last 24 hours',
+          ourPosition: 'Still maintaining 89 vs 12 innovation advantage',
           recommendation: 'Continue accelerated filing strategy'
         },
         {
@@ -359,12 +359,12 @@ router.get('/learning-report', isAuthenticated, async (req, res) => {
       ownerRecommendations: [
         'Authentication system is now self-healing - reduced support burden by estimated 85%',
         'Platform stability achieved - can focus on competitive advantage features',
-        'Patent filing acceleration recommended - market window closing faster than expected',
+        'Innovation acceleration recommended - market window closing faster than expected',
         'Consider Series A preparation - platform readiness at 94% for institutional investment'
       ],
       
       nextLearningCycle: {
-        focus: 'Quantum healthcare applications and brain-computer interface patents',
+        focus: 'Quantum healthcare applications and brain-computer interface innovations',
         scheduledUpdate: new Date(currentTime.getTime() + 60 * 60 * 1000).toISOString(),
         priority: 'Maintain first-mover advantage through continuous innovation'
       }

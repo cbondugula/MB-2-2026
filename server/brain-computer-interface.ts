@@ -5,7 +5,7 @@ const router = Router();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Revolutionary Brain-Computer Interface Technology
-// Patent-Protected: Thought-Controlled Healthcare Development Platform
+// Thought-Controlled Healthcare Development Platform
 
 interface BCICapabilities {
   thoughtRecognition: boolean;
@@ -280,7 +280,7 @@ router.post('/process-thought', async (req, res) => {
         'Breakthrough accessibility beyond assistive technology',
         'Cognitive enhancement for neurodiverse developers'
       ],
-      patent_protected: 'Thought-Controlled Healthcare Development Platform - Patent Filed',
+      innovation_protected: 'Thought-Controlled Healthcare Development Platform - Innovation Filed',
       timestamp: new Date().toISOString()
     });
   } catch (error) {
@@ -314,7 +314,7 @@ router.get('/capabilities', async (req, res) => {
         healthcare_bci_applications: '$2.4B by 2030',
         addressable_market: '$12.3B annually',
         social_impact: 'Life-changing independence for disabled developers',
-        patent_protection: 'Revolutionary thought-controlled development algorithms'
+        innovation_protection: 'Revolutionary thought-controlled development algorithms'
       }
     });
   } catch (error) {

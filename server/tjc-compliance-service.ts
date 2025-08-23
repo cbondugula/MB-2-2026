@@ -5,7 +5,7 @@ const router = Router();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Revolutionary Joint Commission Compliance Automation System
-// Patent-Protected: AI-Driven Healthcare Regulatory Compliance Platform
+// AI-Driven Healthcare Regulatory Compliance Platform
 
 interface TJCStandard {
   id: string;
@@ -329,7 +329,7 @@ class TJCComplianceEngine {
     annualFees: string;
     automationOpportunity: string;
     competitiveAdvantage: string[];
-    patentValue: string;
+    innovationValue: string;
   }> {
     return {
       marketSize: '$12.4B annually',
@@ -342,9 +342,9 @@ class TJCComplianceEngine {
         '75% reduction in compliance preparation time',
         'Predictive compliance violation detection',
         'Automated survey readiness assessment',
-        'Patent-protected compliance algorithms'
+        'Innovation-protected compliance algorithms'
       ],
-      patentValue: '$1.2B - $2.8B for TJC compliance automation IP'
+      innovationValue: '$1.2B - $2.8B for TJC compliance automation IP'
     };
   }
 }
@@ -392,7 +392,7 @@ router.post('/assess-compliance', async (req, res) => {
         '75% reduction in compliance preparation costs',
         'Predictive compliance violation detection',
         '5-7 year technological lead in healthcare compliance',
-        'Patent-protected compliance automation algorithms'
+        'Innovation-protected compliance automation algorithms'
       ],
       cost_savings: {
         consultant_fees_eliminated: '$150,000 - $300,000 per assessment',
@@ -401,7 +401,7 @@ router.post('/assess-compliance', async (req, res) => {
         risk_mitigation: '90% early detection of compliance issues',
         total_annual_savings: '$500,000 - $1.2M per hospital'
       },
-      patent_protected: 'AI-Driven Healthcare Regulatory Compliance Platform - Patent Filed',
+      innovation_protected: 'AI-Driven Healthcare Regulatory Compliance Platform - Innovation Filed',
       timestamp: new Date().toISOString()
     });
   } catch (error) {
@@ -503,7 +503,7 @@ router.get('/monitor-compliance/:hospitalId', async (req, res) => {
         'Revolutionary predictive compliance analytics',
         'Automated corrective action deployment',
         'Continuous cost-benefit optimization',
-        'Patent-protected compliance algorithms',
+        'Innovation-protected compliance algorithms',
         'Unprecedented hospital regulatory automation'
       ]
     });
@@ -537,7 +537,7 @@ router.get('/market-analysis', async (req, res) => {
       },
       acquisition_value: {
         strategic_acquirers: ['Oracle Health', 'Microsoft Healthcare', 'Epic Systems', 'Cerner (Oracle)'],
-        patent_portfolio_value: '$1.2B - $2.8B',
+        innovation_portfolio_value: '$1.2B - $2.8B',
         platform_valuation: '$8.5B - $12.3B',
         acquisition_multiple: '15-20x revenue',
         timeline_to_acquisition: '18-36 months'
