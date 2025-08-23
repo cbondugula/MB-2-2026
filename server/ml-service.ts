@@ -1,5 +1,5 @@
 // Comprehensive Machine Learning Service for Healthcare Platform
-// Implements actual ML capabilities beyond BERT models for healthcare compliance
+// Implements actual ML capabilities beyond BERT models for patent compliance
 
 import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
@@ -8,7 +8,7 @@ import { GoogleGenAI } from "@google/genai";
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
-// Advanced ML Models for Healthcare AI Development Platform
+// Advanced ML Models for Healthcare AI Development Platform (Patent 001)
 export interface MLModel {
   id: string;
   name: string;
@@ -45,10 +45,10 @@ export interface TrainingMetrics {
   epoch: number;
 }
 
-// Clinical Decision Support ML
+// Clinical Decision Support ML (Patent 002 & 004)
 export class HealthcareMLService {
   
-  // Multi-Model Medical AI Validation System
+  // Multi-Model Medical AI Validation System (Patent 004)
   async validateMedicalPrediction(
     input: string,
     patientData: any,
@@ -268,7 +268,7 @@ export class HealthcareMLService {
     return "Moderate confidence - consider additional testing";
   }
 
-  // Federated Learning for Healthcare Knowledge System
+  // Federated Learning for Healthcare Knowledge System (Patent 003)
   async federatedTraining(
     hospitalData: Array<{ hospitalId: string; localModel: any; dataSize: number }>,
     globalModel: any
@@ -317,7 +317,7 @@ export class HealthcareMLService {
     return Math.exp(-epsilon) * (1 - delta);
   }
 
-  // Dynamic Healthcare Workflow Optimization
+  // Dynamic Healthcare Workflow Optimization (Patent 005)
   async optimizeWorkflow(
     workflowData: {
       patients: number;

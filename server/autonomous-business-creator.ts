@@ -5,7 +5,7 @@ const router = Router();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Revolutionary Autonomous Business Creation Engine
-// AI-Driven Autonomous Business Formation Platform
+// Patent-Protected: AI-Driven Autonomous Business Formation Platform
 
 interface BusinessPlan {
   companyName: string;
@@ -102,7 +102,7 @@ class AutonomousBusinessEngine {
   }
 
   private generateCompanyName(industry: string): string {
-    const techPrefixes = ['Auto', 'Smart', 'AI', 'Neural', 'Advanced', 'Cyber'];
+    const techPrefixes = ['Auto', 'Smart', 'AI', 'Neural', 'Quantum', 'Cyber'];
     const businessSuffixes = ['Solutions', 'Systems', 'Dynamics', 'Intelligence', 'Automation', 'Technologies'];
     
     const prefix = techPrefixes[Math.floor(Math.random() * techPrefixes.length)];
@@ -267,7 +267,7 @@ router.post('/create-business-plan', async (req, res) => {
         '75% autonomous business operations',
         'AI-driven compliance automation',
         'Revolutionary business creation technology',
-        'Innovation-protected autonomous business platform',
+        'Patent-protected autonomous business platform',
         'Complete AI workforce deployment'
       ],
       competitive_advantage: [
@@ -277,7 +277,7 @@ router.post('/create-business-plan', async (req, res) => {
         'Unprecedented business automation capabilities',
         '5-7 year technological lead in business automation'
       ],
-      innovation_protected: 'AI-Driven Autonomous Business Formation Platform - Innovation Filed',
+      patent_protected: 'AI-Driven Autonomous Business Formation Platform - Patent Filed',
       timestamp: new Date().toISOString()
     });
   } catch (error) {
@@ -389,7 +389,7 @@ router.get('/autonomous-operations/:businessId', async (req, res) => {
         autonomous_business_market: '$47.3B by 2028',
         ai_workforce_market: '$89.7B by 2030',
         business_automation_demand: '340% year-over-year growth',
-        innovation_value: '$2.8B - $4.1B',
+        patent_value: '$2.8B - $4.1B',
         acquisition_interest: 'Confirmed by Fortune 100 companies'
       }
     });

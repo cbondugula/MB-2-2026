@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 /*
-INNOVATION #1: Multi-Modal Clinical Decision Support AI with Safety Constellation Architecture
+PATENTABLE INNOVATION #1: Multi-Modal Clinical Decision Support AI with Safety Constellation Architecture
 - Combines multiple specialized medical AI models for enhanced safety and accuracy
 - Real-time HIPAA compliance verification during AI interactions
 - Automated clinical pathway optimization with evidence-based recommendations
@@ -57,7 +57,7 @@ export class ClinicalAIService {
   constructor() {
     this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     
-    // INNOVATION INNOVATION: Specialized medical AI model constellation
+    // PATENT INNOVATION: Specialized medical AI model constellation
     this.medicalModels = new Map([
       ['primary-care', 'gpt-4o'],
       ['cardiology', 'gpt-4o'], // Could be specialized CardioGPT
@@ -71,7 +71,7 @@ export class ClinicalAIService {
   }
 
   /**
-   * INNOVATIONABLE METHOD: Constellation Clinical Decision Support
+   * PATENTABLE METHOD: Constellation Clinical Decision Support
    * Uses multiple specialized AI models and safety verification
    */
   async getConstellationRecommendations(
@@ -94,7 +94,7 @@ export class ClinicalAIService {
         )
       );
 
-      // INNOVATION INNOVATION: Safety verification and consensus scoring
+      // PATENT INNOVATION: Safety verification and consensus scoring
       const consensusScore = this.calculateConsensusScore(primaryRecommendation, alternativeRecommendations);
       const safetyVerified = await this.verifySafety(primaryRecommendation, context);
       const complianceChecked = this.verifyCompliance(primaryRecommendation, context);
@@ -182,7 +182,7 @@ export class ClinicalAIService {
   }
 
   /**
-   * INNOVATIONABLE METHOD: AI Consensus Scoring for Medical Safety
+   * PATENTABLE METHOD: AI Consensus Scoring for Medical Safety
    */
   private calculateConsensusScore(
     primary: ClinicalRecommendation,
@@ -201,7 +201,7 @@ export class ClinicalAIService {
   }
 
   /**
-   * INNOVATIONABLE METHOD: Automated Clinical Safety Verification
+   * PATENTABLE METHOD: Automated Clinical Safety Verification
    */
   private async verifySafety(
     recommendation: ClinicalRecommendation,
@@ -242,7 +242,7 @@ export class ClinicalAIService {
   }
 
   /**
-   * INNOVATIONABLE METHOD: Real-time Healthcare Standards Compliance Verification
+   * PATENTABLE METHOD: Real-time Healthcare Standards Compliance Verification
    */
   private verifyCompliance(
     recommendation: ClinicalRecommendation,
@@ -271,7 +271,7 @@ export class ClinicalAIService {
   }
 
   /**
-   * INNOVATIONABLE METHOD: AI-Powered Clinical Risk Assessment
+   * PATENTABLE METHOD: AI-Powered Clinical Risk Assessment
    */
   private async assessRisk(
     recommendation: ClinicalRecommendation,
@@ -320,7 +320,7 @@ export class ClinicalAIService {
   }
 
   /**
-   * INNOVATIONABLE METHOD: Automated Clinical Code Generation with Safety Validation
+   * PATENTABLE METHOD: Automated Clinical Code Generation with Safety Validation
    */
   async generateClinicalCode(
     requirements: string,

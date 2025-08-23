@@ -255,7 +255,7 @@ export class PlatformOptimizationService {
           'Microservices architecture for specialized medical AI services',
           'Real-time WebSocket scaling for collaboration features'
         ],
-        proprietary_innovations: [
+        patent_protected_innovations: [
           'Voice-controlled healthcare backend generation',
           'Multi-AI medical validation system',
           'Federated healthcare knowledge processing',
@@ -296,7 +296,7 @@ export class PlatformOptimizationService {
         performance_benchmarks: await this.testPerformanceBenchmarks(),
         frontend_functionality: await this.testFrontendFunctionality(),
         ai_integrations: await this.testAIIntegrations(),
-        innovation_portfolio_access: await this.testInnovationPortfolioAccess()
+        patent_portfolio_access: await this.testPatentPortfolioAccess()
       };
 
       const overallHealth = this.calculateOverallHealth(testResults);
@@ -543,19 +543,19 @@ export class PlatformOptimizationService {
   }
 
   /**
-   * Test Innovation Portfolio Access
+   * Test Patent Portfolio Access
    */
-  async testInnovationPortfolioAccess() {
-    console.log('📋 Testing innovation portfolio access...');
+  async testPatentPortfolioAccess() {
+    console.log('📋 Testing patent portfolio access...');
     
     return {
-      innovation_documentation: 'comprehensive',
+      patent_documentation: 'comprehensive',
       filing_status: 'tracked',
       valuation_data: 'accessible',
       competitive_analysis: 'available',
       ip_protection: 'documented',
       portfolio_value: '$46.63B-$84.88B',
-      innovations_count: 89,
+      patents_count: 89,
       filing_readiness: 'uspto_ready',
       score: 96
     };

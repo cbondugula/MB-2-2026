@@ -12,7 +12,7 @@ const defaultFlags: FeatureFlags = {
   voice_controlled_development: true,
   
   // Advanced Features
-  advanced_ai_processing: false,
+  quantum_ai_hybrid: false,
   real_time_collaboration: true,
   advanced_analytics: true,
   
@@ -37,7 +37,7 @@ const defaultFlags: FeatureFlags = {
   genomics_integration: false,
   
   // Business Features
-  innovation_portfolio_tracking: true,
+  patent_portfolio_tracking: true,
   revenue_analytics: true,
   competitive_analysis: true
 }
@@ -45,21 +45,21 @@ const defaultFlags: FeatureFlags = {
 // Environment-based feature overrides
 const environmentFlags: { [env: string]: Partial<FeatureFlags> } = {
   development: {
-    advanced_ai_processing: true,
+    quantum_ai_hybrid: true,
     ai_code_generation: true,
     medical_imaging_analysis: true,
     genomics_integration: true,
     multi_factor_auth: true
   },
   production: {
-    advanced_ai_processing: false,
+    quantum_ai_hybrid: false,
     ai_code_generation: false,
     medical_imaging_analysis: false,
     genomics_integration: false
   },
   testing: {
     // All features enabled for comprehensive testing
-    advanced_ai_processing: true,
+    quantum_ai_hybrid: true,
     ai_code_generation: true,
     medical_imaging_analysis: true,
     genomics_integration: true,

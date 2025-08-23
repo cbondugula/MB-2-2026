@@ -1,8 +1,9 @@
 import OpenAI from "openai";
+import { VOICE_NO_CODE_PATENTS } from "./voice-no-code-patents";
 
 /**
  * GROK INDEPENDENT VERIFICATION SERVICE
- * Using XAI's Grok for independent innovation and IP analysis
+ * Using XAI's Grok for independent patent and IP analysis
  */
 
 export class GrokVerificationService {
@@ -16,38 +17,38 @@ export class GrokVerificationService {
   }
 
   /**
-   * Independent Innovation Analysis using Grok
+   * Independent Patent Analysis using Grok
    */
-  async verifyInnovationPortfolio(): Promise<any> {
-    const innovationPrompt = `As an independent AI analyst, provide a comprehensive evaluation of this revolutionary healthcare development platform innovation portfolio:
+  async verifyPatentPortfolio(): Promise<any> {
+    const patentPrompt = `As an independent AI analyst, provide a comprehensive evaluation of this revolutionary healthcare development platform patent portfolio:
 
-INNOVATION PORTFOLIO FOR ANALYSIS:
+PATENT PORTFOLIO FOR ANALYSIS:
 
-INNOVATION 1: Voice-Controlled Healthcare Application Development Platform
+PATENT 1: Voice-Controlled Healthcare Application Development Platform
 - Creates complete healthcare applications through voice commands alone
 - Healthcare-specific voice recognition with medical terminology
 - Real-time HIPAA-compliant application generation
 - Eliminates need for traditional coding interfaces
 
-INNOVATION 2: Universal No-Code Visual Healthcare Application Builder
+PATENT 2: Universal No-Code Visual Healthcare Application Builder
 - Drag-and-drop healthcare application development
 - Intelligent component orchestration with medical workflow understanding
 - Automatic full-stack code generation with regulatory compliance
 - Healthcare-specific template library and API integrations
 
-INNOVATION 3: Integrated Voice and Visual Development Platform with AI Intelligence
+PATENT 3: Integrated Voice and Visual Development Platform with AI Intelligence
 - Seamless combination of voice and visual development modalities
 - AI-powered component intelligence for healthcare workflows
 - Cross-modal command continuation and context preservation
 - Multimodal healthcare application development environment
 
 ANALYSIS REQUIREMENTS:
-1. Innovation Strength Assessment (1-100 scale)
+1. Patent Strength Assessment (1-100 scale)
 2. Market Disruption Potential
 3. Competitive Landscape Analysis
-4. Prior Innovation Risk Evaluation
+4. Prior Art Risk Evaluation
 5. Commercial Value Estimation
-6. Development Strategy Recommendations
+6. Filing Strategy Recommendations
 7. IP Protection Strengths and Vulnerabilities
 
 Provide objective, independent analysis focusing on:
@@ -64,9 +65,9 @@ Be thorough and critical in your assessment.`;
       messages: [
         { 
           role: "system", 
-          content: "You are an independent AI analyst specializing in technology innovation evaluation and intellectual property strategy. Provide objective, critical analysis without bias." 
+          content: "You are an independent AI analyst specializing in technology patent evaluation and intellectual property strategy. Provide objective, critical analysis without bias." 
         },
-        { role: "user", content: innovationPrompt }
+        { role: "user", content: patentPrompt }
       ],
       temperature: 0.3,
       max_tokens: 3000
@@ -94,7 +95,7 @@ TECHNOLOGY OVERVIEW:
 - Complete elimination of traditional development tools
 
 IP PROTECTION STRATEGY:
-1. Innovation Applications: 3 core innovations covering voice development, no-code platform, multimodal interface
+1. Patent Applications: 3 core patents covering voice development, no-code platform, multimodal interface
 2. Trade Secrets: Core algorithms, healthcare NLP models, compliance automation
 3. Code Obfuscation: Encrypted algorithms, masked API endpoints, access controls
 4. Competitive Intelligence: Decoy technologies, reverse engineering protection
@@ -108,7 +109,7 @@ COMPETITIVE LANDSCAPE:
 
 EVALUATION CRITERIA:
 1. IP Strategy Effectiveness (1-100)
-2. Trade Secret vs Innovation Balance
+2. Trade Secret vs Patent Balance
 3. Protection Gap Analysis
 4. Competitive Vulnerability Assessment
 5. Market Entry Barriers Created
@@ -293,8 +294,8 @@ Be thorough in identifying technical risks and limitations.`;
    * Comprehensive Independent Verification
    */
   async conductComprehensiveVerification(): Promise<any> {
-    const [innovationAnalysis, ipStrategy, marketAnalysis, techFeasibility] = await Promise.all([
-      this.verifyInnovationPortfolio(),
+    const [patentAnalysis, ipStrategy, marketAnalysis, techFeasibility] = await Promise.all([
+      this.verifyPatentPortfolio(),
       this.verifyIPProtectionStrategy(),
       this.verifyMarketOpportunity(),
       this.verifyTechnologyFeasibility()
@@ -302,13 +303,13 @@ Be thorough in identifying technical risks and limitations.`;
 
     return {
       verificationReport: {
-        innovationAnalysis,
+        patentAnalysis,
         ipProtectionStrategy: ipStrategy,
         marketOpportunity: marketAnalysis,
         technicalFeasibility: techFeasibility
       },
       overallAssessment: await this.generateOverallAssessment([
-        innovationAnalysis,
+        patentAnalysis,
         ipStrategy,
         marketAnalysis,
         techFeasibility

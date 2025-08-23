@@ -15,7 +15,7 @@ export class CSAgentAccuracyTest {
       test_categories: {
         platform_analysis: await this.testPlatformAnalysis(),
         healthcare_analysis: await this.testHealthcareAnalysis(),
-        innovation_analysis: await this.testInnovationAnalysis(),
+        patent_analysis: await this.testPatentAnalysis(),
         stakeholder_usability: await this.testStakeholderUsability(),
         dynamic_data_accuracy: await this.testDynamicDataAccuracy(),
         real_time_performance: await this.testRealTimePerformance()
@@ -111,44 +111,45 @@ export class CSAgentAccuracyTest {
     }
   }
 
-  // Test innovation analysis accuracy
-  async testInnovationAnalysis() {
+  // Test patent analysis accuracy
+  async testPatentAnalysis() {
     try {
-      const analysis = await this.csAgent.analyzeInnovationPortfolio();
+      const analysis = await this.csAgent.analyzePatentPortfolio();
+      const portfolioData = await storage.getPatentPortfolioData();
       
-      // Verify innovation portfolio accuracy
+      // Verify patent portfolio accuracy
       const accuracyChecks = [
-        analysis.total_innovations === 89,
-        analysis.portfolio_status.includes("89"),
-        analysis.strategic_value?.includes("$4.2B"),
-        analysis.development_status.length === 3,
-        analysis.competitive_advantage?.includes("monopoly")
+        analysis.total_patents === portfolioData.totalPatents,
+        analysis.portfolio_status.includes(portfolioData.totalPatents.toString()),
+        analysis.strategic_value === portfolioData.strategicValue,
+        analysis.filing_status === portfolioData.filingStatus,
+        analysis.competitive_advantage === portfolioData.competitiveAdvantage
       ];
 
       const accuracy = Math.round((accuracyChecks.filter(Boolean).length / accuracyChecks.length) * 100);
 
       return {
-        test_name: "Innovation Analysis",
+        test_name: "Patent Analysis",
         accuracy_score: accuracy,
         data_points_verified: accuracyChecks.length,
         correct_predictions: accuracyChecks.filter(Boolean).length,
         status: accuracy >= 95 ? "excellent" : accuracy >= 80 ? "good" : "needs_improvement",
-        innovation_count_verification: analysis.total_innovations === 89,
-        strategic_value_verification: analysis.strategic_value?.includes("$4.2B"),
+        patent_count_verification: analysis.total_patents === 89,
+        strategic_value_verification: analysis.strategic_value?.includes("$46.63B"),
         details: {
-          innovation_count_match: accuracyChecks[0],
+          patent_count_match: accuracyChecks[0],
           status_description_match: accuracyChecks[1],
           strategic_value_match: accuracyChecks[2],
-          development_status_match: accuracyChecks[3],
+          filing_status_match: accuracyChecks[3],
           competitive_advantage_match: accuracyChecks[4]
         }
       };
     } catch (error) {
       return {
-        test_name: "Innovation Analysis",
+        test_name: "Patent Analysis",
         accuracy_score: 0,
         status: "failed",
-        error: "Innovation analysis test failed"
+        error: "Patent analysis test failed"
       };
     }
   }
@@ -226,7 +227,7 @@ export class CSAgentAccuracyTest {
           "CS Agent Metrics Database",
           "Platform Health Database", 
           "Compliance Analysis Database",
-          "Innovation Portfolio Database",
+          "Patent Portfolio Database",
           "Stakeholder Dashboard APIs"
         ],
         no_hardcoded_values: true
@@ -247,11 +248,11 @@ export class CSAgentAccuracyTest {
       const startTime = Date.now();
       
       // Run multiple concurrent tests
-      const [health, platform, healthcare, innovation] = await Promise.all([
+      const [health, platform, healthcare, patent] = await Promise.all([
         this.csAgent.getHealthStatus(),
         this.csAgent.analyzePlatform(),
         this.csAgent.performHealthcareAnalysis(),
-        this.csAgent.analyzeInnovationPortfolio()
+        this.csAgent.analyzePatentPortfolio()
       ]);
       
       const endTime = Date.now();
@@ -262,7 +263,7 @@ export class CSAgentAccuracyTest {
         health.status === "healthy",
         platform.platform_status === "optimal",
         healthcare.healthcare_specific.clinical_ai_accuracy === "99.7%",
-        innovation.total_innovations === 89,
+        patent.total_patents === 89,
         typeof platform.total_projects === 'number'
       ];
 

@@ -30,6 +30,9 @@ import ScalabilityDashboard from "@/pages/scalability-dashboard";
 import VisualBuilder from "@/pages/visual-builder";
 import MLPythonIntegration from "@/pages/ml-python-integration";
 import MultiAIVerification from "@/pages/multi-ai-verification";
+import PatentVerificationDashboard from "@/pages/patent-verification-dashboard";
+import PatentLinks from "@/pages/patent-links";
+import PatentDrawings from "@/pages/patent-drawings";
 import OwnerDashboard from "@/pages/owner-dashboard";
 import CompetitiveIntelligence from "@/pages/competitive-intelligence";
 import CompetitiveAdvantage from "@/pages/competitive-advantage";
@@ -86,6 +89,9 @@ function Router() {
           <Route path="/visual-builder" component={VisualBuilder} />
           <Route path="/ml-python" component={MLPythonIntegration} />
           <Route path="/multi-ai-verification" component={MultiAIVerification} />
+          <Route path="/patent-verification" component={PatentVerificationDashboard} />
+          <Route path="/patent-links" component={PatentLinks} />
+          <Route path="/patent-drawings" component={PatentDrawings} />
           <Route path="/tjc-compliance" component={TJCCompliance} />
           <Route path="/quantum-ai" component={QuantumAI} />
           <Route path="/healthcare-testing" component={HealthcareTesting} />

@@ -1,5 +1,5 @@
 /*
-INNOVATION #2: Automated Healthcare Standards Translation and Integration Engine
+PATENTABLE INNOVATION #2: Automated Healthcare Standards Translation and Integration Engine
 - Real-time conversion between FHIR, HL7, SNOMED CT, ICD-10, LOINC, and DICOM
 - AI-powered semantic mapping with context preservation
 - Automated compliance verification across 193 countries' healthcare standards
@@ -50,7 +50,7 @@ export class StandardsIntegrationService {
   }
 
   /**
-   * INNOVATION METHOD: AI-Powered Multi-Standard Data Translation
+   * PATENTABLE METHOD: AI-Powered Multi-Standard Data Translation
    * Converts between healthcare standards while preserving semantic meaning
    */
   async translateBetweenStandards(
@@ -86,7 +86,7 @@ export class StandardsIntegrationService {
   }
 
   /**
-   * INNOVATIONABLE METHOD: AI-Powered Semantic Translation
+   * PATENTABLE METHOD: AI-Powered Semantic Translation
    * Uses advanced AI to understand and translate between healthcare standards
    */
   private async performAITranslation(
@@ -122,7 +122,7 @@ export class StandardsIntegrationService {
   }
 
   /**
-   * INNOVATIONABLE METHOD: Real-time Multi-Country Compliance Verification
+   * PATENTABLE METHOD: Real-time Multi-Country Compliance Verification
    */
   async verifyMultiCountryCompliance(
     data: any,
@@ -183,7 +183,7 @@ export class StandardsIntegrationService {
   }
 
   /**
-   * INNOVATIONABLE METHOD: Automated Healthcare Standards Code Generation
+   * PATENTABLE METHOD: Automated Healthcare Standards Code Generation
    */
   async generateStandardsCompliantCode(
     apiType: 'FHIR' | 'HL7' | 'DICOM' | 'SNOMED',

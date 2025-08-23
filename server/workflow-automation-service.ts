@@ -1,5 +1,5 @@
-// Dynamic Healthcare Workflow Automation System with Predictive Resource Allocation
-// Implementation of our workflow optimization technology
+// Patent 005: Dynamic Healthcare Workflow Automation System with Predictive Resource Allocation
+// Implementation of our patented workflow optimization technology
 
 export interface WorkflowNode {
   id: string;
@@ -49,10 +49,10 @@ export interface WorkflowOptimization {
   compliance_enhancement: number;
 }
 
-// Core Innovation Implementation
+// Core Patent 005 Implementation
 export class DynamicWorkflowAutomationService {
   
-  // AI-Driven Workflow Optimization
+  // AI-Driven Workflow Optimization (Patent Claim 1)
   async optimizeWorkflowWithAI(workflowId: string, currentMetrics: any): Promise<WorkflowOptimization> {
     const workflow = await this.getWorkflow(workflowId);
     const historicalData = await this.getHistoricalPerformance(workflowId);
@@ -83,7 +83,7 @@ export class DynamicWorkflowAutomationService {
     };
   }
 
-  // Predictive Resource Allocation (Innovation Claim 2)
+  // Predictive Resource Allocation (Patent Claim 2)
   async predictResourceAllocation(
     workflowId: string, 
     timeWindow: { start: Date; end: Date },
@@ -119,7 +119,7 @@ export class DynamicWorkflowAutomationService {
     };
   }
 
-  // Real-Time Process Adaptation (Innovation Claim 3)
+  // Real-Time Process Adaptation (Patent Claim 3)
   async adaptProcessInRealTime(
     workflowId: string,
     triggerEvent: any,
@@ -154,7 +154,7 @@ export class DynamicWorkflowAutomationService {
     };
   }
 
-  // Global Compliance Automation (Innovation Claim 4)
+  // Global Compliance Automation (Patent Claim 4)
   async automateGlobalCompliance(
     workflowId: string,
     countries: string[],

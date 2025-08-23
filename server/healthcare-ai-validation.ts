@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import { GoogleGenAI } from "@google/genai";
+import { VOICE_NO_CODE_PATENTS } from "./voice-no-code-patents";
 
 /**
  * HEALTHCARE AI VALIDATION SERVICE

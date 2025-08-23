@@ -17,6 +17,11 @@ export default function DualQuantumClassical() {
   const [subspecialties, setSubspecialties] = useState("Cardiology,Neurology,Oncology,Radiology,Surgery,Pediatrics");
   const [narratives, setNarratives] = useState("Resident demonstrates excellent clinical reasoning...\nShows proficiency in procedural skills...\nCommunicates effectively with patients...");
 
+  // Fetch patent implementation status
+  const { data: patentStatus } = useQuery({
+    queryKey: ['/api/dual-processing/patent-status'],
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
 
   // International Accreditation Processing
   const accreditationMutation = useMutation({
