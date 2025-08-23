@@ -129,7 +129,7 @@ export class CSAgentService {
         development_status: [
           { innovation: 'Healthcare AI Platform', status: 'Developed', value: '$2.1B-$3.8B' },
           { innovation: 'Voice-Controlled ML Training', status: 'Testing', value: '$1.5B-$2.2B' },
-          { innovation: 'Quantum-AI Medical Education', status: 'Development', value: '$3.2B-$4.1B' }
+          { innovation: 'Advanced-AI Medical Education', status: 'Development', value: '$3.2B-$4.1B' }
         ],
         strategic_value: "$4.2B-$6.1B"
       };

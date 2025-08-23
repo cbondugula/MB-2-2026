@@ -319,7 +319,7 @@ export class PredictiveComplianceEngine {
       complianceForecasting: {
         sixMonths: 'COMPLIANT_WITH_MINOR_UPDATES',
         oneYear: 'MAJOR_REGULATORY_CHANGES_EXPECTED',
-        twoYears: 'QUANTUM_SECURITY_REQUIREMENTS_ANTICIPATED'
+        twoYears: 'ADVANCED_SECURITY_REQUIREMENTS_ANTICIPATED'
       }
     };
   }

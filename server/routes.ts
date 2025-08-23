@@ -33,12 +33,12 @@ import { grokVerificationService } from "./grok-verification-service";
 import { healthcareAIValidationService } from "./healthcare-ai-validation";
 import { workflowAutomationService } from "./workflow-automation-service";
 import { registerAIChatRoutes } from "./routes/ai-chat";
-import { quantumAIRouter } from "./quantum-ai-service";
+import { advancedAIRouter } from "./quantum-ai-service";
 import { autonomousBusinessRouter } from "./autonomous-business-creator";
 import { bciRouter } from "./brain-computer-interface";
 import { tjcComplianceRouter } from "./tjc-compliance-service";
 import { healthcareTestingRouter } from "./healthcare-testing-service";
-import { dualQuantumClassicalService } from "./dual-quantum-classical-service";
+import { dualAdvancedClassicalService } from "./dual-quantum-classical-service";
 import { superCSAgentRoutes } from "./routes/super-cs-agent";
 import { csAgentService } from "./cs-agent-dynamic-service";
 
@@ -1916,14 +1916,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // SUPER SC AGENT - STATIC TO DYNAMIC CONVERSION ENDPOINT
   // Import revolutionary technology routers
-  const { quantumAIRouter } = await import('./quantum-ai-service');
+  const { advancedAIRouter } = await import('./quantum-ai-service');
   const { autonomousBusinessRouter } = await import('./autonomous-business-creator');
   const { bciRouter } = await import('./brain-computer-interface');
   const { tjcComplianceRouter } = await import('./tjc-compliance-service');
   const { healthcareTestingRouter } = await import('./healthcare-testing-service');
 
   // Revolutionary Technology API Routes
-  app.use('/api/quantum', quantumAIRouter);
+  app.use('/api/quantum', advancedAIRouter);
   app.use('/api/business', autonomousBusinessRouter);
   app.use('/api/bci', bciRouter);
   app.use('/api/tjc', tjcComplianceRouter);
@@ -2307,7 +2307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         categories: [
           {
-            name: 'Quantum Healthcare AI',
+            name: 'Advanced Healthcare AI',
             innovations: 17,
             status: 'Filed',
             value: '$1.9B - $3.2B'
@@ -2845,11 +2845,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Dual Quantum-Classical Implementation Routes
+  // Dual Advanced-Classical Implementation Routes
   app.post('/api/dual-processing/international-accreditation', isAuthenticated, async (req, res) => {
     try {
-      const { countries, requirements, useQuantum } = req.body;
-      const result = await dualQuantumClassicalService.processInternationalAccreditation(countries, requirements, useQuantum);
+      const { countries, requirements, useAdvanced } = req.body;
+      const result = await dualAdvancedClassicalService.processInternationalAccreditation(countries, requirements, useAdvanced);
       res.json(result);
     } catch (error) {
       console.error("Error in dual international accreditation:", error);
@@ -2859,8 +2859,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/dual-processing/fellowship-programs', isAuthenticated, async (req, res) => {
     try {
-      const { subspecialties, requirements, useQuantum } = req.body;
-      const result = await dualQuantumClassicalService.processFellowshipPrograms(subspecialties, requirements, useQuantum);
+      const { subspecialties, requirements, useAdvanced } = req.body;
+      const result = await dualAdvancedClassicalService.processFellowshipPrograms(subspecialties, requirements, useAdvanced);
       res.json(result);
     } catch (error) {
       console.error("Error in dual fellowship processing:", error);
@@ -2870,8 +2870,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/dual-processing/continuous-monitoring', isAuthenticated, async (req, res) => {
     try {
-      const { institutions, realTimeData, useQuantum } = req.body;
-      const result = await dualQuantumClassicalService.continuousAccreditationMonitoring(institutions, realTimeData, useQuantum);
+      const { institutions, realTimeData, useAdvanced } = req.body;
+      const result = await dualAdvancedClassicalService.continuousAccreditationMonitoring(institutions, realTimeData, useAdvanced);
       res.json(result);
     } catch (error) {
       console.error("Error in dual continuous monitoring:", error);
@@ -2881,8 +2881,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/dual-processing/milestone-epa', isAuthenticated, async (req, res) => {
     try {
-      const { narratives, milestoneData, useQuantum } = req.body;
-      const result = await dualQuantumClassicalService.milestoneEPAAssessment(narratives, milestoneData, useQuantum);
+      const { narratives, milestoneData, useAdvanced } = req.body;
+      const result = await dualAdvancedClassicalService.milestoneEPAAssessment(narratives, milestoneData, useAdvanced);
       res.json(result);
     } catch (error) {
       console.error("Error in dual milestone EPA assessment:", error);

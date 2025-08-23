@@ -102,7 +102,7 @@ class AutonomousBusinessEngine {
   }
 
   private generateCompanyName(industry: string): string {
-    const techPrefixes = ['Auto', 'Smart', 'AI', 'Neural', 'Quantum', 'Cyber'];
+    const techPrefixes = ['Auto', 'Smart', 'AI', 'Neural', 'Advanced', 'Cyber'];
     const businessSuffixes = ['Solutions', 'Systems', 'Dynamics', 'Intelligence', 'Automation', 'Technologies'];
     
     const prefix = techPrefixes[Math.floor(Math.random() * techPrefixes.length)];
