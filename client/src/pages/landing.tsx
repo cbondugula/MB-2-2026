@@ -8,6 +8,11 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 
+// Load testing agent in development
+if (import.meta.env.DEV) {
+  import('../testing-agent.js').catch(console.error);
+}
+
 export default function Landing() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
