@@ -1,4 +1,5 @@
 import { storage } from './storage';
+import { errorHandler } from './common/error-handler';
 
 /**
  * CS Agent - Computer Science Agent for MedBuilder Platform Optimization
@@ -54,21 +55,16 @@ export class PlatformOptimizationService {
       return {
         overall_score: metrics.complianceScore || 95,
         code_quality: 'excellent',
-        performance_metrics: {
-          response_time: '< 200ms',
-          memory_usage: 'optimal',
-          database_connections: 'healthy',
-          api_success_rate: '99.7%'
-        },
+        performance_metrics: await this.getRealTimePerformanceMetrics(),
         active_issues: [],
         recent_optimizations: this.optimizationHistory.length,
         next_optimization_scheduled: new Date(Date.now() + 3600000).toISOString()
       };
     } catch (error) {
-      return {
-        overall_score: 0,
-        error: 'Platform health analysis failed'
-      };
+      return errorHandler.createErrorResponse(
+        'Platform health analysis',
+        error instanceof Error ? error.message : String(error)
+      );
     }
   }
 
@@ -77,14 +73,15 @@ export class PlatformOptimizationService {
    */
   async analyzeCodeQuality() {
     try {
+      const codeMetrics = await storage.getCodeQualityMetrics();
       const analysis = {
-        typescript_errors: 0,
-        eslint_warnings: 0,
-        security_vulnerabilities: 0,
-        performance_bottlenecks: 0,
-        code_coverage: 92,
-        maintainability_index: 85,
-        technical_debt_hours: 2.5,
+        typescript_errors: codeMetrics.typescriptErrors,
+        eslint_warnings: codeMetrics.eslintWarnings,
+        security_vulnerabilities: codeMetrics.securityVulnerabilities,
+        performance_bottlenecks: codeMetrics.performanceBottlenecks,
+        code_coverage: codeMetrics.codeCoverage,
+        maintainability_index: codeMetrics.maintainabilityIndex,
+        technical_debt_hours: codeMetrics.technicalDebtHours,
         recent_corrections: [
           {
             file: 'server/medhelm-service.ts',
@@ -120,10 +117,10 @@ export class PlatformOptimizationService {
         ]
       };
     } catch (error) {
-      return {
-        success: false,
-        error: 'Code quality analysis failed'
-      };
+      return errorHandler.createErrorResponse(
+        'Code quality analysis',
+        error instanceof Error ? error.message : String(error)
+      );
     }
   }
 

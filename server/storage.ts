@@ -59,6 +59,27 @@ export interface IStorage {
     componentsUsed: number;
     timeSaved: number;
   }>;
+  
+  // Real-time monitoring methods
+  getSystemMetrics(): Promise<{
+    responseTime: number;
+    memoryUsage: number;
+    cpuUsage: number;
+    databaseConnections: number;
+    apiSuccessRate: number;
+  }>;
+  getCodeQualityMetrics(): Promise<{
+    typescriptErrors: number;
+    eslintWarnings: number;
+    securityVulnerabilities: number;
+    performanceBottlenecks: number;
+    codeCoverage: number;
+    maintainabilityIndex: number;
+    technicalDebtHours: number;
+  }>;
+  getAverageGenerationTime(): Promise<number>;
+  getQualityScore(): Promise<number>;
+  getRealTimeUsageStats(): Promise<{[key: string]: number}>;
   getUserRecentActivities(userId: string): Promise<ProjectActivity[]>;
   
   // Project operations
@@ -2160,6 +2181,32 @@ This agreement incorporates organization-specific requirements and automatically
         alerts: [{ type: 'system', message: 'Database connection failed', severity: 'critical' }]
       };
     }
+  }
+
+  // Real-time monitoring implementations
+  async getSystemMetrics() {
+    const { monitoringService } = await import('./monitoring-service');
+    return await monitoringService.getSystemMetrics();
+  }
+
+  async getCodeQualityMetrics() {
+    const { monitoringService } = await import('./monitoring-service');
+    return await monitoringService.getCodeQualityMetrics();
+  }
+
+  async getAverageGenerationTime(): Promise<number> {
+    const { monitoringService } = await import('./monitoring-service');
+    return await monitoringService.getAverageGenerationTime();
+  }
+
+  async getQualityScore(): Promise<number> {
+    const { monitoringService } = await import('./monitoring-service');
+    return await monitoringService.getQualityScore();
+  }
+
+  async getRealTimeUsageStats(): Promise<{[key: string]: number}> {
+    const { monitoringService } = await import('./monitoring-service');
+    return await monitoringService.getRealTimeUsageStats();
   }
 }
 
