@@ -2212,14 +2212,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/templates/healthcare', async (req, res) => {
     try {
       const templates = await storage.getTemplates();
+      const usageStats = await storage.getRealTimeUsageStats();
+      
       const enhancedTemplates = templates.map(template => ({
         ...template,
         lastUpdated: new Date().toISOString(),
         dynamicContent: true,
         usage: {
-          installations: await storage.getRealTimeUsageStats().then(stats => Math.max(500, stats.totalProjects * 50 + template.id * 100)),
+          installations: Math.max(500, usageStats.totalProjects * 50 + template.id * 100),
           rating: (4.2 + (template.id % 10) * 0.08).toFixed(1),
-          reviews: await storage.getRealTimeUsageStats().then(stats => Math.max(25, stats.activeProjects * 10 + template.id * 5))
+          reviews: Math.max(25, usageStats.activeProjects * 10 + template.id * 5)
         }
       }));
       
@@ -2247,6 +2249,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Components API - Dynamic healthcare UI components
   app.get('/api/components/healthcare', async (req, res) => {
     try {
+      const usageStats = await storage.getRealTimeUsageStats();
       const components = {
         lastUpdated: new Date().toISOString(),
         dynamicContent: true,
@@ -2259,7 +2262,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 id: 'patient-registration',
                 name: 'Patient Registration Form',
                 description: 'Comprehensive patient intake with HIPAA compliance',
-                usage: await storage.getRealTimeUsageStats().then(stats => Math.max(1000, stats.totalProjects * 25)),
+                usage: Math.max(1000, usageStats.totalProjects * 25),
                 complexity: 'Medium',
                 features: ['HIPAA Compliant', 'Multi-language', 'Validation']
               },
@@ -2267,7 +2270,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 id: 'appointment-scheduler',
                 name: 'Appointment Scheduler',
                 description: 'Smart appointment booking with availability detection',
-                usage: await storage.getRealTimeUsageStats().then(stats => Math.max(1000, stats.totalProjects * 25)),
+                usage: Math.max(1000, usageStats.totalProjects * 25),
                 complexity: 'High',
                 features: ['Real-time Availability', 'Calendar Integration', 'Notifications']
               },
@@ -2275,7 +2278,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 id: 'patient-portal',
                 name: 'Patient Portal Dashboard',
                 description: 'Secure patient information and communication hub',
-                usage: await storage.getRealTimeUsageStats().then(stats => Math.max(1000, stats.totalProjects * 25)),
+                usage: Math.max(1000, usageStats.totalProjects * 25),
                 complexity: 'High',
                 features: ['Secure Messaging', 'Medical Records', 'Bill Pay']
               }
@@ -2289,7 +2292,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 id: 'ehr-interface',
                 name: 'EHR Integration Interface',
                 description: 'Standard EHR system integration component',
-                usage: await storage.getRealTimeUsageStats().then(stats => Math.max(1000, stats.totalProjects * 25)),
+                usage: Math.max(1000, usageStats.totalProjects * 25),
                 complexity: 'High',
                 features: ['HL7 FHIR', 'Multi-EHR Support', 'Real-time Sync']
               },
@@ -2297,7 +2300,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 id: 'clinical-notes',
                 name: 'Clinical Notes Editor',
                 description: 'AI-powered clinical documentation',
-                usage: await storage.getRealTimeUsageStats().then(stats => Math.max(1000, stats.totalProjects * 25)),
+                usage: Math.max(1000, usageStats.totalProjects * 25),
                 complexity: 'Medium',
                 features: ['Voice Input', 'AI Suggestions', 'Template Library']
               },
@@ -2305,7 +2308,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 id: 'drug-interaction',
                 name: 'Drug Interaction Checker',
                 description: 'Real-time medication safety verification',
-                usage: await storage.getRealTimeUsageStats().then(stats => Math.max(1000, stats.totalProjects * 25)),
+                usage: Math.max(1000, usageStats.totalProjects * 25),
                 complexity: 'High',
                 features: ['Real-time Checking', 'Allergy Alerts', 'FDA Database']
               }
@@ -2319,7 +2322,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 id: 'health-dashboard',
                 name: 'Healthcare Analytics Dashboard',
                 description: 'Real-time healthcare metrics and KPIs',
-                usage: await storage.getRealTimeUsageStats().then(stats => Math.max(1000, stats.totalProjects * 25)),
+                usage: Math.max(1000, usageStats.totalProjects * 25),
                 complexity: 'High',
                 features: ['Real-time Data', 'Custom Charts', 'Export Tools']
               },
@@ -2327,7 +2330,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 id: 'compliance-monitor',
                 name: 'Compliance Monitoring',
                 description: 'Automated compliance tracking and reporting',
-                usage: await storage.getRealTimeUsageStats().then(stats => Math.max(1000, stats.totalProjects * 25)),
+                usage: Math.max(1000, usageStats.totalProjects * 25),
                 complexity: 'Medium',
                 features: ['HIPAA Tracking', 'Audit Trails', 'Alert System']
               }
@@ -2362,7 +2365,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             countries: ['United States', 'Canada', 'Mexico'],
             keyRegulations: ['HIPAA', 'PIPEDA', 'Mexican Health Privacy Law'],
             compliance: '100%',
-            implementations: await storage.getRealTimeUsageStats().then(stats => Math.max(5000, stats.totalProjects * 200))
+            implementations: Math.max(5000, usageStats.totalProjects * 200)
           },
           {
             region: 'Europe',
@@ -2392,7 +2395,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           coverage: '100%'
         },
         marketStats: {
-          totalHealthcareApps: await storage.getRealTimeUsageStats().then(stats => Math.max(50000, stats.totalProjects * 5000)),
+          totalHealthcareApps: Math.max(50000, usageStats.totalProjects * 5000),
           monthlyGrowth: '12.5%',
           averageComplianceScore: '97.8%',
           customerSatisfaction: '4.8/5.0'

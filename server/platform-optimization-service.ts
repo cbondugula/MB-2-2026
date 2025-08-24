@@ -559,6 +559,33 @@ export class PlatformOptimizationService {
   }
 
   /**
+   * Get Real-Time Performance Metrics
+   */
+  async getRealTimePerformanceMetrics() {
+    try {
+      const systemMetrics = await storage.getSystemMetrics();
+      return {
+        response_time: `${systemMetrics.responseTime}ms`,
+        memory_usage: `${systemMetrics.memoryUsage}%`,
+        database_connections: systemMetrics.databaseConnections > 0 ? 'healthy' : 'warning',
+        api_success_rate: `${systemMetrics.apiSuccessRate}%`,
+        cpu_usage: `${systemMetrics.cpuUsage}%`,
+        last_updated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Failed to get real-time performance metrics:', error);
+      return {
+        response_time: 'unknown',
+        memory_usage: 'unknown',
+        database_connections: 'unknown',
+        api_success_rate: 'unknown',
+        cpu_usage: 'unknown',
+        last_updated: new Date().toISOString()
+      };
+    }
+  }
+
+  /**
    * Calculate Overall Platform Health
    */
   calculateOverallHealth(testResults: any) {
