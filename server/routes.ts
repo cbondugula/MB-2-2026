@@ -1169,6 +1169,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Ultra-Speed Optimization API Endpoints
+  app.get('/api/ultra-speed/benchmark', async (req, res) => {
+    try {
+      const { ultraSpeedOptimizer } = await import('./ultra-speed-optimization');
+      const benchmark = await ultraSpeedOptimizer.runSpeedBenchmark();
+      res.json(benchmark);
+    } catch (error) {
+      console.error('Speed benchmark failed:', error);
+      res.status(500).json({ message: 'Speed benchmark failed', error: error.message });
+    }
+  });
+
+  app.get('/api/ultra-speed/performance', async (req, res) => {
+    try {
+      const { ultraSpeedOptimizer } = await import('./ultra-speed-optimization');
+      const metrics = await ultraSpeedOptimizer.getPerformanceMetrics();
+      res.json(metrics);
+    } catch (error) {
+      console.error('Performance metrics failed:', error);
+      res.status(500).json({ message: 'Performance metrics failed', error: error.message });
+    }
+  });
+
+  app.post('/api/ultra-speed/optimize', async (req, res) => {
+    try {
+      const { ultraSpeedOptimizer } = await import('./ultra-speed-optimization');
+      const optimization = await ultraSpeedOptimizer.optimizeMemoryUsage();
+      res.json({
+        success: true,
+        optimization,
+        message: 'Platform optimized for maximum speed',
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Speed optimization failed:', error);
+      res.status(500).json({ message: 'Speed optimization failed', error: error.message });
+    }
+  });
+
   // Healthcare AI Validation API Endpoints
   app.get('/api/validation/healthcare-comprehensive', async (req, res) => {
     try {
