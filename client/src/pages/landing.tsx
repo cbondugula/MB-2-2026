@@ -134,6 +134,12 @@ export default function Landing() {
 
       {/* Main Content - Clean centered layout */}
       <div className="flex-1 flex flex-col items-center justify-center min-h-[85vh] px-6 py-12">
+        {/* Debug indicator */}
+        {showDemo && (
+          <div className="fixed top-20 right-4 bg-green-500 text-white px-3 py-1 rounded text-sm z-50">
+            DEMO ACTIVE: {showDemo ? 'ON' : 'OFF'}
+          </div>
+        )}
         <div className="max-w-5xl mx-auto text-center space-y-12">
           {/* Title */}
           <div className="space-y-8">
@@ -301,12 +307,15 @@ export default function Landing() {
 
       {/* Demo Section */}
       {showDemo && (
-        <div className="bg-gray-800 border-t border-gray-700 py-12" data-testid="demo-section">
-          <div className="container mx-auto px-6">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-white mb-4">Platform Demo</h2>
-                <p className="text-gray-400">Experience our comprehensive healthcare AI development platform</p>
+        <div className="bg-gray-800 border-t border-gray-700 py-12 w-full min-h-[500px] z-10 relative" data-testid="demo-section" style={{display: 'block', visibility: 'visible'}}>
+          <div className="container mx-auto px-6 w-full">
+            <div className="max-w-6xl mx-auto w-full">
+              <div className="text-center mb-8 w-full">
+                <h2 className="text-3xl font-bold text-white mb-4 bg-purple-600 p-4 rounded">🚀 LIVE PLATFORM DEMO 🚀</h2>
+                <p className="text-gray-400 text-lg">Experience our comprehensive healthcare AI development platform</p>
+                <div className="mt-4 p-3 bg-green-800 border border-green-600 rounded text-green-200 text-sm">
+                  ✅ Demo is ACTIVE - Real-time data loading below
+                </div>
                 {(mlError || trainingError || modelsError) && (
                   <div className="mt-4 p-3 bg-red-900 border border-red-700 rounded text-red-200 text-sm">
                     API Error - Demo data may not load properly. Check console for details.
