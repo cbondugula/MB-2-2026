@@ -473,9 +473,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 
   // Patent Conflict Analysis API
-  app.post('/api/patent-conflict-analysis', isAuthenticated, async (req: any, res) => {
+  app.post('/api/innovation-conflict-analysis', isAuthenticated, async (req: any, res) => {
     try {
-      const { patentAttorneyAgent } = await import('./patent-attorney-agent');
+      const { legalDocumentationAgent } = await import('./legal-documentation-service');
       
       const filedPatents = [
         "Patent 048: Traditional AI ACGME Institutional Requirements (classical ML, single institution)",
@@ -495,7 +495,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         success: true,
         conflictAnalysis: conflictAnalysis,
-        analysisType: "patent-conflict-assessment",
+        analysisType: "innovation-conflict-assessment",
         recommendation: "Independent filing strategy with technical differentiation emphasis"
       });
       
@@ -508,7 +508,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Prior Art Analysis API
   app.post('/api/prior-art-analysis', isAuthenticated, async (req: any, res) => {
     try {
-      const { patentAttorneyAgent } = await import('./patent-attorney-agent');
+      const { legalDocumentationAgent } = await import('./legal-documentation-service');
       
       const technologyArea = "Quantum-enhanced medical education compliance automation with dual quantum-classical processing architecture for ACGME/LCME accreditation standards verification";
       
@@ -528,7 +528,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Multi-AI Patent Portfolio Assessment
-  app.get('/api/multi-ai-patent-assessment', isAuthenticated, async (req: any, res) => {
+  app.get('/api/multi-ai-innovation-assessment', isAuthenticated, async (req: any, res) => {
     try {
       console.log('Initiating comprehensive multi-AI patent assessment...');
       
@@ -2027,11 +2027,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { bciRouter } = await import('./brain-computer-interface');
   const { tjcComplianceRouter } = await import('./tjc-compliance-service');
   const { healthcareTestingRouter } = await import('./healthcare-testing-service');
-  const { tjcPatentAnalysisRouter } = await import('./tjc-patent-analysis-service');
-  const { patentValuationRouter } = await import('./patent-valuation-comparison');
-  const { tjcPatentFilingRouter } = await import('./tjc-patent-filing-service');
-  const { patentDrawingsRouter } = await import('./patent-drawings-service');
-  const { acgmePatentRouter } = await import('./acgme-patent-analysis-service');
+  const { tjcInnovationAnalysisRouter } = await import('./tjc-innovation-analysis-service');
+  const { innovationValuationRouter } = await import('./innovation-valuation-comparison');
+  const { tjcInnovationFilingRouter } = await import('./tjc-innovation-filing-service');
+  const { technicalDiagramsRouter } = await import('./technical-diagrams-service');
+  const { acgmeInnovationRouter } = await import('./acgme-innovation-analysis-service');
 
   // Revolutionary Technology API Routes (Non-Patent)
   app.use('/api/quantum', quantumAIRouter);

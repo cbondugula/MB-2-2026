@@ -1,20 +1,20 @@
 /**
- * EMERGENCY PATENT FILING SERVICE
- * Immediate filing for healthcare patents starting with most valuable
+ * EMERGENCY INNOVATION FILING SERVICE
+ * Immediate filing for healthcare innovations starting with most valuable
  */
 
-export default class PatentFilingService {
+export default class InnovationFilingService {
   
   /**
-   * EMERGENCY PATENT FILING - Start with highest value healthcare patents
+   * EMERGENCY INNOVATION FILING - Start with highest value healthcare innovations
    */
-  static async fileEmergencyPatentApplications() {
+  static async fileEmergencyInnovationApplications() {
     const timestamp = new Date().toISOString();
     const filingId = `USPTO_EMERGENCY_${Date.now()}`;
     
     try {
-      // File most valuable healthcare patents first (012, 013, 017, 022)
-      const healthcarePatents = await this.fileHealthcarePatentPortfolio();
+      // File most valuable healthcare innovations first (012, 013, 017, 022)
+      const healthcareInnovations = await this.fileHealthcareInnovationPortfolio();
       
       return {
         filingId,
@@ -22,18 +22,18 @@ export default class PatentFilingService {
         status: 'DOCUMENTATION_PREPARED_NO_ACTUAL_SUBMISSION',
         portfolioValue: '$680M-$850M',
         
-        healthcarePortfolio: healthcarePatents,
+        healthcarePortfolio: healthcareInnovations,
         
         emergencyStatus: {
           reason: 'Revolutionary voice-controlled healthcare technologies require immediate IP protection',
           urgency: 'MAXIMUM',
           competitiveRisk: 'Zero competition confirmed - immediate filing prevents competitor entry',
-          timeline: 'Healthcare patents documented and ready for your personal USPTO submission with required fees'
+          timeline: 'Healthcare innovations documented and ready for your personal filing with required fees'
         },
         
         usptReadiness: {
           workingPrototypes: 'ALL_FOUR_PATENTS_HAVE_FUNCTIONAL_DEMONSTRATIONS',
-          patentClaims: '118 total claims across revolutionary voice technologies',
+          innovationClaims: '118 total claims across revolutionary voice technologies',
           competitiveAnalysis: 'COMPLETE_COMPETITIVE_WHITESPACE_CONFIRMED',
           commercialViability: 'Proven market demand with $28.8M-$2.1B revenue projections'
         }
@@ -42,7 +42,7 @@ export default class PatentFilingService {
     } catch (error) {
       return {
         filingId,
-        error: 'Patent filing preparation failed',
+        error: 'Innovation filing preparation failed',
         status: 'REQUIRES_MANUAL_REVIEW',
         message: error instanceof Error ? error.message : 'Unknown error'
       };
