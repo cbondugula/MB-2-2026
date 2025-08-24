@@ -2,27 +2,27 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export interface PatentConsultationRequest {
+export interface LegalConsultationRequest {
   situation: string;
-  filedPatents: string[];
-  newPatents: string[];
+  filedDocuments: string[];
+  newDocuments: string[];
   technicalDifferences: string;
   questions: string[];
 }
 
-export interface PatentLegalAnalysis {
+export interface LegalAnalysis {
   recommendedStrategy: string;
   legalRisks: string[];
   claimStrategy: string;
-  filingTimeline: string;
+  implementationTimeline: string;
   internationalConsiderations: string;
   portfolioValue: string;
   priorityRecommendations: string[];
 }
 
-export class PatentAttorneyAgent {
+export class LegalDocumentationAgent {
   
-  async consultOnPatentStrategy(request: PatentConsultationRequest): Promise<PatentLegalAnalysis> {
+  async consultOnLegalStrategy(request: LegalConsultationRequest): Promise<LegalAnalysis> {
     const systemPrompt = `You are a senior patent attorney with 20+ years of experience in healthcare technology patents, quantum computing IP, and strategic patent portfolio development. You specialize in:
 
 - USPTO patent prosecution and filing strategies
@@ -59,11 +59,11 @@ Respond as a professional patent attorney would in a formal legal consultation.`
 **SITUATION ANALYSIS**:
 ${request.situation}
 
-**FILED PATENTS**: 
-${request.filedPatents.join('\n')}
+**FILED DOCUMENTS**: 
+${request.filedDocuments.join('\n')}
 
-**NEW PATENTS READY TO FILE**:
-${request.newPatents.join('\n')}
+**NEW DOCUMENTS READY TO FILE**:
+${request.newDocuments.join('\n')}
 
 **TECHNICAL DIFFERENTIATION**:
 ${request.technicalDifferences}
@@ -93,7 +93,7 @@ Provide detailed legal reasoning for all recommendations in accordance with curr
       recommendedStrategy: analysis.recommendedStrategy || "Independent fresh applications recommended",
       legalRisks: analysis.legalRisks || ["Minimal risk with proper differentiation"],
       claimStrategy: analysis.claimStrategy || "Broad quantum method and system claims",
-      filingTimeline: analysis.filingTimeline || "File within 7-14 days for optimal position",
+      implementationTimeline: analysis.filingTimeline || "File within 7-14 days for optimal position",
       internationalConsiderations: analysis.internationalConsiderations || "PCT filing recommended for global protection",
       portfolioValue: analysis.portfolioValue || "$1.0B-$1.5B estimated quantum portfolio value",
       priorityRecommendations: analysis.priorityRecommendations || ["File independent applications immediately"]
@@ -181,4 +181,4 @@ Consider current quantum computing, healthcare AI, and medical education technol
   }
 }
 
-export const patentAttorneyAgent = new PatentAttorneyAgent();
+export const legalDocumentationAgent = new LegalDocumentationAgent();

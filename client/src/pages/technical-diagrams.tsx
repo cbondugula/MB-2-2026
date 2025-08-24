@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useState } from 'react';
 
-interface PatentDrawing {
+interface TechnicalDiagram {
   figureNumber: string;
   title: string;
   svgContent: string;
@@ -17,7 +17,7 @@ interface PatentDrawing {
   usptorequirements: string[];
 }
 
-interface PatentDrawingSet {
+interface TechnicalDiagramSet {
   patentNumber: string;
   patentTitle: string;
   drawings: PatentDrawing[];
@@ -25,7 +25,7 @@ interface PatentDrawingSet {
   complianceNotes: string[];
 }
 
-interface PatentDrawingsResponse {
+interface TechnicalDiagramsResponse {
   success: boolean;
   patent_drawings?: PatentDrawingSet;
   all_patent_drawings?: {
@@ -39,12 +39,12 @@ interface PatentDrawingsResponse {
   filing_recommendation?: string;
 }
 
-export default function PatentDrawings() {
-  const [selectedPatent, setSelectedPatent] = useState<string>('045');
+export default function TechnicalDiagrams() {
+  const [selectedDiagram, setSelectedDiagram] = useState<string>('045');
 
-  // Fetch all TJC patent drawings dynamically
-  const { data: allDrawings, isLoading, error } = useQuery<PatentDrawingsResponse>({
-    queryKey: ['/api/patent-drawings/all-tjc-drawings'],
+  // Fetch all TJC technical diagrams dynamically
+  const { data: allDrawings, isLoading, error } = useQuery<TechnicalDiagramsResponse>({
+    queryKey: ['/api/technical-diagrams/all-tjc-diagrams'],
     refetchInterval: 30000 // Refresh every 30 seconds for real-time updates
   });
 

@@ -27,39 +27,39 @@ import {
   Layers
 } from "lucide-react";
 
-export default function PatentVerificationDashboard() {
-  const [selectedPatent, setSelectedPatent] = useState<string>('');
+export default function InnovationVerificationDashboard() {
+  const [selectedInnovation, setSelectedInnovation] = useState<string>('');
   const { toast } = useToast();
 
-  // Voice + Frontend Patents
-  const { data: voicePatents } = useQuery({
-    queryKey: ['/api/patents/voice-no-code']
+  // Voice + Frontend Features
+  const { data: voiceFeatures } = useQuery({
+    queryKey: ['/api/innovations/voice-platform']
   });
 
-  // No-Code Backend Patents
-  const { data: backendPatents } = useQuery({
-    queryKey: ['/api/patents/no-code-backend']
+  // No-Code Backend Features
+  const { data: backendFeatures } = useQuery({
+    queryKey: ['/api/innovations/backend-automation']
   });
 
-  // Combined Portfolio Analysis
-  const { data: portfolioStrategy } = useQuery({
-    queryKey: ['/api/patents/portfolio-strategy']
+  // Combined Platform Analysis
+  const { data: platformStrategy } = useQuery({
+    queryKey: ['/api/innovations/platform-strategy']
   });
 
   // Backend Market Analysis
   const { data: backendMarket } = useQuery({
-    queryKey: ['/api/patents/backend-market-analysis']
+    queryKey: ['/api/innovations/backend-market-analysis']
   });
 
   // Combined Portfolio Analysis
   const combinedPortfolioMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest('GET', '/api/patents/combined-portfolio');
+      return apiRequest('GET', '/api/innovations/platform-portfolio');
     },
     onSuccess: () => {
       toast({
-        title: "Portfolio Analysis Complete",
-        description: "Combined patent portfolio valued at $800M-$1.12B",
+        title: "Platform Analysis Complete",
+        description: "Combined innovation platform valued at $800M-$1.12B",
       });
     }
   });

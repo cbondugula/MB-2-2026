@@ -1,9 +1,9 @@
 /**
- * NO-CODE BACKEND PATENT PORTFOLIO
+ * NO-CODE BACKEND AUTOMATION FEATURES
  * Revolutionary backend generation without traditional development tools
  */
 
-export interface NoCodeBackendPatent {
+export interface BackendAutomationFeature {
   id: string;
   title: string;
   description: string;
@@ -11,13 +11,13 @@ export interface NoCodeBackendPatent {
   technicalInnovation: string;
   marketValue: string;
   noveltyScore: number;
-  patentabilityConfidence: string;
+  implementationConfidence: string;
   competitiveAdvantage: string;
 }
 
-export const NO_CODE_BACKEND_PATENTS: NoCodeBackendPatent[] = [
+export const BACKEND_AUTOMATION_FEATURES: BackendAutomationFeature[] = [
   {
-    id: 'PATENT_012',
+    id: 'BACKEND_FEATURE_001',
     title: 'Automated Backend Infrastructure Generation for Healthcare Applications Without Traditional Development Tools',
     description: 'Revolutionary system that generates complete backend infrastructure, APIs, databases, and deployment configurations for healthcare applications through visual interfaces and voice commands, eliminating the need for traditional backend development tools.',
     claims: [
@@ -40,12 +40,12 @@ export const NO_CODE_BACKEND_PATENTS: NoCodeBackendPatent[] = [
     technicalInnovation: 'First comprehensive no-code backend generation platform specifically designed for healthcare applications with automated compliance, security, and integration capabilities',
     marketValue: '$150-200M',
     noveltyScore: 9,
-    patentabilityConfidence: 'very high',
+    implementationConfidence: 'very high',
     competitiveAdvantage: 'No existing platform offers complete healthcare backend generation without coding - creates massive barriers to entry'
   },
 
   {
-    id: 'PATENT_013',
+    id: 'BACKEND_FEATURE_002',
     title: 'Intelligent Healthcare API Generation and Management System with Automated Documentation and Testing',
     description: 'Advanced system that automatically generates, manages, and maintains healthcare APIs with intelligent documentation, automated testing, and real-time compliance monitoring, all without traditional development tools.',
     claims: [
@@ -68,7 +68,7 @@ export const NO_CODE_BACKEND_PATENTS: NoCodeBackendPatent[] = [
     technicalInnovation: 'First automated healthcare API generation platform with intelligent management, testing, and compliance monitoring capabilities',
     marketValue: '$120-160M',
     noveltyScore: 9,
-    patentabilityConfidence: 'high',
+    implementationConfidence: 'high',
     competitiveAdvantage: 'Healthcare API management is complex and heavily regulated - automation creates significant competitive advantage'
   },
 
@@ -96,7 +96,7 @@ export const NO_CODE_BACKEND_PATENTS: NoCodeBackendPatent[] = [
     technicalInnovation: 'First voice-controlled database management system specifically designed for healthcare applications with automated compliance and optimization',
     marketValue: '$100-140M',
     noveltyScore: 10,
-    patentabilityConfidence: 'very high',
+    implementationConfidence: 'very high',
     competitiveAdvantage: 'Voice-controlled database management is completely novel - no existing solutions combine voice interface with healthcare database optimization'
   },
 
@@ -124,21 +124,21 @@ export const NO_CODE_BACKEND_PATENTS: NoCodeBackendPatent[] = [
     technicalInnovation: 'First visual DevOps and deployment automation platform specifically designed for healthcare applications with integrated compliance and security',
     marketValue: '$130-170M',
     noveltyScore: 8,
-    patentabilityConfidence: 'high',
+    implementationConfidence: 'high',
     competitiveAdvantage: 'Healthcare DevOps requires specialized compliance and security - visual automation creates significant market differentiation'
   }
 ];
 
-export class NoCodeBackendPatentService {
+export class BackendAutomationService {
   /**
    * No-Code Backend Patent Analysis
    */
-  static getPatentAnalysis() {
+  static getFeatureAnalysis() {
     return {
       portfolioValue: '$500-670M',
-      totalPatents: NO_CODE_BACKEND_PATENTS.length,
+      totalFeatures: BACKEND_AUTOMATION_FEATURES.length,
       averageNoveltyScore: 9.0,
-      patentabilityConfidence: 'very high',
+      implementationConfidence: 'very high',
       
       keyInnovations: [
         'Complete backend generation without coding',
@@ -308,4 +308,4 @@ export class NoCodeBackendPatentService {
  * Revolutionary technology with strong patent protection potential
  */
 
-export default NoCodeBackendPatentService;
+export default BackendAutomationService;

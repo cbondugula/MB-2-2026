@@ -1,18 +1,18 @@
 /*
-COMPREHENSIVE PATENT DOCUMENTATION FOR MEDBUILDER PLATFORM
-==========================================================
+COMPREHENSIVE INNOVATION DOCUMENTATION FOR MEDBUILDER PLATFORM
+==============================================================
 
-This file documents our key patentable innovations to strengthen IP protection 
-and provide evidence for patent applications.
+This file documents our key technological innovations and capabilities 
+that differentiate our healthcare development platform.
 
-PATENT PORTFOLIO STRATEGY:
-- File 5-8 core patents covering unique healthcare AI innovations
+INNOVATION STRATEGY:
+- Showcase 5-8 core innovations covering unique healthcare AI capabilities
 - Focus on intersection of AI + Healthcare Standards + Compliance
 - Avoid competing with general AI coding (Google/Microsoft territory)
 - Target healthcare-specific automation and safety systems
 */
 
-export interface PatentableInnovation {
+export interface PlatformInnovation {
   id: string;
   title: string;
   category: 'ai-safety' | 'standards-integration' | 'compliance-automation' | 'clinical-ai' | 'workflow-automation';
@@ -22,14 +22,14 @@ export interface PatentableInnovation {
   priorArt: string[];
   differentiators: string[];
   implementationFile: string;
-  patentStrength: 'high' | 'medium' | 'low';
-  filingPriority: number; // 1-10, 10 being highest
+  innovationStrength: 'high' | 'medium' | 'low';
+  developmentPriority: number; // 1-10, 10 being highest
   estimatedValue: string;
 }
 
-export const PATENTABLE_INNOVATIONS: PatentableInnovation[] = [
+export const PLATFORM_INNOVATIONS: PlatformInnovation[] = [
   {
-    id: 'PATENT_001',
+    id: 'INNOVATION_001',
     title: 'Multi-Modal Clinical Decision Support AI with Safety Constellation Architecture',
     category: 'ai-safety',
     description: 'A revolutionary AI safety system that uses multiple specialized medical AI models in constellation to provide clinical decision support with enhanced accuracy and safety verification.',
@@ -54,13 +54,13 @@ export const PATENTABLE_INNOVATIONS: PatentableInnovation[] = [
       'Integration with FHIR/HL7 standards for seamless EHR integration'
     ],
     implementationFile: 'server/clinical-ai-service.ts',
-    patentStrength: 'high',
-    filingPriority: 10,
+    innovationStrength: 'high',
+    developmentPriority: 10,
     estimatedValue: '$25-50M acquisition premium'
   },
 
   {
-    id: 'PATENT_002',
+    id: 'INNOVATION_002',
     title: 'Automated Healthcare Standards Translation and Integration Engine',
     category: 'standards-integration',
     description: 'AI-powered system for real-time conversion between healthcare data standards (FHIR, HL7, SNOMED, ICD-10) while preserving semantic meaning and ensuring compliance across 193 countries.',
@@ -85,13 +85,13 @@ export const PATENTABLE_INNOVATIONS: PatentableInnovation[] = [
       'Automated mapping rule generation and updates'
     ],
     implementationFile: 'server/standards-integration-service.ts',
-    patentStrength: 'high',
-    filingPriority: 9,
+    innovationStrength: 'high',
+    developmentPriority: 9,
     estimatedValue: '$20-40M acquisition premium'
   },
 
   {
-    id: 'PATENT_003',
+    id: 'INNOVATION_003',
     title: 'AI-Powered Healthcare Code Generation with Automated HIPAA Compliance Verification',
     category: 'compliance-automation',
     description: 'Advanced code generation system that automatically produces healthcare applications with built-in HIPAA compliance, audit logging, and security best practices.',
@@ -116,13 +116,13 @@ export const PATENTABLE_INNOVATIONS: PatentableInnovation[] = [
       'Multi-framework compliance wrapper generation'
     ],
     implementationFile: 'server/clinical-ai-service.ts (generateClinicalCode method)',
-    patentStrength: 'high',
-    filingPriority: 9,
+    innovationStrength: 'high',
+    developmentPriority: 9,
     estimatedValue: '$15-30M acquisition premium'
   },
 
   {
-    id: 'PATENT_004',
+    id: 'INNOVATION_004',
     title: 'Dynamic Healthcare Workflow Automation with AI-Driven Process Optimization',
     category: 'workflow-automation',
     description: 'Intelligent system that automatically optimizes healthcare workflows by analyzing patterns, predicting bottlenecks, and suggesting process improvements using AI.',
@@ -147,13 +147,13 @@ export const PATENTABLE_INNOVATIONS: PatentableInnovation[] = [
       'Predictive resource allocation'
     ],
     implementationFile: 'server/advanced-capabilities-service.ts',
-    patentStrength: 'medium',
-    filingPriority: 7,
+    innovationStrength: 'medium',
+    developmentPriority: 7,
     estimatedValue: '$10-20M acquisition premium'
   },
 
   {
-    id: 'PATENT_005',
+    id: 'INNOVATION_005',
     title: 'Intelligent Healthcare Template Generation with Domain-Specific AI Customization',
     category: 'clinical-ai',
     description: 'AI system that generates healthcare application templates customized for specific medical domains (cardiology, oncology, etc.) with appropriate workflows and compliance features.',
@@ -178,8 +178,8 @@ export const PATENTABLE_INNOVATIONS: PatentableInnovation[] = [
       'AI-powered component recommendations'
     ],
     implementationFile: 'server/stack-builder.ts',
-    patentStrength: 'medium',
-    filingPriority: 6,
+    innovationStrength: 'medium',
+    developmentPriority: 6,
     estimatedValue: '$8-15M acquisition premium'
   }
 ];
@@ -267,9 +267,9 @@ ${claims}
   static calculatePortfolioValue(): {totalValue: string, patentCount: number, strengthDistribution: any} {
     const totalPatents = PATENTABLE_INNOVATIONS.length;
     const strengthDistribution = {
-      high: PATENTABLE_INNOVATIONS.filter(p => p.patentStrength === 'high').length,
-      medium: PATENTABLE_INNOVATIONS.filter(p => p.patentStrength === 'medium').length,
-      low: PATENTABLE_INNOVATIONS.filter(p => p.patentStrength === 'low').length
+      high: PLATFORM_INNOVATIONS.filter(p => p.innovationStrength === 'high').length,
+      medium: PLATFORM_INNOVATIONS.filter(p => p.innovationStrength === 'medium').length,
+      low: PLATFORM_INNOVATIONS.filter(p => p.innovationStrength === 'low').length
     };
 
     // Conservative estimate: High = $25M avg, Medium = $12M avg, Low = $5M avg

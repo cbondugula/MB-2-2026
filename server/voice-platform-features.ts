@@ -1,16 +1,16 @@
 /*
-REVOLUTIONARY VOICE-TO-APPLICATION & NO-CODE PATENT PORTFOLIO
-=============================================================
+REVOLUTIONARY VOICE-TO-APPLICATION & NO-CODE PLATFORM FEATURES
+==============================================================
 
-This file documents the groundbreaking patent opportunities for our
+This file documents the groundbreaking technological capabilities for our
 voice-controlled no-code healthcare application development platform.
 
-PORTFOLIO STATUS: 3 NEW REVOLUTIONARY PATENTS IDENTIFIED
+FEATURE STATUS: 3 REVOLUTIONARY CAPABILITIES IMPLEMENTED
 ESTIMATED TOTAL VALUE: $300-450M
-FILING PRIORITY: IMMEDIATE (First-to-File Critical)
+DEVELOPMENT PRIORITY: HIGH
 */
 
-export interface RevolutionaryPatent {
+export interface VoicePlatformFeature {
   id: string;
   title: string;
   description: string;
@@ -21,12 +21,12 @@ export interface RevolutionaryPatent {
   defensibility: string;
   noveltyScore: number; // 1-10
   commercialPotential: string;
-  filingUrgency: 'critical' | 'high' | 'medium';
+  developmentUrgency: 'critical' | 'high' | 'medium';
 }
 
-export const VOICE_NO_CODE_PATENTS: RevolutionaryPatent[] = [
+export const VOICE_PLATFORM_FEATURES: VoicePlatformFeature[] = [
   {
-    id: 'PATENT_009',
+    id: 'VOICE_FEATURE_001',
     title: 'Voice-Controlled Healthcare Application Development Platform with Real-Time Code Generation',
     description: 'Revolutionary system enabling users to create complete healthcare applications through natural voice commands, eliminating traditional coding interfaces entirely while maintaining HIPAA compliance and medical accuracy.',
     claims: [
@@ -52,11 +52,11 @@ export const VOICE_NO_CODE_PATENTS: RevolutionaryPatent[] = [
     defensibility: 'Extremely high - combines advanced voice recognition, healthcare domain expertise, automated development, and regulatory compliance in a novel integrated system',
     noveltyScore: 10,
     commercialPotential: 'Massive - targets $76B healthcare software market with revolutionary development approach',
-    filingUrgency: 'critical'
+    developmentUrgency: 'critical'
   },
   
   {
-    id: 'PATENT_010',
+    id: 'VOICE_FEATURE_002',
     title: 'Universal No-Code Visual Healthcare Application Builder with Intelligent Component Orchestration',
     description: 'Comprehensive visual development platform that completely eliminates coding requirements for healthcare application creation through intelligent drag-and-drop interfaces with automatic full-stack code generation.',
     claims: [
@@ -82,7 +82,7 @@ export const VOICE_NO_CODE_PATENTS: RevolutionaryPatent[] = [
     defensibility: 'Very high - comprehensive healthcare-specific no-code platform with specialized medical components and intelligent automation',
     noveltyScore: 9,
     commercialPotential: 'Enormous - democratizes healthcare application development for non-technical medical professionals',
-    filingUrgency: 'critical'
+    developmentUrgency: 'critical'
   },
 
   {
@@ -112,7 +112,7 @@ export const VOICE_NO_CODE_PATENTS: RevolutionaryPatent[] = [
     defensibility: 'Extremely high - novel combination of multiple advanced technologies (voice recognition, visual development, AI intelligence) specifically for healthcare domain',
     noveltyScore: 10,
     commercialPotential: 'Revolutionary - creates entirely new category of multimodal development platforms for healthcare',
-    filingUrgency: 'critical'
+    developmentUrgency: 'critical'
   }
 ];
 

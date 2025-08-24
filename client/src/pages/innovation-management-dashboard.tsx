@@ -8,14 +8,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { FileText, Shield, Zap, Globe, Database, Code, Brain, Workflow } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
-export default function PatentFilingDashboard() {
-  const [activePatent, setActivePatent] = useState('PATENT_012');
+export default function InnovationManagementDashboard() {
+  const [activeInnovation, setActiveInnovation] = useState('INNOVATION_012');
   
-  const { data: filingStatus, isLoading } = useQuery({
-    queryKey: ['/api/patents/filing-status'],
+  const { data: developmentStatus, isLoading } = useQuery({
+    queryKey: ['/api/innovations/development-status'],
   });
 
-  const patents = [
+  const innovations = [
     {
       id: 'PATENT_001',
       title: 'Voice-Controlled Frontend Development',
