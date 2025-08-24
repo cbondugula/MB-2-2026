@@ -22,21 +22,30 @@ const _vmt = {
   },
   
   // Healthcare ML Model Templates (PROPRIETARY)
-  _healthcareMLTemplates: {
-    'diabetes_prediction': {
-      features: ['age', 'bmi', 'glucose', 'blood_pressure', 'family_history'],
-      algorithm: 'random_forest',
-      target_accuracy: 0.94
-    },
-    'cardiac_risk': {
-      features: ['age', 'cholesterol', 'blood_pressure', 'smoking', 'exercise'],
-      algorithm: 'gradient_boosting',
-      target_accuracy: 0.92
-    },
-    'treatment_response': {
-      features: ['drug_type', 'dosage', 'patient_weight', 'comorbidities'],
-      algorithm: 'neural_network',
-      target_accuracy: 0.89
+  _healthcareMLTemplates: async () => {
+    // Fetch dynamic healthcare ML templates from API
+    try {
+      const response = await fetch('/api/ml/healthcare-templates');
+      return await response.json();
+    } catch (error) {
+      // Fallback templates if API fails
+      return {
+        'diabetes_prediction': {
+          features: ['age', 'bmi', 'glucose', 'blood_pressure', 'family_history'],
+          algorithm: 'random_forest',
+          target_accuracy: 0.94
+        },
+        'cardiac_risk': {
+          features: ['age', 'cholesterol', 'blood_pressure', 'smoking', 'exercise'],
+          algorithm: 'gradient_boosting',
+          target_accuracy: 0.92
+        },
+        'treatment_response': {
+          features: ['drug_type', 'dosage', 'patient_weight', 'comorbidities'],
+          algorithm: 'neural_network',
+          target_accuracy: 0.89
+        }
+      };
     }
   }
 };

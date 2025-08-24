@@ -52,7 +52,7 @@ export class HealthcareMLService {
   async validateMedicalPrediction(
     input: string,
     patientData: any,
-    models: string[] = ["clinical-bert", "bio-bert", "med-gemma", "gpt-4o"]
+    models?: string[]
   ): Promise<{
     consensus: string;
     confidence: number;
@@ -60,6 +60,18 @@ export class HealthcareMLService {
     riskAssessment: string;
   }> {
     try {
+      // Fetch dynamic model list if not provided
+      if (!models) {
+        try {
+          const response = await fetch('/api/ml/model-registry');
+          const registry = await response.json();
+          models = registry.clinicalModels.map((m: any) => m.name.toLowerCase().replace(/\s+/g, '-'));
+        } catch (error) {
+          // Fallback to basic models if API fails
+          models = ["clinical-bert", "bio-bert", "med-gemma", "gpt-4o"];
+        }
+      }
+      
       const modelResults = await Promise.all(
         models.map(async (model) => {
           switch (model) {

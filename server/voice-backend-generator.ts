@@ -7,29 +7,51 @@
 // ████████ OBFUSCATED CORE ALGORITHM ████████
 const _vbg = {
   // Voice-to-Infrastructure Translation Engine (TRADE SECRET)
-  _viteTrans: (voiceCmd: string) => {
-    // [OBFUSCATED] Core voice processing algorithm
+  _viteTrans: async (voiceCmd: string) => {
+    // Dynamic pattern fetching from API
     const _parsed = voiceCmd.toLowerCase().trim();
-    const _patterns = [
-      /create.*database.*with.*tables?\s+([\w\s,]+)/i,
-      /generate.*api.*for\s+([\w\s]+)/i,
-      /deploy.*to\s+([\w\s]+)/i,
-      /setup.*authentication.*with\s+([\w\s]+)/i
-    ];
+    let _patterns;
+    
+    // Fetch dynamic patterns from our new API endpoint
+    try {
+      const response = await fetch('/api/voice-backend/patterns');
+      const dynamicPatterns = await response.json();
+      _patterns = [
+        ...dynamicPatterns.databaseCreation,
+        ...dynamicPatterns.apiGeneration,
+        ...dynamicPatterns.deployment,
+        ...dynamicPatterns.authentication
+      ];
+    } catch (error) {
+      // Fallback to basic patterns if API fails
+      _patterns = [
+        /create.*database/i,
+        /generate.*api/i,
+        /deploy.*app/i,
+        /setup.*auth/i
+      ];
+    }
     
     // [OBFUSCATED] Pattern matching and infrastructure generation
     return _patterns.map(p => p.test(_parsed) ? p.exec(_parsed) : null).filter(Boolean);
   },
   
   // Healthcare Context Processing (PROPRIETARY)
-  _hcpProc: (medTerms: string[]) => {
-    // [OBFUSCATED] Medical terminology to database schema translation
-    const _medMappings = {
-      'patient': { table: 'patients', fields: ['id', 'name', 'dob', 'medical_record_number'] },
-      'doctor': { table: 'healthcare_providers', fields: ['id', 'name', 'license_number', 'specialty'] },
-      'appointment': { table: 'appointments', fields: ['id', 'patient_id', 'provider_id', 'datetime', 'status'] },
-      'medication': { table: 'medications', fields: ['id', 'name', 'dosage', 'instructions'] }
-    };
+  _hcpProc: async (medTerms: string[]) => {
+    // Fetch dynamic medical mappings from API
+    let _medMappings;
+    try {
+      const response = await fetch('/api/voice-backend/medical-mappings');
+      _medMappings = await response.json();
+    } catch (error) {
+      // Fallback to basic mappings if API fails
+      _medMappings = {
+        'patient': { table: 'patients', fields: ['id', 'name', 'dob', 'medical_record_number'] },
+        'doctor': { table: 'healthcare_providers', fields: ['id', 'name', 'license_number', 'specialty'] },
+        'appointment': { table: 'appointments', fields: ['id', 'patient_id', 'provider_id', 'datetime', 'status'] },
+        'medication': { table: 'medications', fields: ['id', 'name', 'dosage', 'instructions'] }
+      };
+    }
     return medTerms.map(term => _medMappings[term.toLowerCase()]).filter(Boolean);
   }
 };

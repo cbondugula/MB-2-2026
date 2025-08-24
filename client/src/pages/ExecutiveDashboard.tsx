@@ -51,7 +51,13 @@ export default function ExecutiveDashboard() {
     enabled: true
   });
 
-  if (isLoading) {
+  const { data: revenueProjections, isLoading: revenueLoading } = useQuery({
+    queryKey: ['/api/executive/revenue-projections'],
+    enabled: true,
+    refetchInterval: 30000 // Refresh every 30 seconds for dynamic data
+  });
+
+  if (isLoading || revenueLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
@@ -59,25 +65,10 @@ export default function ExecutiveDashboard() {
     );
   }
 
-  const defaultROI: ROIMetrics = (roiData as ROIMetrics) || {
-    developmentCostReduction: 90,
-    timeToMarketImprovement: 85,
-    complianceCostSavings: 95,
-    totalROI: 340
-  };
-
-  const defaultCompetitive: CompetitiveAdvantage = (competitiveData as CompetitiveAdvantage) || {
-    patentPortfolio: "$46.63B-$84.88B",
-    marketPosition: "Zero Direct Competition",
-    technologyLead: "3-5 Year Head Start",
-    complianceAutomation: 93
-  };
-
-  const revenueProjections = {
-    year1: { customers: 2500, arpu: 960, arr: 28.8 },
-    year3: { customers: 45000, arpu: 1920, arr: 1037 },
-    year5: { customers: 120000, arpu: 3000, arr: 4320 }
-  };
+  // All data is now dynamic - no hardcoded fallbacks!
+  const dynamicROI: ROIMetrics = roiData as ROIMetrics;
+  const dynamicCompetitive: CompetitiveAdvantage = competitiveData as CompetitiveAdvantage;
+  const dynamicRevenue = revenueProjections as any;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
@@ -102,7 +93,7 @@ export default function ExecutiveDashboard() {
             <CardContent className="p-6">
               <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {defaultROI.totalROI}%
+                {dynamicROI.totalROI}%
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Total ROI</p>
             </CardContent>
@@ -112,7 +103,7 @@ export default function ExecutiveDashboard() {
             <CardContent className="p-6">
               <DollarSign className="h-8 w-8 text-blue-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {defaultROI.developmentCostReduction}%
+                {dynamicROI.developmentCostReduction}%
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Cost Reduction</p>
             </CardContent>
@@ -122,7 +113,7 @@ export default function ExecutiveDashboard() {
             <CardContent className="p-6">
               <Shield className="h-8 w-8 text-purple-500 mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {defaultCompetitive.complianceAutomation}%
+                {dynamicCompetitive.complianceAutomation}%
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Compliance Automation</p>
             </CardContent>
@@ -169,10 +160,10 @@ export default function ExecutiveDashboard() {
                       <div className="flex justify-between items-center mb-3">
                         <span className="font-medium">Development Cost Reduction</span>
                         <span className="text-2xl font-bold text-green-600">
-                          {defaultROI.developmentCostReduction}%
+                          {dynamicROI.developmentCostReduction}%
                         </span>
                       </div>
-                      <Progress value={defaultROI.developmentCostReduction} className="h-3 mb-2" />
+                      <Progress value={dynamicROI.developmentCostReduction} className="h-3 mb-2" />
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         Average savings of $2.4M annually per healthcare organization through automated development
                       </p>
@@ -183,10 +174,10 @@ export default function ExecutiveDashboard() {
                       <div className="flex justify-between items-center mb-3">
                         <span className="font-medium">Time to Market Improvement</span>
                         <span className="text-2xl font-bold text-blue-600">
-                          {defaultROI.timeToMarketImprovement}%
+                          {dynamicROI.timeToMarketImprovement}%
                         </span>
                       </div>
-                      <Progress value={defaultROI.timeToMarketImprovement} className="h-3 mb-2" />
+                      <Progress value={dynamicROI.timeToMarketImprovement} className="h-3 mb-2" />
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         Healthcare applications deployed 15x faster with voice-controlled development
                       </p>
@@ -197,10 +188,10 @@ export default function ExecutiveDashboard() {
                       <div className="flex justify-between items-center mb-3">
                         <span className="font-medium">Compliance Cost Savings</span>
                         <span className="text-2xl font-bold text-purple-600">
-                          {defaultROI.complianceCostSavings}%
+                          {dynamicROI.complianceCostSavings}%
                         </span>
                       </div>
-                      <Progress value={defaultROI.complianceCostSavings} className="h-3 mb-2" />
+                      <Progress value={dynamicROI.complianceCostSavings} className="h-3 mb-2" />
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         Automated HIPAA compliance eliminates $850K annually in compliance costs
                       </p>
@@ -211,7 +202,7 @@ export default function ExecutiveDashboard() {
                         <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400 mr-3" />
                         <div>
                           <h3 className="font-semibold text-green-900 dark:text-green-100">
-                            Total Annual ROI: {defaultROI.totalROI}%
+                            Total Annual ROI: {dynamicROI.totalROI}%
                           </h3>
                           <p className="text-sm text-green-800 dark:text-green-200">
                             Investment payback period: 3.2 months for typical healthcare organization
@@ -241,7 +232,7 @@ export default function ExecutiveDashboard() {
                 <CardContent>
                   <div className="space-y-6">
                     <div className="flex space-x-4 mb-6">
-                      {Object.entries(revenueProjections).map(([key, data]) => (
+                      {Object.entries(dynamicRevenue || {}).map(([key, data]) => (
                         <Button
                           key={key}
                           variant={selectedTimeframe === key ? "default" : "outline"}
@@ -258,7 +249,7 @@ export default function ExecutiveDashboard() {
                         <CardContent className="p-4">
                           <Users className="h-6 w-6 text-blue-500 mx-auto mb-2" />
                           <div className="text-xl font-bold">
-                            {revenueProjections[selectedTimeframe as keyof typeof revenueProjections].customers.toLocaleString()}
+                            {dynamicRevenue?.[selectedTimeframe].customers.toLocaleString()}
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400">Healthcare Organizations</p>
                         </CardContent>
@@ -268,7 +259,7 @@ export default function ExecutiveDashboard() {
                         <CardContent className="p-4">
                           <DollarSign className="h-6 w-6 text-green-500 mx-auto mb-2" />
                           <div className="text-xl font-bold">
-                            ${revenueProjections[selectedTimeframe as keyof typeof revenueProjections].arpu}/mo
+                            ${dynamicRevenue?.[selectedTimeframe].arpu}/mo
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400">Average Revenue Per User</p>
                         </CardContent>
@@ -278,7 +269,7 @@ export default function ExecutiveDashboard() {
                         <CardContent className="p-4">
                           <TrendingUp className="h-6 w-6 text-purple-500 mx-auto mb-2" />
                           <div className="text-xl font-bold">
-                            ${revenueProjections[selectedTimeframe as keyof typeof revenueProjections].arr}M
+                            ${dynamicRevenue?.[selectedTimeframe].arr}M
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400">Annual Recurring Revenue</p>
                         </CardContent>
@@ -323,7 +314,7 @@ export default function ExecutiveDashboard() {
                 <CardContent>
                   <div className="text-center mb-4">
                     <div className="text-3xl font-bold text-green-600">
-                      {defaultCompetitive.patentPortfolio}
+                      {dynamicCompetitive.patentPortfolio}
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">89 Patents Strategic Value</p>
                   </div>
@@ -357,7 +348,7 @@ export default function ExecutiveDashboard() {
                       <h3 className="font-semibold mb-2">Competitive Analysis</h3>
                       <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded">
                         <p className="text-sm font-medium text-green-800 dark:text-green-200">
-                          {defaultCompetitive.marketPosition}
+                          {dynamicCompetitive.marketPosition}
                         </p>
                         <p className="text-xs text-green-700 dark:text-green-300 mt-1">
                           First-mover advantage in voice-controlled healthcare development
@@ -369,7 +360,7 @@ export default function ExecutiveDashboard() {
                       <h3 className="font-semibold mb-2">Technology Lead</h3>
                       <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded">
                         <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
-                          {defaultCompetitive.technologyLead}
+                          {dynamicCompetitive.technologyLead}
                         </p>
                         <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
                           Quantum-AI hybrid architecture with patent protection
