@@ -2705,6 +2705,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ML Metrics endpoint for demo (Public with dynamic data)
+  app.get('/api/ml/metrics', async (req, res) => {
+    try {
+      const now = Date.now();
+      const baseMetrics = 15847 + Math.floor((now % 300000) / 1000); // Varies over time
+      const accuracy = 0.87 + (now % 15000) / 100000; // Varies around 0.87-0.92
+      const federatedNodes = 6 + Math.floor((now % 120000) / 20000); // Varies 6-12
+      const complianceScore = 0.94 + (now % 8000) / 100000; // Varies around 0.94-0.98
+
+      const metrics = {
+        totalPredictions: baseMetrics,
+        averageAccuracy: accuracy,
+        federatedNodes,
+        complianceScore,
+        realTimeAlerts: 23 + Math.floor((now % 60000) / 5000),
+        activePipelines: 12,
+        dailyVolume: baseMetrics * 0.08,
+        timestamp: new Date().toISOString()
+      };
+
+      res.json(metrics);
+    } catch (error) {
+      console.error("ML metrics error:", error);
+      res.status(500).json({ message: "Failed to get ML metrics" });
+    }
+  });
+
+  // ML Models endpoint for demo (Public with dynamic data) 
+  app.get('/api/ml/models', async (req, res) => {
+    try {
+      const now = Date.now();
+      const models = {
+        availableModels: [
+          {
+            id: "clinical-bert-v2",
+            name: "ClinicalBERT v2.1",
+            domain: "Clinical NLP",
+            type: "Transformer",
+            accuracy: 0.94,
+            status: "deployed",
+            lastUpdated: new Date(now - 86400000).toISOString()
+          },
+          {
+            id: "med-gemma-7b", 
+            name: "Med-Gemma 7B",
+            domain: "Medical Q&A",
+            type: "Large Language Model",
+            accuracy: 0.91,
+            status: "deployed", 
+            lastUpdated: new Date(now - 172800000).toISOString()
+          },
+          {
+            id: "pathology-vision",
+            name: "PathologyVision AI",
+            domain: "Medical Imaging",
+            type: "Computer Vision",
+            accuracy: 0.89,
+            status: "training",
+            lastUpdated: new Date(now - 43200000).toISOString()
+          }
+        ],
+        totalModels: 12,
+        deployedModels: 8,
+        trainingModels: 4,
+        timestamp: new Date().toISOString()
+      };
+
+      res.json(models);
+    } catch (error) {
+      console.error("ML models error:", error);
+      res.status(500).json({ message: "Failed to get ML models" });
+    }
+  });
+
   // ML Model Training Status & Analytics (Public for demo with dynamic data)
   app.get('/api/ml/training-status', async (req, res) => {
     try {
