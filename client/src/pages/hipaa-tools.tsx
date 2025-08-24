@@ -235,7 +235,7 @@ export default function HIPAATools() {
                         <div className="space-y-2">
                           <div className="flex items-center justify-between">
                             <span className="text-sm text-slate-600">High Risk Issues</span>
-                            <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200">0</Badge>
+                            <Badge variant="outline" className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 border-red-200 dark:border-red-700">0</Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className="text-sm text-slate-600">Medium Risk Issues</span>
@@ -243,7 +243,7 @@ export default function HIPAATools() {
                           </div>
                           <div className="flex items-center justify-between">
                             <span className="text-sm text-slate-600">Low Risk Issues</span>
-                            <Badge variant="outline" className="bg-yellow-50 text-yellow-600 border-yellow-200">2</Badge>
+                            <Badge variant="outline" className="bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-200 border-yellow-200 dark:border-yellow-700">2</Badge>
                           </div>
                         </div>
                       </div>

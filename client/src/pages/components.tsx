@@ -146,7 +146,7 @@ export default function Components() {
                       </div>
                       <div className="flex items-center space-x-1">
                         {component.isVerified && (
-                          <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                          <Badge variant="outline" className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700">
                             Verified
                           </Badge>
                         )}

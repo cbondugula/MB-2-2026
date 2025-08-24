@@ -126,7 +126,7 @@ export default function TechnicalDiagrams() {
                   All TJC compliance patents include professional technical illustrations
                 </CardDescription>
               </div>
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              <Badge variant="outline" className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700">
                 USPTO Ready
               </Badge>
             </div>

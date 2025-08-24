@@ -27,12 +27,13 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
-  /* Healthcare-specific color variables */
+  /* Healthcare-specific color variables - Enhanced Contrast */
   --medical-blue-50: hsl(214, 100%, 97%);
   --medical-blue-100: hsl(214, 95%, 93%);
   --medical-blue-500: hsl(207, 90%, 54%);
   --medical-blue-600: hsl(208, 79%, 51%);
   --medical-blue-700: hsl(211, 74%, 45%);
+  --medical-blue-900: hsl(211, 74%, 25%);
   
   --trust-green-50: hsl(151, 81%, 96%);
   --trust-green-100: hsl(149, 80%, 90%);
@@ -40,10 +41,17 @@
   --trust-green-500: hsl(160, 84%, 39%);
   --trust-green-600: hsl(158, 64%, 52%);
   --trust-green-700: hsl(158, 64%, 42%);
+  --trust-green-900: hsl(158, 64%, 22%);
   
   --healthcare-teal-100: hsl(185, 96%, 90%);
   --healthcare-teal-500: hsl(188, 78%, 41%);
   --healthcare-teal-600: hsl(186, 77%, 47%);
+  --healthcare-teal-900: hsl(186, 77%, 27%);
+  
+  /* High Contrast Warning Colors */
+  --warning-yellow-50: hsl(54, 91%, 95%);
+  --warning-yellow-700: hsl(45, 93%, 47%);
+  --warning-yellow-900: hsl(25, 95%, 27%);
 }
 
 .dark {
@@ -68,23 +76,31 @@
   --ring: hsl(240, 4.9%, 83.9%);
   --radius: 0.5rem;
   
-  /* Dark mode healthcare colors */
+  /* Dark mode healthcare colors - Enhanced Contrast */
   --medical-blue-50: hsl(214, 32%, 91%);
   --medical-blue-100: hsl(213, 27%, 84%);
-  --medical-blue-500: hsl(207, 90%, 54%);
-  --medical-blue-600: hsl(208, 79%, 51%);
-  --medical-blue-700: hsl(211, 74%, 45%);
+  --medical-blue-500: hsl(207, 90%, 64%);
+  --medical-blue-600: hsl(208, 79%, 61%);
+  --medical-blue-700: hsl(211, 74%, 65%);
+  --medical-blue-900: hsl(211, 74%, 75%);
   
-  --trust-green-50: hsl(151, 81%, 6%);
-  --trust-green-100: hsl(149, 80%, 10%);
-  --trust-green-200: hsl(152, 76%, 20%);
-  --trust-green-500: hsl(160, 84%, 39%);
-  --trust-green-600: hsl(158, 64%, 52%);
-  --trust-green-700: hsl(158, 64%, 42%);
+  --trust-green-50: hsl(151, 81%, 16%);
+  --trust-green-100: hsl(149, 80%, 20%);
+  --trust-green-200: hsl(152, 76%, 30%);
+  --trust-green-500: hsl(160, 84%, 49%);
+  --trust-green-600: hsl(158, 64%, 62%);
+  --trust-green-700: hsl(158, 64%, 72%);
+  --trust-green-900: hsl(158, 64%, 82%);
   
-  --healthcare-teal-100: hsl(185, 96%, 10%);
-  --healthcare-teal-500: hsl(188, 78%, 41%);
-  --healthcare-teal-600: hsl(186, 77%, 47%);
+  --healthcare-teal-100: hsl(185, 96%, 20%);
+  --healthcare-teal-500: hsl(188, 78%, 51%);
+  --healthcare-teal-600: hsl(186, 77%, 57%);
+  --healthcare-teal-900: hsl(186, 77%, 77%);
+  
+  /* Dark mode warning colors */
+  --warning-yellow-50: hsl(54, 91%, 15%);
+  --warning-yellow-700: hsl(45, 93%, 67%);
+  --warning-yellow-900: hsl(25, 95%, 77%);
 }
 
 @layer base {
@@ -136,6 +152,7 @@
 }
 
 @layer utilities {
+  /* High contrast background utilities */
   .medical-blue-50 {
     background-color: var(--medical-blue-50);
   }
@@ -150,6 +167,9 @@
   }
   .medical-blue-700 {
     background-color: var(--medical-blue-700);
+  }
+  .medical-blue-900 {
+    background-color: var(--medical-blue-900);
   }
   
   .trust-green-50 {
@@ -170,6 +190,9 @@
   .trust-green-700 {
     background-color: var(--trust-green-700);
   }
+  .trust-green-900 {
+    background-color: var(--trust-green-900);
+  }
   
   .healthcare-teal-100 {
     background-color: var(--healthcare-teal-100);
@@ -179,6 +202,20 @@
   }
   .healthcare-teal-600 {
     background-color: var(--healthcare-teal-600);
+  }
+  .healthcare-teal-900 {
+    background-color: var(--healthcare-teal-900);
+  }
+  
+  /* Warning color utilities */
+  .warning-yellow-50 {
+    background-color: var(--warning-yellow-50);
+  }
+  .warning-yellow-700 {
+    background-color: var(--warning-yellow-700);
+  }
+  .warning-yellow-900 {
+    background-color: var(--warning-yellow-900);
   }
   
   .text-medical-blue-50 {
@@ -195,6 +232,9 @@
   }
   .text-medical-blue-700 {
     color: var(--medical-blue-700);
+  }
+  .text-medical-blue-900 {
+    color: var(--medical-blue-900);
   }
   
   .text-trust-green-50 {
@@ -215,6 +255,9 @@
   .text-trust-green-700 {
     color: var(--trust-green-700);
   }
+  .text-trust-green-900 {
+    color: var(--trust-green-900);
+  }
   
   .text-healthcare-teal-100 {
     color: var(--healthcare-teal-100);
@@ -224,6 +267,17 @@
   }
   .text-healthcare-teal-600 {
     color: var(--healthcare-teal-600);
+  }
+  .text-healthcare-teal-900 {
+    color: var(--healthcare-teal-900);
+  }
+  
+  /* Warning text utilities */
+  .text-warning-yellow-700 {
+    color: var(--warning-yellow-700);
+  }
+  .text-warning-yellow-900 {
+    color: var(--warning-yellow-900);
   }
   
   .border-medical-blue-200 {

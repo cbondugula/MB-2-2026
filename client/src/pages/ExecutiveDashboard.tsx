@@ -206,14 +206,14 @@ export default function ExecutiveDashboard() {
                       </p>
                     </div>
 
-                    <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                    <div className="bg-green-100 dark:bg-green-900 border border-green-200 dark:border-green-700 p-4 rounded-lg">
                       <div className="flex items-center">
-                        <TrendingUp className="h-6 w-6 text-green-600 mr-3" />
+                        <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400 mr-3" />
                         <div>
-                          <h3 className="font-semibold text-green-800 dark:text-green-200">
+                          <h3 className="font-semibold text-green-900 dark:text-green-100">
                             Total Annual ROI: {defaultROI.totalROI}%
                           </h3>
-                          <p className="text-sm text-green-700 dark:text-green-300">
+                          <p className="text-sm text-green-800 dark:text-green-200">
                             Investment payback period: 3.2 months for typical healthcare organization
                           </p>
                         </div>
@@ -285,8 +285,8 @@ export default function ExecutiveDashboard() {
                       </Card>
                     </div>
 
-                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                      <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                    <div className="bg-blue-100 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 p-4 rounded-lg">
+                      <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
                         Strategic Acquisition Potential by Year 3
                       </h3>
                       <div className="space-y-2 text-sm">

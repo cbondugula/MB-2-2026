@@ -291,8 +291,8 @@ export default function AIAgents() {
                           key={specialty}
                           className={`p-2 border rounded cursor-pointer text-sm transition-colors ${
                             selectedSpecialties.includes(specialty)
-                              ? 'bg-blue-50 border-blue-200 text-blue-700'
-                              : 'hover:bg-gray-50'
+                              ? 'bg-blue-100 dark:bg-blue-900 border-blue-200 dark:border-blue-700 text-blue-900 dark:text-blue-100'
+                              : 'hover:bg-gray-100 dark:hover:bg-gray-800'
                           }`}
                           onClick={() => toggleSpecialty(specialty)}
                         >
@@ -310,8 +310,8 @@ export default function AIAgents() {
                           key={language.code}
                           className={`p-2 border rounded cursor-pointer text-sm transition-colors ${
                             selectedLanguages.includes(language.code)
-                              ? 'bg-green-50 border-green-200 text-green-700'
-                              : 'hover:bg-gray-50'
+                              ? 'bg-green-100 dark:bg-green-900 border-green-200 dark:border-green-700 text-green-900 dark:text-green-100'
+                              : 'hover:bg-gray-100 dark:hover:bg-gray-800'
                           }`}
                           onClick={() => toggleLanguage(language.code)}
                         >
@@ -383,7 +383,7 @@ export default function AIAgents() {
                     </div>
                   )}
 
-                  <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg">
+                  <div className="p-4 bg-blue-100 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg">
                     <h4 className="font-medium mb-2">Deployment Benefits</h4>
                     <ul className="text-sm space-y-1">
                       <li className="flex items-center space-x-2">
@@ -527,11 +527,11 @@ export default function AIAgents() {
                     ))}
                   </div>
 
-                  <div className="mt-6 p-4 bg-green-50 dark:bg-green-950 rounded-lg">
-                    <h4 className="font-medium text-green-800 dark:text-green-200 mb-2">
+                  <div className="mt-6 p-4 bg-green-100 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg">
+                    <h4 className="font-medium text-green-900 dark:text-green-100 mb-2">
                       Ollama Connected Successfully
                     </h4>
-                    <p className="text-sm text-green-700 dark:text-green-300">
+                    <p className="text-sm text-green-800 dark:text-green-200">
                       Local AI models are available for maximum privacy and HIPAA compliance. 
                       All processing happens on your local infrastructure.
                     </p>
@@ -544,7 +544,7 @@ export default function AIAgents() {
                   <p className="text-muted-foreground mb-4">
                     Install and start Ollama to use local AI models for enhanced privacy
                   </p>
-                  <div className="bg-yellow-50 dark:bg-yellow-950 p-4 rounded-lg text-left">
+                  <div className="bg-warning-yellow-50 dark:bg-warning-yellow-50 border border-yellow-200 dark:border-yellow-700 p-4 rounded-lg text-left">
                     <h4 className="font-medium mb-2">Setup Instructions:</h4>
                     <ol className="text-sm space-y-1 list-decimal list-inside">
                       <li>Install Ollama from https://ollama.ai</li>

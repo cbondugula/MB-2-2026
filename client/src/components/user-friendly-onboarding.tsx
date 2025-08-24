@@ -250,7 +250,7 @@ export default function UserFriendlyOnboarding({ onComplete, onSkip }: Onboardin
                   <Card 
                     key={industry.id}
                     className={`cursor-pointer transition-all hover:shadow-md ${
-                      userProfile.industry === industry.id ? 'ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-950' : ''
+                      userProfile.industry === industry.id ? 'ring-2 ring-purple-500 bg-purple-100 dark:bg-purple-900 border border-purple-200 dark:border-purple-700' : ''
                     }`}
                     onClick={() => updateProfile({ industry: industry.id })}
                   >
