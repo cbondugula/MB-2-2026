@@ -365,7 +365,7 @@ export default function VisualBuilder() {
                       <Eye className="w-4 h-4 mr-2" />
                       Browse Templates
                     </Button>
-                    <Button variant="outline" className="border-gray-600 text-gray-300">
+                    <Button variant="outline" className="bg-purple-50 dark:bg-purple-900 border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-800">
                       <Wand2 className="w-4 h-4 mr-2" />
                       AI Generate
                     </Button>
