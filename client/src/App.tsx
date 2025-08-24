@@ -38,9 +38,7 @@ import CompetitiveIntelligence from "@/pages/competitive-intelligence";
 import CompetitiveAdvantage from "@/pages/competitive-advantage";
 import SuperCSAgent from "@/pages/super-cs-agent";
 import TJCCompliance from "@/pages/tjc-compliance";
-import QuantumAI from "@/pages/quantum-ai";
 import HealthcareTesting from "@/pages/healthcare-testing";
-import DualQuantumClassical from "@/pages/dual-quantum-classical";
 import HealthcareAppBuilder from "@/pages/healthcare-app-builder";
 import HealthcareDemo from "@/pages/healthcare-demo";
 import CSAgentDashboard from "@/pages/CSAgentDashboard";
@@ -93,9 +91,7 @@ function Router() {
           <Route path="/innovation-links" component={InnovationLinks} />
           <Route path="/technical-diagrams" component={TechnicalDiagrams} />
           <Route path="/tjc-compliance" component={TJCCompliance} />
-          <Route path="/quantum-ai" component={QuantumAI} />
           <Route path="/healthcare-testing" component={HealthcareTesting} />
-          <Route path="/dual-quantum-classical" component={DualQuantumClassical} />
           <Route path="/healthcare-app-builder" component={HealthcareDemo} />
           <Route path="/documentation" component={Documentation} />
           <Route path="/owner" component={OwnerDashboard} />
