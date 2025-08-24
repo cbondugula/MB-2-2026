@@ -15,25 +15,35 @@ export default function Landing() {
   const [userMode, setUserMode] = useState<'healthcare' | 'developer'>('healthcare');
 
   // Fetch dynamic ML data when demo is shown
-  const { data: mlMetrics, isLoading: mlLoading } = useQuery({
+  const { data: mlMetrics, isLoading: mlLoading, error: mlError } = useQuery({
     queryKey: ['/api/ml/metrics'],
     enabled: showDemo,
     retry: false,
     refetchInterval: showDemo ? 5000 : false, // Refresh every 5 seconds when demo is active
   });
 
-  const { data: trainingJobs, isLoading: trainingLoading } = useQuery({
+  const { data: trainingJobs, isLoading: trainingLoading, error: trainingError } = useQuery({
     queryKey: ['/api/ml/training-status'],
     enabled: showDemo,
     retry: false,
     refetchInterval: showDemo ? 3000 : false, // Refresh every 3 seconds
   });
 
-  const { data: deployedModels, isLoading: modelsLoading } = useQuery({
+  const { data: deployedModels, isLoading: modelsLoading, error: modelsError } = useQuery({
     queryKey: ['/api/ml/models'],
     enabled: showDemo,
     retry: false,
   });
+
+  // Debug logging
+  useEffect(() => {
+    if (showDemo) {
+      console.log('Demo enabled - checking data:');
+      console.log('ML Metrics:', mlMetrics, 'Loading:', mlLoading, 'Error:', mlError);
+      console.log('Training Jobs:', trainingJobs, 'Loading:', trainingLoading, 'Error:', trainingError);
+      console.log('Models:', deployedModels, 'Loading:', modelsLoading, 'Error:', modelsError);
+    }
+  }, [showDemo, mlMetrics, trainingJobs, deployedModels, mlLoading, trainingLoading, modelsLoading]);
 
   const healthcarePrompts = [
     "I need an app to schedule patient appointments and send reminders",
@@ -286,12 +296,17 @@ export default function Landing() {
 
       {/* Demo Section */}
       {showDemo && (
-        <div className="bg-gray-800 border-t border-gray-700 py-12">
+        <div className="bg-gray-800 border-t border-gray-700 py-12" data-testid="demo-section">
           <div className="container mx-auto px-6">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold text-white mb-4">Platform Demo</h2>
                 <p className="text-gray-400">Experience our comprehensive healthcare AI development platform</p>
+                {(mlError || trainingError || modelsError) && (
+                  <div className="mt-4 p-3 bg-red-900 border border-red-700 rounded text-red-200 text-sm">
+                    API Error - Demo data may not load properly. Check console for details.
+                  </div>
+                )}
               </div>
 
               {/* ML Dashboard Preview */}
