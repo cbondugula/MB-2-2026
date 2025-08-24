@@ -319,7 +319,7 @@ export default function Landing() {
                               ) : (
                                 <>
                                   <p className="text-xl font-bold text-white">
-                                    {mlMetrics?.totalPredictions?.toLocaleString() || '15,847'}
+                                    {(mlMetrics as any)?.totalPredictions?.toLocaleString() || '15,847'}
                                   </p>
                                   <p className="text-xs text-gray-400">ML Predictions</p>
                                 </>
@@ -342,7 +342,7 @@ export default function Landing() {
                               ) : (
                                 <>
                                   <p className="text-xl font-bold text-white">
-                                    {mlMetrics?.averageAccuracy ? `${Math.round(mlMetrics.averageAccuracy * 100)}%` : '89%'}
+                                    {(mlMetrics as any)?.averageAccuracy ? `${Math.round((mlMetrics as any).averageAccuracy * 100)}%` : '89%'}
                                   </p>
                                   <p className="text-xs text-gray-400">Model Accuracy</p>
                                 </>
@@ -365,7 +365,7 @@ export default function Landing() {
                               ) : (
                                 <>
                                   <p className="text-xl font-bold text-white">
-                                    {mlMetrics?.federatedNodes || '8'}
+                                    {(mlMetrics as any)?.federatedNodes || '8'}
                                   </p>
                                   <p className="text-xs text-gray-400">Federated Hospitals</p>
                                 </>
@@ -388,7 +388,7 @@ export default function Landing() {
                               ) : (
                                 <>
                                   <p className="text-xl font-bold text-white">
-                                    {mlMetrics?.complianceScore ? `${Math.round(mlMetrics.complianceScore * 100)}%` : '96%'}
+                                    {(mlMetrics as any)?.complianceScore ? `${Math.round((mlMetrics as any).complianceScore * 100)}%` : '96%'}
                                   </p>
                                   <p className="text-xs text-gray-400">HIPAA Compliance</p>
                                 </>
@@ -416,7 +416,7 @@ export default function Landing() {
                             </div>
                           ) : (
                             <div className="space-y-3">
-                              {trainingJobs?.activeJobs?.slice(0, 2).map((job: any, index: number) => (
+                              {((trainingJobs as any)?.activeJobs || []).slice(0, 2).map((job: any, index: number) => (
                                 <div key={index} className="space-y-2">
                                   <div className="flex justify-between items-center text-sm">
                                     <span className="text-gray-300">{job.modelName || `Training Job ${index + 1}`}</span>
@@ -478,7 +478,7 @@ export default function Landing() {
                             </div>
                           ) : (
                             <div className="space-y-2">
-                              {deployedModels?.availableModels?.slice(0, 3).map((model: any, index: number) => (
+                              {((deployedModels as any)?.availableModels || []).slice(0, 3).map((model: any, index: number) => (
                                 <div key={index} className="flex justify-between items-center p-2 bg-gray-900 rounded text-sm">
                                   <div>
                                     <div className="text-white font-medium">{model.name}</div>
