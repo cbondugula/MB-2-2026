@@ -84,7 +84,7 @@ export default function Landing() {
               <Button 
                 onClick={() => setShowDemo(!showDemo)}
                 variant="outline"
-                className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                className="border-gray-400 text-white hover:bg-gray-700 hover:border-gray-300"
                 size="sm"
               >
                 {showDemo ? 'Hide Demo' : 'View Demo'}
@@ -92,7 +92,7 @@ export default function Landing() {
               <Button 
                 asChild
                 variant="outline"
-                className="border-green-600 text-green-300 hover:bg-green-700"
+                className="border-green-400 text-white hover:bg-green-700 hover:border-green-300"
                 size="sm"
               >
                 <Link href="/pricing">Pricing</Link>
@@ -100,7 +100,7 @@ export default function Landing() {
               <Button 
                 asChild
                 variant="outline"
-                className="border-blue-600 text-blue-300 hover:bg-blue-700"
+                className="border-blue-400 text-white hover:bg-blue-700 hover:border-blue-300"
                 size="sm"
               >
                 <Link href="/legal-documents">Legal Docs</Link>
