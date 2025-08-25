@@ -90,7 +90,7 @@ export default function Landing() {
               <div>
                 <span className="text-xl font-semibold text-white">MedBuilder</span>
                 <Badge variant="secondary" className="ml-2 text-xs bg-green-900 text-green-300">
-                  Patent Pending
+                  Enterprise AI Technology
                 </Badge>
               </div>
             </div>

@@ -179,7 +179,7 @@ export default function InnovationVerificationDashboard() {
                             </div>
                             <div className="text-center">
                               <div className="text-2xl font-bold text-green-400">3</div>
-                              <div className="text-sm text-gray-400">Patent Pending</div>
+                              <div className="text-sm text-gray-400">Enterprise AI Technology</div>
                             </div>
                           </div>
                           

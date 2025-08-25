@@ -231,7 +231,7 @@ export default function CustomPricing() {
             </div>
             <Badge variant="secondary" className="bg-green-900 text-green-300">
               <Sparkles className="w-3 h-3 mr-1" />
-              Patent Pending
+              Enterprise AI Technology
             </Badge>
           </div>
         </div>
