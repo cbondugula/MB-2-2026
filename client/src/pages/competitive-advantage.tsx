@@ -113,7 +113,7 @@ export default function CompetitiveAdvantage() {
             <div className="flex items-center justify-between">
               <div>
                 <strong>COMPETITIVE ALERT:</strong> Big Tech companies filing 47% more healthcare AI patents this quarter.
-                Our quantum-enhanced portfolio provides 18.4x-41.9x performance advantage over classical approaches.
+                Our advanced AI portfolio provides 18.4x-41.9x performance advantage over traditional approaches.
               </div>
               <Button 
                 size="sm" 
@@ -178,7 +178,7 @@ export default function CompetitiveAdvantage() {
                   </div>
                   <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded border-2 border-green-500">
                     <div className="font-bold text-green-700">OUR ADVANTAGE</div>
-                    <div className="text-sm">Quantum + Voice + Healthcare Specialization = UNIQUE</div>
+                    <div className="text-sm">Advanced AI + Voice + Healthcare Specialization = UNIQUE</div>
                   </div>
                 </div>
               )}
@@ -212,10 +212,10 @@ export default function CompetitiveAdvantage() {
               ) : (
                 <div className="space-y-4">
                   {((innovationPipeline as any)?.technologies || [
-                    { name: 'Quantum Voice-AI Hybrid', progress: 85, advantage: 'First-to-market' },
+                    { name: 'Advanced Voice-AI Hybrid', progress: 85, advantage: 'First-to-market' },
                     { name: 'Medical Brain-Computer Interface', progress: 72, advantage: '10x faster diagnosis' },
                     { name: 'Autonomous Healthcare Orchestration', progress: 91, advantage: 'Complete automation' },
-                    { name: 'Voice-Controlled Quantum Computing', progress: 67, advantage: 'Revolutionary UX' }
+                    { name: 'Voice-Controlled Advanced Computing', progress: 67, advantage: 'Revolutionary UX' }
                   ]).map((tech: any, index: number) => (
                     <div key={index} className="p-3 border rounded-lg">
                       <div className="flex justify-between items-center mb-2">
@@ -289,8 +289,8 @@ export default function CompetitiveAdvantage() {
                       <div className="text-sm text-gray-600">vs Big Tech: 8</div>
                     </div>
                     <div className="p-3 border rounded">
-                      <div className="font-semibold text-purple-600">Quantum Healthcare</div>
-                      <div className="text-2xl font-bold">{(patentRace as any)?.quantumPatents || '17'}</div>
+                      <div className="font-semibold text-purple-600">Advanced Healthcare</div>
+                      <div className="text-2xl font-bold">{(patentRace as any)?.advancedPatents || '17'}</div>
                       <div className="text-sm text-gray-600">vs Big Tech: 3</div>
                     </div>
                     <div className="p-3 border rounded">
@@ -343,7 +343,7 @@ export default function CompetitiveAdvantage() {
                       urgency: 'CRITICAL'
                     },
                     { 
-                      market: 'Quantum Medical Education Platforms', 
+                      market: 'Advanced Medical Education Platforms', 
                       window: '12-18 months', 
                       value: '$890M TAM',
                       urgency: 'HIGH'
@@ -414,10 +414,10 @@ export default function CompetitiveAdvantage() {
                   24-Hour Patent Sprint
                 </Button>
                 <Button 
-                  onClick={() => handleAccelerateInnovation("Quantum Development Boost")}
+                  onClick={() => handleAccelerateInnovation("Advanced Development Boost")}
                   className="w-full bg-purple-600 hover:bg-purple-700"
                 >
-                  Quantum Dev Boost
+                  Advanced Dev Boost
                 </Button>
               </div>
               

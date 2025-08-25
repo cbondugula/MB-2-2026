@@ -49,10 +49,10 @@ export default function Pricing() {
     },
     {
       icon: <Globe className="w-6 h-6" />,
-      name: 'Quantum-Enhanced Platform',
+      name: 'Advanced AI Platform',
       price: 'Included',
       value: '$8,000/mo',
-      description: 'Next-generation quantum-classical hybrid processing architecture'
+      description: 'Next-generation advanced AI hybrid processing architecture'
     },
     {
       icon: <Star className="w-6 h-6" />,

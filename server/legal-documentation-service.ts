@@ -23,7 +23,7 @@ export interface LegalAnalysis {
 export class LegalDocumentationAgent {
   
   async consultOnLegalStrategy(request: LegalConsultationRequest): Promise<LegalAnalysis> {
-    const systemPrompt = `You are a senior patent attorney with 20+ years of experience in healthcare technology patents, quantum computing IP, and strategic patent portfolio development. You specialize in:
+    const systemPrompt = `You are a senior patent attorney with 20+ years of experience in healthcare technology patents, advanced computing IP, and strategic patent portfolio development. You specialize in:
 
 - USPTO patent prosecution and filing strategies
 - Prior art analysis and patentability assessment
@@ -54,7 +54,7 @@ Respond as a professional patent attorney would in a formal legal consultation.`
           content: `PATENT STRATEGY CONSULTATION REQUEST
 
 **CLIENT**: Dr. Chandra Sekhar Bondugula
-**TECHNOLOGY**: Quantum-Enhanced Medical Education Compliance Automation
+**TECHNOLOGY**: Advanced Medical Education Compliance Automation
 
 **SITUATION ANALYSIS**:
 ${request.situation}
@@ -92,10 +92,10 @@ Provide detailed legal reasoning for all recommendations in accordance with curr
     return {
       recommendedStrategy: analysis.recommendedStrategy || "Independent fresh applications recommended",
       legalRisks: analysis.legalRisks || ["Minimal risk with proper differentiation"],
-      claimStrategy: analysis.claimStrategy || "Broad quantum method and system claims",
+      claimStrategy: analysis.claimStrategy || "Broad advanced method and system claims",
       implementationTimeline: analysis.filingTimeline || "File within 7-14 days for optimal position",
       internationalConsiderations: analysis.internationalConsiderations || "PCT filing recommended for global protection",
-      portfolioValue: analysis.portfolioValue || "$1.0B-$1.5B estimated quantum portfolio value",
+      portfolioValue: analysis.portfolioValue || "$1.0B-$1.5B estimated advanced portfolio value",
       priorityRecommendations: analysis.priorityRecommendations || ["File independent applications immediately"]
     };
   }

@@ -137,13 +137,13 @@ class PatentValuationService {
         riskFactors: ["Regulatory changes", "Hospital budget cycles"]
       },
 
-      // Quantum-AI Hybrid Processing Patent
+      // Advanced AI Hybrid Processing Patent
       {
-        patentName: "Quantum-AI Hybrid Healthcare Processing System",
-        technologyArea: "Quantum Computing + Healthcare AI",
-        marketSize: "$1.3B quantum computing market (emerging)",
-        competitiveAdvantage: 9, // Very few quantum healthcare applications
-        technicalComplexity: 10, // Bleeding edge quantum + AI
+        patentName: "Advanced AI Hybrid Healthcare Processing System",
+        technologyArea: "Advanced Computing + Healthcare AI",
+        marketSize: "$1.3B advanced computing market (emerging)",
+        competitiveAdvantage: 9, // Very few advanced healthcare applications
+        technicalComplexity: 10, // Bleeding edge advanced + AI
         patentStrength: 7.5, // Emerging field, uncertain patent landscape
         timeToMarket: "2-3 years",
         baseValue: 300,
@@ -158,7 +158,7 @@ class PatentValuationService {
         licensingRevenue: 15,
         commercialReadiness: "Low - research stage technology",
         strategicImportance: 6,
-        riskFactors: ["Quantum hardware limitations", "Market maturity timeline", "Technical feasibility"]
+        riskFactors: ["Advanced hardware limitations", "Market maturity timeline", "Technical feasibility"]
       }
     ];
 

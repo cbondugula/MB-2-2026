@@ -2924,7 +2924,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         categories: [
           {
-            name: 'Quantum Healthcare AI',
+            name: 'Advanced Healthcare AI',
             patents: 17,
             status: 'Filed',
             value: '$1.9B - $3.2B'
@@ -2950,7 +2950,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ],
         filingProgress: {
           nextFilingDate: '2025-08-15',
-          priorityQueue: ['Patent 061Q', 'Patent 062Q', 'Patent 063Q'],
+          priorityQueue: ['Patent 061A', 'Patent 062A', 'Patent 063A'],
           estimatedCompletion: '2025-12-31'
         }
       };
@@ -3536,7 +3536,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Dual Quantum-Classical Patent Implementation Routes
+  // Dual Advanced-Classical Patent Implementation Routes
   app.post('/api/dual-processing/international-accreditation', isAuthenticated, async (req, res) => {
     try {
       const { countries, requirements } = req.body;

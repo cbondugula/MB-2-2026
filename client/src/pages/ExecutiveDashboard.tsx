@@ -363,7 +363,7 @@ export default function ExecutiveDashboard() {
                           {dynamicCompetitive.technologyLead}
                         </p>
                         <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                          Quantum-AI hybrid architecture with patent protection
+                          Advanced AI hybrid architecture with patent protection
                         </p>
                       </div>
                     </div>

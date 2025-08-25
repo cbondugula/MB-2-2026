@@ -338,13 +338,13 @@ export default function Dashboard() {
                   Revolutionary Technologies
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
-                  <Link href="/quantum-ai">
+                  <Link href="/advanced-ai">
                     <Button variant="outline" size="sm" className="w-full border-blue-600 text-blue-300 hover:bg-blue-900 bg-blue-900/20">
                       <Atom className="w-4 h-4 mr-2" />
-                      Quantum-AI
+                      Advanced-AI
                     </Button>
                   </Link>
-                  <Link href="/dual-quantum-classical">
+                  <Link href="/dual-advanced-classical">
                     <Button variant="outline" size="sm" className="w-full border-cyan-600 text-cyan-300 hover:bg-cyan-900 bg-cyan-900/20">
                       <Zap className="w-4 h-4 mr-2" />
                       Dual Patents
