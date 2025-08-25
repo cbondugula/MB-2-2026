@@ -481,7 +481,7 @@ export default function SuperAgent() {
                 <Workflow className="w-12 h-12 text-purple-400 mx-auto mb-2" />
                 <h3 className="text-white font-semibold">Workflow Optimization</h3>
                 <p className="text-gray-400 text-sm">Predictive resource allocation</p>
-                <p className="text-purple-400 text-xs mt-1">Patent Pending Technology</p>
+                <p className="text-purple-400 text-xs mt-1">Enterprise AI Technology</p>
               </div>
             </div>
             

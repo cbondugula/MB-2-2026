@@ -89,7 +89,7 @@ export default function InnovationVerificationDashboard() {
                 $800M-$1.12B Portfolio Value
               </Badge>
               <Badge variant="outline" className="text-blue-400 border-blue-400">
-                Patent Pending Technology
+                Enterprise AI Technology
               </Badge>
             </div>
           </div>
