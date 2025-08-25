@@ -117,7 +117,7 @@ export default function HealthcareDemo() {
                 </div>
                 <div className="flex items-center space-x-1">
                   <Mic className="w-4 h-4 text-blue-500" />
-                  <span>Voice-Controlled</span>
+                  <span>AI-Powered</span>
                 </div>
               </div>
             </div>
@@ -246,7 +246,7 @@ export default function HealthcareDemo() {
                       </div>
                       <div className="flex items-center space-x-2 text-sm">
                         <Mic className="w-4 h-4 text-orange-500" />
-                        <span>Voice-Controlled Interface</span>
+                        <span>AI-Powered Interface</span>
                       </div>
                     </div>
                   </CardContent>

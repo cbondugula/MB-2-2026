@@ -179,7 +179,7 @@ export default function ExecutiveDashboard() {
                       </div>
                       <Progress value={dynamicROI.timeToMarketImprovement} className="h-3 mb-2" />
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Healthcare applications deployed 15x faster with voice-controlled development
+                        Healthcare applications deployed 15x faster with AI-powered development
                       </p>
                     </div>
 
@@ -351,7 +351,7 @@ export default function ExecutiveDashboard() {
                           {dynamicCompetitive.marketPosition}
                         </p>
                         <p className="text-xs text-green-700 dark:text-green-300 mt-1">
-                          First-mover advantage in voice-controlled healthcare development
+                          First-mover advantage in AI-powered healthcare development
                         </p>
                       </div>
                     </div>

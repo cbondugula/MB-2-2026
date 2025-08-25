@@ -21,7 +21,7 @@ export default function Pricing() {
   const automatedFeatures = [
     {
       icon: <Zap className="w-6 h-6" />,
-      name: 'Voice-Controlled Development',
+      name: 'AI-Powered Development',
       price: 'Included',
       value: '$2,500/mo',
       description: 'Revolutionary voice commands for complete application creation'

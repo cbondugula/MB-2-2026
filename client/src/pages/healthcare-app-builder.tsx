@@ -245,7 +245,7 @@ export default function HealthcareAppBuilder() {
                 </div>
                 <div className="flex items-center space-x-1">
                   <Mic className="w-4 h-4 text-blue-500" />
-                  <span>Voice-Controlled</span>
+                  <span>AI-Powered</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Globe className="w-4 h-4 text-teal-500" />

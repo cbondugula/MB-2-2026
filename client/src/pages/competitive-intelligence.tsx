@@ -327,7 +327,7 @@ export default function CompetitiveIntelligence() {
                     Growth Rate: {(marketIntelligence as any)?.growthRate || '+87% YoY in Healthcare AI'}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">
-                    Key Trend: {(marketIntelligence as any)?.keyTrend || 'Voice-controlled development platforms gaining traction'}
+                    Key Trend: {(marketIntelligence as any)?.keyTrend || 'AI-powered development platforms gaining traction'}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">
                     Opportunity Score: {(marketIntelligence as any)?.opportunityScore || '9.2/10 for healthcare specialization'}

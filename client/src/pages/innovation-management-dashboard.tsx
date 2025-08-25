@@ -18,7 +18,7 @@ export default function InnovationManagementDashboard() {
   const innovations = [
     {
       id: 'PATENT_001',
-      title: 'Voice-Controlled Frontend Development',
+      title: 'AI-Powered Frontend Development',
       icon: <Code className="h-6 w-6" />,
       value: '$80-120M',
       status: 'FILING_IMMEDIATELY',
@@ -45,7 +45,7 @@ export default function InnovationManagementDashboard() {
     },
     {
       id: 'PATENT_012',
-      title: 'Voice-Controlled No-Code Backend',
+      title: 'AI-Powered No-Code Backend',
       icon: <Zap className="h-6 w-6" />,
       value: '$150-220M',
       status: 'FILING_IMMEDIATELY',
@@ -148,7 +148,7 @@ export default function InnovationManagementDashboard() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="text-sm">Voice-Controlled Backend Generation</span>
+              <span className="text-sm">AI-Powered Backend Generation</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>

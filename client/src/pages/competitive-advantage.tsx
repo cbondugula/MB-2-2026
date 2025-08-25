@@ -215,7 +215,7 @@ export default function CompetitiveAdvantage() {
                     { name: 'Advanced Voice-AI Hybrid', progress: 85, advantage: 'First-to-market' },
                     { name: 'Medical Brain-Computer Interface', progress: 72, advantage: '10x faster diagnosis' },
                     { name: 'Autonomous Healthcare Orchestration', progress: 91, advantage: 'Complete automation' },
-                    { name: 'Voice-Controlled Advanced Computing', progress: 67, advantage: 'Revolutionary UX' }
+                    { name: 'AI-Powered Advanced Computing', progress: 67, advantage: 'Revolutionary UX' }
                   ]).map((tech: any, index: number) => (
                     <div key={index} className="p-3 border rounded-lg">
                       <div className="flex justify-between items-center mb-2">
@@ -337,7 +337,7 @@ export default function CompetitiveAdvantage() {
                 <div className="space-y-4">
                   {((firstMoverOps as any)?.opportunities || [
                     { 
-                      market: 'Voice-Controlled Healthcare Development', 
+                      market: 'AI-Powered Healthcare Development', 
                       window: '6-8 months', 
                       value: '$2.4B TAM',
                       urgency: 'CRITICAL'

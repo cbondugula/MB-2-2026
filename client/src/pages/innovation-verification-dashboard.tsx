@@ -167,7 +167,7 @@ export default function InnovationVerificationDashboard() {
                     <div className="bg-gray-900 p-4 rounded-lg">
                       <h4 className="text-white font-medium mb-3 flex items-center">
                         <Mic className="w-4 h-4 mr-2 text-blue-400" />
-                        Voice-Controlled Healthcare Development Platform
+                        AI-Powered Healthcare Development Platform
                       </h4>
                       
                       {voicePatents ? (
@@ -186,7 +186,7 @@ export default function InnovationVerificationDashboard() {
                           <div className="space-y-2 text-sm">
                             <div className="flex items-center space-x-2">
                               <CheckCircle className="w-4 h-4 text-green-400" />
-                              <span className="text-gray-300">Voice-controlled application development</span>
+                              <span className="text-gray-300">AI-powered application development</span>
                             </div>
                             <div className="flex items-center space-x-2">
                               <CheckCircle className="w-4 h-4 text-green-400" />
@@ -231,7 +231,7 @@ export default function InnovationVerificationDashboard() {
                             </div>
                             <div className="flex items-center space-x-2">
                               <CheckCircle className="w-4 h-4 text-green-400" />
-                              <span className="text-gray-300">Voice-controlled database management</span>
+                              <span className="text-gray-300">AI-powered database management</span>
                             </div>
                             <div className="flex items-center space-x-2">
                               <CheckCircle className="w-4 h-4 text-green-400" />
@@ -488,7 +488,7 @@ export default function InnovationVerificationDashboard() {
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center space-x-2">
                       <Mic className="w-4 h-4 text-green-400" />
-                      <span className="text-green-300">Voice-controlled development</span>
+                      <span className="text-green-300">AI-powered development</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Eye className="w-4 h-4 text-blue-400" />
@@ -513,7 +513,7 @@ export default function InnovationVerificationDashboard() {
                 </div>
                 <p className="text-gray-300 text-sm">
                   First platform to completely eliminate traditional development tools for healthcare applications. 
-                  Voice-controlled, no-code development with automated compliance creates unprecedented market position 
+                  AI-powered, no-code development with automated compliance creates unprecedented market position 
                   with zero competition and massive acquisition value from major technology companies.
                 </p>
               </div>

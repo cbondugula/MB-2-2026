@@ -135,9 +135,9 @@ export default function Documentation() {
               <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all hover:border-green-500/50 hover:shadow-lg">
                 <CardContent className="p-8 text-center">
                   <Code className="w-8 h-8 text-purple-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-white mb-2">Voice-Controlled AI</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2">AI-Powered Development</h3>
                   <p className="text-gray-400 text-sm">
-                    Revolutionary voice-controlled development with AI-powered healthcare application generation
+                    Revolutionary AI-powered development with intelligent healthcare application generation
                   </p>
                 </CardContent>
               </Card>
@@ -365,7 +365,7 @@ export default function Documentation() {
                                 </div>
                               )) || (
                                 [
-                                  { name: "Voice-Controlled Development", adoption: 94, category: "AI Platform" },
+                                  { name: "AI-Powered Development", adoption: 94, category: "AI Platform" },
                                   { name: "Multi-AI Verification", adoption: 87, category: "Quality Assurance" },
                                   { name: "Global Compliance Suite", adoption: 91, category: "Regulatory" }
                                 ].map((feature, index) => (
@@ -454,7 +454,7 @@ export default function Documentation() {
             <CardContent>
               <div className="space-y-3 text-sm text-gray-300">
                 <div className="flex justify-between">
-                  <span>Voice-Controlled Development</span>
+                  <span>AI-Powered Development</span>
                   <span className="text-green-400">$1000/mo</span>
                 </div>
                 <div className="flex justify-between">

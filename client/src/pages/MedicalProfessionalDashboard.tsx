@@ -101,7 +101,7 @@ export default function MedicalProfessionalDashboard() {
             </h1>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Voice-controlled healthcare application development designed for medical professionals.
+            AI-powered healthcare application development designed for medical professionals.
             Build HIPAA-compliant applications without coding.
           </p>
         </div>
