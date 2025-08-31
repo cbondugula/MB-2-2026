@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { registerMedicalRoutes } from "./routes/medical";
 import { registerExecutiveRoutes } from "./routes/executive";
 import { registerMedHELMRoutes } from "./routes/medhelm";
+import { registerLangExtractRoutes } from "./routes/langextract";
 import { registerCSAgentRoutes } from "./routes/cs-agent";
 import { registerMonitoringRoutes } from "./routes/monitoring";
 import { Server as SocketIOServer } from "socket.io";
@@ -3048,6 +3049,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Register Stanford MedHELM integration routes
   registerMedHELMRoutes(app);
+  
+  // Register LangExtract integration routes
+  registerLangExtractRoutes(app);
   
   // Register CS Agent (Computer Science Agent) optimization routes
   registerCSAgentRoutes(app);

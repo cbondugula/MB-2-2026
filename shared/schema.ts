@@ -489,28 +489,9 @@ export const insertPrivacyComplianceSchema = createInsertSchema(privacyComplianc
 export const insertMulticulturalSupportSchema = createInsertSchema(multiculturalSupport);
 export const insertAlternativeMedicineSchema = createInsertSchema(alternativeMedicine);
 
-// Types
+// Initial Types
 export type UpsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
-export type Project = typeof projects.$inferSelect;
-export type Template = typeof templates.$inferSelect;
-export type Component = typeof components.$inferSelect;
-export type ApiIntegration = typeof apiIntegrations.$inferSelect;
-export type ProjectActivity = typeof projectActivities.$inferSelect;
-export type AiSession = typeof aiSessions.$inferSelect;
-export type CodeAnalysis = typeof codeAnalysis.$inferSelect;
-export type CollaborationSession = typeof collaborationSessions.$inferSelect;
-export type AdvancedTemplate = typeof advancedTemplates.$inferSelect;
-export type SmartComponent = typeof smartComponents.$inferSelect;
-export type HealthcareDomain = typeof healthcareDomains.$inferSelect;
-export type HealthcareAgent = typeof healthcareAgents.$inferSelect;
-export type HealthcareStandard = typeof healthcareStandards.$inferSelect;
-export type HealthcareOrganization = typeof healthcareOrganizations.$inferSelect;
-export type MedicalPublication = typeof medicalPublications.$inferSelect;
-export type HealthcareSimulation = typeof healthcareSimulations.$inferSelect;
-export type PrivacyCompliance = typeof privacyCompliance.$inferSelect;
-export type MulticulturalSupport = typeof multiculturalSupport.$inferSelect;
-export type AlternativeMedicine = typeof alternativeMedicine.$inferSelect;
 
 // Memory and conversation tables for healthcare AI agents
 export const conversations = pgTable("conversations", {
@@ -581,9 +562,66 @@ export const userPreferencesRelations = relations(userPreferences, ({ one }) => 
   }),
 }));
 
+// LangExtract Integration Tables
+export const langExtractExtractions = pgTable("langextract_extractions", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  projectId: integer("project_id").references(() => projects.id),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  sourceText: text("source_text").notNull(),
+  extractionType: varchar("extraction_type").notNull(), // medical, clinical, legal, etc.
+  instructions: text("instructions").notNull(),
+  examples: jsonb("examples"), // few-shot examples
+  results: jsonb("results"), // extraction results with grounding
+  confidence: integer("confidence"), // 0-100
+  modelUsed: varchar("model_used"), // gemini, gpt-4, etc.
+  visualizationHtml: text("visualization_html"), // generated HTML
+  tags: jsonb("tags"),
+  isPublic: boolean("is_public").default(false),
+  status: varchar("status").default("completed"), // pending, processing, completed, failed
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const langExtractTemplates = pgTable("langextract_templates", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  category: varchar("category").notNull(), // medical, clinical, research, etc.
+  description: text("description"),
+  extractionType: varchar("extraction_type").notNull(),
+  instructions: text("instructions").notNull(),
+  examples: jsonb("examples").notNull(), // pre-built examples
+  schema: jsonb("schema"), // extraction schema definition
+  tags: jsonb("tags"),
+  isVerified: boolean("is_verified").default(false),
+  useCount: integer("use_count").default(0),
+  rating: integer("rating").default(0), // 1-5 stars
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// LangExtract Relations
+export const langExtractExtractionsRelations = relations(langExtractExtractions, ({ one }) => ({
+  user: one(users, {
+    fields: [langExtractExtractions.userId],
+    references: [users.id],
+  }),
+  project: one(projects, {
+    fields: [langExtractExtractions.projectId],
+    references: [projects.id],
+  }),
+}));
+
+// LangExtract Insert Schemas
+export const insertLangExtractExtractionSchema = createInsertSchema(langExtractExtractions);
+export const insertLangExtractTemplateSchema = createInsertSchema(langExtractTemplates);
+
 export type Conversation = typeof conversations.$inferSelect;
 export type MemoryEntry = typeof memoryEntries.$inferSelect;
 export type UserPreference = typeof userPreferences.$inferSelect;
+
+// Complete Type Definitions
 export type InsertProject = z.infer<typeof insertProjectSchema>;
 export type Project = typeof projects.$inferSelect;
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
@@ -604,6 +642,19 @@ export type InsertAdvancedTemplate = z.infer<typeof insertAdvancedTemplateSchema
 export type AdvancedTemplate = typeof advancedTemplates.$inferSelect;
 export type InsertSmartComponent = z.infer<typeof insertSmartComponentSchema>;
 export type SmartComponent = typeof smartComponents.$inferSelect;
+export type HealthcareDomain = typeof healthcareDomains.$inferSelect;
+export type HealthcareAgent = typeof healthcareAgents.$inferSelect;
+export type HealthcareStandard = typeof healthcareStandards.$inferSelect;
+export type HealthcareOrganization = typeof healthcareOrganizations.$inferSelect;
+export type MedicalPublication = typeof medicalPublications.$inferSelect;
+export type HealthcareSimulation = typeof healthcareSimulations.$inferSelect;
+export type PrivacyCompliance = typeof privacyCompliance.$inferSelect;
+export type MulticulturalSupport = typeof multiculturalSupport.$inferSelect;
+export type AlternativeMedicine = typeof alternativeMedicine.$inferSelect;
+export type LangExtractExtraction = typeof langExtractExtractions.$inferSelect;
+export type LangExtractTemplate = typeof langExtractTemplates.$inferSelect;
+export type InsertLangExtractExtraction = z.infer<typeof insertLangExtractExtractionSchema>;
+export type InsertLangExtractTemplate = z.infer<typeof insertLangExtractTemplateSchema>;
 
 // Contract automation tables
 export const organizations = pgTable("organizations", {

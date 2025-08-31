@@ -45,6 +45,7 @@ import CSAgentDashboard from "@/pages/CSAgentDashboard";
 import MedicalProfessionalDashboard from "@/pages/MedicalProfessionalDashboard";
 import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
 import MedHELMDashboard from "@/pages/MedHELMDashboard";
+import LangExtractDashboard from "@/pages/LangExtractDashboard";
 import Documentation from "@/pages/documentation";
 
 function Router() {
@@ -102,6 +103,7 @@ function Router() {
           <Route path="/medical-dashboard" component={MedicalProfessionalDashboard} />
           <Route path="/executive-dashboard" component={ExecutiveDashboard} />
           <Route path="/medhelm" component={MedHELMDashboard} />
+          <Route path="/langextract" component={LangExtractDashboard} />
         </>
       )}
       <Route component={NotFound} />
