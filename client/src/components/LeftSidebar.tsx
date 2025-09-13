@@ -16,7 +16,8 @@ import {
   Building,
   Rocket,
   Sparkles,
-  Stethoscope
+  Stethoscope,
+  FileText
 } from "lucide-react";
 
 export default function LeftSidebar() {
@@ -26,6 +27,7 @@ export default function LeftSidebar() {
     { path: "/", label: "Dashboard", icon: Home },
     { path: "/healthcare-app-builder", label: "Healthcare Apps", icon: Stethoscope },
     { path: "/ai-workspace", label: "AI Workspace", icon: Brain },
+    { path: "/langextract", label: "Medical Text Analysis", icon: FileText },
     { path: "/app-builder", label: "App Builder", icon: Rocket },
     { path: "/ai-code-generator", label: "AI Code Generator", icon: Sparkles },
     { path: "/bert-analysis", label: "BERT Analysis", icon: Activity },

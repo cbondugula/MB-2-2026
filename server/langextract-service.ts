@@ -185,7 +185,11 @@ class HealthcareLangExtract:
         try:
             if LANGEXTRACT_AVAILABLE:
                 # Use real LangExtract when available
-                return self._extract_with_langextract(text, extraction_type, custom_instructions, custom_examples)
+                result = self._extract_with_langextract(text, extraction_type, custom_instructions, custom_examples)
+                if not result or not isinstance(result, dict):
+                    # Fallback to mock if real extractor is unavailable/incomplete
+                    return self._extract_with_mock(text, extraction_type, custom_instructions)
+                return result
             else:
                 # Use mock extraction for demonstration
                 return self._extract_with_mock(text, extraction_type, custom_instructions)
@@ -298,6 +302,17 @@ class HealthcareLangExtract:
                         }
                     })
         
+        elif extraction_type == "comprehensive_medical":
+            # Extract all medical entities in one comprehensive analysis
+            # Combine results from all extraction types
+            all_types = ["medication", "diagnosis", "lab_result", "symptom"]
+            
+            for etype in all_types:
+                # Recursively call each extraction type
+                temp_result = self._extract_with_mock(text, etype, custom_instructions)
+                if temp_result.get("success") and temp_result.get("extractions"):
+                    extractions.extend(temp_result["extractions"])
+        
         # Generate simple HTML visualization
         visualization_html = self._generate_visualization_html(text, extractions)
         
@@ -354,7 +369,9 @@ class HealthcareLangExtract:
         
         # For now, return a reasonable confidence score
         # In practice, this would analyze extraction quality, grounding, etc.
-        return 85
+        if isinstance(result, list) and len(result) > 0:
+            return 85
+        return 60
 
     def _extract_source_grounding(self, result: Any) -> List[Dict]:
         """Extract source grounding information"""
@@ -410,14 +427,20 @@ def main():
                 print(json.dumps({"error": "Invalid JSON in examples parameter"}))
                 sys.exit(1)
         
-        result = processor.extract_healthcare_data(
-            text=args.text,
-            extraction_type=args.type,
-            custom_instructions=args.instructions,
-            custom_examples=custom_examples
-        )
-        
-        print(json.dumps(result, indent=2))
+        try:
+            result = processor.extract_healthcare_data(
+                text=args.text,
+                extraction_type=args.type,
+                custom_instructions=args.instructions,
+                custom_examples=custom_examples
+            )
+            
+            if result and isinstance(result, dict):
+                print(json.dumps(result, indent=2))
+            else:
+                print(json.dumps({"success": False, "error": "No extraction result generated"}))
+        except Exception as e:
+            print(json.dumps({"success": False, "error": f"Extraction failed: {str(e)}"}))
     
     elif args.action == 'templates':
         templates = processor.get_available_templates()
