@@ -470,17 +470,28 @@ Generate complete, working healthcare applications that can be deployed immediat
     const apps = await db
       .select()
       .from(generatedApps)
-      .where(and(
-        eq(generatedApps.id, appId),
-        eq(generatedApps.userId, userId)
-      ))
+      .where(eq(generatedApps.id, appId))
       .limit(1);
     
     if (apps.length === 0) {
-      throw new Error("App not found or access denied");
+      throw new Error("App not found");
     }
     
-    return apps[0];
+    const app = apps[0];
+    
+    // Allow access if:
+    // 1. User owns the app
+    // 2. App was created by a guest user (starts with 'guest_')
+    // 3. App is marked as public
+    const isOwner = app.userId === userId;
+    const isGuestApp = app.userId?.startsWith('guest_');
+    const isPublic = app.isPublic;
+    
+    if (!isOwner && !isGuestApp && !isPublic) {
+      throw new Error("Access denied");
+    }
+    
+    return app;
   }
 }
 
