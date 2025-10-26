@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Send, Code, Sparkles, FileCode, User, Bot } from "lucide-react";
+import { Loader2, Send, Code, Sparkles, FileCode, User, Bot, CheckCircle, ExternalLink, Eye } from "lucide-react";
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
   generatedCode?: any;
+  appId?: string; // App ID when code is saved
 }
 
 export function ChatToCode() {
@@ -129,7 +130,7 @@ export function ChatToCode() {
                 if (data.generatedCode) {
                   setMessages(prev => prev.map(msg => 
                     msg.id === assistantMsgId 
-                      ? { ...msg, generatedCode: data.generatedCode }
+                      ? { ...msg, generatedCode: data.generatedCode, appId: data.appId }
                       : msg
                   ));
                 }
@@ -240,12 +241,54 @@ export function ChatToCode() {
                       </CardContent>
                     </Card>
                     
+                    {message.appId && (
+                      <Card className="bg-gradient-to-br from-green-900/30 to-blue-900/30 border-green-500/50">
+                        <CardContent className="p-4">
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                              <CheckCircle className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="flex-1 space-y-3">
+                              <div>
+                                <h4 className="text-sm font-semibold text-green-400 mb-1">
+                                  ✨ App Created Successfully!
+                                </h4>
+                                <p className="text-xs text-gray-300">
+                                  Your healthcare app has been generated and saved. You can now preview it, edit the code, or deploy it.
+                                </p>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                <Button
+                                  size="sm"
+                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                  onClick={() => window.open(`/apps/${message.appId}`, '_blank')}
+                                  data-testid={`view-app-${message.appId}`}
+                                >
+                                  <Eye className="w-3 h-3 mr-1.5" />
+                                  View App
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                                  onClick={() => window.open(`/apps/${message.appId}/code`, '_blank')}
+                                >
+                                  <Code className="w-3 h-3 mr-1.5" />
+                                  View Code
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+                    
                     {message.generatedCode && (
-                      <Card className="bg-gray-900 border-green-500/30">
+                      <Card className="bg-gray-900 border-gray-700/50">
                         <CardHeader className="pb-3">
-                          <CardTitle className="text-sm flex items-center gap-2 text-green-400">
+                          <CardTitle className="text-sm flex items-center gap-2 text-gray-300">
                             <FileCode className="w-4 h-4" />
-                            Generated Code
+                            Generated Code Preview
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
@@ -257,9 +300,9 @@ export function ChatToCode() {
                               {Object.keys(message.generatedCode.code || {}).length} files
                             </Badge>
                           </div>
-                          <div className="bg-gray-950 rounded-lg p-3 max-h-60 overflow-auto">
+                          <div className="bg-gray-950 rounded-lg p-3 max-h-40 overflow-auto">
                             <pre className="text-xs text-gray-300">
-                              {JSON.stringify(message.generatedCode.code, null, 2)}
+                              {JSON.stringify(message.generatedCode.code, null, 2).substring(0, 500)}...
                             </pre>
                           </div>
                           <p className="text-xs text-gray-400 mt-2">
