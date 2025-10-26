@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Send, Code, Sparkles, FileCode, User, Bot, CheckCircle, ExternalLink, Eye } from "lucide-react";
+import { Loader2, Send, Code, Sparkles, FileCode, User, Bot, CheckCircle, ExternalLink, Eye, FolderCode } from "lucide-react";
+import { Link } from "wouter";
 
 interface Message {
   id: string;
@@ -275,6 +276,17 @@ export function ChatToCode() {
                                 >
                                   <Code className="w-3 h-3 mr-1.5" />
                                   View Code
+                                </Button>
+                                <Button
+                                  asChild
+                                  size="sm"
+                                  variant="outline"
+                                  className="border-blue-600 text-blue-300 hover:bg-blue-900/30"
+                                >
+                                  <Link href="/my-apps">
+                                    <FolderCode className="w-3 h-3 mr-1.5" />
+                                    My Apps
+                                  </Link>
                                 </Button>
                               </div>
                             </div>
