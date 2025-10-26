@@ -57,13 +57,30 @@ export class ChatToCodeService {
     return conversationId;
   }
   
-  // Add a message to conversation
+  // Add a message to conversation with ownership verification
   async addMessage(
     conversationId: string, 
     role: "user" | "assistant" | "system",
     content: string,
+    userId?: string,
     metadata?: any
   ): Promise<string> {
+    // Verify conversation ownership if userId provided
+    if (userId) {
+      const conversation = await db
+        .select()
+        .from(chatConversations)
+        .where(and(
+          eq(chatConversations.id, conversationId),
+          eq(chatConversations.userId, userId)
+        ))
+        .limit(1);
+      
+      if (conversation.length === 0) {
+        throw new Error("Conversation not found or access denied");
+      }
+    }
+    
     const messageId = nanoid();
     
     // Get the next sequence number

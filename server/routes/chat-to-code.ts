@@ -1,18 +1,43 @@
 import type { Express } from "express";
+import rateLimit from "express-rate-limit";
 import { isAuthenticated } from "../replitAuth";
 import { chatToCodeService } from "../chat-to-code-service";
+import { nanoid } from "nanoid";
+
+// Rate limiter for anonymous users (10 messages per hour)
+const anonymousRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // 10 requests per hour for anonymous users
+  message: { error: "Too many requests. Please sign in for unlimited access." },
+  skip: (req) => {
+    // Skip rate limiting for authenticated users
+    return !!(req.user?.claims?.sub);
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Helper to get user ID (authenticated or guest)
+function getUserId(req: any): string {
+  const authenticatedUserId = req.user?.claims?.sub;
+  if (authenticatedUserId) {
+    return authenticatedUserId;
+  }
+  
+  // Generate guest ID for anonymous users
+  if (!req.session.guestId) {
+    req.session.guestId = `guest_${nanoid()}`;
+  }
+  return req.session.guestId;
+}
 
 export function registerChatToCodeRoutes(app: Express) {
   
-  // Create a new conversation
-  app.post("/api/chat/conversations", isAuthenticated, async (req, res) => {
+  // Create a new conversation (public with rate limiting)
+  app.post("/api/chat/conversations", anonymousRateLimiter, async (req, res) => {
     try {
       const { initialPrompt, title } = req.body;
-      const userId = (req.user as any)?.claims?.sub;
-      
-      if (!userId) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+      const userId = getUserId(req);
       
       const conversationId = await chatToCodeService.createConversation(
         userId,
@@ -20,11 +45,12 @@ export function registerChatToCodeRoutes(app: Express) {
         title
       );
       
-      // Add the initial message
+      // Add the initial message with ownership verification
       await chatToCodeService.addMessage(
         conversationId,
         "user",
-        initialPrompt
+        initialPrompt,
+        userId
       );
       
       res.json({ conversationId });
@@ -34,18 +60,21 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Send a message and get AI response (streaming)
-  app.post("/api/chat/messages", isAuthenticated, async (req, res) => {
+  // Send a message and get AI response (streaming - public with rate limiting)
+  app.post("/api/chat/messages", anonymousRateLimiter, async (req, res) => {
     try {
       const { conversationId, message } = req.body;
-      const userId = (req.user as any)?.claims?.sub;
+      const userId = getUserId(req);
       
-      if (!userId) {
-        return res.status(401).json({ error: "Unauthorized" });
+      // Add user message to database with ownership verification
+      try {
+        await chatToCodeService.addMessage(conversationId, "user", message, userId);
+      } catch (error: any) {
+        if (error.message.includes("access denied") || error.message.includes("not found")) {
+          return res.status(403).json({ error: "Access denied: You don't have permission to access this conversation" });
+        }
+        throw error;
       }
-      
-      // Add user message to database
-      await chatToCodeService.addMessage(conversationId, "user", message);
       
       // Get conversation history with ownership verification
       const history = await chatToCodeService.getConversationHistory(conversationId, userId);
@@ -86,11 +115,12 @@ export function registerChatToCodeRoutes(app: Express) {
         // After loop exits, lastResult contains the final returned value
         generatedCode = lastResult?.value;
         
-        // Save assistant response to database
+        // Save assistant response to database with ownership verification
         const messageId = await chatToCodeService.addMessage(
           conversationId,
           "assistant",
           fullResponse,
+          userId,
           { generatedCode }
         );
         
@@ -127,15 +157,11 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Get conversation history
-  app.get("/api/chat/conversations/:conversationId", isAuthenticated, async (req, res) => {
+  // Get conversation history (public)
+  app.get("/api/chat/conversations/:conversationId", async (req, res) => {
     try {
       const { conversationId } = req.params;
-      const userId = (req.user as any)?.claims?.sub;
-      
-      if (!userId) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+      const userId = getUserId(req);
       
       const messages = await chatToCodeService.getConversationHistory(conversationId, userId);
       res.json({ messages });
@@ -145,14 +171,10 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Get user's conversations
-  app.get("/api/chat/conversations", isAuthenticated, async (req, res) => {
+  // Get user's conversations (public)
+  app.get("/api/chat/conversations", async (req, res) => {
     try {
-      const userId = (req.user as any)?.claims?.sub;
-      
-      if (!userId) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+      const userId = getUserId(req);
       
       const conversations = await chatToCodeService.getUserConversations(userId);
       res.json({ conversations });
@@ -162,14 +184,10 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Get user's generated apps
-  app.get("/api/chat/apps", isAuthenticated, async (req, res) => {
+  // Get user's generated apps (public)
+  app.get("/api/chat/apps", async (req, res) => {
     try {
-      const userId = (req.user as any)?.claims?.sub;
-      
-      if (!userId) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+      const userId = getUserId(req);
       
       const apps = await chatToCodeService.getUserApps(userId);
       res.json({ apps });
@@ -179,15 +197,11 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Get a specific generated app with ownership verification
-  app.get("/api/chat/apps/:appId", isAuthenticated, async (req, res) => {
+  // Get a specific generated app with ownership verification (public)
+  app.get("/api/chat/apps/:appId", async (req, res) => {
     try {
       const { appId } = req.params;
-      const userId = (req.user as any)?.claims?.sub;
-      
-      if (!userId) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+      const userId = getUserId(req);
       
       const app = await chatToCodeService.getAppById(appId, userId);
       res.json({ app });

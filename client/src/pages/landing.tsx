@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Shield, Code, Zap, Sparkles, Cpu, Terminal, Activity, Brain, Network, TrendingUp, CheckCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Shield, Code, Zap, Sparkles, Cpu, Terminal, Activity, Brain, Network, TrendingUp, CheckCircle, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { ChatToCode } from "@/components/ChatToCode";
 
 // Load testing agent in development
 if (import.meta.env.DEV) {
@@ -18,6 +20,7 @@ export default function Landing() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const [userMode, setUserMode] = useState<'healthcare' | 'developer'>('healthcare');
 
   // Fetch dynamic ML data when demo is shown
@@ -73,9 +76,7 @@ export default function Landing() {
 
   const handleGenerateApp = () => {
     if (!prompt.trim()) return;
-    setIsGenerating(true);
-    localStorage.setItem('pendingPrompt', prompt);
-    window.location.href = '/api/login';
+    setShowChat(true);
   };
 
   return (
@@ -122,11 +123,13 @@ export default function Landing() {
                 <Link href="/legal-documents">Legal Docs</Link>
               </Button>
               <Button 
-                onClick={() => window.location.href = '/api/login'}
+                onClick={() => setShowChat(true)}
                 className="bg-green-600 hover:bg-green-700 text-white"
                 size="sm"
+                data-testid="start-chat-button"
               >
-                Sign in
+                <MessageSquare className="w-4 h-4 mr-2" />
+                Try It Now
               </Button>
             </div>
           </div>
@@ -584,6 +587,26 @@ export default function Landing() {
           </div>
         </div>
       </footer>
+
+      {/* Chat-to-Code Dialog */}
+      <Dialog open={showChat} onOpenChange={setShowChat}>
+        <DialogContent className="max-w-5xl h-[85vh] bg-gray-900 border-gray-700 text-white p-0">
+          <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-800">
+            <DialogTitle className="text-2xl font-bold flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              AI Chat-to-Code
+              <Badge className="bg-green-900 text-green-300 ml-2">
+                Live Demo
+              </Badge>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-hidden">
+            <ChatToCode />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
