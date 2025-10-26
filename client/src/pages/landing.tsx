@@ -10,6 +10,7 @@ import { Link } from "wouter";
 
 // Load testing agent in development
 if (import.meta.env.DEV) {
+  // @ts-ignore - Testing agent is a JavaScript file without type definitions
   import('../testing-agent.js').catch(console.error);
 }
 

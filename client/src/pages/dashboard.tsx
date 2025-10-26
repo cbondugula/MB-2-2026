@@ -39,13 +39,39 @@ import {
   TestTube
 } from "lucide-react";
 
+// TypeScript interfaces for API responses
+interface Project {
+  id: number | string;
+  name: string;
+  type?: string;
+  status: string;
+  description?: string;
+  framework?: string;
+  createdAt?: string;
+}
+
+interface UserStats {
+  totalProjects?: number;
+  deploymentsCount?: number;
+  hasCompletedOnboarding?: boolean;
+  lastActivity?: string;
+}
+
+interface Activity {
+  id: number | string;
+  type: string;
+  description: string;
+  timestamp: string;
+  projectId?: number | string;
+}
+
 export default function Dashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { isAuthenticated, isLoading, user } = useAuth();
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [activeProject, setActiveProject] = useState(null);
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [showConversationalInterface, setShowConversationalInterface] = useState(false);
   
   // Smart refresh for user stats (critical healthcare data)
@@ -69,14 +95,14 @@ export default function Dashboard() {
   }, [isAuthenticated, isLoading, toast]);
 
   // Fetch user projects dynamically
-  const { data: projects, isLoading: projectsLoading } = useQuery({
+  const { data: projects, isLoading: projectsLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
     enabled: isAuthenticated,
     retry: false,
   });
 
   // Fetch user statistics with tier-based updates (USER_EXPERIENCE tier)
-  const { data: userStats, isLoading: statsLoading, refetch: refetchStats } = useQuery({
+  const { data: userStats, isLoading: statsLoading, refetch: refetchStats } = useQuery<UserStats>({
     queryKey: ["/api/users/stats"],
     enabled: isAuthenticated,
     retry: false,
@@ -84,7 +110,7 @@ export default function Dashboard() {
   });
 
   // Fetch recent activities with tier-based updates (USER_EXPERIENCE tier)
-  const { data: activities, isLoading: activitiesLoading, refetch: refetchActivities } = useQuery({
+  const { data: activities, isLoading: activitiesLoading, refetch: refetchActivities } = useQuery<Activity[]>({
     queryKey: ["/api/activities/recent"],
     enabled: isAuthenticated,
     retry: false,
