@@ -15,11 +15,16 @@ interface Message {
   appId?: string; // App ID when code is saved
 }
 
-export function ChatToCode() {
+interface ChatToCodeProps {
+  initialPrompt?: string;
+}
+
+export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [hasAutoSent, setHasAutoSent] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -30,6 +35,15 @@ export function ChatToCode() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Auto-send initial prompt when component mounts
+  useEffect(() => {
+    if (initialPrompt && !hasAutoSent && !isStreaming && messages.length === 0) {
+      setHasAutoSent(true);
+      // Send the initial prompt directly
+      handleSendMessage(initialPrompt);
+    }
+  }, [initialPrompt, hasAutoSent, isStreaming, messages.length]);
 
   const createConversation = async (initialPrompt: string): Promise<string> => {
     const response = await fetch("/api/chat/conversations", {
@@ -46,10 +60,10 @@ export function ChatToCode() {
     return data.conversationId;
   };
 
-  const sendMessage = async () => {
-    if (!input.trim() || isStreaming) return;
+  const handleSendMessage = async (messageText?: string) => {
+    const userMessage = (messageText || input).trim();
+    if (!userMessage || isStreaming) return;
 
-    const userMessage = input.trim();
     setInput("");
     
     // Add user message to UI
@@ -163,7 +177,7 @@ export function ChatToCode() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      sendMessage();
+      handleSendMessage();
     }
   };
 
@@ -380,7 +394,7 @@ export function ChatToCode() {
             data-testid="chat-input"
           />
           <Button
-            onClick={sendMessage}
+            onClick={() => handleSendMessage()}
             disabled={!input.trim() || isStreaming}
             className="bg-green-600 hover:bg-green-700 text-white self-end"
             size="lg"

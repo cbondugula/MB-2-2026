@@ -603,7 +603,7 @@ export default function Landing() {
             </DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-hidden">
-            <ChatToCode />
+            <ChatToCode initialPrompt={prompt} />
           </div>
         </DialogContent>
       </Dialog>
