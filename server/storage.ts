@@ -16,6 +16,24 @@ import {
   healthcareOrganizations,
   medicalPublications,
   healthcareSimulations,
+  techStacks,
+  aiModels,
+  codeExamples,
+  gitRepositories,
+  deployments,
+  codeReviews,
+  previewEnvironments,
+  buildHistory,
+  environmentVariables,
+  projectCollaborators,
+  pricingPlans,
+  buildCapabilities,
+  organizations,
+  contracts,
+  executiveMetrics,
+  executiveROI,
+  executiveCompetitive,
+  executiveRevenue,
   type User,
   type UpsertUser,
   type Project,
@@ -39,12 +57,44 @@ import {
   type HealthcareOrganization,
   type MedicalPublication,
   type HealthcareSimulation,
+  type TechStack,
+  type AiModel,
+  type CodeExample,
+  type GitRepository,
+  type Deployment,
+  type CodeReview,
+  type PreviewEnvironment,
+  type BuildHistory,
+  type EnvironmentVariable,
+  type ProjectCollaborator,
+  type PricingPlan,
+  type BuildCapability,
+  type Organization,
+  type Contract,
+  type ExecutiveMetrics,
+  type ExecutiveROI,
+  type ExecutiveCompetitive,
+  type ExecutiveRevenue,
   insertHealthcareDomainSchema,
   insertHealthcareAgentSchema,
   insertHealthcareStandardSchema,
   insertHealthcareOrganizationSchema,
   insertMedicalPublicationSchema,
   insertHealthcareSimulationSchema,
+  insertTechStackSchema,
+  insertAiModelSchema,
+  insertCodeExampleSchema,
+  insertGitRepositorySchema,
+  insertDeploymentSchema,
+  insertCodeReviewSchema,
+  insertPreviewEnvironmentSchema,
+  insertBuildHistorySchema,
+  insertEnvironmentVariableSchema,
+  insertProjectCollaboratorSchema,
+  insertPricingPlanSchema,
+  insertBuildCapabilitySchema,
+  insertOrganizationSchema,
+  insertContractSchema,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql } from "drizzle-orm";
@@ -200,6 +250,12 @@ export interface IStorage {
     components: Array<{name: string; status: string; lastCheck: string}>;
     alerts: Array<{type: string; message: string; severity: string}>;
   }>;
+  
+  // Executive dashboard operations
+  getExecutiveMetrics(): Promise<ExecutiveMetrics | undefined>;
+  getExecutiveROI(): Promise<ExecutiveROI | undefined>;
+  getExecutiveCompetitive(): Promise<ExecutiveCompetitive | undefined>;
+  getExecutiveRevenue(): Promise<ExecutiveRevenue | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -567,140 +623,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   // App Builder methods
-  async getTechStacks(): Promise<any[]> {
-    return [
-      {
-        id: 'react-node-typescript',
-        name: 'React + Node.js + TypeScript',
-        description: 'Modern full-stack with React frontend and Node.js backend',
-        category: 'fullstack',
-        healthcareDomain: 'general',
-        frontend: { name: 'React', features: ['responsive', 'pwa', 'accessibility'] },
-        backend: { framework: 'Express.js', features: ['auth', 'encryption', 'audit-logging'] }
-      },
-      {
-        id: 'angular-dotnet',
-        name: 'Angular + .NET Core',
-        description: 'Enterprise-grade solution with Angular and .NET Core',
-        category: 'enterprise',
-        healthcareDomain: 'clinical',
-        frontend: { name: 'Angular', features: ['enterprise', 'forms', 'testing'] },
-        backend: { framework: '.NET Core', features: ['security', 'performance', 'scalability'] }
-      },
-      {
-        id: 'vue-python-django',
-        name: 'Vue.js + Python Django',
-        description: 'Rapid development with Vue.js and Django REST framework',
-        category: 'rapid',
-        healthcareDomain: 'research',
-        frontend: { name: 'Vue.js', features: ['reactive', 'lightweight', 'flexible'] },
-        backend: { framework: 'Django', features: ['admin', 'orm', 'security'] }
-      },
-      {
-        id: 'flutter-firebase',
-        name: 'Flutter + Firebase',
-        description: 'Cross-platform mobile with real-time backend',
-        category: 'mobile',
-        healthcareDomain: 'patient-care',
-        frontend: { name: 'Flutter', features: ['cross-platform', 'native', 'real-time'] },
-        backend: { framework: 'Firebase', features: ['real-time', 'auth', 'cloud-functions'] }
-      },
-      {
-        id: 'nextjs-prisma',
-        name: 'Next.js + Prisma + PostgreSQL',
-        description: 'Full-stack React framework with type-safe database',
-        category: 'modern',
-        healthcareDomain: 'digital-health',
-        frontend: { name: 'Next.js', features: ['ssr', 'api-routes', 'optimization'] },
-        backend: { framework: 'Prisma', features: ['type-safe', 'migrations', 'monitoring'] }
-      },
-      {
-        id: 'svelte-rust',
-        name: 'Svelte + Rust + WebAssembly',
-        description: 'High-performance solution with Svelte and Rust backend',
-        category: 'performance',
-        healthcareDomain: 'medical-imaging',
-        frontend: { name: 'Svelte', features: ['performance', 'minimal', 'reactive'] },
-        backend: { framework: 'Rust', features: ['performance', 'memory-safety', 'wasm'] }
-      }
-    ];
+  async getTechStacks(): Promise<TechStack[]> {
+    try {
+      return await db.select().from(techStacks).where(eq(techStacks.isActive, true));
+    } catch (error) {
+      console.error('Failed to fetch tech stacks:', error);
+      return [];
+    }
   }
 
-  async getBuildCapabilities(): Promise<any[]> {
-    return [
-      {
-        id: 'ai',
-        name: 'AI Integration',
-        description: 'Healthcare AI models and machine learning capabilities',
-        icon: 'brain',
-        complexity: 'medium',
-        buildTime: '5-10 minutes'
-      },
-      {
-        id: 'realtime',
-        name: 'Real-time Collaboration',
-        description: 'Live updates and collaborative editing features',
-        icon: 'network',
-        complexity: 'medium',
-        buildTime: '3-5 minutes'
-      },
-      {
-        id: 'blockchain',
-        name: 'Blockchain Integration',
-        description: 'Secure, decentralized data storage and verification',
-        icon: 'shield',
-        complexity: 'high',
-        buildTime: '10-15 minutes'
-      },
-      {
-        id: 'iot',
-        name: 'IoT Device Support',
-        description: 'Medical device connectivity and data streaming',
-        icon: 'zap',
-        complexity: 'high',
-        buildTime: '8-12 minutes'
-      },
-      {
-        id: 'analytics',
-        name: 'Advanced Analytics',
-        description: 'Healthcare data visualization and reporting',
-        icon: 'brain',
-        complexity: 'medium',
-        buildTime: '4-6 minutes'
-      },
-      {
-        id: 'mobile',
-        name: 'Mobile App Support',
-        description: 'Native iOS and Android companion apps',
-        icon: 'network',
-        complexity: 'high',
-        buildTime: '12-18 minutes'
-      },
-      {
-        id: 'telemedicine',
-        name: 'Telemedicine Features',
-        description: 'Video calling, screen sharing, and remote consultations',
-        icon: 'zap',
-        complexity: 'medium',
-        buildTime: '6-8 minutes'
-      },
-      {
-        id: 'payments',
-        name: 'Payment Processing',
-        description: 'Secure healthcare billing and payment systems',
-        icon: 'shield',
-        complexity: 'medium',
-        buildTime: '4-6 minutes'
-      },
-      {
-        id: 'interoperability',
-        name: 'FHIR/HL7 Integration',
-        description: 'Healthcare standard compliance and data exchange',
-        icon: 'network',
-        complexity: 'high',
-        buildTime: '8-10 minutes'
-      }
-    ];
+  async getBuildCapabilities(): Promise<BuildCapability[]> {
+    try {
+      return await db.select().from(buildCapabilities).where(eq(buildCapabilities.isActive, true));
+    } catch (error) {
+      console.error('Failed to fetch build capabilities:', error);
+      return [];
+    }
   }
 
   async getComplianceFrameworks(): Promise<any[]> {
@@ -961,220 +899,22 @@ class FHIRPatientService {
     ];
   }
 
-  async getAIModels(): Promise<any[]> {
-    return [
-      {
-        id: 'claude-sonnet-4',
-        name: 'Claude Sonnet 4.0',
-        description: 'Latest Anthropic model with advanced reasoning and healthcare expertise',
-        provider: 'Anthropic',
-        capabilities: ['advanced-reasoning', 'code-generation', 'medical-analysis', 'fhir-compliance', 'hipaa-guidance'],
-        accuracy: 99.2,
-        speed: 'very-fast',
-        contextWindow: '200k tokens',
-        specialization: 'Healthcare & Medical AI'
-      },
-      {
-        id: 'healthcare-gpt4o',
-        name: 'GPT-4o Healthcare',
-        description: 'OpenAI multimodal model optimized for healthcare applications',
-        provider: 'OpenAI',
-        capabilities: ['multimodal', 'code-generation', 'medical-nlp', 'image-analysis', 'fhir-compliance'],
-        accuracy: 98.5,
-        speed: 'fast',
-        contextWindow: '128k tokens',
-        specialization: 'Multimodal Healthcare AI'
-      },
-      {
-        id: 'medllama-70b',
-        name: 'MedLlama 70B',
-        description: 'Fine-tuned medical language model for clinical applications',
-        provider: 'Meta',
-        capabilities: ['clinical-notes', 'diagnosis-assist', 'drug-interaction', 'medical-coding'],
-        accuracy: 96.2,
-        speed: 'medium',
-        contextWindow: '32k tokens',
-        specialization: 'Clinical Decision Support'
-      },
-      {
-        id: 'gemini-2-pro-health',
-        name: 'Gemini 2.0 Pro Health',
-        description: 'Google advanced AI model with healthcare specialization',
-        provider: 'Google',
-        capabilities: ['multimodal', 'real-time', 'medical-imaging', 'genomics', 'drug-discovery'],
-        accuracy: 97.8,
-        speed: 'very-fast',
-        contextWindow: '2M tokens',
-        specialization: 'Medical Research & Imaging'
-      },
-      {
-        id: 'clinicalbert-v3',
-        name: 'ClinicalBERT v3.0',
-        description: 'Enhanced BERT model trained on latest clinical datasets',
-        provider: 'Google Health',
-        capabilities: ['medical-ner', 'clinical-classification', 'symptom-extraction', 'icd-coding'],
-        accuracy: 95.8,
-        speed: 'very-fast',
-        contextWindow: '16k tokens',
-        specialization: 'Clinical Text Processing'
-      },
-      {
-        id: 'perplexity-health',
-        name: 'Perplexity Healthcare Pro',
-        description: 'Real-time AI with access to latest medical research and publications',
-        provider: 'Perplexity',
-        capabilities: ['real-time-search', 'pubmed-integration', 'research-synthesis', 'evidence-based'],
-        accuracy: 96.5,
-        speed: 'fast',
-        contextWindow: '64k tokens',
-        specialization: 'Medical Research & Evidence'
-      },
-      {
-        id: 'med-gemma-7b',
-        name: 'Med-Gemma 7B',
-        description: 'Google open-source medical language model for clinical content generation',
-        provider: 'Google (Open Source)',
-        capabilities: ['medical-content-generation', 'clinical-qa', 'medical-summarization', 'patient-education'],
-        accuracy: 94.2,
-        speed: 'very-fast',
-        contextWindow: '8k tokens',
-        specialization: 'Medical Content Generation',
-        isOpenSource: true
-      },
-      {
-        id: 'med-gemma-2b',
-        name: 'Med-Gemma 2B',
-        description: 'Lightweight medical model for edge deployment and fast inference',
-        provider: 'Google (Open Source)',
-        capabilities: ['medical-qa', 'symptom-checker', 'drug-information', 'medical-coding'],
-        accuracy: 91.8,
-        speed: 'ultra-fast',
-        contextWindow: '4k tokens',
-        specialization: 'Edge Medical AI',
-        isOpenSource: true
-      },
-      {
-        id: 'biomistral-7b',
-        name: 'BioMistral 7B',
-        description: 'Mistral AI medical model fine-tuned on biomedical literature',
-        provider: 'Mistral AI (Open Source)',
-        capabilities: ['biomedical-research', 'drug-discovery', 'molecular-biology', 'genetics'],
-        accuracy: 93.5,
-        speed: 'fast',
-        contextWindow: '32k tokens',
-        specialization: 'Biomedical Research',
-        isOpenSource: true
-      },
-      {
-        id: 'meditron-70b',
-        name: 'Meditron 70B',
-        description: 'EPFL open-source medical LLM trained on medical literature and guidelines',
-        provider: 'EPFL (Open Source)',
-        capabilities: ['clinical-guidelines', 'medical-reasoning', 'differential-diagnosis', 'treatment-planning'],
-        accuracy: 95.1,
-        speed: 'medium',
-        contextWindow: '4k tokens',
-        specialization: 'Clinical Decision Support',
-        isOpenSource: true
-      },
-      {
-        id: 'clinical-camel-70b',
-        name: 'Clinical-Camel 70B',
-        description: 'Open-source medical model with clinical conversation capabilities',
-        provider: 'King Abdullah University (Open Source)',
-        capabilities: ['clinical-conversations', 'patient-counseling', 'medical-education', 'case-studies'],
-        accuracy: 94.7,
-        speed: 'medium',
-        contextWindow: '4k tokens',
-        specialization: 'Clinical Communication',
-        isOpenSource: true
-      },
-      {
-        id: 'pubmedbert',
-        name: 'PubMedBERT',
-        description: 'BERT model pre-trained on PubMed abstracts and full-text articles',
-        provider: 'Microsoft (Open Source)',
-        capabilities: ['pubmed-search', 'literature-analysis', 'medical-ner', 'biomedical-qa'],
-        accuracy: 92.3,
-        speed: 'very-fast',
-        contextWindow: '512 tokens',
-        specialization: 'Biomedical Literature',
-        isOpenSource: true
-      }
-    ];
+  async getAIModels(): Promise<AiModel[]> {
+    try {
+      return await db.select().from(aiModels).where(eq(aiModels.isActive, true));
+    } catch (error) {
+      console.error('Failed to fetch AI models:', error);
+      return [];
+    }
   }
 
-  async getCodeExamples(): Promise<any[]> {
-    return [
-      {
-        id: 'telehealth-video',
-        title: 'Telehealth Video Call',
-        description: 'HIPAA-compliant video calling with screen sharing',
-        language: 'typescript',
-        useCase: 'telemedicine',
-        code: `// Secure Video Call Component
-import { useEffect, useRef } from 'react';
-import { WebRTCManager } from '@/utils/webrtc-secure';
-
-export default function SecureVideoCall() {
-  const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  
-  useEffect(() => {
-    const webrtc = new WebRTCManager({
-      encryption: 'DTLS-SRTP',
-      recording: {
-        enabled: true,
-        hipaaCompliant: true
-      }
-    });
-    
-    webrtc.initialize();
-    
-    return () => webrtc.cleanup();
-  }, []);
-  
-  return (
-    <div className="video-call-container">
-      <video ref={localVideoRef} autoPlay muted />
-      <video ref={remoteVideoRef} autoPlay />
-    </div>
-  );
-}`
-      },
-      {
-        id: 'blockchain-records',
-        title: 'Blockchain Medical Records',
-        description: 'Immutable patient records using blockchain technology',
-        language: 'typescript',
-        useCase: 'data-security',
-        code: `// Blockchain Medical Record Storage
-import { ethers } from 'ethers';
-
-class MedicalRecordBlockchain {
-  private contract: ethers.Contract;
-  
-  constructor(contractAddress: string, provider: ethers.Provider) {
-    const abi = [
-      'function storeRecord(string memory patientId, string memory encryptedData) public',
-      'function getRecord(string memory patientId) public view returns (string memory)'
-    ];
-    this.contract = new ethers.Contract(contractAddress, abi, provider);
-  }
-  
-  async storePatientRecord(patientId: string, data: any): Promise<string> {
-    const encryptedData = await this.encryptData(data);
-    const tx = await this.contract.storeRecord(patientId, encryptedData);
-    return tx.hash;
-  }
-  
-  private async encryptData(data: any): Promise<string> {
-    // Implementation of encryption logic
-    return JSON.stringify(data);
-  }
-}`
-      }
-    ];
+  async getCodeExamples(): Promise<CodeExample[]> {
+    try {
+      return await db.select().from(codeExamples).orderBy(desc(codeExamples.createdAt));
+    } catch (error) {
+      console.error('Failed to fetch code examples:', error);
+      return [];
+    }
   }
 
   async generateCode(codeRequest: any): Promise<any> {
@@ -1431,309 +1171,78 @@ export default function MedicationTracker() {
   }
 
   // Replit Development Features
-  async getGitRepositories(): Promise<any[]> {
-    return [
-      {
-        id: 'healthcare-ehr-system',
-        name: 'healthcare-ehr-system',
-        description: 'Complete EHR system with FHIR integration',
-        owner: 'healthcare-team',
-        isPrivate: false,
-        branch: 'main',
-        lastCommit: {
-          message: 'Add patient consent management',
-          author: 'Dr. Smith',
-          timestamp: '2024-01-18T10:30:00Z',
-          hash: 'a1b2c3d'
-        },
-        collaborators: 15,
-        stars: 342,
-        forks: 89,
-        size: '12.4 MB',
-        language: 'TypeScript',
-        topics: ['healthcare', 'ehr', 'fhir', 'hipaa'],
-        commits: 1247,
-        branches: 8,
-        releases: 12
-      },
-      {
-        id: 'telemedicine-platform',
-        name: 'telemedicine-platform',
-        description: 'HIPAA-compliant video consultation platform',
-        owner: 'medtech-solutions',
-        isPrivate: true,
-        branch: 'develop',
-        lastCommit: {
-          message: 'Implement secure video encryption',
-          author: 'Jane Doe',
-          timestamp: '2024-01-17T15:45:00Z',
-          hash: 'x7y8z9a'
-        },
-        collaborators: 8,
-        stars: 156,
-        forks: 23,
-        size: '8.7 MB',
-        language: 'React',
-        topics: ['telemedicine', 'video-call', 'hipaa', 'webrtc'],
-        commits: 523,
-        branches: 5,
-        releases: 6
-      }
-    ];
+  async getGitRepositories(): Promise<GitRepository[]> {
+    try {
+      return await db.select().from(gitRepositories).orderBy(desc(gitRepositories.updatedAt));
+    } catch (error) {
+      console.error('Failed to fetch git repositories:', error);
+      return [];
+    }
   }
 
-  async getDeployments(): Promise<any[]> {
-    return [
-      {
-        id: 'prod-ehr-system',
-        name: 'Healthcare EHR Production',
-        url: 'https://ehr-system.medbuilder.app',
-        status: 'running',
-        environment: 'production',
-        region: 'us-east-1',
-        lastDeployment: '2024-01-18T08:30:00Z',
-        version: 'v2.1.4',
-        health: 'healthy',
-        traffic: '1.2K/hour',
-        uptime: '99.9%',
-        ssl: true,
-        customDomain: true,
-        buildTime: '3m 45s',
-        memoryUsage: '512MB',
-        cpuUsage: '45%'
-      },
-      {
-        id: 'staging-telemedicine',
-        name: 'Telemedicine Staging',
-        url: 'https://telemedicine-staging.medbuilder.app',
-        status: 'running',
-        environment: 'staging',
-        region: 'us-west-2',
-        lastDeployment: '2024-01-17T14:20:00Z',
-        version: 'v1.8.2',
-        health: 'healthy',
-        traffic: '45/hour',
-        uptime: '99.5%',
-        ssl: true,
-        customDomain: false,
-        buildTime: '2m 12s',
-        memoryUsage: '256MB',
-        cpuUsage: '23%'
-      }
-    ];
+  async getDeployments(): Promise<Deployment[]> {
+    try {
+      return await db.select().from(deployments).orderBy(desc(deployments.lastDeployment));
+    } catch (error) {
+      console.error('Failed to fetch deployments:', error);
+      return [];
+    }
   }
 
-  async getCodeReviews(): Promise<any[]> {
-    return [
-      {
-        id: 'pr-123',
-        title: 'Add FHIR R4 patient resource validation',
-        author: 'Dr. Johnson',
-        reviewers: ['alice-dev', 'bob-security'],
-        status: 'approved',
-        createdAt: '2024-01-17T09:00:00Z',
-        updatedAt: '2024-01-18T11:30:00Z',
-        linesAdded: 145,
-        linesRemoved: 23,
-        files: 8,
-        comments: 12,
-        aiInsights: [
-          'HIPAA compliance verified',
-          'Security scan passed',
-          'Performance impact: minimal'
-        ],
-        checks: {
-          tests: 'passed',
-          security: 'passed',
-          performance: 'passed',
-          accessibility: 'passed'
-        }
-      },
-      {
-        id: 'pr-124',
-        title: 'Implement clinical decision support API',
-        author: 'sarah-ai',
-        reviewers: ['charlie-medical', 'david-backend'],
-        status: 'pending',
-        createdAt: '2024-01-18T14:15:00Z',
-        updatedAt: '2024-01-18T16:45:00Z',
-        linesAdded: 267,
-        linesRemoved: 45,
-        files: 15,
-        comments: 5,
-        aiInsights: [
-          'Medical algorithm validation needed',
-          'Consider adding unit tests',
-          'Documentation coverage: 85%'
-        ],
-        checks: {
-          tests: 'running',
-          security: 'pending',
-          performance: 'passed',
-          accessibility: 'warning'
-        }
-      }
-    ];
+  async getCodeReviews(): Promise<CodeReview[]> {
+    try {
+      return await db.select().from(codeReviews).orderBy(desc(codeReviews.createdAt));
+    } catch (error) {
+      console.error('Failed to fetch code reviews:', error);
+      return [];
+    }
   }
 
-  async getPreviewEnvironments(): Promise<any[]> {
-    return [
-      {
-        id: 'preview-pr-123',
-        name: 'FHIR Validation Preview',
-        url: 'https://pr-123-preview.medbuilder.app',
-        status: 'active',
-        pullRequest: 'pr-123',
-        createdAt: '2024-01-17T09:30:00Z',
-        expiresAt: '2024-01-24T09:30:00Z',
-        features: ['FHIR R4 validation', 'Patient resource management'],
-        testResults: {
-          passed: 145,
-          failed: 2,
-          coverage: '94%'
-        },
-        performance: {
-          loadTime: '1.2s',
-          firstPaint: '0.8s',
-          lighthouse: 92
-        }
-      },
-      {
-        id: 'preview-feature-cds',
-        name: 'Clinical Decision Support Preview',
-        url: 'https://cds-feature.medbuilder.app',
-        status: 'building',
-        pullRequest: 'pr-124',
-        createdAt: '2024-01-18T14:30:00Z',
-        expiresAt: '2024-01-25T14:30:00Z',
-        features: ['AI-powered clinical insights', 'Drug interaction checking'],
-        testResults: null,
-        performance: null
-      }
-    ];
+  async getPreviewEnvironments(): Promise<PreviewEnvironment[]> {
+    try {
+      return await db.select().from(previewEnvironments).orderBy(desc(previewEnvironments.createdAt));
+    } catch (error) {
+      console.error('Failed to fetch preview environments:', error);
+      return [];
+    }
   }
 
-  async getBuildHistory(): Promise<any[]> {
-    return [
-      {
-        id: 'build-456',
-        commit: 'a1b2c3d',
-        branch: 'main',
-        status: 'success',
-        startTime: '2024-01-18T08:25:00Z',
-        endTime: '2024-01-18T08:28:45Z',
-        duration: '3m 45s',
-        logs: [
-          'Installing dependencies...',
-          'Running tests...',
-          'Building application...',
-          'Deployment successful'
-        ],
-        tests: {
-          total: 342,
-          passed: 340,
-          failed: 2,
-          skipped: 0
-        }
-      },
-      {
-        id: 'build-455',
-        commit: 'x7y8z9a',
-        branch: 'develop',
-        status: 'failed',
-        startTime: '2024-01-17T15:40:00Z',
-        endTime: '2024-01-17T15:42:15Z',
-        duration: '2m 15s',
-        logs: [
-          'Installing dependencies...',
-          'Running tests...',
-          'Error: Test suite failed',
-          'Build cancelled'
-        ],
-        tests: {
-          total: 298,
-          passed: 285,
-          failed: 13,
-          skipped: 0
-        }
-      }
-    ];
+  async getBuildHistory(): Promise<BuildHistory[]> {
+    try {
+      return await db.select().from(buildHistory).orderBy(desc(buildHistory.startTime));
+    } catch (error) {
+      console.error('Failed to fetch build history:', error);
+      return [];
+    }
   }
 
-  async getEnvironmentVariables(): Promise<any[]> {
-    return [
-      {
-        key: 'DATABASE_URL',
-        value: '••••••••••••••••',
-        environment: 'production',
-        encrypted: true,
-        lastUpdated: '2024-01-15T10:00:00Z'
-      },
-      {
-        key: 'FHIR_SERVER_URL',
-        value: 'https://api.fhir.org/r4',
-        environment: 'production',
-        encrypted: false,
-        lastUpdated: '2024-01-10T14:30:00Z'
-      },
-      {
-        key: 'HIPAA_ENCRYPTION_KEY',
-        value: '••••••••••••••••',
-        environment: 'production',
-        encrypted: true,
-        lastUpdated: '2024-01-18T09:15:00Z'
-      }
-    ];
+  async getEnvironmentVariables(): Promise<EnvironmentVariable[]> {
+    try {
+      return await db.select().from(environmentVariables).orderBy(desc(environmentVariables.lastUpdated));
+    } catch (error) {
+      console.error('Failed to fetch environment variables:', error);
+      return [];
+    }
   }
 
-  async getCollaborators(): Promise<any[]> {
-    return [
-      {
-        id: 'dr-smith',
-        name: 'Dr. Emily Smith',
-        email: 'emily.smith@medcenter.org',
-        role: 'owner',
-        permissions: ['read', 'write', 'admin'],
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=emily',
-        lastActive: '2024-01-18T16:30:00Z',
-        contributions: 247
-      },
-      {
-        id: 'alice-dev',
-        name: 'Alice Johnson',
-        email: 'alice@techteam.com',
-        role: 'developer',
-        permissions: ['read', 'write'],
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alice',
-        lastActive: '2024-01-18T15:45:00Z',
-        contributions: 189
-      },
-      {
-        id: 'bob-security',
-        name: 'Bob Wilson',
-        email: 'bob@security.com',
-        role: 'security-reviewer',
-        permissions: ['read', 'review'],
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=bob',
-        lastActive: '2024-01-17T12:20:00Z',
-        contributions: 56
-      }
-    ];
+  async getCollaborators(): Promise<ProjectCollaborator[]> {
+    try {
+      return await db.select().from(projectCollaborators).orderBy(desc(projectCollaborators.lastActive));
+    } catch (error) {
+      console.error('Failed to fetch collaborators:', error);
+      return [];
+    }
   }
 
   // Contract automation operations
-  async createOrganization(organizationData: any): Promise<any> {
-    const id = `org_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const organization = {
-      id,
-      ...organizationData,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    
-    // In a real implementation, this would use the database
-    // For now, return the organization with computed fields
-    return organization;
+  async createOrganization(organizationData: any): Promise<Organization> {
+    try {
+      const [organization] = await db.insert(organizations).values(organizationData).returning();
+      return organization;
+    } catch (error) {
+      console.error('Failed to create organization:', error);
+      throw error;
+    }
   }
 
   async generateContract(organizationId: string, planId: string, customPricing: any): Promise<any> {
@@ -1901,115 +1410,53 @@ This agreement incorporates organization-specific requirements and automatically
 `;
   }
 
-  private async getOrganizationById(organizationId: string): Promise<any> {
-    // Placeholder - would fetch from database
-    return {
-      id: organizationId,
-      name: "Sample Healthcare Organization",
-      type: "Hospital",
-      size: "Large (251-1000 employees)",
-      country: "United States",
-      state: "California",
-      contactPerson: "Dr. Jane Smith",
-      contactTitle: "Chief Technology Officer",
-      complianceNeeds: ["HIPAA", "SOC 2"],
-      integrationNeeds: ["Epic", "FHIR R4"],
-      estimatedUsers: 500
-    };
+  private async getOrganizationById(organizationId: string): Promise<Organization | undefined> {
+    try {
+      const [organization] = await db.select().from(organizations).where(eq(organizations.id, organizationId));
+      return organization;
+    } catch (error) {
+      console.error('Failed to fetch organization:', error);
+      return undefined;
+    }
   }
 
-  private async getActiveContract(organizationId: string): Promise<any> {
-    // Placeholder - would fetch from database
-    return {
-      id: "contract_" + organizationId,
-      startDate: new Date().toISOString(),
-      endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-      monthlyPrice: 999,
-      annualPrice: 9990
-    };
+  private async getActiveContract(organizationId: string): Promise<Contract | undefined> {
+    try {
+      const [contract] = await db.select().from(contracts)
+        .where(
+          and(
+            eq(contracts.organizationId, organizationId),
+            eq(contracts.status, 'active')
+          )
+        )
+        .orderBy(desc(contracts.startDate))
+        .limit(1);
+      return contract;
+    } catch (error) {
+      console.error('Failed to fetch active contract:', error);
+      return undefined;
+    }
   }
 
   // Pricing operations
-  async getPricingPlans(): Promise<any[]> {
-    // Return dynamic pricing plans with real-time data
-    const currentDate = new Date();
-    const isHolidayPromo = currentDate.getMonth() === 11; // December holiday promo
-    
-    return [
-      {
-        id: 'starter',
-        name: 'Healthcare Professional',
-        description: 'Perfect for individual doctors, nurses, and healthcare professionals',
-        icon: 'Users',
-        color: 'text-blue-500',
-        popular: false,
-        monthlyPrice: isHolidayPromo ? 39 : 49,
-        annualPrice: isHolidayPromo ? 29 : 39,
+  async getPricingPlans(): Promise<PricingPlan[]> {
+    try {
+      const plans = await db.select().from(pricingPlans).where(eq(pricingPlans.isActive, true));
+      
+      // Calculate dynamic promo status and adjust prices based on current date
+      const currentDate = new Date();
+      const isHolidayPromo = currentDate.getMonth() === 11; // December holiday promo
+      
+      return plans.map(plan => ({
+        ...plan,
         promoActive: isHolidayPromo,
-        features: [
-          'Up to 5 healthcare apps per month',
-          'HIPAA-compliant templates',
-          'Basic AI assistance',
-          'Mobile-responsive design',
-          'Email support',
-          'Patient data encryption',
-          'Basic analytics',
-          '30-day money-back guarantee'
-        ],
-        limitations: [
-          'No API integrations',
-          'Limited customization'
-        ]
-      },
-      {
-        id: 'professional',
-        name: 'Clinical Practice',
-        description: 'Ideal for small to medium clinics and medical practices',
-        icon: 'Building',
-        color: 'text-green-500',
-        popular: true,
-        monthlyPrice: isHolidayPromo ? 99 : 129,
-        annualPrice: isHolidayPromo ? 79 : 99,
-        promoActive: isHolidayPromo,
-        features: [
-          'Unlimited healthcare apps',
-          'Advanced AI code generation',
-          'EHR/EMR integrations',
-          'Custom HIPAA workflows',
-          'Priority support',
-          'Advanced analytics',
-          'Multi-user collaboration',
-          'White-label options',
-          'API access',
-          'Custom branding'
-        ],
-        limitations: []
-      },
-      {
-        id: 'enterprise',
-        name: 'Healthcare System',
-        description: 'Complete solution for hospitals and large healthcare organizations',
-        icon: 'Crown',
-        color: 'text-purple-500',
-        popular: false,
-        monthlyPrice: isHolidayPromo ? 399 : 499,
-        annualPrice: isHolidayPromo ? 319 : 399,
-        promoActive: isHolidayPromo,
-        features: [
-          'Everything in Clinical Practice',
-          'Dedicated account manager',
-          'Custom development',
-          'On-premise deployment',
-          'SSO integration',
-          'Advanced security',
-          'Compliance consulting',
-          'Training & onboarding',
-          'SLA guarantees',
-          '24/7 phone support'
-        ],
-        limitations: []
-      }
-    ];
+        monthlyPrice: isHolidayPromo && plan.promoMonthlyPrice ? plan.promoMonthlyPrice : plan.monthlyPrice,
+        annualPrice: isHolidayPromo && plan.promoAnnualPrice ? plan.promoAnnualPrice : plan.annualPrice,
+      }));
+    } catch (error) {
+      console.error('Failed to fetch pricing plans:', error);
+      return [];
+    }
   }
 
   async getPricingStats(): Promise<any> {
@@ -2207,6 +1654,47 @@ This agreement incorporates organization-specific requirements and automatically
   async getRealTimeUsageStats(): Promise<{[key: string]: number}> {
     const { monitoringService } = await import('./monitoring-service');
     return await monitoringService.getRealTimeUsageStats();
+  }
+
+  // Executive dashboard operations
+  async getExecutiveMetrics(): Promise<ExecutiveMetrics | undefined> {
+    try {
+      const [metrics] = await db.select().from(executiveMetrics).orderBy(desc(executiveMetrics.timestamp)).limit(1);
+      return metrics;
+    } catch (error) {
+      console.error('Failed to fetch executive metrics:', error);
+      return undefined;
+    }
+  }
+
+  async getExecutiveROI(): Promise<ExecutiveROI | undefined> {
+    try {
+      const [roi] = await db.select().from(executiveROI).orderBy(desc(executiveROI.timestamp)).limit(1);
+      return roi;
+    } catch (error) {
+      console.error('Failed to fetch executive ROI:', error);
+      return undefined;
+    }
+  }
+
+  async getExecutiveCompetitive(): Promise<ExecutiveCompetitive | undefined> {
+    try {
+      const [competitive] = await db.select().from(executiveCompetitive).orderBy(desc(executiveCompetitive.timestamp)).limit(1);
+      return competitive;
+    } catch (error) {
+      console.error('Failed to fetch executive competitive:', error);
+      return undefined;
+    }
+  }
+
+  async getExecutiveRevenue(): Promise<ExecutiveRevenue | undefined> {
+    try {
+      const [revenue] = await db.select().from(executiveRevenue).orderBy(desc(executiveRevenue.timestamp)).limit(1);
+      return revenue;
+    } catch (error) {
+      console.error('Failed to fetch executive revenue:', error);
+      return undefined;
+    }
   }
 }
 

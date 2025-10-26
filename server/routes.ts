@@ -53,17 +53,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register AI Chat routes
   registerAIChatRoutes(app);
 
-  // Dynamic Executive Data APIs (CS Agent Generated)
+  // Dynamic Executive Data APIs (Database-backed)
   app.get('/api/executive/dashboard', async (req, res) => {
     try {
-      const executiveMetrics = {
-        platformUsers: Math.floor(15000 + Math.random() * 5000),
-        activeProjects: Math.floor(8500 + Math.random() * 2000),
-        revenueGrowth: Math.floor(280 + Math.random() * 60),
-        marketPenetration: Math.floor(12 + Math.random() * 8),
-        timestamp: new Date().toISOString()
-      };
-      res.json(executiveMetrics);
+      const metrics = await storage.getExecutiveMetrics();
+      if (!metrics) {
+        return res.status(404).json({ message: "Executive metrics not found" });
+      }
+      res.json({
+        platformUsers: metrics.platformUsers,
+        activeProjects: metrics.activeProjects,
+        revenueGrowth: metrics.revenueGrowth,
+        marketPenetration: metrics.marketPenetration,
+        timestamp: metrics.timestamp?.toISOString() || new Date().toISOString()
+      });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch executive metrics" });
     }
@@ -71,14 +74,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/executive/roi-analysis', async (req, res) => {
     try {
-      const roiMetrics = {
-        developmentCostReduction: Math.floor(88 + Math.random() * 8),
-        timeToMarketImprovement: Math.floor(82 + Math.random() * 10),
-        complianceCostSavings: Math.floor(92 + Math.random() * 6),
-        totalROI: Math.floor(335 + Math.random() * 15),
-        timestamp: new Date().toISOString()
-      };
-      res.json(roiMetrics);
+      const roi = await storage.getExecutiveROI();
+      if (!roi) {
+        return res.status(404).json({ message: "Executive ROI not found" });
+      }
+      res.json({
+        developmentCostReduction: roi.developmentCostReduction,
+        timeToMarketImprovement: roi.timeToMarketImprovement,
+        complianceCostSavings: roi.complianceCostSavings,
+        totalROI: roi.totalROI,
+        timestamp: roi.timestamp?.toISOString() || new Date().toISOString()
+      });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch ROI analysis" });
     }
@@ -86,14 +92,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/executive/competitive-analysis', async (req, res) => {
     try {
-      const competitiveData = {
-        patentPortfolio: `$${(46.63 + Math.random() * 38.25).toFixed(2)}B-$${(84.88 + Math.random() * 15.12).toFixed(2)}B`,
-        marketPosition: "Zero Direct Competition",
-        technologyLead: `${Math.floor(3 + Math.random() * 3)}-${Math.floor(5 + Math.random() * 2)} Year Head Start`,
-        complianceAutomation: Math.floor(91 + Math.random() * 7),
-        timestamp: new Date().toISOString()
-      };
-      res.json(competitiveData);
+      const competitive = await storage.getExecutiveCompetitive();
+      if (!competitive) {
+        return res.status(404).json({ message: "Executive competitive data not found" });
+      }
+      res.json({
+        patentPortfolio: `${competitive.patentPortfolioMin}-${competitive.patentPortfolioMax}`,
+        marketPosition: competitive.marketPosition,
+        technologyLead: competitive.technologyLead,
+        complianceAutomation: competitive.complianceAutomation,
+        timestamp: competitive.timestamp?.toISOString() || new Date().toISOString()
+      });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch competitive analysis" });
     }
@@ -101,30 +110,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/executive/revenue-projections', async (req, res) => {
     try {
-      const { timeframe } = req.query;
-      const baseYear1 = { customers: 2500, arpu: 960, arr: 28.8 };
-      const baseYear3 = { customers: 45000, arpu: 1920, arr: 1037 };
-      const baseYear5 = { customers: 120000, arpu: 3000, arr: 4320 };
+      const revenue = await storage.getExecutiveRevenue();
+      if (!revenue) {
+        return res.status(404).json({ message: "Executive revenue data not found" });
+      }
       
-      const dynamicProjections = {
+      const projections = {
         year1: {
-          customers: Math.floor(baseYear1.customers + Math.random() * 500),
-          arpu: Math.floor(baseYear1.arpu + Math.random() * 100),
-          arr: parseFloat((baseYear1.arr + Math.random() * 5).toFixed(1))
+          customers: revenue.year1Customers,
+          arpu: revenue.year1Arpu,
+          arr: revenue.year1Arr
         },
         year3: {
-          customers: Math.floor(baseYear3.customers + Math.random() * 5000),
-          arpu: Math.floor(baseYear3.arpu + Math.random() * 200),
-          arr: Math.floor(baseYear3.arr + Math.random() * 100)
+          customers: revenue.year3Customers,
+          arpu: revenue.year3Arpu,
+          arr: revenue.year3Arr
         },
         year5: {
-          customers: Math.floor(baseYear5.customers + Math.random() * 10000),
-          arpu: Math.floor(baseYear5.arpu + Math.random() * 300),
-          arr: Math.floor(baseYear5.arr + Math.random() * 200)
+          customers: revenue.year5Customers,
+          arpu: revenue.year5Arpu,
+          arr: revenue.year5Arr
         },
-        timestamp: new Date().toISOString()
+        timestamp: revenue.timestamp?.toISOString() || new Date().toISOString()
       };
-      res.json(dynamicProjections);
+      res.json(projections);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch revenue projections" });
     }

@@ -722,10 +722,270 @@ export const contractSignatures = pgTable("contract_signatures", {
   signedAt: timestamp("signed_at").defaultNow(),
 });
 
+// Tech Stacks table - for dynamic tech stack management
+export const techStacks = pgTable("tech_stacks", {
+  id: varchar("id").primaryKey().notNull(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  category: varchar("category").notNull(),
+  healthcareDomain: varchar("healthcare_domain"),
+  frontend: jsonb("frontend").notNull(),
+  backend: jsonb("backend").notNull(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// AI Models table - for dynamic AI model catalog
+export const aiModels = pgTable("ai_models", {
+  id: varchar("id").primaryKey().notNull(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  provider: varchar("provider").notNull(),
+  capabilities: text("capabilities").array(),
+  accuracy: integer("accuracy"),
+  speed: varchar("speed"),
+  contextWindow: varchar("context_window"),
+  specialization: varchar("specialization"),
+  isOpenSource: boolean("is_open_source").default(false),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Code Examples table - for dynamic code examples library
+export const codeExamples = pgTable("code_examples", {
+  id: varchar("id").primaryKey().notNull(),
+  title: varchar("title").notNull(),
+  description: text("description"),
+  language: varchar("language").notNull(),
+  useCase: varchar("use_case"),
+  code: text("code").notNull(),
+  tags: text("tags").array(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Git Repositories table
+export const gitRepositories = pgTable("git_repositories", {
+  id: varchar("id").primaryKey().notNull(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  owner: varchar("owner").notNull(),
+  isPrivate: boolean("is_private").default(false),
+  branch: varchar("branch").default("main"),
+  lastCommitMessage: text("last_commit_message"),
+  lastCommitAuthor: varchar("last_commit_author"),
+  lastCommitTimestamp: timestamp("last_commit_timestamp"),
+  lastCommitHash: varchar("last_commit_hash"),
+  collaborators: integer("collaborators").default(0),
+  stars: integer("stars").default(0),
+  forks: integer("forks").default(0),
+  size: varchar("size"),
+  language: varchar("language"),
+  topics: text("topics").array(),
+  commits: integer("commits").default(0),
+  branches: integer("branches").default(1),
+  releases: integer("releases").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Deployments table
+export const deployments = pgTable("deployments", {
+  id: varchar("id").primaryKey().notNull(),
+  projectId: integer("project_id").references(() => projects.id),
+  name: varchar("name").notNull(),
+  url: varchar("url").notNull(),
+  status: varchar("status").notNull(),
+  environment: varchar("environment").notNull(),
+  region: varchar("region"),
+  lastDeployment: timestamp("last_deployment"),
+  version: varchar("version"),
+  health: varchar("health"),
+  traffic: varchar("traffic"),
+  uptime: varchar("uptime"),
+  ssl: boolean("ssl").default(false),
+  customDomain: boolean("custom_domain").default(false),
+  buildTime: varchar("build_time"),
+  memoryUsage: varchar("memory_usage"),
+  cpuUsage: varchar("cpu_usage"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Code Reviews table
+export const codeReviews = pgTable("code_reviews", {
+  id: varchar("id").primaryKey().notNull(),
+  projectId: integer("project_id").references(() => projects.id),
+  title: varchar("title").notNull(),
+  author: varchar("author").notNull(),
+  reviewers: text("reviewers").array(),
+  status: varchar("status").notNull(),
+  linesAdded: integer("lines_added").default(0),
+  linesRemoved: integer("lines_removed").default(0),
+  files: integer("files").default(0),
+  comments: integer("comments").default(0),
+  aiInsights: text("ai_insights").array(),
+  checks: jsonb("checks"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Preview Environments table
+export const previewEnvironments = pgTable("preview_environments", {
+  id: varchar("id").primaryKey().notNull(),
+  projectId: integer("project_id").references(() => projects.id),
+  name: varchar("name").notNull(),
+  url: varchar("url").notNull(),
+  status: varchar("status").notNull(),
+  pullRequest: varchar("pull_request"),
+  features: text("features").array(),
+  testResults: jsonb("test_results"),
+  performance: jsonb("performance"),
+  expiresAt: timestamp("expires_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Build History table
+export const buildHistory = pgTable("build_history", {
+  id: varchar("id").primaryKey().notNull(),
+  projectId: integer("project_id").references(() => projects.id),
+  commit: varchar("commit").notNull(),
+  branch: varchar("branch").notNull(),
+  status: varchar("status").notNull(),
+  startTime: timestamp("start_time").notNull(),
+  endTime: timestamp("end_time"),
+  duration: varchar("duration"),
+  logs: text("logs").array(),
+  tests: jsonb("tests"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Environment Variables table
+export const environmentVariables = pgTable("environment_variables", {
+  id: varchar("id").primaryKey().notNull(),
+  projectId: integer("project_id").references(() => projects.id),
+  key: varchar("key").notNull(),
+  value: text("value").notNull(),
+  environment: varchar("environment").notNull(),
+  encrypted: boolean("encrypted").default(false),
+  lastUpdated: timestamp("last_updated").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Project Collaborators table
+export const projectCollaborators = pgTable("project_collaborators", {
+  id: varchar("id").primaryKey().notNull(),
+  projectId: integer("project_id").references(() => projects.id),
+  userId: varchar("user_id").references(() => users.id),
+  name: varchar("name").notNull(),
+  email: varchar("email").notNull(),
+  role: varchar("role").notNull(),
+  permissions: text("permissions").array(),
+  avatar: varchar("avatar"),
+  lastActive: timestamp("last_active"),
+  contributions: integer("contributions").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Pricing Plans table
+export const pricingPlans = pgTable("pricing_plans", {
+  id: varchar("id").primaryKey().notNull(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  icon: varchar("icon"),
+  color: varchar("color"),
+  popular: boolean("popular").default(false),
+  monthlyPrice: integer("monthly_price").notNull(),
+  annualPrice: integer("annual_price").notNull(),
+  features: text("features").array(),
+  limitations: text("limitations").array(),
+  isActive: boolean("is_active").default(true),
+  displayOrder: integer("display_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Build Capabilities table
+export const buildCapabilities = pgTable("build_capabilities", {
+  id: varchar("id").primaryKey().notNull(),
+  category: varchar("category").notNull(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  features: text("features").array(),
+  techRequirements: jsonb("tech_requirements"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Executive Metrics tables
+export const executiveMetrics = pgTable("executive_metrics", {
+  id: varchar("id").primaryKey().notNull(),
+  platformUsers: integer("platform_users").notNull(),
+  activeProjects: integer("active_projects").notNull(),
+  revenueGrowth: integer("revenue_growth").notNull(),
+  marketPenetration: integer("market_penetration").notNull(),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
+export const executiveROI = pgTable("executive_roi", {
+  id: varchar("id").primaryKey().notNull(),
+  developmentCostReduction: integer("development_cost_reduction").notNull(),
+  timeToMarketImprovement: integer("time_to_market_improvement").notNull(),
+  complianceCostSavings: integer("compliance_cost_savings").notNull(),
+  totalROI: integer("total_roi").notNull(),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
+export const executiveCompetitive = pgTable("executive_competitive", {
+  id: varchar("id").primaryKey().notNull(),
+  patentPortfolioMin: text("patent_portfolio_min").notNull(),
+  patentPortfolioMax: text("patent_portfolio_max").notNull(),
+  marketPosition: text("market_position").notNull(),
+  technologyLead: text("technology_lead").notNull(),
+  complianceAutomation: integer("compliance_automation").notNull(),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
+export const executiveRevenue = pgTable("executive_revenue", {
+  id: varchar("id").primaryKey().notNull(),
+  year1Customers: integer("year1_customers").notNull(),
+  year1Arpu: integer("year1_arpu").notNull(),
+  year1Arr: integer("year1_arr").notNull(),
+  year3Customers: integer("year3_customers").notNull(),
+  year3Arpu: integer("year3_arpu").notNull(),
+  year3Arr: integer("year3_arr").notNull(),
+  year5Customers: integer("year5_customers").notNull(),
+  year5Arpu: integer("year5_arpu").notNull(),
+  year5Arr: integer("year5_arr").notNull(),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
 // Contract automation Zod schemas
 export const insertOrganizationSchema = createInsertSchema(organizations);
 export const insertContractSchema = createInsertSchema(contracts);
 export const insertContractSignatureSchema = createInsertSchema(contractSignatures);
+export const insertTechStackSchema = createInsertSchema(techStacks);
+export const insertAiModelSchema = createInsertSchema(aiModels);
+export const insertCodeExampleSchema = createInsertSchema(codeExamples);
+export const insertGitRepositorySchema = createInsertSchema(gitRepositories);
+export const insertDeploymentSchema = createInsertSchema(deployments);
+export const insertCodeReviewSchema = createInsertSchema(codeReviews);
+export const insertPreviewEnvironmentSchema = createInsertSchema(previewEnvironments);
+export const insertBuildHistorySchema = createInsertSchema(buildHistory);
+export const insertEnvironmentVariableSchema = createInsertSchema(environmentVariables);
+export const insertProjectCollaboratorSchema = createInsertSchema(projectCollaborators);
+export const insertPricingPlanSchema = createInsertSchema(pricingPlans);
+export const insertBuildCapabilitySchema = createInsertSchema(buildCapabilities);
+export const insertExecutiveMetricsSchema = createInsertSchema(executiveMetrics);
+export const insertExecutiveROISchema = createInsertSchema(executiveROI);
+export const insertExecutiveCompetitiveSchema = createInsertSchema(executiveCompetitive);
+export const insertExecutiveRevenueSchema = createInsertSchema(executiveRevenue);
 
 export type InsertOrganization = z.infer<typeof insertOrganizationSchema>;
 export type Organization = typeof organizations.$inferSelect;
@@ -733,3 +993,35 @@ export type InsertContract = z.infer<typeof insertContractSchema>;
 export type Contract = typeof contracts.$inferSelect;
 export type InsertContractSignature = z.infer<typeof insertContractSignatureSchema>;
 export type ContractSignature = typeof contractSignatures.$inferSelect;
+export type InsertTechStack = z.infer<typeof insertTechStackSchema>;
+export type TechStack = typeof techStacks.$inferSelect;
+export type InsertAiModel = z.infer<typeof insertAiModelSchema>;
+export type AiModel = typeof aiModels.$inferSelect;
+export type InsertCodeExample = z.infer<typeof insertCodeExampleSchema>;
+export type CodeExample = typeof codeExamples.$inferSelect;
+export type InsertGitRepository = z.infer<typeof insertGitRepositorySchema>;
+export type GitRepository = typeof gitRepositories.$inferSelect;
+export type InsertDeployment = z.infer<typeof insertDeploymentSchema>;
+export type Deployment = typeof deployments.$inferSelect;
+export type InsertCodeReview = z.infer<typeof insertCodeReviewSchema>;
+export type CodeReview = typeof codeReviews.$inferSelect;
+export type InsertPreviewEnvironment = z.infer<typeof insertPreviewEnvironmentSchema>;
+export type PreviewEnvironment = typeof previewEnvironments.$inferSelect;
+export type InsertBuildHistory = z.infer<typeof insertBuildHistorySchema>;
+export type BuildHistory = typeof buildHistory.$inferSelect;
+export type InsertEnvironmentVariable = z.infer<typeof insertEnvironmentVariableSchema>;
+export type EnvironmentVariable = typeof environmentVariables.$inferSelect;
+export type InsertProjectCollaborator = z.infer<typeof insertProjectCollaboratorSchema>;
+export type ProjectCollaborator = typeof projectCollaborators.$inferSelect;
+export type InsertPricingPlan = z.infer<typeof insertPricingPlanSchema>;
+export type PricingPlan = typeof pricingPlans.$inferSelect;
+export type InsertBuildCapability = z.infer<typeof insertBuildCapabilitySchema>;
+export type BuildCapability = typeof buildCapabilities.$inferSelect;
+export type InsertExecutiveMetrics = z.infer<typeof insertExecutiveMetricsSchema>;
+export type ExecutiveMetrics = typeof executiveMetrics.$inferSelect;
+export type InsertExecutiveROI = z.infer<typeof insertExecutiveROISchema>;
+export type ExecutiveROI = typeof executiveROI.$inferSelect;
+export type InsertExecutiveCompetitive = z.infer<typeof insertExecutiveCompetitiveSchema>;
+export type ExecutiveCompetitive = typeof executiveCompetitive.$inferSelect;
+export type InsertExecutiveRevenue = z.infer<typeof insertExecutiveRevenueSchema>;
+export type ExecutiveRevenue = typeof executiveRevenue.$inferSelect;
