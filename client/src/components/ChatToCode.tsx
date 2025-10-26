@@ -142,6 +142,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
                     : msg
                 ));
               } else if (data.type === "complete") {
+                console.log("Received complete event:", { hasGeneratedCode: !!data.generatedCode, hasAppId: !!data.appId, appId: data.appId });
                 if (data.generatedCode) {
                   setMessages(prev => prev.map(msg => 
                     msg.id === assistantMsgId 
