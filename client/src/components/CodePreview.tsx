@@ -24,15 +24,37 @@ export function CodePreview({ code, framework = "html", className = "" }: CodePr
   const [error, setError] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<"preview" | "code">("preview");
 
+  const findFile = (patterns: string[]) => {
+    for (const pattern of patterns) {
+      const exactMatch = code[pattern];
+      if (exactMatch) return exactMatch;
+      
+      const pathMatch = Object.keys(code).find(key => 
+        key.endsWith(`/${pattern}`) || key === pattern
+      );
+      if (pathMatch) return code[pathMatch];
+    }
+    return "";
+  };
+
   const generatePreviewHTML = () => {
     try {
-      // For simple HTML/CSS/JS apps
-      const html = code["index.html"] || code["App.tsx"] || code["main.tsx"] || "";
-      const css = code["style.css"] || code["styles.css"] || "";
-      const js = code["script.js"] || code["main.js"] || "";
+      console.log("Generating preview with code:", Object.keys(code));
+      
+      const html = findFile(["index.html", "public/index.html"]);
+      const css = findFile(["style.css", "styles.css", "App.css", "src/App.css"]);
+      const js = findFile(["script.js", "main.js"]);
+      const appTsx = findFile(["App.tsx", "App.jsx", "src/App.tsx", "src/App.jsx"]);
+      const mainComponent = findFile(["Dashboard.tsx", "src/components/Dashboard.tsx"]);
 
-      // If it's a React app, we need to provide a minimal runtime
-      if (framework === "react" || code["App.tsx"] || code["package.json"]) {
+      const isReactApp = framework === "react" || appTsx || code["package.json"] || Object.keys(code).some(k => k.endsWith('.tsx') || k.endsWith('.jsx'));
+
+      if (isReactApp) {
+        const allComponents = Object.entries(code)
+          .filter(([key]) => key.endsWith('.tsx') || key.endsWith('.jsx'))
+          .map(([_, content]) => content)
+          .join('\n\n');
+
         return `
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +74,7 @@ export function CodePreview({ code, framework = "html", className = "" }: CodePr
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    ${code["App.tsx"] || code["App.jsx"] || ""}
+    ${allComponents}
     
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
@@ -61,7 +83,6 @@ export function CodePreview({ code, framework = "html", className = "" }: CodePr
 </html>`;
       }
 
-      // For vanilla HTML/CSS/JS
       return `
 <!DOCTYPE html>
 <html lang="en">
