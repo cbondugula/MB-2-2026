@@ -1034,7 +1034,7 @@ export type ExecutiveRevenue = typeof executiveRevenue.$inferSelect;
 // Chat Conversations - Individual chat sessions with AI
 export const chatConversations = pgTable("chat_conversations", {
   id: varchar("id").primaryKey().notNull(),
-  userId: varchar("user_id").references(() => users.id),
+  userId: varchar("user_id").notNull(), // Removed FK constraint to allow guest users
   title: varchar("title").notNull(), // Auto-generated or user-provided
   initialPrompt: text("initial_prompt"), // First message that started the conversation
   status: varchar("status").notNull().default("active"), // active, completed, archived
