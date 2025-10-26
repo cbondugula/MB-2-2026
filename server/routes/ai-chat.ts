@@ -6,7 +6,7 @@ export function registerAIChatRoutes(app: Express) {
   app.post("/api/ai/chat", isAuthenticated, async (req, res) => {
     try {
       const { message, conversationHistory, projectId, mode } = req.body;
-      const userId = req.user?.claims?.sub;
+      const userId = (req.user as any)?.claims?.sub;
 
       // Simulate AI response for now - in production this would call OpenAI/Anthropic
       const response = await generateAIResponse(message, {
@@ -30,7 +30,7 @@ export function registerAIChatRoutes(app: Express) {
   app.post("/api/projects/onboard", isAuthenticated, async (req, res) => {
     try {
       const { userProfile, projectIdea, preferences } = req.body;
-      const userId = req.user?.claims?.sub;
+      const userId = (req.user as any)?.claims?.sub;
 
       // Create personalized project based on onboarding
       const project = await createOnboardingProject({
@@ -58,7 +58,7 @@ export function registerAIChatRoutes(app: Express) {
   app.post("/api/users/preferences", isAuthenticated, async (req, res) => {
     try {
       const { preferences } = req.body;
-      const userId = req.user?.claims?.sub;
+      const userId = (req.user as any)?.claims?.sub;
 
       // Save user preferences
       // In production, this would update the database

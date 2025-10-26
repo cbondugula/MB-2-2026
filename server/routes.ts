@@ -38,6 +38,7 @@ import { healthcareAIValidationService } from "./healthcare-ai-validation";
 import { BACKEND_AUTOMATION_FEATURES } from "./backend-automation-features";
 import { workflowAutomationService } from "./workflow-automation-service";
 import { registerAIChatRoutes } from "./routes/ai-chat";
+import { registerChatToCodeRoutes } from "./routes/chat-to-code";
 import { autonomousBusinessRouter } from "./autonomous-business-creator";
 import { bciRouter } from "./brain-computer-interface";
 import { tjcComplianceRouter } from "./tjc-compliance-service";
@@ -52,6 +53,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register AI Chat routes
   registerAIChatRoutes(app);
+  
+  // Register Chat-to-Code routes (v0.dev/bolt.new competitor)
+  registerChatToCodeRoutes(app);
 
   // Dynamic Executive Data APIs (Database-backed)
   app.get('/api/executive/dashboard', async (req, res) => {

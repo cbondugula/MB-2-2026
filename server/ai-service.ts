@@ -584,7 +584,7 @@ Include specific implementations for the selected countries and languages.
 
       return await ollamaService.generateHealthcareResponse(modelName, prompt, context);
     } catch (error) {
-      console.log('Ollama fallback to cloud:', error.message);
+      console.log('Ollama fallback to cloud:', (error as Error).message);
       // Fallback to cloud models
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
