@@ -277,20 +277,13 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
                                 <Button
                                   size="sm"
                                   className="bg-green-600 hover:bg-green-700 text-white"
-                                  onClick={() => window.open(`/apps/${message.appId}`, '_blank')}
+                                  asChild
                                   data-testid={`view-app-${message.appId}`}
                                 >
-                                  <Eye className="w-3 h-3 mr-1.5" />
-                                  View App
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="border-gray-600 text-gray-300 hover:bg-gray-800"
-                                  onClick={() => window.open(`/apps/${message.appId}/code`, '_blank')}
-                                >
-                                  <Code className="w-3 h-3 mr-1.5" />
-                                  View Code
+                                  <Link href={`/apps/${message.appId}`} target="_blank">
+                                    <Eye className="w-3 h-3 mr-1.5" />
+                                    View App
+                                  </Link>
                                 </Button>
                                 <Button
                                   asChild
