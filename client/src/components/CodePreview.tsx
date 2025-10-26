@@ -50,10 +50,79 @@ export function CodePreview({ code, framework = "html", className = "" }: CodePr
       const isReactApp = framework === "react" || appTsx || code["package.json"] || Object.keys(code).some(k => k.endsWith('.tsx') || k.endsWith('.jsx'));
 
       if (isReactApp) {
-        const allComponents = Object.entries(code)
+        // Transform components by removing imports and exports
+        const transformComponent = (code: string) => {
+          let transformed = code;
+          
+          // Remove all import statements
+          transformed = transformed.replace(/import\s+.*?from\s+['"].*?['"];?\n?/g, '');
+          transformed = transformed.replace(/import\s+['"].*?['"];?\n?/g, '');
+          
+          // Remove export default
+          transformed = transformed.replace(/export\s+default\s+/g, '');
+          
+          // Remove export keyword
+          transformed = transformed.replace(/export\s+/g, '');
+          
+          // Remove TypeScript type annotations
+          // Remove : Type from variables
+          transformed = transformed.replace(/:\s*\w+(<[^>]+>)?(?=\s*[=;,)])/g, '');
+          
+          // Remove React.FC
+          transformed = transformed.replace(/:\s*React\.FC(<[^>]+>)?/g, '');
+          
+          // Remove interface/type definitions
+          transformed = transformed.replace(/interface\s+\w+\s*\{[^}]*\}/g, '');
+          transformed = transformed.replace(/type\s+\w+\s*=\s*[^;]+;/g, '');
+          
+          // Remove generic type constraints
+          transformed = transformed.replace(/useParams<\{[^}]+\}>\(\)/g, 'useParams()');
+          transformed = transformed.replace(/useState<[^>]+>/g, 'useState');
+          
+          // Remove any remaining type annotations in angle brackets
+          transformed = transformed.replace(/<\{[^}]+\}>/g, '');
+          
+          return transformed;
+        };
+
+        // Get all component files and transform them
+        const componentFiles = Object.entries(code)
           .filter(([key]) => key.endsWith('.tsx') || key.endsWith('.jsx'))
-          .map(([_, content]) => content)
+          .map(([filename, content]) => ({
+            name: filename.split('/').pop()?.replace(/\.(tsx|jsx)$/, ''),
+            code: transformComponent(content)
+          }));
+
+        // Build the components code
+        const componentsCode = componentFiles
+          .map(({ code }) => code)
           .join('\n\n');
+
+        // Create router mocks
+        const routerMocks = `
+          // Mock react-router-dom
+          const BrowserRouter = ({ children }) => children;
+          const Router = ({ children }) => children;
+          const Routes = ({ children }) => {
+            const route = React.Children.toArray(children).find(child => 
+              child.props.path === '/' || child.props.path === window.location.hash.slice(1)
+            );
+            return route || React.Children.toArray(children)[0];
+          };
+          const Route = ({ element }) => element;
+          const Link = ({ to, children, className }) => 
+            React.createElement('a', { 
+              href: '#' + to, 
+              className,
+              onClick: (e) => { e.preventDefault(); window.location.hash = to; }
+            }, children);
+          const useParams = () => {
+            const hash = window.location.hash.slice(1);
+            const parts = hash.split('/');
+            return { id: parts[parts.length - 1] };
+          };
+          const useNavigate = () => (path) => { window.location.hash = path; };
+        `;
 
         return `
 <!DOCTYPE html>
@@ -65,6 +134,7 @@ export function CodePreview({ code, framework = "html", className = "" }: CodePr
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: system-ui, -apple-system, sans-serif; }
@@ -74,10 +144,29 @@ export function CodePreview({ code, framework = "html", className = "" }: CodePr
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    ${allComponents}
-    
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    try {
+      ${routerMocks}
+      
+      ${componentsCode}
+      
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(React.createElement(App));
+      
+      // Handle hash changes for routing
+      window.addEventListener('hashchange', () => {
+        root.render(React.createElement(App));
+      });
+      
+      console.log('✅ React app mounted successfully');
+    } catch (error) {
+      console.error('❌ Failed to mount React app:', error);
+      document.getElementById('root').innerHTML = 
+        '<div style="padding: 20px; color: red; font-family: monospace;">' +
+        '<h2>Preview Error</h2>' +
+        '<p>' + error.message + '</p>' +
+        '<pre>' + error.stack + '</pre>' +
+        '</div>';
+    }
   </script>
 </body>
 </html>`;
