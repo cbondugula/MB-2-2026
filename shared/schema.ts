@@ -1074,7 +1074,7 @@ export const chatMessages = pgTable("chat_messages", {
 // Generated Apps - Apps created via chat interface (different from projects table)
 export const generatedApps = pgTable("generated_apps", {
   id: varchar("id").primaryKey().notNull(),
-  userId: varchar("user_id").notNull().references(() => users.id),
+  userId: varchar("user_id").notNull(), // No FK constraint to support guest users
   conversationId: varchar("conversation_id").references(() => chatConversations.id),
   projectId: integer("project_id").references(() => projects.id), // Link to project if user saves as project
   name: varchar("name").notNull(),
