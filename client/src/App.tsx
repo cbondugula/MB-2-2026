@@ -47,6 +47,7 @@ import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
 import MedHELMDashboard from "@/pages/MedHELMDashboard";
 import LangExtractDashboard from "@/pages/LangExtractDashboard";
 import Documentation from "@/pages/documentation";
+import AppPreview from "@/pages/app-preview";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -61,6 +62,7 @@ function Router() {
           <Route path="/contract-onboarding" component={ContractOnboarding} />
           <Route path="/legal-documents" component={LegalDocuments} />
           <Route path="/documentation" component={Documentation} />
+          <Route path="/apps/:appId" component={AppPreview} />
         </>
       ) : (
         <>
@@ -104,6 +106,7 @@ function Router() {
           <Route path="/executive-dashboard" component={ExecutiveDashboard} />
           <Route path="/medhelm" component={MedHELMDashboard} />
           <Route path="/langextract" component={LangExtractDashboard} />
+          <Route path="/apps/:appId" component={AppPreview} />
         </>
       )}
       <Route component={NotFound} />
