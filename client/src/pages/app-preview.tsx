@@ -17,10 +17,12 @@ import {
   Loader2,
   ExternalLink,
   Copy,
-  CheckCircle
+  CheckCircle,
+  Eye
 } from "lucide-react";
 import { Link } from "wouter";
 import { useState } from "react";
+import { CodePreview } from "@/components/CodePreview";
 
 export default function AppPreview() {
   const [, params] = useRoute("/apps/:appId");
@@ -144,6 +146,11 @@ export default function AppPreview() {
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-8">
+        {/* Live Preview Section */}
+        <div className="mb-6">
+          <CodePreview code={codeFiles} framework={app.framework} />
+        </div>
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - App Details */}
           <div className="lg:col-span-1 space-y-6">
