@@ -98,6 +98,11 @@ export function CodePreview({ code, framework = "html", className = "" }: CodePr
           .map(({ code }) => code)
           .join('\n\n');
 
+        // Debug: Log transformed code
+        console.log("=== TRANSFORMED CODE ===");
+        console.log(componentsCode.substring(0, 500));
+        console.log("=== END PREVIEW ===");
+
         // Create router mocks
         const routerMocks = `
           // Mock react-router-dom
@@ -140,31 +145,53 @@ export function CodePreview({ code, framework = "html", className = "" }: CodePr
     body { font-family: system-ui, -apple-system, sans-serif; }
     ${css}
   </style>
+  <script>
+    // Catch Babel transpilation errors
+    window.addEventListener('error', function(e) {
+      console.error('❌ Global error:', e.message, e.error);
+      if (e.message.includes('Babel')) {
+        document.getElementById('root').innerHTML = 
+          '<div style="padding: 20px; color: red; font-family: monospace;">' +
+          '<h2>Babel Transpilation Error</h2>' +
+          '<p>' + e.message + '</p>' +
+          '</div>';
+      }
+    });
+  </script>
 </head>
 <body>
   <div id="root"></div>
-  <script type="text/babel">
+  <script type="text/babel" data-type="module">
     try {
+      console.log('🔵 Starting React app mount...');
+      
       ${routerMocks}
+      
+      console.log('🔵 Router mocks loaded');
       
       ${componentsCode}
       
+      console.log('🔵 Components code executed');
+      console.log('🔵 App component:', typeof App);
+      
       const root = ReactDOM.createRoot(document.getElementById('root'));
+      console.log('🔵 React root created');
+      
       root.render(React.createElement(App));
+      console.log('✅ React app mounted successfully!');
       
       // Handle hash changes for routing
       window.addEventListener('hashchange', () => {
         root.render(React.createElement(App));
       });
-      
-      console.log('✅ React app mounted successfully');
     } catch (error) {
       console.error('❌ Failed to mount React app:', error);
+      console.error('❌ Error stack:', error.stack);
       document.getElementById('root').innerHTML = 
         '<div style="padding: 20px; color: red; font-family: monospace;">' +
         '<h2>Preview Error</h2>' +
-        '<p>' + error.message + '</p>' +
-        '<pre>' + error.stack + '</pre>' +
+        '<p><strong>Message:</strong> ' + error.message + '</p>' +
+        '<pre style="white-space: pre-wrap; font-size: 12px;">' + error.stack + '</pre>' +
         '</div>';
     }
   </script>
