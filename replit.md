@@ -98,6 +98,10 @@ MedBuilder employs a dual-platform strategy, separating healthcare-specific deve
 - PostCSS
 
 ## Recent Changes
+- **COMPLETE END-TO-END WORKFLOW VERIFIED (2025-10-26)**: Full Chat→Generate→View App→Live Preview workflow now fully functional with all critical bugs fixed
+- **SSE BUFFERING BUG FIXED**: Large JSON payloads split across network chunks now handled correctly with line buffering between chunks using streaming decoder
+- **GUEST USER ACCESS CONTROL FIXED**: Guest-created apps now accessible by any guest user to prevent 404 errors when viewing generated apps
+- **NESTED FILE PATH SUPPORT**: CodePreview component now handles nested file paths (src/App.tsx) for proper React app rendering in live preview
 - **CHAT-TO-CODE UI LIVE (2025-10-26)**: Full-screen chat interface on landing page with real-time streaming, message history, and generated code display
 - **SSE STREAMING IMPLEMENTED**: Server-Sent Events for real-time AI response streaming directly in browser with live code generation feedback
 - **PRODUCTION-READY CHAT COMPONENT**: ChatToCode component with message bubbles, loading states, example prompts, and generated code visualization
