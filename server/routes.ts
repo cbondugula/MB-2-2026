@@ -60,11 +60,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!metrics) {
         return res.status(404).json({ message: "Executive metrics not found" });
       }
+      // Return only real data - exclude fictitious numbers
       res.json({
-        platformUsers: metrics.platformUsers,
-        activeProjects: metrics.activeProjects,
-        revenueGrowth: metrics.revenueGrowth,
-        marketPenetration: metrics.marketPenetration,
         timestamp: metrics.timestamp?.toISOString() || new Date().toISOString()
       });
     } catch (error) {
@@ -78,11 +75,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!roi) {
         return res.status(404).json({ message: "Executive ROI not found" });
       }
+      // Return only real data - exclude fictitious ROI percentages
       res.json({
-        developmentCostReduction: roi.developmentCostReduction,
-        timeToMarketImprovement: roi.timeToMarketImprovement,
-        complianceCostSavings: roi.complianceCostSavings,
-        totalROI: roi.totalROI,
         timestamp: roi.timestamp?.toISOString() || new Date().toISOString()
       });
     } catch (error) {
@@ -115,25 +109,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Executive revenue data not found" });
       }
       
-      const projections = {
-        year1: {
-          customers: revenue.year1Customers,
-          arpu: revenue.year1Arpu,
-          arr: revenue.year1Arr
-        },
-        year3: {
-          customers: revenue.year3Customers,
-          arpu: revenue.year3Arpu,
-          arr: revenue.year3Arr
-        },
-        year5: {
-          customers: revenue.year5Customers,
-          arpu: revenue.year5Arpu,
-          arr: revenue.year5Arr
-        },
+      // Return only real data - exclude fictitious revenue projections
+      res.json({
         timestamp: revenue.timestamp?.toISOString() || new Date().toISOString()
-      };
-      res.json(projections);
+      });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch revenue projections" });
     }

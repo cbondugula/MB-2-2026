@@ -923,22 +923,22 @@ export const buildCapabilities = pgTable("build_capabilities", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// Executive Metrics tables
+// Executive Metrics tables (fields nullable to allow removal of fictitious data)
 export const executiveMetrics = pgTable("executive_metrics", {
   id: varchar("id").primaryKey().notNull(),
-  platformUsers: integer("platform_users").notNull(),
-  activeProjects: integer("active_projects").notNull(),
-  revenueGrowth: integer("revenue_growth").notNull(),
-  marketPenetration: integer("market_penetration").notNull(),
+  platformUsers: integer("platform_users"),
+  activeProjects: integer("active_projects"),
+  revenueGrowth: integer("revenue_growth"),
+  marketPenetration: integer("market_penetration"),
   timestamp: timestamp("timestamp").defaultNow(),
 });
 
 export const executiveROI = pgTable("executive_roi", {
   id: varchar("id").primaryKey().notNull(),
-  developmentCostReduction: integer("development_cost_reduction").notNull(),
-  timeToMarketImprovement: integer("time_to_market_improvement").notNull(),
-  complianceCostSavings: integer("compliance_cost_savings").notNull(),
-  totalROI: integer("total_roi").notNull(),
+  developmentCostReduction: integer("development_cost_reduction"),
+  timeToMarketImprovement: integer("time_to_market_improvement"),
+  complianceCostSavings: integer("compliance_cost_savings"),
+  totalROI: integer("total_roi"),
   timestamp: timestamp("timestamp").defaultNow(),
 });
 
@@ -954,15 +954,15 @@ export const executiveCompetitive = pgTable("executive_competitive", {
 
 export const executiveRevenue = pgTable("executive_revenue", {
   id: varchar("id").primaryKey().notNull(),
-  year1Customers: integer("year1_customers").notNull(),
-  year1Arpu: integer("year1_arpu").notNull(),
-  year1Arr: integer("year1_arr").notNull(),
-  year3Customers: integer("year3_customers").notNull(),
-  year3Arpu: integer("year3_arpu").notNull(),
-  year3Arr: integer("year3_arr").notNull(),
-  year5Customers: integer("year5_customers").notNull(),
-  year5Arpu: integer("year5_arpu").notNull(),
-  year5Arr: integer("year5_arr").notNull(),
+  year1Customers: integer("year1_customers"),
+  year1Arpu: integer("year1_arpu"),
+  year1Arr: integer("year1_arr"),
+  year3Customers: integer("year3_customers"),
+  year3Arpu: integer("year3_arpu"),
+  year3Arr: integer("year3_arr"),
+  year5Customers: integer("year5_customers"),
+  year5Arpu: integer("year5_arpu"),
+  year5Arr: integer("year5_arr"),
   timestamp: timestamp("timestamp").defaultNow(),
 });
 

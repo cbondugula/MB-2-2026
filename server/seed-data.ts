@@ -1538,23 +1538,23 @@ export default function FHIRPatientSearch() {
 
     await db.insert(projectCollaborators).values(collaboratorData);
 
-    // Seed executive metrics
+    // Seed executive metrics (removed fictitious numbers per user request)
     const executiveMetricsData = {
       id: 'exec-metrics-001',
-      platformUsers: 18500,
-      activeProjects: 9800,
-      revenueGrowth: 320,
-      marketPenetration: 16,
+      platformUsers: null,
+      activeProjects: null,
+      revenueGrowth: null,
+      marketPenetration: null,
       timestamp: new Date()
     };
     await db.insert(executiveMetrics).values(executiveMetricsData);
 
     const executiveROIData = {
       id: 'exec-roi-001',
-      developmentCostReduction: 92,
-      timeToMarketImprovement: 88,
-      complianceCostSavings: 95,
-      totalROI: 340,
+      developmentCostReduction: null,
+      timeToMarketImprovement: null,
+      complianceCostSavings: null,
+      totalROI: null,
       timestamp: new Date()
     };
     await db.insert(executiveROI).values(executiveROIData);
@@ -1572,15 +1572,15 @@ export default function FHIRPatientSearch() {
 
     const executiveRevenueData = {
       id: 'exec-revenue-001',
-      year1Customers: 4800,
-      year1Arpu: 6000,
-      year1Arr: 29,
-      year3Customers: 42000,
-      year3Arpu: 12500,
-      year3Arr: 525,
-      year5Customers: 180000,
-      year5Arpu: 24000,
-      year5Arr: 4320,
+      year1Customers: null,
+      year1Arpu: null,
+      year1Arr: null,
+      year3Customers: null,
+      year3Arpu: null,
+      year3Arr: null,
+      year5Customers: null,
+      year5Arpu: null,
+      year5Arr: null,
       timestamp: new Date()
     };
     await db.insert(executiveRevenue).values(executiveRevenueData);
