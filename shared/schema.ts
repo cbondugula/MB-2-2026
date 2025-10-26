@@ -1025,3 +1025,199 @@ export type InsertExecutiveCompetitive = z.infer<typeof insertExecutiveCompetiti
 export type ExecutiveCompetitive = typeof executiveCompetitive.$inferSelect;
 export type InsertExecutiveRevenue = z.infer<typeof insertExecutiveRevenueSchema>;
 export type ExecutiveRevenue = typeof executiveRevenue.$inferSelect;
+
+// ============================================================================
+// CHAT-TO-CODE SYSTEM TABLES
+// Competing with v0.dev, bolt.new, lovable.dev
+// ============================================================================
+
+// Chat Conversations - Individual chat sessions with AI
+export const chatConversations = pgTable("chat_conversations", {
+  id: varchar("id").primaryKey().notNull(),
+  userId: varchar("user_id").references(() => users.id),
+  title: varchar("title").notNull(), // Auto-generated or user-provided
+  initialPrompt: text("initial_prompt"), // First message that started the conversation
+  status: varchar("status").notNull().default("active"), // active, completed, archived
+  generatedAppId: varchar("generated_app_id").references(() => generatedApps.id, { onDelete: "set null" }), // Link to app if conversation resulted in app creation
+  conversationType: varchar("conversation_type").default("chat"), // chat, voice, quick-action
+  context: jsonb("context"), // Store conversation context, user preferences, healthcare specialty, etc.
+  metadata: jsonb("metadata"), // Additional metadata (device info, location, etc.)
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  lastMessageAt: timestamp("last_message_at").defaultNow(),
+}, (table) => [
+  index("chat_conversations_user_id_idx").on(table.userId),
+  index("chat_conversations_created_at_idx").on(table.createdAt),
+]);
+
+// Chat Messages - Individual messages in conversations
+export const chatMessages = pgTable("chat_messages", {
+  id: varchar("id").primaryKey().notNull(),
+  conversationId: varchar("conversation_id").notNull().references(() => chatConversations.id, { onDelete: "cascade" }),
+  sequence: integer("sequence").notNull(), // Message ordering within conversation
+  role: varchar("role").notNull(), // user, assistant, system
+  content: text("content").notNull(),
+  messageType: varchar("message_type").default("text"), // text, code, image, file, action
+  attachments: jsonb("attachments"), // Array of file uploads, screenshots, etc.
+  codeBlocks: jsonb("code_blocks"), // Extracted code blocks with language info
+  suggestions: jsonb("suggestions"), // AI suggestions or quick actions
+  feedback: jsonb("feedback"), // User feedback on message (thumbs up/down, rating)
+  isStreaming: boolean("is_streaming").default(false), // For real-time streaming responses
+  metadata: jsonb("metadata"), // Token count, model used, processing time, etc.
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("chat_messages_conversation_id_idx").on(table.conversationId),
+  index("chat_messages_created_at_idx").on(table.createdAt),
+  index("chat_messages_sequence_idx").on(table.conversationId, table.sequence),
+]);
+
+// Generated Apps - Apps created via chat interface (different from projects table)
+export const generatedApps = pgTable("generated_apps", {
+  id: varchar("id").primaryKey().notNull(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  conversationId: varchar("conversation_id").references(() => chatConversations.id),
+  projectId: integer("project_id").references(() => projects.id), // Link to project if user saves as project
+  name: varchar("name").notNull(),
+  description: text("description"),
+  appType: varchar("app_type").notNull(), // ehr, telemedicine, patient-portal, clinical-ai, etc.
+  framework: varchar("framework").notNull(), // react, vue, angular, etc.
+  techStack: jsonb("tech_stack").notNull(), // Complete tech stack with versions
+  code: jsonb("code").notNull(), // File structure: { "src/App.tsx": "...", "package.json": "..." }
+  dependencies: jsonb("dependencies").notNull(), // NPM/pip packages
+  buildConfig: jsonb("build_config"), // Vite/Webpack configuration
+  previewUrl: varchar("preview_url"), // Temporary preview URL
+  shareableLink: varchar("shareable_link"), // Public shareable link
+  isPublic: boolean("is_public").default(false),
+  isHipaaCompliant: boolean("is_hipaa_compliant").default(true),
+  complianceChecks: jsonb("compliance_checks"), // Automated compliance scan results
+  aiModelUsed: varchar("ai_model_used"), // gpt-4o, claude-3.5-sonnet, etc.
+  generationMetadata: jsonb("generation_metadata"), // Prompts used, iterations, tokens
+  status: varchar("status").default("draft"), // draft, preview, deployed, archived
+  lastReviewedBy: varchar("last_reviewed_by"), // Audit trail for HIPAA compliance
+  lastReviewedAt: timestamp("last_reviewed_at"), // When was it last reviewed
+  viewCount: integer("view_count").default(0),
+  forkCount: integer("fork_count").default(0),
+  starCount: integer("star_count").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  lastDeployedAt: timestamp("last_deployed_at"),
+}, (table) => [
+  index("generated_apps_user_id_idx").on(table.userId),
+  index("generated_apps_created_at_idx").on(table.createdAt),
+  index("generated_apps_status_idx").on(table.status),
+]);
+
+// App Versions - Version history and iterations of generated apps
+export const appVersions = pgTable("app_versions", {
+  id: varchar("id").primaryKey().notNull(),
+  appId: varchar("app_id").notNull().references(() => generatedApps.id, { onDelete: "cascade" }),
+  versionNumber: integer("version_number").notNull(), // Auto-incrementing version (v1, v2, v3)
+  conversationMessageId: varchar("conversation_message_id").references(() => chatMessages.id), // Which message created this version
+  changeDescription: text("change_description"), // What changed in this version
+  code: jsonb("code").notNull(), // Complete code snapshot for this version
+  dependencies: jsonb("dependencies"), // Dependencies at this version
+  diff: jsonb("diff"), // Code diff from previous version
+  isRollbackPoint: boolean("is_rollback_point").default(true), // Can user rollback to this version
+  deployedUrl: varchar("deployed_url"), // If this version was deployed
+  status: varchar("status").default("active"), // active, archived, deprecated
+  metadata: jsonb("metadata"), // Generation stats, AI feedback, etc.
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("app_versions_app_id_idx").on(table.appId),
+  index("app_versions_created_at_idx").on(table.createdAt),
+]);
+
+// App Deployments - Deployed apps with shareable URLs (separate from project deployments)
+export const appDeployments = pgTable("app_deployments", {
+  id: varchar("id").primaryKey().notNull(),
+  appId: varchar("app_id").notNull().references(() => generatedApps.id, { onDelete: "cascade" }),
+  versionId: varchar("version_id").references(() => appVersions.id),
+  deploymentUrl: varchar("deployment_url").notNull().unique(), // https://[app-name].medbuilder.app
+  customDomain: varchar("custom_domain"), // Custom domain if user adds one
+  subdomain: varchar("subdomain").notNull().unique(), // Unique subdomain
+  status: varchar("status").notNull().default("deploying"), // deploying, active, failed, inactive
+  deploymentTarget: jsonb("deployment_target"), // Target metadata (region, provider, config)
+  environment: varchar("environment").default("production"), // production, preview, staging
+  region: varchar("region"), // us-east-1, eu-west-1, etc.
+  buildLogs: jsonb("build_logs"), // Build process logs
+  healthCheck: jsonb("health_check"), // Last health check status
+  ssl: boolean("ssl").default(true),
+  bandwidth: varchar("bandwidth"), // Bandwidth usage
+  visitors: integer("visitors").default(0),
+  deploymentConfig: jsonb("deployment_config"), // Environment vars, build settings, etc.
+  deployedBy: varchar("deployed_by"), // User who deployed
+  deployedAt: timestamp("deployed_at").defaultNow(),
+  lastHealthCheck: timestamp("last_health_check"),
+  expiresAt: timestamp("expires_at"), // For temporary deployments
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("app_deployments_app_id_idx").on(table.appId),
+  index("app_deployments_version_id_idx").on(table.versionId),
+  index("app_deployments_status_idx").on(table.status),
+]);
+
+// User Settings - Comprehensive user settings for chat-to-code system
+export const userSettings = pgTable("user_settings", {
+  id: varchar("id").primaryKey().notNull(),
+  userId: varchar("user_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+  userMode: varchar("user_mode").default("simple"), // simple, developer, expert
+  preferredLanguage: varchar("preferred_language").default("en"),
+  healthcareSpecialty: varchar("healthcare_specialty"), // cardiology, pediatrics, etc.
+  defaultFramework: varchar("default_framework").default("react"),
+  defaultTechStack: jsonb("default_tech_stack"), // User's preferred tech stack
+  enableVoiceControl: boolean("enable_voice_control").default(false),
+  enableAIAssist: boolean("enable_ai_assist").default(true),
+  preferredAIModel: varchar("preferred_ai_model").default("gpt-4o"),
+  codeEditorTheme: varchar("code_editor_theme").default("vs-dark"),
+  notificationSettings: jsonb("notification_settings"),
+  privacySettings: jsonb("privacy_settings"),
+  accessibilitySettings: jsonb("accessibility_settings"),
+  experimentalFeatures: jsonb("experimental_features"), // Beta features user has enabled
+  onboardingCompleted: boolean("onboarding_completed").default(false),
+  onboardingSteps: jsonb("onboarding_steps"), // Track which onboarding steps completed
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Template Usage Analytics - Track which templates are most popular
+export const templateUsageAnalytics = pgTable("template_usage_analytics", {
+  id: varchar("id").primaryKey().notNull(),
+  templateId: integer("template_id").references(() => templates.id),
+  userId: varchar("user_id").references(() => users.id),
+  generatedAppId: varchar("generated_app_id").references(() => generatedApps.id),
+  usageType: varchar("usage_type").notNull(), // browsed, previewed, customized, deployed
+  userRole: varchar("user_role"), // medical-professional, developer, admin
+  healthcareSpecialty: varchar("healthcare_specialty"),
+  timeToCustomize: integer("time_to_customize"), // Seconds from view to first edit
+  timeToDeploy: integer("time_to_deploy"), // Seconds from start to deployment
+  successfulDeployment: boolean("successful_deployment"),
+  userFeedback: jsonb("user_feedback"), // Rating, comments, issues
+  modifications: jsonb("modifications"), // What changes user made to template
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Chat-to-Code Insert Schemas
+export const insertChatConversationSchema = createInsertSchema(chatConversations);
+export const insertChatMessageSchema = createInsertSchema(chatMessages);
+export const insertGeneratedAppSchema = createInsertSchema(generatedApps);
+export const insertAppVersionSchema = createInsertSchema(appVersions);
+export const insertAppDeploymentSchema = createInsertSchema(appDeployments);
+export const insertUserSettingsSchema = createInsertSchema(userSettings);
+export const insertTemplateUsageAnalyticsSchema = createInsertSchema(templateUsageAnalytics);
+
+// Chat-to-Code Types
+export type InsertChatConversation = z.infer<typeof insertChatConversationSchema>;
+export type ChatConversation = typeof chatConversations.$inferSelect;
+export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
+export type ChatMessage = typeof chatMessages.$inferSelect;
+export type InsertGeneratedApp = z.infer<typeof insertGeneratedAppSchema>;
+export type GeneratedApp = typeof generatedApps.$inferSelect;
+export type InsertAppVersion = z.infer<typeof insertAppVersionSchema>;
+export type AppVersion = typeof appVersions.$inferSelect;
+export type InsertAppDeployment = z.infer<typeof insertAppDeploymentSchema>;
+export type AppDeployment = typeof appDeployments.$inferSelect;
+export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
+export type UserSettings = typeof userSettings.$inferSelect;
+export type InsertTemplateUsageAnalytics = z.infer<typeof insertTemplateUsageAnalyticsSchema>;
+export type TemplateUsageAnalytics = typeof templateUsageAnalytics.$inferSelect;
