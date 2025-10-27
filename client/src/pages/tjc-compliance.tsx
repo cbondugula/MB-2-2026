@@ -33,12 +33,12 @@ export default function TJCCompliance() {
 
   const assessmentMutation = useMutation({
     mutationFn: async (data: any) => apiRequest('POST', '/api/tjc/assess-compliance', data),
-    onSuccess: (response) => {
+    onSuccess: (response: any) => {
       setAssessmentResult(response.assessment);
     }
   });
 
-  const { data: monitoringData } = useQuery({
+  const { data: monitoringData } = useQuery<any>({
     queryKey: ['/api/tjc/monitor-compliance', hospitalId],
     enabled: !!hospitalId && hospitalId.length > 3,
     refetchInterval: 30000 // Real-time monitoring every 30 seconds
@@ -279,7 +279,7 @@ export default function TJCCompliance() {
                     Real-Time Compliance Monitoring Active
                   </CardTitle>
                   <CardDescription>
-                    Last updated: {new Date(monitoringData.last_updated).toLocaleString()}
+                    Last updated: {monitoringData?.last_updated ? new Date(monitoringData.last_updated).toLocaleString() : 'Not available'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -287,30 +287,30 @@ export default function TJCCompliance() {
                     <div>
                       <p className="text-sm font-medium text-gray-600 mb-2">Current Compliance Score</p>
                       <div className="flex items-center space-x-3">
-                        <Progress value={monitoringData.compliance_trends.current_score} className="flex-1" />
+                        <Progress value={monitoringData?.compliance_trends?.current_score || 0} className="flex-1" />
                         <span className="text-xl font-bold text-gray-900">
-                          {monitoringData.compliance_trends.current_score}%
+                          {monitoringData?.compliance_trends?.current_score || 0}%
                         </span>
                       </div>
                       <p className="text-sm text-green-600 mt-1">
-                        +{monitoringData.compliance_trends.change_percentage}% from last assessment
+                        +{monitoringData?.compliance_trends?.change_percentage || 0}% from last assessment
                       </p>
                     </div>
                     
                     <div>
                       <p className="text-sm font-medium text-gray-600 mb-2">Survey Readiness</p>
                       <p className="text-xl font-bold text-gray-900">
-                        {monitoringData.next_survey_readiness}
+                        {monitoringData?.next_survey_readiness || 'N/A'}
                       </p>
-                      <p className="text-sm text-gray-600 mt-1">Cost optimization: {monitoringData.cost_optimization}</p>
+                      <p className="text-sm text-gray-600 mt-1">Cost optimization: {monitoringData?.cost_optimization || 'N/A'}</p>
                     </div>
                   </div>
 
-                  {monitoringData.active_alerts && monitoringData.active_alerts.length > 0 && (
+                  {monitoringData?.active_alerts && monitoringData.active_alerts.length > 0 && (
                     <div>
                       <h4 className="text-lg font-semibold text-gray-900 mb-3">Active Alerts</h4>
                       <div className="space-y-3">
-                        {monitoringData.active_alerts.map((alert: any, index: number) => (
+                        {(monitoringData.active_alerts || []).map((alert: any, index: number) => (
                           <div key={index} className="border border-orange-200 rounded-lg p-4 bg-orange-50">
                             <div className="flex items-start">
                               <AlertCircle className="h-5 w-5 text-orange-600 mr-3 mt-0.5" />
@@ -334,7 +334,7 @@ export default function TJCCompliance() {
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-3">Automated Fixes Applied</h4>
                     <ul className="space-y-2">
-                      {monitoringData.automated_fixes.map((fix: string, index: number) => (
+                      {(monitoringData?.automated_fixes || []).map((fix: string, index: number) => (
                         <li key={index} className="flex items-center">
                           <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
                           <span className="text-sm text-gray-700">{fix}</span>
