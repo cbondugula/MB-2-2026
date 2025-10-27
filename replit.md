@@ -98,6 +98,8 @@ MedBuilder employs a dual-platform strategy, separating healthcare-specific deve
 - PostCSS
 
 ## Recent Changes
+- **WINSTON STRUCTURED LOGGING ACTIVE (2025-10-27)**: Production-ready structured logging with Winston for HIPAA-compliant audit trails: HTTP request logging (method, URL, status, duration, IP, userAgent, userId), security event logging (rate limits, auth failures), PHI scrubbing, request correlation IDs, multiple log levels (error, warn, info, http, debug), and graceful shutdown integration
+- **DEPLOYMENT INFRASTRUCTURE COMPLETE (2025-10-27)**: Production-ready deployment with comprehensive health checks (/health for monitoring with database/encryption/memory stats), readiness probe (/ready for load balancers), liveness probe (/live for orchestrators), graceful shutdown handlers (SIGTERM/SIGINT/uncaught errors), 5s grace period, 30s timeout, all exempt from rate limiting for orchestrator compatibility, complete DEPLOYMENT.md documentation
 - **COMPREHENSIVE RATE LIMITING COMPLETE (2025-10-27)**: Production-ready multi-tier rate limiting protecting all endpoints (1000/15min global, 5/15min auth, 100/min reads, 30/min writes, 10/min AI generation, 30/min chat) with IPv6-safe key generation, HIPAA audit integration, standard HTTP headers (X-RateLimit-*), and future Redis upgrade path documented
 - **COMPLETE END-TO-END WORKFLOW VERIFIED (2025-10-26)**: Full Chat→Generate→View App→Live Preview workflow now fully functional with all critical bugs fixed
 - **SSE BUFFERING BUG FIXED**: Large JSON payloads split across network chunks now handled correctly with line buffering between chunks using streaming decoder

@@ -1,7 +1,9 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { setupVite, serveStatic, log as viteLog } from "./vite";
 import { seedDatabase } from "./seed-data";
+import { log, logStartup, logShutdown, logError } from "./logger";
+import { requestContextMiddleware, httpLoggingMiddleware, errorLoggingMiddleware } from "./middleware/request-logger";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
@@ -9,35 +11,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      log(logLine);
-    }
-  });
-
-  next();
-});
+// Request logging middleware (before routes)
+app.use(requestContextMiddleware);
+app.use(httpLoggingMiddleware);
 
 (async () => {
   // Seed the database with initial data
@@ -49,6 +25,9 @@ app.use((req, res, next) => {
 
   const server = await registerRoutes(app);
 
+  // Error logging middleware (before error handler)
+  app.use(errorLoggingMiddleware);
+  
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
@@ -76,14 +55,21 @@ app.use((req, res, next) => {
     host: "0.0.0.0",
     reusePort: true,
   }, () => {
-    log(`serving on port ${port}`);
+    viteLog(`serving on port ${port}`);
+    logStartup({
+      port,
+      environment: process.env.NODE_ENV || "development",
+      nodeVersion: process.version,
+      databaseConnected: true,
+    });
   });
 
   // Graceful shutdown handling
   const { setShuttingDown } = await import("./health");
   
   async function gracefulShutdown(signal: string) {
-    log(`${signal} received, starting graceful shutdown...`);
+    viteLog(`${signal} received, starting graceful shutdown...`);
+    logShutdown(signal);
     setShuttingDown(true);
     
     // Stop accepting new connections
@@ -117,12 +103,13 @@ app.use((req, res, next) => {
   
   // Handle uncaught errors
   process.on('uncaughtException', (error) => {
-    console.error('Uncaught exception:', error);
+    logError(error, { event: 'uncaughtException' });
     gracefulShutdown('UNCAUGHT_EXCEPTION');
   });
   
   process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled rejection at:', promise, 'reason:', reason);
+    const error = reason instanceof Error ? reason : new Error(String(reason));
+    logError(error, { event: 'unhandledRejection', promise: String(promise) });
     gracefulShutdown('UNHANDLED_REJECTION');
   });
 })();
