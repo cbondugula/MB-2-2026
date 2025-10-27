@@ -365,19 +365,19 @@ export default function Dashboard() {
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/advanced-ai">
-                    <Button variant="outline" size="sm" className="w-full border-blue-500 text-white hover:bg-blue-900 bg-blue-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-blue-400 bg-blue-950 text-white hover:bg-blue-900 hover:border-blue-300 font-semibold shadow-sm">
                       <Atom className="w-4 h-4 mr-2" />
                       Advanced-AI
                     </Button>
                   </Link>
                   <Link href="/dual-advanced-classical">
-                    <Button variant="outline" size="sm" className="w-full border-cyan-500 text-white hover:bg-cyan-900 bg-cyan-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-cyan-400 bg-cyan-950 text-white hover:bg-cyan-900 hover:border-cyan-300 font-semibold shadow-sm">
                       <Zap className="w-4 h-4 mr-2" />
                       Dual Patents
                     </Button>
                   </Link>
                   <Link href="/tjc-compliance">
-                    <Button variant="outline" size="sm" className="w-full border-green-500 text-white hover:bg-green-900 bg-green-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-green-400 bg-green-950 text-white hover:bg-green-900 hover:border-green-300 font-semibold shadow-sm">
                       <Shield className="w-4 h-4 mr-2" />
                       TJC Compliance
                     </Button>
@@ -385,7 +385,7 @@ export default function Dashboard() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full border-purple-500 text-white hover:bg-purple-900 bg-purple-900/20 font-medium"
+                    className="w-full border-2 border-purple-400 bg-purple-950 text-white hover:bg-purple-900 hover:border-purple-300 font-semibold shadow-sm"
                     onClick={() => window.open('/api/bci/capabilities', '_blank')}
                   >
                     <Brain className="w-4 h-4 mr-2" />
@@ -394,14 +394,14 @@ export default function Dashboard() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full border-orange-500 text-white hover:bg-orange-900 bg-orange-900/20 font-medium"
+                    className="w-full border-2 border-orange-400 bg-orange-950 text-white hover:bg-orange-900 hover:border-orange-300 font-semibold shadow-sm"
                     onClick={() => window.open('/api/business/create-business-plan', '_blank')}
                   >
                     <Building className="w-4 h-4 mr-2" />
                     Auto Business
                   </Button>
                   <Link href="/healthcare-testing">
-                    <Button variant="outline" size="sm" className="w-full border-pink-500 text-white hover:bg-pink-900 bg-pink-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-pink-400 bg-pink-950 text-white hover:bg-pink-900 hover:border-pink-300 font-semibold shadow-sm">
                       <TestTube className="w-4 h-4 mr-2" />
                       AI Testing
                     </Button>
@@ -414,55 +414,55 @@ export default function Dashboard() {
                 <h3 className="text-sm font-medium text-gray-300">Healthcare Tools</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/global-healthcare">
-                    <Button variant="outline" size="sm" className="w-full border-blue-500 text-white hover:bg-blue-900 bg-blue-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-blue-400 bg-blue-950 text-white hover:bg-blue-900 hover:border-blue-300 font-semibold shadow-sm">
                       <Globe className="w-4 h-4 mr-2" />
                       Global Healthcare
                     </Button>
                   </Link>
                   <Link href="/clinical-ai">
-                    <Button variant="outline" size="sm" className="w-full border-teal-500 text-white hover:bg-teal-900 bg-teal-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-teal-400 bg-teal-950 text-white hover:bg-teal-900 hover:border-teal-300 font-semibold shadow-sm">
                       <Brain className="w-4 h-4 mr-2" />
                       Clinical AI
                     </Button>
                   </Link>
                   <Link href="/hipaa-tools">
-                    <Button variant="outline" size="sm" className="w-full border-emerald-500 text-white hover:bg-emerald-900 bg-emerald-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-emerald-400 bg-emerald-950 text-white hover:bg-emerald-900 hover:border-emerald-300 font-semibold shadow-sm">
                       <Shield className="w-4 h-4 mr-2" />
                       HIPAA Tools
                     </Button>
                   </Link>
                   <Link href="/super-agent">
-                    <Button variant="outline" size="sm" className="w-full border-yellow-500 text-white hover:bg-yellow-900 bg-yellow-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-yellow-400 bg-yellow-950 text-white hover:bg-yellow-900 hover:border-yellow-300 font-semibold shadow-sm">
                       <Zap className="w-4 h-4 mr-2" />
                       Super Agent
                     </Button>
                   </Link>
                   <Link href="/cs-agent">
-                    <Button variant="outline" size="sm" className="w-full border-cyan-500 text-white hover:bg-cyan-900 bg-cyan-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-cyan-400 bg-cyan-950 text-white hover:bg-cyan-900 hover:border-cyan-300 font-semibold shadow-sm">
                       <Brain className="w-4 h-4 mr-2" />
                       CS Agent 100x
                     </Button>
                   </Link>
                   <Link href="/visual-builder">
-                    <Button variant="outline" size="sm" className="w-full border-purple-500 text-white hover:bg-purple-900 bg-purple-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-purple-400 bg-purple-950 text-white hover:bg-purple-900 hover:border-purple-300 font-semibold shadow-sm">
                       <Eye className="w-4 h-4 mr-2" />
                       No-Code Builder
                     </Button>
                   </Link>
                   <Link href="/ml-python">
-                    <Button variant="outline" size="sm" className="w-full border-orange-500 text-white hover:bg-orange-900 bg-orange-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-orange-400 bg-orange-950 text-white hover:bg-orange-900 hover:border-orange-300 font-semibold shadow-sm">
                       <Code className="w-4 h-4 mr-2" />
                       Python ML
                     </Button>
                   </Link>
                   <Link href="/ml-dashboard">
-                    <Button variant="outline" size="sm" className="w-full border-violet-500 text-white hover:bg-violet-900 bg-violet-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-violet-400 bg-violet-950 text-white hover:bg-violet-900 hover:border-violet-300 font-semibold shadow-sm">
                       <Activity className="w-4 h-4 mr-2" />
                       ML Platform
                     </Button>
                   </Link>
                   <Link href="/healthcare-testing">
-                    <Button variant="outline" size="sm" className="w-full border-green-500 text-white hover:bg-green-900 bg-green-900/20 font-medium">
+                    <Button variant="outline" size="sm" className="w-full border-2 border-green-400 bg-green-950 text-white hover:bg-green-900 hover:border-green-300 font-semibold shadow-sm">
                       <TestTube className="w-4 h-4 mr-2" />
                       Advanced Testing
                     </Button>
