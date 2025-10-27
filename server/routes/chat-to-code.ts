@@ -19,6 +19,12 @@ export function registerChatToCodeRoutes(app: Express) {
   app.post("/api/chat/conversations", chatRateLimiter, isAuthenticated, async (req, res) => {
     try {
       const { initialPrompt, title } = req.body;
+      
+      // Validate required fields
+      if (!initialPrompt || typeof initialPrompt !== 'string') {
+        return res.status(400).json({ error: "initialPrompt is required and must be a string" });
+      }
+      
       const userId = getUserId(req);
       const auditLogger = createAuditLogger(req, userId);
       

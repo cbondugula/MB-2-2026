@@ -449,6 +449,10 @@ Generate complete, working healthcare applications that can be deployed immediat
   
   // Generate a title for the conversation based on initial prompt
   private generateTitle(prompt: string): string {
+    // Defensive check for undefined/null prompt
+    if (!prompt || typeof prompt !== 'string') {
+      return "Untitled Conversation";
+    }
     const words = prompt.split(" ").slice(0, 6).join(" ");
     return words.length > 50 ? words.substring(0, 50) + "..." : words;
   }
