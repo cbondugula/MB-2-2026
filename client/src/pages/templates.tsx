@@ -22,6 +22,26 @@ import {
   Plus
 } from "lucide-react";
 
+interface HealthcareTemplate {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  healthcareDomain?: string;
+  framework?: string;
+  backend?: string;
+  projectType?: string;
+  complianceLevel?: string;
+  imageUrl?: string;
+  isHipaaCompliant: boolean;
+  tags?: string[];
+}
+
+interface TemplatesApiResponse {
+  templates: HealthcareTemplate[];
+  categories: string[];
+}
+
 export default function Templates() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading } = useAuth();
@@ -43,14 +63,14 @@ export default function Templates() {
   }, [isAuthenticated, isLoading, toast]);
 
   // Fetch dynamic healthcare templates from API
-  const { data: templatesData, isLoading: templatesLoading } = useQuery({
+  const { data: templatesData, isLoading: templatesLoading } = useQuery<TemplatesApiResponse>({
     queryKey: ["/api/templates/healthcare"],
     enabled: isAuthenticated,
     refetchInterval: 60000, // Refresh every minute for template updates
   });
 
   // Use dynamic categories and templates
-  const categories = templatesData?.categories?.map(cat => ({ value: cat, label: cat })) || [
+  const categories = templatesData?.categories?.map((cat: string) => ({ value: cat, label: cat })) || [
     { value: "all", label: "All Categories" }
   ];
   
@@ -72,7 +92,7 @@ export default function Templates() {
     );
   }
 
-  const filteredTemplates = templates.filter(template => {
+  const filteredTemplates = templates.filter((template: HealthcareTemplate) => {
     const matchesSearch = searchTerm === "" || 
       template.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       template.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -107,7 +127,7 @@ export default function Templates() {
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category) => (
+                  {categories.map((category: { value: string; label: string }) => (
                     <SelectItem key={category.value} value={category.value}>
                       {category.label}
                     </SelectItem>
@@ -117,8 +137,8 @@ export default function Templates() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTemplates.map((template) => (
-                <Card key={template.id} className="group hover:shadow-lg transition-shadow">
+              {filteredTemplates.map((template: HealthcareTemplate) => (
+                <Card key={template.id} className="group hover:shadow-lg transition-shadow" data-testid={`template-card-${template.id}`}>
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-3">
@@ -140,7 +160,7 @@ export default function Templates() {
                       {template.description}
                     </p>
                     <div className="flex flex-wrap gap-1 mb-4">
-                      {template.tags?.map((tag, index) => (
+                      {template.tags?.map((tag: string, index: number) => (
                         <Badge key={index} variant="outline" className="text-xs">
                           {tag}
                         </Badge>
@@ -148,6 +168,7 @@ export default function Templates() {
                     </div>
                     <Button 
                       className="w-full" 
+                      data-testid={`button-use-template-${template.id}`}
                       onClick={() => {
                         toast({
                           title: "Template Selected",

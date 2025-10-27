@@ -6,10 +6,19 @@ import { useAuth } from "@/hooks/useAuth";
 import { Link } from "wouter";
 import { ArrowRight, Loader2 } from "lucide-react";
 
+interface Template {
+  id: number;
+  name: string;
+  description: string;
+  imageUrl?: string;
+  tags?: string[];
+  isHipaaCompliant?: boolean;
+}
+
 export default function TemplatesSection() {
   const { isAuthenticated } = useAuth();
 
-  const { data: templates, isLoading } = useQuery({
+  const { data: templates, isLoading } = useQuery<Template[]>({
     queryKey: ["/api/templates"],
     enabled: isAuthenticated,
   });
@@ -77,7 +86,7 @@ export default function TemplatesSection() {
     },
   ];
 
-  const displayTemplates = templates || defaultTemplates;
+  const displayTemplates: Template[] = templates || defaultTemplates;
 
   return (
     <Card className="border-slate-200">
@@ -94,7 +103,7 @@ export default function TemplatesSection() {
       
       <CardContent className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {displayTemplates.slice(0, 4).map((template) => (
+          {displayTemplates.slice(0, 4).map((template: Template) => (
             <div 
               key={template.id} 
               className="border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
@@ -108,7 +117,7 @@ export default function TemplatesSection() {
               <p className="text-sm text-slate-600 mb-3">{template.description}</p>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  {template.tags?.map((tag) => (
+                  {template.tags?.map((tag: string) => (
                     <Badge 
                       key={tag}
                       variant="secondary" 
