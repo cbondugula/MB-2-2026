@@ -49,6 +49,10 @@ import LangExtractDashboard from "@/pages/LangExtractDashboard";
 import Documentation from "@/pages/documentation";
 import AppPreview from "@/pages/app-preview";
 import MyApps from "@/pages/my-apps";
+import AdvancedAI from "@/pages/advanced-ai";
+import DualAdvancedClassical from "@/pages/dual-advanced-classical";
+import BCICapabilities from "@/pages/bci-capabilities";
+import AutoBusiness from "@/pages/auto-business";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -70,6 +74,10 @@ function Router() {
         <>
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/advanced-ai" component={AdvancedAI} />
+          <Route path="/dual-advanced-classical" component={DualAdvancedClassical} />
+          <Route path="/bci-capabilities" component={BCICapabilities} />
+          <Route path="/auto-business" component={AutoBusiness} />
           <Route path="/ai-workspace" component={AIWorkspace} />
           <Route path="/bert-analysis" component={BERTAnalysis} />
           <Route path="/standards-builder" component={StandardsBuilder} />

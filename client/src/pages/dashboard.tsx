@@ -368,12 +368,14 @@ export default function Dashboard() {
                     <Button variant="outline" size="sm" className="w-full border-2 border-blue-400 bg-blue-950 text-white hover:bg-blue-900 hover:border-blue-300 font-semibold shadow-sm">
                       <Atom className="w-4 h-4 mr-2" />
                       Advanced-AI
+                      <Badge className="ml-auto bg-yellow-500 text-black text-[10px] px-1.5 py-0.5 font-bold">SOON</Badge>
                     </Button>
                   </Link>
                   <Link href="/dual-advanced-classical">
                     <Button variant="outline" size="sm" className="w-full border-2 border-cyan-400 bg-cyan-950 text-white hover:bg-cyan-900 hover:border-cyan-300 font-semibold shadow-sm">
                       <Zap className="w-4 h-4 mr-2" />
                       Dual Patents
+                      <Badge className="ml-auto bg-yellow-500 text-black text-[10px] px-1.5 py-0.5 font-bold">SOON</Badge>
                     </Button>
                   </Link>
                   <Link href="/tjc-compliance">
@@ -382,24 +384,28 @@ export default function Dashboard() {
                       TJC Compliance
                     </Button>
                   </Link>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="w-full border-2 border-purple-400 bg-purple-950 text-white hover:bg-purple-900 hover:border-purple-300 font-semibold shadow-sm"
-                    onClick={() => window.open('/api/bci/capabilities', '_blank')}
-                  >
-                    <Brain className="w-4 h-4 mr-2" />
-                    Brain Interface
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="w-full border-2 border-orange-400 bg-orange-950 text-white hover:bg-orange-900 hover:border-orange-300 font-semibold shadow-sm"
-                    onClick={() => window.open('/api/business/create-business-plan', '_blank')}
-                  >
-                    <Building className="w-4 h-4 mr-2" />
-                    Auto Business
-                  </Button>
+                  <Link href="/bci-capabilities">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full border-2 border-purple-400 bg-purple-950 text-white hover:bg-purple-900 hover:border-purple-300 font-semibold shadow-sm"
+                    >
+                      <Brain className="w-4 h-4 mr-2" />
+                      Brain Interface
+                      <Badge className="ml-auto bg-yellow-500 text-black text-[10px] px-1.5 py-0.5 font-bold">SOON</Badge>
+                    </Button>
+                  </Link>
+                  <Link href="/auto-business">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full border-2 border-orange-400 bg-orange-950 text-white hover:bg-orange-900 hover:border-orange-300 font-semibold shadow-sm"
+                    >
+                      <Building className="w-4 h-4 mr-2" />
+                      Auto Business
+                      <Badge className="ml-auto bg-yellow-500 text-black text-[10px] px-1.5 py-0.5 font-bold">SOON</Badge>
+                    </Button>
+                  </Link>
                   <Link href="/healthcare-testing">
                     <Button variant="outline" size="sm" className="w-full border-2 border-pink-400 bg-pink-950 text-white hover:bg-pink-900 hover:border-pink-300 font-semibold shadow-sm">
                       <TestTube className="w-4 h-4 mr-2" />

@@ -102,11 +102,12 @@ export default function CSAgentDashboard() {
   // Auto-refresh monitoring data
   useEffect(() => {
     const interval = setInterval(() => {
-      refetchMonitoring();
+      refetchHealth();
+      refetchAnalysis();
     }, 30000); // Refresh every 30 seconds
 
     return () => clearInterval(interval);
-  }, [refetchMonitoring]);
+  }, [refetchHealth, refetchAnalysis]);
 
   if (healthLoading || analysisLoading || healthcareLoading || patentLoading) {
     return (
