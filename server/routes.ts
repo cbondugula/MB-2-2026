@@ -56,10 +56,8 @@ import {
 } from "./rate-limiter";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
-
-  // Apply global rate limiting to all routes (HIPAA security + DDoS protection)
+  // Apply global rate limiting FIRST (before any routes are created)
+  // This ensures ALL routes including auth are protected (HIPAA security + DDoS protection)
   app.use(globalRateLimiter);
 
   // Apply method-specific rate limiting (reads vs writes)
@@ -67,6 +65,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Skip health checks
     if (req.path.startsWith('/health') || req.path.startsWith('/_health')) {
       return next();
+    }
+    
+    // Apply stricter auth rate limiting for sensitive endpoints
+    if (req.path.startsWith('/api/login') || req.path.startsWith('/api/callback')) {
+      return authRateLimiter(req, res, next);
     }
     
     // Apply write rate limiting for state-changing operations
@@ -81,6 +84,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     next();
   });
+
+  // Auth middleware - NOW protected by rate limiters above
+  await setupAuth(app);
 
   // Health check endpoint with encryption status
   app.get('/health', async (req, res) => {

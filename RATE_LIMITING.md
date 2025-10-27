@@ -36,13 +36,27 @@ Rate limits are enforced per:
 - `server/routes.ts` - Global and method-specific middleware
 - `server/routes/chat-to-code.ts` - Chat and AI generation rate limiting
 
+## Current Implementation Status
+
+✅ **COMPLETED (Task #6)**:
+- Global rate limiting active across all routes
+- Method-specific rate limiting (GET vs POST/PUT/PATCH/DELETE)
+- Auth endpoint protection (5 attempts / 15 minutes)
+- AI generation rate limiting (10 requests / minute)
+- Chat message rate limiting (30 messages / minute)
+- IPv6-safe key generation to prevent address rotation bypass
+- Comprehensive monitoring and audit logging integration
+
+⏳ **FUTURE REQUIREMENT (Separate Task)**:
+- Redis-backed storage for production multi-instance deployment
+
 ## Production Requirements
 
-### ⚠️ CRITICAL: Redis-Backed Storage Required
+### ⚠️ FUTURE: Redis-Backed Storage Required
 
-**Current State**: Using in-memory storage (development only)
+**Current State**: Using in-memory storage (acceptable for single-instance development/staging)
 
-**Production Issue**: In-memory storage has critical limitations:
+**Production Issue**: In-memory storage has limitations for multi-instance deployments:
 - No shared counters across multiple server instances
 - Rate limits reset on server restart
 - No persistence of rate limit state
