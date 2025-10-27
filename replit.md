@@ -4,6 +4,16 @@
 
 MedBuilder is an AI-powered web application designed to be the leading platform for creating healthcare and life sciences applications. It features conversational AI, universal accessibility, rapid onboarding, dual visual and voice-controlled development modes, and a proactive AI assistant. The platform focuses on comprehensive IP protection for its innovations, particularly in voice-controlled healthcare development, advanced medical education, and AI-powered compliance automation. MedBuilder ensures global privacy compliance, supports multicultural healthcare across 193 countries and 45 languages, and integrates various healthcare domains like medical education, clinical research, and telehealth. It aims for market dominance and significant revenue potential through its unique blend of AI, voice control, and healthcare specialization.
 
+## Recent Changes
+
+**October 27, 2025 - Healthcare Templates Implementation**
+- Fixed duplicate API route issue: Removed redundant `/api/templates/healthcare` route that was causing "invalid input syntax for type integer: NaN" errors
+- Added 14 comprehensive HIPAA-compliant healthcare templates to `server/seed-data.ts` for database persistence across server restarts
+- Templates now cover: Patient Portal, Research Platform, Telehealth, EHR, Scheduling, Lab Management, Pharmacy, Clinical Trials, Medical Imaging, Analytics, Mental Health, MedTech, Wellness, Hospital Operations
+- Made `/templates` route publicly accessible (no authentication required) so prospective users can browse template library
+- Verified all templates display correctly with metadata including name, description, category, healthcare domain, framework, backend, and HIPAA compliance status
+- Template library fully operational and tested end-to-end with Playwright
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -19,6 +29,7 @@ Mandatory Dynamic Data Policy:
 - All strategic analysis, revenue projections, and market data sourced from live database calculation engines
 - CS Agent service fully converted to dynamic database operations with no hardcoded values
 - Patent demonstrations and USPTO readiness status fetched from working prototype implementations
+- Healthcare templates seeded from database via seed-data.ts (14 HIPAA-compliant templates across all major healthcare domains)
 
 ## System Architecture
 

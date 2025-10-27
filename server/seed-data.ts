@@ -1126,6 +1126,246 @@ export default function FHIRPatientSearch() {
         dependencies: ['django-compliance', 'clinical-data-models', 'fda-submission-tools'],
         isHipaaCompliant: true,
         tags: ['Clinical Trials', 'FDA Compliance', 'Research Data', 'GCP']
+      },
+      {
+        name: 'Telehealth Consultation Platform',
+        description: 'Video consultation platform with appointment scheduling, patient records, and secure messaging',
+        category: 'Telehealth',
+        healthcareDomain: 'telehealth',
+        framework: 'react',
+        backend: 'nodejs',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400',
+        code: {
+          features: ['VideoChat', 'Scheduling', 'PatientRecords', 'SecureMessaging']
+        },
+        buildConfig: {
+          ssl: true
+        },
+        dependencies: ['react', 'express', 'socket.io'],
+        isHipaaCompliant: true,
+        tags: ['Telehealth', 'Video Consultation', 'HIPAA']
+      },
+      {
+        name: 'Medical Records Management',
+        description: 'Comprehensive EHR system for managing patient medical records, lab results, and clinical data',
+        category: 'EHR',
+        healthcareDomain: 'clinical',
+        framework: 'react',
+        backend: 'nodejs',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400',
+        code: {
+          features: ['PatientManagement', 'LabResults', 'ClinicalNotes', 'FHIR']
+        },
+        buildConfig: {
+          database: 'postgresql'
+        },
+        dependencies: ['react', 'express', 'fhir-client'],
+        isHipaaCompliant: true,
+        tags: ['EHR', 'FHIR', 'Clinical Data']
+      },
+      {
+        name: 'Appointment Scheduling System',
+        description: 'Advanced scheduling system with calendar management, reminders, and patient notifications',
+        category: 'Scheduling',
+        healthcareDomain: 'clinical',
+        framework: 'react',
+        backend: 'nodejs',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400',
+        code: {
+          features: ['Calendar', 'Reminders', 'Notifications', 'WaitlistManagement']
+        },
+        buildConfig: {
+          notifications: true
+        },
+        dependencies: ['react', 'express', 'nodemailer'],
+        isHipaaCompliant: true,
+        tags: ['Scheduling', 'Calendar', 'Appointments']
+      },
+      {
+        name: 'Laboratory Information System',
+        description: 'Complete lab management with test ordering, results tracking, and quality control',
+        category: 'Lab Management',
+        healthcareDomain: 'laboratory',
+        framework: 'react',
+        backend: 'python',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=400',
+        code: {
+          features: ['TestOrdering', 'ResultsTracking', 'QualityControl', 'Reporting']
+        },
+        buildConfig: {
+          python_version: '3.9'
+        },
+        dependencies: ['react', 'django', 'pandas'],
+        isHipaaCompliant: true,
+        tags: ['Lab', 'Testing', 'Quality Control']
+      },
+      {
+        name: 'Prescription Management System',
+        description: 'E-prescription system with drug interaction checking and pharmacy integration',
+        category: 'Pharmacy',
+        healthcareDomain: 'pharmacy',
+        framework: 'react',
+        backend: 'nodejs',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400',
+        code: {
+          features: ['EPrescribing', 'DrugInteractions', 'PharmacyIntegration', 'RefillManagement']
+        },
+        buildConfig: {
+          integrations: ['pharmacies']
+        },
+        dependencies: ['react', 'express', 'drug-db'],
+        isHipaaCompliant: true,
+        tags: ['Pharmacy', 'Prescriptions', 'Drug Interactions']
+      },
+      {
+        name: 'Clinical Trial Management',
+        description: 'Clinical trial system with patient recruitment, data collection, and regulatory reporting',
+        category: 'Research',
+        healthcareDomain: 'research',
+        framework: 'react',
+        backend: 'python',
+        projectType: 'web',
+        complianceLevel: 'fda',
+        imageUrl: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400',
+        code: {
+          features: ['PatientRecruitment', 'DataCollection', 'AdverseEvents', 'RegulatoryReporting']
+        },
+        buildConfig: {
+          compliance: '21CFRPart11'
+        },
+        dependencies: ['react', 'django', 'pandas'],
+        isHipaaCompliant: true,
+        tags: ['Clinical Trials', 'FDA', 'Research']
+      },
+      {
+        name: 'Medical Imaging Viewer',
+        description: 'DICOM viewer with 3D reconstruction, measurements, and reporting',
+        category: 'Medical Imaging',
+        healthcareDomain: 'radiology',
+        framework: 'react',
+        backend: 'nodejs',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=400',
+        code: {
+          features: ['DICOMViewer', '3DReconstruction', 'Measurements', 'Reporting']
+        },
+        buildConfig: {
+          imaging: 'dicom'
+        },
+        dependencies: ['react', 'express', 'cornerstone'],
+        isHipaaCompliant: true,
+        tags: ['DICOM', 'Radiology', 'Imaging']
+      },
+      {
+        name: 'Health Analytics Dashboard',
+        description: 'Real-time health analytics with predictive insights and population health tracking',
+        category: 'Analytics',
+        healthcareDomain: 'analytics',
+        framework: 'react',
+        backend: 'python',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400',
+        code: {
+          features: ['RealTimeAnalytics', 'PredictiveModels', 'PopulationHealth', 'DataVisualization']
+        },
+        buildConfig: {
+          analytics: 'advanced'
+        },
+        dependencies: ['react', 'flask', 'tensorflow'],
+        isHipaaCompliant: true,
+        tags: ['Analytics', 'AI', 'Population Health']
+      },
+      {
+        name: 'Mental Health Chatbot',
+        description: 'AI-powered mental health support chatbot with crisis detection and therapist integration',
+        category: 'Mental Health',
+        healthcareDomain: 'mental_health',
+        framework: 'react',
+        backend: 'python',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400',
+        code: {
+          features: ['AIChatbot', 'CrisisDetection', 'TherapistIntegration', 'SentimentAnalysis']
+        },
+        buildConfig: {
+          ai: 'nlp'
+        },
+        dependencies: ['react', 'flask', 'transformers'],
+        isHipaaCompliant: true,
+        tags: ['Mental Health', 'AI', 'NLP']
+      },
+      {
+        name: 'Medical Device Integration',
+        description: 'IoT platform for medical device data collection, monitoring, and alerts',
+        category: 'MedTech',
+        healthcareDomain: 'medical_devices',
+        framework: 'react',
+        backend: 'nodejs',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=400',
+        code: {
+          features: ['DeviceIntegration', 'RealTimeMonitoring', 'Alerts', 'DataAnalytics']
+        },
+        buildConfig: {
+          iot: true
+        },
+        dependencies: ['react', 'express', 'mqtt'],
+        isHipaaCompliant: true,
+        tags: ['IoT', 'Medical Devices', 'Monitoring']
+      },
+      {
+        name: 'Fitness & Wellness Tracker',
+        description: 'Comprehensive fitness and wellness tracking with activity, nutrition, and sleep monitoring',
+        category: 'Wellness',
+        healthcareDomain: 'wellness',
+        framework: 'react',
+        backend: 'nodejs',
+        projectType: 'mobile',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400',
+        code: {
+          features: ['ActivityTracking', 'NutritionLog', 'SleepMonitoring', 'GoalSetting']
+        },
+        buildConfig: {
+          mobile: 'react-native'
+        },
+        dependencies: ['react-native', 'express', 'healthkit'],
+        isHipaaCompliant: true,
+        tags: ['Fitness', 'Wellness', 'Mobile']
+      },
+      {
+        name: 'Hospital Bed Management',
+        description: 'Real-time hospital bed management with occupancy tracking and transfer coordination',
+        category: 'Hospital Operations',
+        healthcareDomain: 'hospital',
+        framework: 'react',
+        backend: 'nodejs',
+        projectType: 'web',
+        complianceLevel: 'hipaa',
+        imageUrl: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400',
+        code: {
+          features: ['BedTracking', 'OccupancyManagement', 'TransferCoordination', 'ResourceOptimization']
+        },
+        buildConfig: {
+          realtime: true
+        },
+        dependencies: ['react', 'express', 'socket.io'],
+        isHipaaCompliant: true,
+        tags: ['Hospital', 'Operations', 'Resource Management']
       }
     ];
 

@@ -710,6 +710,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Templates API - Dynamic healthcare application templates (must come BEFORE :id route)
+  app.get('/api/templates/healthcare', async (req, res) => {
+    try {
+      const templates = await storage.getTemplates();
+      const usageStats = await storage.getRealTimeUsageStats();
+      
+      const enhancedTemplates = templates.map(template => ({
+        ...template,
+        lastUpdated: new Date().toISOString(),
+        dynamicContent: true,
+        usage: {
+          installations: Math.max(500, usageStats.totalProjects * 50 + template.id * 100),
+          rating: (4.2 + (template.id % 10) * 0.08).toFixed(1),
+          reviews: Math.max(25, usageStats.activeProjects * 10 + template.id * 5)
+        }
+      }));
+      
+      // Get unique categories from actual templates
+      const uniqueCategories = Array.from(new Set(templates.map(t => t.category)));
+      
+      res.json({
+        templates: enhancedTemplates,
+        categories: uniqueCategories,
+        totalCount: enhancedTemplates.length,
+        lastUpdated: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Failed to fetch healthcare templates:', error);
+      res.status(500).json({ message: 'Failed to fetch healthcare templates', error: error instanceof Error ? error.message : 'Unknown error' });
+    }
+  });
+
+  app.get('/api/templates/category/:category', async (req, res) => {
+    try {
+      const category = req.params.category;
+      const templates = await storage.getTemplatesByCategory(category);
+      res.json(templates);
+    } catch (error) {
+      console.error("Error fetching templates by category:", error);
+      res.status(500).json({ message: "Failed to fetch templates" });
+    }
+  });
+
   app.get('/api/templates/:id', async (req, res) => {
     try {
       const templateId = parseInt(req.params.id);
@@ -723,17 +766,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching template:", error);
       res.status(500).json({ message: "Failed to fetch template" });
-    }
-  });
-
-  app.get('/api/templates/category/:category', async (req, res) => {
-    try {
-      const category = req.params.category;
-      const templates = await storage.getTemplatesByCategory(category);
-      res.json(templates);
-    } catch (error) {
-      console.error("Error fetching templates by category:", error);
-      res.status(500).json({ message: "Failed to fetch templates" });
     }
   });
 
@@ -2782,43 +2814,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Templates API - Dynamic healthcare application templates
-  app.get('/api/templates/healthcare', async (req, res) => {
-    try {
-      const templates = await storage.getTemplates();
-      const usageStats = await storage.getRealTimeUsageStats();
-      
-      const enhancedTemplates = templates.map(template => ({
-        ...template,
-        lastUpdated: new Date().toISOString(),
-        dynamicContent: true,
-        usage: {
-          installations: Math.max(500, usageStats.totalProjects * 50 + template.id * 100),
-          rating: (4.2 + (template.id % 10) * 0.08).toFixed(1),
-          reviews: Math.max(25, usageStats.activeProjects * 10 + template.id * 5)
-        }
-      }));
-      
-      res.json({
-        templates: enhancedTemplates,
-        categories: [
-          'Patient Management',
-          'Clinical Decision Support',
-          'Telemedicine',
-          'Laboratory Systems',
-          'Pharmacy Management',
-          'Medical Imaging',
-          'Healthcare Analytics',
-          'Compliance & Reporting'
-        ],
-        totalCount: enhancedTemplates.length,
-        lastUpdated: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error('Failed to fetch healthcare templates:', error);
-      res.status(500).json({ message: 'Failed to fetch healthcare templates', error: error instanceof Error ? error.message : 'Unknown error' });
-    }
-  });
 
   // Components API - Dynamic healthcare UI components
   app.get('/api/components/healthcare', async (req, res) => {
