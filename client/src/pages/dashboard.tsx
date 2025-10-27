@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PowerEnhancementBanner from "@/components/power-enhancement-banner";
 import ConversationalInterface from "@/components/conversational-interface";
 import AccessibilityToolbar from "@/components/accessibility-toolbar";
+import OnboardingTour from "@/components/OnboardingTour";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -73,11 +74,21 @@ export default function Dashboard() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [showConversationalInterface, setShowConversationalInterface] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Check if user has completed onboarding
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      const hasCompletedOnboarding = localStorage.getItem('medbuilder_onboarding_completed');
+      if (!hasCompletedOnboarding) {
+        setShowOnboarding(true);
+      }
+    }
+  }, [isAuthenticated, isLoading]);
   
   // Smart refresh for user stats (critical healthcare data)
   const userStatsRefresh = useSmartRefresh('/api/users/stats', true, 10);
   const activitiesRefresh = useSmartRefresh('/api/activities/recent', false, 30);
-  const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -193,6 +204,14 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white font-mono">
+      {/* Onboarding Tour for new users */}
+      {showOnboarding && (
+        <OnboardingTour
+          onComplete={() => setShowOnboarding(false)}
+          onSkip={() => setShowOnboarding(false)}
+        />
+      )}
+      
       {/* Replit-style Header */}
       <header className="bg-gray-800/50 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
         <div className="flex items-center justify-between px-6 py-3">
