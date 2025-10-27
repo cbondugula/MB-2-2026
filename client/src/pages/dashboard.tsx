@@ -414,19 +414,19 @@ export default function Dashboard() {
                 <h3 className="text-sm font-medium text-gray-300">Healthcare Tools</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/global-healthcare">
-                    <Button variant="outline" size="sm" className="w-full bg-gray-50 dark:bg-gray-900 border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <Button variant="outline" size="sm" className="w-full border-blue-600 text-blue-300 hover:bg-blue-900 bg-blue-900/20">
                       <Globe className="w-4 h-4 mr-2" />
                       Global Healthcare
                     </Button>
                   </Link>
                   <Link href="/clinical-ai">
-                    <Button variant="outline" size="sm" className="w-full bg-gray-50 dark:bg-gray-900 border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <Button variant="outline" size="sm" className="w-full border-teal-600 text-teal-300 hover:bg-teal-900 bg-teal-900/20">
                       <Brain className="w-4 h-4 mr-2" />
                       Clinical AI
                     </Button>
                   </Link>
                   <Link href="/hipaa-tools">
-                    <Button variant="outline" size="sm" className="w-full bg-gray-50 dark:bg-gray-900 border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <Button variant="outline" size="sm" className="w-full border-emerald-600 text-emerald-300 hover:bg-emerald-900 bg-emerald-900/20">
                       <Shield className="w-4 h-4 mr-2" />
                       HIPAA Tools
                     </Button>
@@ -456,7 +456,7 @@ export default function Dashboard() {
                     </Button>
                   </Link>
                   <Link href="/ml-dashboard">
-                    <Button variant="outline" size="sm" className="w-full bg-gray-50 dark:bg-gray-900 border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <Button variant="outline" size="sm" className="w-full border-violet-600 text-violet-300 hover:bg-violet-900 bg-violet-900/20">
                       <Activity className="w-4 h-4 mr-2" />
                       ML Platform
                     </Button>
