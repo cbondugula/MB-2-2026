@@ -98,6 +98,7 @@ MedBuilder employs a dual-platform strategy, separating healthcare-specific deve
 - PostCSS
 
 ## Recent Changes
+- **COMPREHENSIVE RATE LIMITING COMPLETE (2025-10-27)**: Production-ready multi-tier rate limiting protecting all endpoints (1000/15min global, 5/15min auth, 100/min reads, 30/min writes, 10/min AI generation, 30/min chat) with IPv6-safe key generation, HIPAA audit integration, standard HTTP headers (X-RateLimit-*), and future Redis upgrade path documented
 - **COMPLETE END-TO-END WORKFLOW VERIFIED (2025-10-26)**: Full Chat→Generate→View App→Live Preview workflow now fully functional with all critical bugs fixed
 - **SSE BUFFERING BUG FIXED**: Large JSON payloads split across network chunks now handled correctly with line buffering between chunks using streaming decoder
 - **GUEST USER ACCESS CONTROL FIXED**: Guest-created apps now accessible by any guest user to prevent 404 errors when viewing generated apps
