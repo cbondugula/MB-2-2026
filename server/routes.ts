@@ -58,12 +58,21 @@ import {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply global rate limiting FIRST (before any routes are created)
   // This ensures ALL routes including auth are protected (HIPAA security + DDoS protection)
-  app.use(globalRateLimiter);
+  // EXCEPTION: Health check endpoints must be exempt for orchestrators (Kubernetes, load balancers)
+  app.use((req, res, next) => {
+    // Skip ALL health/readiness/liveness probes (required for zero-downtime deployments)
+    if (req.path === '/health' || req.path === '/ready' || req.path === '/live' || 
+        req.path.startsWith('/_health')) {
+      return next();
+    }
+    return globalRateLimiter(req, res, next);
+  });
 
   // Apply method-specific rate limiting (reads vs writes)
   app.use((req, res, next) => {
-    // Skip health checks
-    if (req.path.startsWith('/health') || req.path.startsWith('/_health')) {
+    // Skip ALL health/readiness/liveness probes
+    if (req.path === '/health' || req.path === '/ready' || req.path === '/live' || 
+        req.path.startsWith('/_health')) {
       return next();
     }
     
@@ -88,19 +97,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware - NOW protected by rate limiters above
   await setupAuth(app);
 
-  // Health check endpoint with encryption status
-  app.get('/health', async (req, res) => {
-    const { getEncryptionStatus } = await import("./encryption");
-    const encryptionStatus = getEncryptionStatus();
-    
-    res.json({
-      status: "healthy",
-      timestamp: new Date().toISOString(),
-      database: "connected",
-      encryption: encryptionStatus,
-      environment: process.env.NODE_ENV || "development",
-    });
-  });
+  // Deployment infrastructure - health checks and probes
+  const { healthCheck, readinessCheck, livenessCheck } = await import("./health");
+  
+  // Health check - comprehensive system health (for monitoring)
+  app.get('/health', healthCheck);
+  
+  // Readiness probe - is app ready to serve traffic? (for load balancers)
+  app.get('/ready', readinessCheck);
+  
+  // Liveness probe - is app process alive? (for orchestrators)
+  app.get('/live', livenessCheck);
 
   // Register AI Chat routes
   registerAIChatRoutes(app);

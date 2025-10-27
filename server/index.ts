@@ -78,4 +78,51 @@ app.use((req, res, next) => {
   }, () => {
     log(`serving on port ${port}`);
   });
+
+  // Graceful shutdown handling
+  const { setShuttingDown } = await import("./health");
+  
+  async function gracefulShutdown(signal: string) {
+    log(`${signal} received, starting graceful shutdown...`);
+    setShuttingDown(true);
+    
+    // Stop accepting new connections
+    server.close(async (err) => {
+      if (err) {
+        console.error('Error closing server:', err);
+        process.exit(1);
+      }
+      
+      log('Server closed, cleaning up resources...');
+      
+      // Give ongoing requests time to complete
+      setTimeout(() => {
+        log('Graceful shutdown complete');
+        process.exit(0);
+      }, 5000); // 5 second grace period
+    });
+    
+    // Force shutdown after 30 seconds if graceful shutdown hasn't completed
+    setTimeout(() => {
+      console.error('Forced shutdown after timeout');
+      process.exit(1);
+    }, 30000);
+  }
+  
+  // Handle SIGTERM (Docker, Kubernetes, production deployments)
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  
+  // Handle SIGINT (Ctrl+C in development)
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+  
+  // Handle uncaught errors
+  process.on('uncaughtException', (error) => {
+    console.error('Uncaught exception:', error);
+    gracefulShutdown('UNCAUGHT_EXCEPTION');
+  });
+  
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled rejection at:', promise, 'reason:', reason);
+    gracefulShutdown('UNHANDLED_REJECTION');
+  });
 })();
