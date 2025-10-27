@@ -22,45 +22,45 @@ export default function PowerEnhancementBanner() {
   if (!isVisible) return null;
 
   return (
-    <Card className="bg-gradient-to-r from-yellow-900/30 via-orange-900/30 to-red-900/30 border-yellow-600/50 mb-6">
+    <Card className="bg-gradient-to-r from-yellow-950 via-orange-950 to-red-950 border-2 border-yellow-500 mb-6 shadow-lg">
       <CardContent className="p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center mb-3">
-              <Sparkles className="w-6 h-6 text-yellow-400 mr-2" />
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center mb-3 flex-wrap gap-2">
+              <Sparkles className="w-6 h-6 text-yellow-400 flex-shrink-0" />
               <h3 className="text-xl font-bold text-white">🚀 MedBuilder Power Enhancements LIVE</h3>
-              <Badge className="ml-3 bg-green-900 text-green-300 text-xs">
+              <Badge className="bg-green-600 text-white text-xs font-semibold px-2 py-1">
                 NEW
               </Badge>
             </div>
             
-            <p className="text-gray-300 mb-4">
+            <p className="text-gray-100 mb-4 leading-relaxed">
               Super-Agent AI orchestration, Patent 005 workflow automation, and advanced capabilities are now active. 
               Experience the most powerful healthcare development platform ever built.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
               <div className="flex items-center space-x-2">
-                <Brain className="w-5 h-5 text-blue-400" />
-                <span className="text-sm text-white">Multi-Modal AI</span>
+                <Brain className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                <span className="text-sm text-white font-medium">Multi-Modal AI</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Mic className="w-5 h-5 text-green-400" />
-                <span className="text-sm text-white">Voice Commands</span>
+                <Mic className="w-5 h-5 text-green-400 flex-shrink-0" />
+                <span className="text-sm text-white font-medium">Voice Commands</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Workflow className="w-5 h-5 text-purple-400" />
-                <span className="text-sm text-white">Predictive Workflows</span>
+                <Workflow className="w-5 h-5 text-purple-400 flex-shrink-0" />
+                <span className="text-sm text-white font-medium">Predictive Workflows</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Globe className="w-5 h-5 text-cyan-400" />
-                <span className="text-sm text-white">Global Compliance</span>
+                <Globe className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+                <span className="text-sm text-white font-medium">Global Compliance</span>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-wrap items-center gap-3">
               <Link href="/super-agent">
-                <Button className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold">
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold shadow-md">
                   <Zap className="w-4 h-4 mr-2" />
                   Try Super Agent
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -68,22 +68,22 @@ export default function PowerEnhancementBanner() {
               </Link>
               
               <Link href="/scalability-dashboard">
-                <Button variant="outline" className="border-yellow-600 text-yellow-300 hover:bg-yellow-900">
+                <Button variant="outline" className="border-2 border-yellow-400 bg-yellow-950 text-white hover:bg-yellow-900 hover:border-yellow-300 font-semibold">
                   <ArrowRight className="w-4 h-4 mr-2" />
-                  100M+ Goal Tracker
+                  HIPAA Goal Tracker
                 </Button>
               </Link>
               
               <Link href="/visual-builder">
-                <Button variant="outline" className="border-purple-600 text-purple-300 hover:bg-purple-900">
+                <Button variant="outline" className="border-2 border-purple-400 bg-purple-950 text-white hover:bg-purple-900 hover:border-purple-300 font-semibold">
                   <Zap className="w-4 h-4 mr-2" />
                   No-Code Builder
                 </Button>
               </Link>
               
-              <div className="flex items-center space-x-2 text-sm text-gray-400">
+              <div className="flex items-center space-x-2 text-sm text-gray-200 ml-auto">
                 <Code className="w-4 h-4" />
-                <span>Patent 005 Implementation</span>
+                <span className="font-medium">Patent 005 Implementation</span>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function PowerEnhancementBanner() {
             variant="ghost" 
             size="sm" 
             onClick={() => setIsVisible(false)}
-            className="text-gray-400 hover:text-white"
+            className="text-gray-300 hover:text-white hover:bg-white/10 flex-shrink-0"
           >
             <X className="w-4 h-4" />
           </Button>
