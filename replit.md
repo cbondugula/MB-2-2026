@@ -1,8 +1,8 @@
-# replit.md
+# MedBuilder - AI-Powered Healthcare Application Development
 
 ## Overview
 
-MedBuilder is an AI-powered web application designed for creating healthcare and life sciences applications. It aims to be the most advanced and user-friendly AI development platform in the healthcare technology ecosystem. Key capabilities include conversational AI interfaces, universal accessibility, rapid onboarding, dual development modes (visual and voice), and a proactive AI assistant. The platform provides comprehensive IP protection for its innovations, focusing on voice-controlled healthcare development, advanced medical education platforms, and AI-powered compliance automation. MedBuilder offers global privacy compliance, multicultural healthcare support, and coverage for 193 countries and 45 languages, integrating various healthcare domains such as medical education, clinical research, and telehealth. It is positioned to achieve a dominant market share with significant revenue and acquisition potential due to its unique combination of AI, voice control, and healthcare specialization, with a strategic focus on continuous technological evolution and competitive advantage.
+MedBuilder is an AI-powered web application designed to be the leading platform for creating healthcare and life sciences applications. It features conversational AI, universal accessibility, rapid onboarding, dual visual and voice-controlled development modes, and a proactive AI assistant. The platform focuses on comprehensive IP protection for its innovations, particularly in voice-controlled healthcare development, advanced medical education, and AI-powered compliance automation. MedBuilder ensures global privacy compliance, supports multicultural healthcare across 193 countries and 45 languages, and integrates various healthcare domains like medical education, clinical research, and telehealth. It aims for market dominance and significant revenue potential through its unique blend of AI, voice control, and healthcare specialization.
 
 ## User Preferences
 
@@ -22,16 +22,17 @@ Mandatory Dynamic Data Policy:
 
 ## System Architecture
 
-MedBuilder employs a dual-platform strategy, separating healthcare-specific development (MedBuilder) from a multi-domain voice-controlled no-code platform (VoiceBuilder) to maximize patent value and market reach.
+MedBuilder utilizes a dual-platform strategy, separating healthcare-specific development (MedBuilder) from a multi-domain voice-controlled no-code platform (VoiceBuilder).
 
-### Frontend Architecture
+### Frontend
 - **Framework**: React 18 with TypeScript
 - **Build Tool**: Vite
-- **Styling**: Tailwind CSS with shadcn/ui and Radix UI primitives
-- **State Management**: TanStack Query for server state
+- **Styling**: Tailwind CSS with shadcn/ui and Radix UI
+- **State Management**: TanStack Query
 - **Routing**: Wouter
+- **UI/UX**: Healthcare-specific color palette (medical blue, trust green, healthcare teal) and mobile-first responsive design.
 
-### Backend Architecture
+### Backend
 - **Runtime**: Node.js with Express.js
 - **Language**: TypeScript with ES modules
 - **Database ORM**: Drizzle ORM
@@ -39,25 +40,19 @@ MedBuilder employs a dual-platform strategy, separating healthcare-specific deve
 - **Authentication**: Replit Auth with OpenID Connect
 - **Session Management**: Express sessions with PostgreSQL storage
 
-### Key Components & Features
+### Core Features & Design
 - **Authentication System**: Replit Auth integration with PostgreSQL-backed sessions.
-- **Database Layer**: Drizzle ORM for schema management and data operations, with core tables for users, projects, templates, and AI-related data.
-- **Frontend Components**: Dashboard, Conversational AI Interface, Universal Accessibility Toolbar, User-Friendly Onboarding, Clinical AI Platform, Advanced Healthcare Platform components, AI Workspace, AI Code Editor, Templates, Components Library, HIPAA Tools, and application Preview.
-- **UI Framework**: shadcn/ui with a healthcare-specific color palette (medical blue, trust green, healthcare teal) and a mobile-first responsive design.
-- **Data Flow**: Frontend uses TanStack Query, connecting to authenticated Express routes that abstract Drizzle ORM for database interactions.
-- **Project Management**: Projects are stored as JSONB, supporting real-time collaboration and activity tracking.
-- **Dynamic Data Integration**: All data, analytics, and strategic intelligence are sourced from live backend API services (e.g., `/api/patents/filing-status`, `/api/competitive/analysis`, `/api/revenue/projections`), ensuring real-time updates and no static content.
-
-### Technical Implementations
-- **Dual Advanced-Classical Patent Strategy**: Employing both advanced and classical patent claims for future and immediate IP protection.
-- **AI-Powered Features**: Real-time AI code completion, intelligent HIPAA compliance checking, advanced architecture review, real-time collaborative development with AI, smart templates, and automated security scanning.
-- **Comprehensive Healthcare Coverage**: Supports clinical applications, telehealth, medical research, pharma, medical devices, health analytics, genomics, laboratory management, medical imaging, and global healthcare systems across 193 countries, with multilingual support and adherence to international healthcare standards (FHIR, HL7, etc.).
-- **Technology Stack Flexibility**: Supports various frontend (React, Angular, Vue), backend (Node.js, Python, Java), mobile (iOS, Android), and desktop frameworks, as well as different API types (REST, GraphQL, FHIR).
+- **Database Layer**: Drizzle ORM for schema management, supporting users, projects, templates, and AI data. Projects are stored as JSONB for real-time collaboration.
+- **Dynamic Data Integration**: All data, analytics, and strategic intelligence are sourced from live backend API services, ensuring real-time updates and eliminating static content.
+- **AI-Powered Capabilities**: Real-time AI code completion, intelligent HIPAA compliance checking, advanced architecture review, real-time collaborative development with AI, smart templates, and automated security scanning.
+- **Comprehensive Healthcare Coverage**: Supports various clinical applications, telehealth, medical research, pharma, and global healthcare systems, adhering to international standards (FHIR, HL7).
+- **Technology Stack Flexibility**: Supports diverse frontend, backend, mobile, desktop frameworks, and API types (REST, GraphQL, FHIR).
+- **Stakeholder Interfaces**: Dedicated Medical Professional and Executive Intelligence dashboards for role-based usability.
 
 ## External Dependencies
 
-### Core Framework Dependencies
-- React 18 ecosystem (React, React DOM)
+### Core Frameworks
+- React 18 ecosystem
 - Express.js
 - TypeScript
 - Vite
@@ -67,22 +62,20 @@ MedBuilder employs a dual-platform strategy, separating healthcare-specific deve
 - Google Med-Gemma
 - Healthcare BERT Models (ClinicalBERT, BioBERT, PubMedBERT, BlueBERT, RadBERT, PathBERT, CardioBERT, OncoBERT, MentalBERT)
 - Custom AI service layer for healthcare-specific intelligence (medical NER, clinical classification, medical concept extraction)
-- Revolutionary Voice-Controlled AI Systems (for Patents 012, 013, 017, 022)
+- Revolutionary Voice-Controlled AI Systems
 - Predictive Compliance Engine
-- Voice-Controlled ML Training
-- Voice-Controlled Backend Generation
-- Voice-Controlled Database Management
 - Python ML Environment (TensorFlow, PyTorch, Transformers, Scikit-learn, OpenCV, PyDICOM, BioPython)
 - Healthcare-Specific ML Libraries (MedPy, NiBabel, Lifelines, Prophet, MLflow)
 
 ### Database & ORM
 - @neondatabase/serverless
+- Drizzle ORM
 - Zod
 
 ### Authentication & Security
 - Replit Auth
 - Passport.js
-- connect-pg-simple (for session storage)
+- connect-pg-simple
 
 ### Real-time Features
 - Socket.io
@@ -96,44 +89,3 @@ MedBuilder employs a dual-platform strategy, separating healthcare-specific deve
 - tsx
 - ESBuild
 - PostCSS
-
-## Recent Changes
-- **UX IMPROVEMENTS PHASE 1 COMPLETE (2025-10-27)**: 4 major user experience enhancements delivered: (1) Fixed all LSP errors in CS Agent Dashboard with proper TypeScript interfaces, (2) Converted 4 placeholder pages to fully functional features (Advanced AI multi-model platform, Dual Patents portfolio dashboard, BCI Capabilities demos, Auto Business plan generator), (3) Healthcare template library expanded to 14 HIPAA-compliant templates (Telehealth, EHR, Lab Management, Medical Imaging, Mental Health, etc.), (4) Interactive onboarding tour built with 5-step guided walkthrough for new users
-- **INTERACTIVE ONBOARDING TUTORIAL LIVE (2025-10-27)**: New user onboarding with 5-step guided tour covering platform overview, chat-to-code interface, healthcare templates, HIPAA compliance tools, and getting started. Onboarding shown automatically to first-time users with localStorage tracking, full modal overlay with skip/complete functionality
-- **14 HEALTHCARE TEMPLATES AVAILABLE (2025-10-27)**: Comprehensive template library with Telehealth Consultation Platform, Medical Records Management, Appointment Scheduling, Laboratory Information System, Prescription Management, Clinical Trial Management, Medical Imaging Viewer, Health Analytics Dashboard, Mental Health Chatbot, Medical Device Integration, Fitness Tracker, and Hospital Bed Management - all HIPAA-compliant with proper TypeScript types
-- **4 FUNCTIONAL FEATURE PAGES COMPLETED (2025-10-27)**: Advanced AI (multi-model selection with GPT-4o/Claude/Gemini/Med-Gemma/ClinicalBERT and comparison mode), Dual Patents (portfolio dashboard with 14 patents worth $20B+ showing advanced/classical split), BCI Capabilities (brain-computer interface demos with voice/neural/eye-tracking controls), Auto Business (AI business plan generator with financial projections)
-- **PRODUCTION HARDENING PHASE 2 COMPLETE (2025-10-27)**: All 13 production hardening tasks complete! Full E2E test suite verified (landing page chat-to-code, auth, dashboard, health endpoints), PHI encryption verified (AES-256-GCM for all PHI fields), comprehensive documentation (MONITORING.md, ERROR_TRACKING.md, JOB_QUEUE_CACHING.md, PHI_ENCRYPTION_VERIFICATION.md), metrics collection with query string fix, all APIs tested and working
-- **CRITICAL BUG FIXED (2025-10-27)**: POST /api/chat/conversations validation added - now requires initialPrompt parameter with proper error handling (400 response if missing), defensive generateTitle() method prevents undefined crashes
-- **PRODUCTION HARDENING PHASE 1 COMPLETE (2025-10-27)**: 9 of 13 production hardening tasks completed including metrics collection (/metrics JSON + /metrics/prometheus), error tracking documentation (ERROR_TRACKING.md), job queue/caching infrastructure documentation (JOB_QUEUE_CACHING.md with BullMQ + Redis), comprehensive observability documentation (MONITORING.md), E2E testing infrastructure assessment
-- **WINSTON STRUCTURED LOGGING ACTIVE (2025-10-27)**: Production-ready structured logging with Winston for HIPAA-compliant audit trails: HTTP request logging (method, URL, status, duration, IP, userAgent, userId), security event logging (rate limits, auth failures), PHI scrubbing, request correlation IDs, multiple log levels (error, warn, info, http, debug), and graceful shutdown integration
-- **DEPLOYMENT INFRASTRUCTURE COMPLETE (2025-10-27)**: Production-ready deployment with comprehensive health checks (/health for monitoring with database/encryption/memory stats), readiness probe (/ready for load balancers), liveness probe (/live for orchestrators), graceful shutdown handlers (SIGTERM/SIGINT/uncaught errors), 5s grace period, 30s timeout, all exempt from rate limiting for orchestrator compatibility, complete DEPLOYMENT.md documentation
-- **COMPREHENSIVE RATE LIMITING COMPLETE (2025-10-27)**: Production-ready multi-tier rate limiting protecting all endpoints (1000/15min global, 5/15min auth, 100/min reads, 30/min writes, 10/min AI generation, 30/min chat) with IPv6-safe key generation, HIPAA audit integration, standard HTTP headers (X-RateLimit-*), and future Redis upgrade path documented
-- **COMPLETE END-TO-END WORKFLOW VERIFIED (2025-10-26)**: Full Chat→Generate→View App→Live Preview workflow now fully functional with all critical bugs fixed
-- **SSE BUFFERING BUG FIXED**: Large JSON payloads split across network chunks now handled correctly with line buffering between chunks using streaming decoder
-- **GUEST USER ACCESS CONTROL FIXED**: Guest-created apps now accessible by any guest user to prevent 404 errors when viewing generated apps
-- **NESTED FILE PATH SUPPORT**: CodePreview component now handles nested file paths (src/App.tsx) for proper React app rendering in live preview
-- **CHAT-TO-CODE UI LIVE (2025-10-26)**: Full-screen chat interface on landing page with real-time streaming, message history, and generated code display
-- **SSE STREAMING IMPLEMENTED**: Server-Sent Events for real-time AI response streaming directly in browser with live code generation feedback
-- **PRODUCTION-READY CHAT COMPONENT**: ChatToCode component with message bubbles, loading states, example prompts, and generated code visualization
-- **AI CODE GENERATION SERVICE BUILT (2025-10-26)**: Real-time chat-to-code service with OpenAI GPT-4o streaming, conversation management, and automatic app persistence
-- **CHAT-TO-CODE API ROUTES ACTIVE**: RESTful endpoints for conversations, messaging with Server-Sent Events streaming, app retrieval with multi-tenant security
-- **MULTI-TENANT SECURITY ENFORCED**: All endpoints verify user ownership before returning conversations/apps, preventing cross-tenant data leaks
-- **STREAMING CODE GENERATION**: Async generator pattern captures both text chunks (for real-time feedback) and final structured code (for database persistence)
-- **HEALTHCARE-SPECIFIC PROMPTS**: System instructions optimized for HIPAA-compliant medical app generation with user personalization
-- **CHAT-TO-CODE DATABASE SCHEMA IMPLEMENTED (2025-10-26)**: Production-ready schema for v0.dev/bolt.new/lovable competitor with 7 new tables (chat_conversations, chat_messages, generated_apps, app_versions, app_deployments, user_settings, template_usage_analytics)
-- **REFERENTIAL INTEGRITY ENFORCED**: All foreign key relationships properly defined with cascade deletes and set null policies for orphan prevention
-- **PERFORMANCE OPTIMIZED**: Strategic indices on high-traffic columns (user_id, conversation_id, app_id, created_at) for fast queries at scale
-- **AUDIT TRAILS IMPLEMENTED**: HIPAA-ready compliance tracking with lastReviewedBy, lastReviewedAt, deployedBy fields for medical app deployments
-- **VERSION CONTROL READY**: Complete version history system with rollback points, code diffs, and change tracking for generated applications
-- **MESSAGE SEQUENCING**: Sequential ordering of chat messages with proper indexing for conversation replay and context management
-- **STANFORD MEDHELM EVALUATION FRAMEWORK INTEGRATED**: MedHELM's LLM evaluation methodology now guides AI model selection for medical tasks in MedBuilder platform  
-- **INTELLIGENT MODEL RECOMMENDATION**: MedHELM framework recommends optimal AI models (GPT-4o, Claude-3.5-Sonnet) for specific healthcare use cases based on 121 medical task evaluations
-- **MEDHELM API ENDPOINTS ACTIVE**: LLM evaluation and recommendation system via /api/medhelm/* endpoints with model selection guidance within MedBuilder
-- **AI RESPONSE QUALITY VALIDATION**: Stanford MedHELM criteria assess medical AI responses for accuracy, clinical relevance, safety, evidence base, and communication quality  
-- **MEDICAL TASK OPTIMIZATION**: Framework ensures appropriate LLM selection for clinical decision support, medical knowledge queries, and healthcare NLP tasks in MedBuilder
-- **STAKEHOLDER DASHBOARDS IMPLEMENTED**: Created dedicated Medical Professional and Executive Intelligence dashboards addressing MedBuilder platform usability gaps identified by CS Agent analysis
-- **CS AGENT PLATFORM OPTIMIZATION**: Computer Science Agent continuously monitors code quality, corrects errors, and optimizes MedBuilder platform functionality
-- **MEDICAL PROFESSIONAL INTERFACE COMPLETE**: Voice-controlled healthcare development with HIPAA compliance monitoring, medical templates, and 30-minute quick start
-- **EXECUTIVE INTELLIGENCE DASHBOARD LIVE**: Strategic business intelligence with ROI analysis (340% return), revenue projections ($28.8M→$4.32B), and competitive tracking
-- **USABILITY SCORES UPGRADED**: Medical professionals 72→95/100, executives 65→90/100 through role-based interfaces and domain expertise
-- **COMPETITIVE ADVANTAGE MAINTAINED**: $46.63B-$84.88B patent portfolio value confirmed with zero direct competition and 3-5 year technology lead
