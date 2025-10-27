@@ -46,10 +46,41 @@ import { healthcareTestingRouter } from "./healthcare-testing-service";
 import { superCSAgentRoutes } from "./routes/super-cs-agent";
 import { multiAIInnovationService } from "./multi-ai-innovation-assessment";
 import { csAgentService } from "./cs-agent-dynamic-service";
+import { 
+  globalRateLimiter,
+  apiReadRateLimiter,
+  apiWriteRateLimiter,
+  aiGenerationRateLimiter,
+  chatRateLimiter,
+  authRateLimiter
+} from "./rate-limiter";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
+
+  // Apply global rate limiting to all routes (HIPAA security + DDoS protection)
+  app.use(globalRateLimiter);
+
+  // Apply method-specific rate limiting (reads vs writes)
+  app.use((req, res, next) => {
+    // Skip health checks
+    if (req.path.startsWith('/health') || req.path.startsWith('/_health')) {
+      return next();
+    }
+    
+    // Apply write rate limiting for state-changing operations
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+      return apiWriteRateLimiter(req, res, next);
+    }
+    
+    // Apply read rate limiting for GET/HEAD/OPTIONS
+    if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+      return apiReadRateLimiter(req, res, next);
+    }
+    
+    next();
+  });
 
   // Health check endpoint with encryption status
   app.get('/health', async (req, res) => {

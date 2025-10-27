@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { isAuthenticated } from "../replitAuth";
 import { chatToCodeService } from "../chat-to-code-service";
 import { createAuditLogger } from "../audit-logger";
+import { chatRateLimiter, aiGenerationRateLimiter } from "../rate-limiter";
 
 // Helper to get authenticated user ID
 function getUserId(req: any): string {
@@ -15,7 +16,7 @@ function getUserId(req: any): string {
 export function registerChatToCodeRoutes(app: Express) {
   
   // Create a new conversation (requires authentication)
-  app.post("/api/chat/conversations", isAuthenticated, async (req, res) => {
+  app.post("/api/chat/conversations", chatRateLimiter, isAuthenticated, async (req, res) => {
     try {
       const { initialPrompt, title } = req.body;
       const userId = getUserId(req);
@@ -51,8 +52,8 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Send a message and get AI response (streaming - requires authentication)
-  app.post("/api/chat/messages", isAuthenticated, async (req, res) => {
+  // Send a message and get AI response (streaming - requires authentication + rate limiting)
+  app.post("/api/chat/messages", aiGenerationRateLimiter, isAuthenticated, async (req, res) => {
     try {
       const { conversationId, message } = req.body;
       const userId = getUserId(req);
