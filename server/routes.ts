@@ -58,11 +58,11 @@ import {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply global rate limiting FIRST (before any routes are created)
   // This ensures ALL routes including auth are protected (HIPAA security + DDoS protection)
-  // EXCEPTION: Health check endpoints must be exempt for orchestrators (Kubernetes, load balancers)
+  // EXCEPTION: Health check and metrics endpoints must be exempt for monitoring/orchestrators
   app.use((req, res, next) => {
-    // Skip ALL health/readiness/liveness probes (required for zero-downtime deployments)
+    // Skip health/readiness/liveness probes + metrics (required for monitoring)
     if (req.path === '/health' || req.path === '/ready' || req.path === '/live' || 
-        req.path.startsWith('/_health')) {
+        req.path.startsWith('/_health') || req.path.startsWith('/metrics')) {
       return next();
     }
     return globalRateLimiter(req, res, next);
@@ -70,9 +70,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Apply method-specific rate limiting (reads vs writes)
   app.use((req, res, next) => {
-    // Skip ALL health/readiness/liveness probes
+    // Skip health/readiness/liveness probes + metrics
     if (req.path === '/health' || req.path === '/ready' || req.path === '/live' || 
-        req.path.startsWith('/_health')) {
+        req.path.startsWith('/_health') || req.path.startsWith('/metrics')) {
       return next();
     }
     
@@ -108,6 +108,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Liveness probe - is app process alive? (for orchestrators)
   app.get('/live', livenessCheck);
+
+  // Metrics endpoints - for observability and monitoring
+  const { getAllMetrics, getPrometheusMetrics } = await import("./metrics");
+  
+  // JSON metrics endpoint - comprehensive metrics in JSON format
+  app.get('/metrics', async (req, res) => {
+    try {
+      const metrics = await getAllMetrics();
+      res.json(metrics);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to collect metrics' });
+    }
+  });
+  
+  // Prometheus metrics endpoint - for Prometheus/Grafana integration
+  app.get('/metrics/prometheus', async (req, res) => {
+    try {
+      const prometheusMetrics = await getPrometheusMetrics();
+      res.set('Content-Type', 'text/plain');
+      res.send(prometheusMetrics);
+    } catch (error) {
+      res.status(500).send('# Failed to collect metrics');
+    }
+  });
 
   // Register AI Chat routes
   registerAIChatRoutes(app);

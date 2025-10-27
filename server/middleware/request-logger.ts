@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { logRequest, logSecurityEvent } from "../logger";
+import { metricsCollector } from "../metrics";
 import { nanoid } from "nanoid";
 
 /**
@@ -43,6 +44,10 @@ export function httpLoggingMiddleware(req: Request, res: Response, next: NextFun
   // Listen for response finish event
   res.on("finish", () => {
     const duration = req.startTime ? Date.now() - req.startTime : 0;
+    
+    // Collect metrics (strip query strings to prevent unbounded cardinality)
+    const urlWithoutQuery = req.originalUrl?.split('?')[0] || req.url.split('?')[0] || req.url;
+    metricsCollector.recordRequest(req.method, urlWithoutQuery, res.statusCode, duration);
     
     // Log the request
     logRequest(req, res, duration);
