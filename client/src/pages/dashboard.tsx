@@ -359,8 +359,8 @@ export default function Dashboard() {
 
               {/* Revolutionary Technologies */}
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-green-300 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-yellow-400" />
                   Revolutionary Technologies
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
@@ -411,7 +411,7 @@ export default function Dashboard() {
 
               {/* Quick Tools */}
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-300">Healthcare Tools</h3>
+                <h3 className="text-base font-bold text-white">Healthcare Tools</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/global-healthcare">
                     <Button variant="outline" size="sm" className="w-full border-2 border-blue-400 bg-blue-950 text-white hover:bg-blue-900 hover:border-blue-300 font-semibold shadow-sm">
@@ -472,7 +472,7 @@ export default function Dashboard() {
 
               {/* Recent Projects */}
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-gray-300">Recent Projects</h3>
+                <h3 className="text-base font-bold text-white">Recent Projects</h3>
                 <div className="space-y-2">
                   {projectsLoading ? (
                     <div className="text-gray-500 text-sm">Loading projects...</div>
