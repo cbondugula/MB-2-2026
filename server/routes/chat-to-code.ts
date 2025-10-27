@@ -1,40 +1,20 @@
 import type { Express } from "express";
-import rateLimit from "express-rate-limit";
 import { isAuthenticated } from "../replitAuth";
 import { chatToCodeService } from "../chat-to-code-service";
-import { nanoid } from "nanoid";
 
-// Rate limiter for anonymous users (10 messages per hour)
-const anonymousRateLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // 10 requests per hour for anonymous users
-  message: { error: "Too many requests. Please sign in for unlimited access." },
-  skip: (req) => {
-    // Skip rate limiting for authenticated users
-    return !!(req.user?.claims?.sub);
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-// Helper to get user ID (authenticated or guest)
+// Helper to get authenticated user ID
 function getUserId(req: any): string {
-  const authenticatedUserId = req.user?.claims?.sub;
-  if (authenticatedUserId) {
-    return authenticatedUserId;
+  const userId = req.user?.claims?.sub;
+  if (!userId) {
+    throw new Error("Authentication required");
   }
-  
-  // Generate guest ID for anonymous users
-  if (!req.session.guestId) {
-    req.session.guestId = `guest_${nanoid()}`;
-  }
-  return req.session.guestId;
+  return userId;
 }
 
 export function registerChatToCodeRoutes(app: Express) {
   
-  // Create a new conversation (public with rate limiting)
-  app.post("/api/chat/conversations", anonymousRateLimiter, async (req, res) => {
+  // Create a new conversation (requires authentication)
+  app.post("/api/chat/conversations", isAuthenticated, async (req, res) => {
     try {
       const { initialPrompt, title } = req.body;
       const userId = getUserId(req);
@@ -60,8 +40,8 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Send a message and get AI response (streaming - public with rate limiting)
-  app.post("/api/chat/messages", anonymousRateLimiter, async (req, res) => {
+  // Send a message and get AI response (streaming - requires authentication)
+  app.post("/api/chat/messages", isAuthenticated, async (req, res) => {
     try {
       const { conversationId, message } = req.body;
       const userId = getUserId(req);
@@ -157,8 +137,8 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Get conversation history (public)
-  app.get("/api/chat/conversations/:conversationId", async (req, res) => {
+  // Get conversation history (requires authentication)
+  app.get("/api/chat/conversations/:conversationId", isAuthenticated, async (req, res) => {
     try {
       const { conversationId } = req.params;
       const userId = getUserId(req);
@@ -171,8 +151,8 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Get user's conversations (public)
-  app.get("/api/chat/conversations", async (req, res) => {
+  // Get user's conversations (requires authentication)
+  app.get("/api/chat/conversations", isAuthenticated, async (req, res) => {
     try {
       const userId = getUserId(req);
       
@@ -184,8 +164,8 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Get user's generated apps (public)
-  app.get("/api/chat/apps", async (req, res) => {
+  // Get user's generated apps (requires authentication)
+  app.get("/api/chat/apps", isAuthenticated, async (req, res) => {
     try {
       const userId = getUserId(req);
       
@@ -197,8 +177,8 @@ export function registerChatToCodeRoutes(app: Express) {
     }
   });
   
-  // Get a specific generated app with ownership verification (public)
-  app.get("/api/chat/apps/:appId", async (req, res) => {
+  // Get a specific generated app with ownership verification (requires authentication)
+  app.get("/api/chat/apps/:appId", isAuthenticated, async (req, res) => {
     try {
       const { appId } = req.params;
       const userId = getUserId(req);

@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Send, Code, Sparkles, FileCode, User, Bot, CheckCircle, ExternalLink, Eye, FolderCode } from "lucide-react";
+import { Loader2, Send, Code, Sparkles, FileCode, User, Bot, CheckCircle, ExternalLink, Eye, FolderCode, LogIn, Shield } from "lucide-react";
 import { Link } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Message {
   id: string;
@@ -20,6 +21,7 @@ interface ChatToCodeProps {
 }
 
 export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
+  const { isAuthenticated, isLoading } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
@@ -196,6 +198,61 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
     "Generate a telemedicine consultation platform",
   ];
 
+  // Show authentication required UI for non-authenticated users
+  if (!isAuthenticated && !isLoading) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center p-8">
+        <Card className="max-w-md bg-gray-800 border-gray-700">
+          <CardHeader className="text-center space-y-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto">
+              <Shield className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-2xl font-bold text-gray-100 mb-2">
+                Authentication Required
+              </CardTitle>
+              <p className="text-gray-400 text-sm">
+                For HIPAA compliance and data security, you must be signed in to use the Chat-to-Code platform.
+              </p>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-blue-900/20 border border-blue-700/50 rounded-lg p-4">
+              <h4 className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                Why Authentication is Required
+              </h4>
+              <ul className="text-xs text-gray-300 space-y-1.5">
+                <li>• Audit logging for healthcare data access</li>
+                <li>• HIPAA-compliant data encryption</li>
+                <li>• Secure conversation and app storage</li>
+                <li>• User accountability and data ownership</li>
+              </ul>
+            </div>
+            <Button
+              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              size="lg"
+              onClick={() => window.location.href = '/api/login'}
+              data-testid="login-button"
+            >
+              <LogIn className="w-5 h-5 mr-2" />
+              Sign In to Continue
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-green-500 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full flex flex-col">
       {/* Chat Messages */}
@@ -362,28 +419,6 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
 
       {/* Input Area */}
       <div className="border-t border-gray-800 bg-gray-900/50 backdrop-blur-sm p-4">
-        {/* Sign-up Banner */}
-        {messages.length > 0 && (
-          <div className="mb-3 bg-gradient-to-r from-green-900/30 to-blue-900/30 border border-green-700/50 rounded-lg p-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-green-400" />
-                <p className="text-sm text-gray-300">
-                  Sign in to save your apps and access them anytime
-                </p>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-green-600 hover:bg-green-700 text-white border-green-500"
-                onClick={() => window.location.href = '/api/login'}
-              >
-                Sign In
-              </Button>
-            </div>
-          </div>
-        )}
-        
         <div className="flex gap-2">
           <Textarea
             ref={textareaRef}
