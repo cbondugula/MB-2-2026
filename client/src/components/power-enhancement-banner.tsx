@@ -68,14 +68,14 @@ export default function PowerEnhancementBanner() {
               </Link>
               
               <Link href="/scalability-dashboard">
-                <Button variant="outline" className="border-2 border-white text-white hover:bg-white/20 hover:border-white font-semibold backdrop-blur-sm">
+                <Button className="bg-white/20 border-2 border-white text-white hover:bg-white/30 font-bold shadow-md backdrop-blur-md">
                   <ArrowRight className="w-4 h-4 mr-2" />
                   HIPAA Goal Tracker
                 </Button>
               </Link>
               
               <Link href="/visual-builder">
-                <Button variant="outline" className="border-2 border-white text-white hover:bg-white/20 hover:border-white font-semibold backdrop-blur-sm">
+                <Button className="bg-white/20 border-2 border-white text-white hover:bg-white/30 font-bold shadow-md backdrop-blur-md">
                   <Zap className="w-4 h-4 mr-2" />
                   No-Code Builder
                 </Button>
