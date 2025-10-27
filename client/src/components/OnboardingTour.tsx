@@ -187,6 +187,9 @@ export default function OnboardingTour({ onComplete, onSkip }: OnboardingTourPro
                 className="w-full"
                 data-testid={`button-action-${step.id}`}
                 onClick={() => {
+                  if (step.id === 'chat-to-code') {
+                    localStorage.setItem('openChatInterface', 'true');
+                  }
                   window.location.href = step.action!.href;
                 }}
               >

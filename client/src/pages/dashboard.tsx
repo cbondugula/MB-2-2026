@@ -149,6 +149,15 @@ export default function Dashboard() {
     }
   }, [isAuthenticated]);
 
+  // Handle opening chat interface from onboarding tour
+  useEffect(() => {
+    const openChatInterface = localStorage.getItem('openChatInterface');
+    if (openChatInterface && isAuthenticated) {
+      setShowConversationalInterface(true);
+      localStorage.removeItem('openChatInterface');
+    }
+  }, [isAuthenticated]);
+
   // Check if user needs onboarding
   useEffect(() => {
     if (isAuthenticated && userStats && !userStats.hasCompletedOnboarding) {
