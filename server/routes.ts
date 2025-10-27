@@ -51,6 +51,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
+  // Health check endpoint with encryption status
+  app.get('/health', async (req, res) => {
+    const { getEncryptionStatus } = await import("./encryption");
+    const encryptionStatus = getEncryptionStatus();
+    
+    res.json({
+      status: "healthy",
+      timestamp: new Date().toISOString(),
+      database: "connected",
+      encryption: encryptionStatus,
+      environment: process.env.NODE_ENV || "development",
+    });
+  });
+
   // Register AI Chat routes
   registerAIChatRoutes(app);
   

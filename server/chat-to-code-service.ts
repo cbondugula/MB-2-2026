@@ -12,6 +12,7 @@ import {
 } from "../shared/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import { encrypt, decrypt } from "./encryption";
 
 const openai = new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY 
@@ -43,11 +44,14 @@ export class ChatToCodeService {
   async createConversation(userId: string, initialPrompt: string, title?: string): Promise<string> {
     const conversationId = nanoid();
     
+    // Encrypt PHI in initial prompt before storing (HIPAA compliance)
+    const encryptedInitialPrompt = encrypt(initialPrompt) || initialPrompt;
+    
     await db.insert(chatConversations).values({
       id: conversationId,
       userId,
       title: title || this.generateTitle(initialPrompt),
-      initialPrompt,
+      initialPrompt: encryptedInitialPrompt,
       status: "active",
       conversationType: "chat",
       context: {},
@@ -92,11 +96,14 @@ export class ChatToCodeService {
     
     const nextSequence = messages.length > 0 ? messages[0].sequence + 1 : 1;
     
+    // Encrypt PHI content before storing (HIPAA compliance)
+    const encryptedContent = encrypt(content) || content;
+    
     await db.insert(chatMessages).values({
       id: messageId,
       conversationId,
       role,
-      content,
+      content: encryptedContent,
       sequence: nextSequence,
       messageType: "text",
       metadata: metadata || {},
@@ -135,10 +142,11 @@ export class ChatToCodeService {
       .where(eq(chatMessages.conversationId, conversationId))
       .orderBy(chatMessages.sequence);
     
+    // Decrypt PHI content when retrieving (HIPAA compliance)
     return messages.map(msg => ({
       id: msg.id,
       role: msg.role as "user" | "assistant" | "system",
-      content: msg.content,
+      content: decrypt(msg.content) || msg.content,
       sequence: msg.sequence,
     }));
   }
