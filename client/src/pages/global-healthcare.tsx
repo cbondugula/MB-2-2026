@@ -116,7 +116,15 @@ export default function GlobalHealthcare() {
   // Use dynamic data instead of hardcoded mock data
   const displayData = filteredGlobalData || {
     privacyLaws: [],
-    culturalProfiles: []
+    culturalProfiles: [],
+    alternativeMedicine: [],
+    complianceStats: {
+      totalJurisdictions: 193,
+      supportedLanguages: 45,
+      culturalProfiles: 0,
+      alternativeSystems: 12,
+      complianceScore: 94
+    }
   };
 
   return (
@@ -218,7 +226,7 @@ export default function GlobalHealthcare() {
 
           <TabsContent value="privacy-laws" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {data.privacyLaws.map((law) => (
+              {displayData.privacyLaws.map((law) => (
                 <Card key={law.id} className="h-full">
                   <CardHeader>
                     <div className="flex items-center justify-between">
@@ -281,7 +289,7 @@ export default function GlobalHealthcare() {
 
           <TabsContent value="cultural-profiles" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {data.culturalProfiles.map((profile, idx) => (
+              {displayData.culturalProfiles.map((profile, idx) => (
                 <Card key={idx} className="h-full">
                   <CardHeader>
                     <div className="flex items-center justify-between">
@@ -355,7 +363,7 @@ export default function GlobalHealthcare() {
 
           <TabsContent value="alternative-medicine" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {data.alternativeMedicine.map((system, idx) => (
+              {displayData.alternativeMedicine.map((system, idx) => (
                 <Card key={idx} className="h-full">
                   <CardHeader>
                     <div className="flex items-center justify-between">
