@@ -18,6 +18,9 @@ const keyGenerator = (req: Request): string => {
   return ipKeyGenerator(req.ip || req.socket.remoteAddress || 'unknown');
 };
 
+// Skip rate limiting in development for testing
+const skipRateLimitInDevelopment = process.env.NODE_ENV === 'development';
+
 // Standard message for rate limit exceeded
 const standardMessage = {
   error: "Too many requests from this user/IP, please try again later.",
@@ -39,6 +42,7 @@ export const authRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator,
+  skip: () => skipRateLimitInDevelopment,
   // Custom handler for auth-specific logging
   handler: (req, res) => {
     console.warn(`[SECURITY] Rate limit exceeded for auth endpoint: ${req.path} from ${keyGenerator(req)}`);
@@ -66,8 +70,9 @@ export const aiGenerationRateLimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator,
   skipSuccessfulRequests: false,
-  // Skip rate limit for premium users (if implemented)
+  // Skip rate limit for premium users (if implemented) or in development
   skip: (req) => {
+    if (skipRateLimitInDevelopment) return true;
     // Future: Check if user has premium plan
     // return req.user?.plan === 'enterprise';
     return false;
@@ -87,7 +92,8 @@ export const chatRateLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator
+  keyGenerator,
+  skip: () => skipRateLimitInDevelopment
 });
 
 /**
@@ -100,7 +106,8 @@ export const apiReadRateLimiter = rateLimit({
   message: standardMessage,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator
+  keyGenerator,
+  skip: () => skipRateLimitInDevelopment
 });
 
 /**
@@ -117,7 +124,8 @@ export const apiWriteRateLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator
+  keyGenerator,
+  skip: () => skipRateLimitInDevelopment
 });
 
 /**
@@ -173,7 +181,8 @@ export const globalRateLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator
+  keyGenerator,
+  skip: () => skipRateLimitInDevelopment
 });
 
 /**

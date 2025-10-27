@@ -302,7 +302,11 @@ export default function TJCCompliance() {
                       <p className="text-xl font-bold text-gray-900">
                         {monitoringData?.next_survey_readiness || 'N/A'}
                       </p>
-                      <p className="text-sm text-gray-600 mt-1">Cost optimization: {monitoringData?.cost_optimization || 'N/A'}</p>
+                      {monitoringData?.cost_optimization && (
+                        <p className="text-sm text-gray-600 mt-1">
+                          Monthly savings: ${monitoringData.cost_optimization.monthly_savings?.toLocaleString() || 0}
+                        </p>
+                      )}
                     </div>
                   </div>
 
