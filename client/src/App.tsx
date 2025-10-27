@@ -69,6 +69,7 @@ function Router() {
       ) : (
         <>
           <Route path="/" component={Dashboard} />
+          <Route path="/dashboard" component={Dashboard} />
           <Route path="/ai-workspace" component={AIWorkspace} />
           <Route path="/bert-analysis" component={BERTAnalysis} />
           <Route path="/standards-builder" component={StandardsBuilder} />
