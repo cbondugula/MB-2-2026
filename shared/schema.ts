@@ -36,6 +36,29 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// HIPAA Audit Logs table (compliance requirement)
+export const auditLogs = pgTable(
+  "audit_logs",
+  {
+    id: serial("id").primaryKey(),
+    userId: varchar("user_id").notNull(), // Who performed the action
+    action: varchar("action").notNull(), // CREATE, READ, UPDATE, DELETE
+    tableName: varchar("table_name").notNull(), // Which table was accessed
+    recordId: varchar("record_id"), // Which specific record (if applicable)
+    oldValues: jsonb("old_values"), // Previous state (for UPDATE/DELETE)
+    newValues: jsonb("new_values"), // New state (for CREATE/UPDATE)
+    ipAddress: varchar("ip_address"), // Source IP
+    userAgent: varchar("user_agent"), // Browser/client info
+    metadata: jsonb("metadata"), // Additional context
+    timestamp: timestamp("timestamp").defaultNow().notNull(),
+  },
+  (table) => [
+    index("idx_audit_logs_user_id").on(table.userId),
+    index("idx_audit_logs_table_name").on(table.tableName),
+    index("idx_audit_logs_timestamp").on(table.timestamp),
+  ],
+);
+
 // Projects table
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
@@ -1196,6 +1219,11 @@ export const templateUsageAnalytics = pgTable("template_usage_analytics", {
   modifications: jsonb("modifications"), // What changes user made to template
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+// Audit Log Insert Schema and Types (HIPAA compliance)
+export const insertAuditLogSchema = createInsertSchema(auditLogs).omit({ id: true, timestamp: true });
+export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
+export type AuditLog = typeof auditLogs.$inferSelect;
 
 // Chat-to-Code Insert Schemas
 export const insertChatConversationSchema = createInsertSchema(chatConversations);

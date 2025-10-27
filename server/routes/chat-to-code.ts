@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { isAuthenticated } from "../replitAuth";
 import { chatToCodeService } from "../chat-to-code-service";
+import { createAuditLogger } from "../audit-logger";
 
 // Helper to get authenticated user ID
 function getUserId(req: any): string {
@@ -18,6 +19,7 @@ export function registerChatToCodeRoutes(app: Express) {
     try {
       const { initialPrompt, title } = req.body;
       const userId = getUserId(req);
+      const auditLogger = createAuditLogger(req, userId);
       
       const conversationId = await chatToCodeService.createConversation(
         userId,
@@ -25,13 +27,22 @@ export function registerChatToCodeRoutes(app: Express) {
         title
       );
       
+      // Log conversation creation (HIPAA compliance)
+      await auditLogger.logCreate("chat_conversations", conversationId, {
+        userId,
+        title: title || initialPrompt.substring(0, 100),
+      });
+      
       // Add the initial message with ownership verification
-      await chatToCodeService.addMessage(
+      const initialMessageId = await chatToCodeService.addMessage(
         conversationId,
         "user",
         initialPrompt,
         userId
       );
+      
+      // Log initial message creation (HIPAA compliance)
+      await auditLogger.logCreate("chat_messages", initialMessageId, { role: "user", conversationId });
       
       res.json({ conversationId });
     } catch (error) {
@@ -45,10 +56,13 @@ export function registerChatToCodeRoutes(app: Express) {
     try {
       const { conversationId, message } = req.body;
       const userId = getUserId(req);
+      const auditLogger = createAuditLogger(req, userId);
       
       // Add user message to database with ownership verification
       try {
-        await chatToCodeService.addMessage(conversationId, "user", message, userId);
+        const userMessageId = await chatToCodeService.addMessage(conversationId, "user", message, userId);
+        // Log message creation (HIPAA compliance)
+        await auditLogger.logCreate("chat_messages", userMessageId, { role: "user", conversationId });
       } catch (error: any) {
         if (error.message.includes("access denied") || error.message.includes("not found")) {
           return res.status(403).json({ error: "Access denied: You don't have permission to access this conversation" });
@@ -58,6 +72,9 @@ export function registerChatToCodeRoutes(app: Express) {
       
       // Get conversation history with ownership verification
       const history = await chatToCodeService.getConversationHistory(conversationId, userId);
+      
+      // Log conversation history READ (HIPAA compliance)
+      await auditLogger.logRead("chat_conversations", conversationId, { purpose: "AI context", messageCount: history.length });
       
       // Set up Server-Sent Events for streaming
       res.setHeader("Content-Type", "text/event-stream");
@@ -104,6 +121,9 @@ export function registerChatToCodeRoutes(app: Express) {
           { generatedCode }
         );
         
+        // Log assistant message creation (HIPAA compliance)
+        await auditLogger.logCreate("chat_messages", messageId, { role: "assistant", conversationId });
+        
         // If code was generated, save the app
         if (generatedCode && Object.keys(generatedCode.code || {}).length > 0) {
           const appId = await chatToCodeService.saveGeneratedApp(
@@ -113,6 +133,12 @@ export function registerChatToCodeRoutes(app: Express) {
             generatedCode,
             message
           );
+          
+          // Log app generation (HIPAA compliance)
+          await auditLogger.logCreate("generated_apps", appId, { 
+            conversationId,
+            framework: generatedCode.techStack?.framework 
+          });
           
           res.write(`data: ${JSON.stringify({ 
             type: "complete", 
@@ -142,8 +168,13 @@ export function registerChatToCodeRoutes(app: Express) {
     try {
       const { conversationId } = req.params;
       const userId = getUserId(req);
+      const auditLogger = createAuditLogger(req, userId);
       
       const messages = await chatToCodeService.getConversationHistory(conversationId, userId);
+      
+      // Log conversation READ access (HIPAA compliance)
+      await auditLogger.logRead("chat_conversations", conversationId, { messageCount: messages.length });
+      
       res.json({ messages });
     } catch (error) {
       console.error("Error getting conversation:", error);
@@ -155,8 +186,13 @@ export function registerChatToCodeRoutes(app: Express) {
   app.get("/api/chat/conversations", isAuthenticated, async (req, res) => {
     try {
       const userId = getUserId(req);
+      const auditLogger = createAuditLogger(req, userId);
       
       const conversations = await chatToCodeService.getUserConversations(userId);
+      
+      // Log user conversations READ access (HIPAA compliance)
+      await auditLogger.logRead("chat_conversations", undefined, { count: conversations.length });
+      
       res.json({ conversations });
     } catch (error) {
       console.error("Error getting conversations:", error);
@@ -168,8 +204,13 @@ export function registerChatToCodeRoutes(app: Express) {
   app.get("/api/chat/apps", isAuthenticated, async (req, res) => {
     try {
       const userId = getUserId(req);
+      const auditLogger = createAuditLogger(req, userId);
       
       const apps = await chatToCodeService.getUserApps(userId);
+      
+      // Log user apps READ access (HIPAA compliance)
+      await auditLogger.logRead("generated_apps", undefined, { count: apps.length });
+      
       res.json({ apps });
     } catch (error) {
       console.error("Error getting apps:", error);
@@ -182,8 +223,13 @@ export function registerChatToCodeRoutes(app: Express) {
     try {
       const { appId } = req.params;
       const userId = getUserId(req);
+      const auditLogger = createAuditLogger(req, userId);
       
       const app = await chatToCodeService.getAppById(appId, userId);
+      
+      // Log app READ access (HIPAA compliance)
+      await auditLogger.logRead("generated_apps", appId, { framework: app.framework });
+      
       res.json({ app });
     } catch (error) {
       console.error("Error getting app:", error);
