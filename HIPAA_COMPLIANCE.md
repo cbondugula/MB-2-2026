@@ -21,20 +21,25 @@ Neon PostgreSQL provides built-in encryption at rest and in transit:
 
 ### 2. Application-Level Encryption
 
-**Status**: ✅ Implemented
+**Status**: ⚠️ Partially Implemented (Proof-of-Concept)
 
 Additional encryption layer for critical PHI fields using AES-256-GCM:
 
-**Encrypted Fields:**
-- User PII: email, firstName, lastName
-- Chat messages: content, attachments
-- Conversation data: initialPrompt, context
-- Generated app code: code field (may contain PHI examples)
-- Audit logs: oldValues, newValues, metadata
-- Organization data: email, phone, address, taxId
-- Contract data: signatures
+**Currently Encrypted Fields:**
+- ✅ Chat messages: `content` (in `chat_messages` table)
+- ✅ Conversation data: `initialPrompt` (in `chat_conversations` table)
+
+**Fields Requiring Encryption (Future Implementation):**
+- ⏳ User PII: `email`, `firstName`, `lastName`, `phoneNumber` (in `users` table)
+- ⏳ Generated app code: `code` field (may contain PHI examples in `generated_apps` table)
+- ⏳ Audit logs: `oldValues`, `newValues`, `metadata` (in `audit_logs` table)
+- ⏳ Organization data: `email`, `phone`, `address`, `taxId` (in `organizations` table)
+- ⏳ Contract data: `signatures`, `signerEmail` (in `contracts` table)
+- ⏳ Attachments: `content`, `metadata` (in various tables)
 
 **Encryption Key**: Stored in `ENCRYPTION_KEY` environment variable (32-byte hex string)
+
+**Note**: Full application-level encryption requires integration across 20+ files and all database read/write operations. This is documented as a separate implementation project below.
 
 ### 3. Database-Level Audit Logging
 
@@ -264,6 +269,128 @@ GET /api/compliance/breach-detection
 - HIPAA Security Rule: https://www.hhs.gov/hipaa/for-professionals/security/index.html
 - Neon HIPAA Docs: https://neon.com/docs/security/hipaa
 - HHS Breach Notification Rule: https://www.hhs.gov/hipaa/for-professionals/breach-notification/index.html
+
+---
+
+## Appendix: Full Application-Level Encryption Implementation Plan
+
+### Current Status
+Application-level encryption is **partially implemented** as proof-of-concept for chat messages only. Full integration requires systematic encryption across all PHI-containing fields.
+
+### Implementation Requirements
+
+**Estimated Effort**: 3-5 hours across 20+ files
+
+#### Phase 1: Database Write Operations (Encryption)
+Integrate `encrypt()` or `encryptObject()` calls before all database inserts/updates:
+
+**Files to Modify:**
+1. `server/routes.ts` - All POST/PATCH endpoints writing PHI:
+   - User registration/update endpoints
+   - Organization CRUD operations
+   - Contract creation/signing
+   - Attachment uploads
+   - Settings updates
+
+2. `server/chat-to-code-service.ts` (✅ Already completed):
+   - `createConversation()` - encrypt `initialPrompt`
+   - `addMessage()` - encrypt message `content`
+   - `createGeneratedApp()` - encrypt `code`, `dependencies`, `techStack`
+
+3. `server/audit-logger.ts`:
+   - Encrypt `oldValues`, `newValues`, `metadata` before audit log writes
+
+**Tables Requiring Encryption:**
+- `users`: `email`, `firstName`, `lastName`, `phoneNumber`, `bio`, `avatarUrl`
+- `organizations`: `email`, `phone`, `address`, `taxId`, `metadata`
+- `contracts`: `signerEmail`, `signerName`, `signatures`, `metadata`
+- `generated_apps`: `code`, `dependencies`, `techStack`, `explanation`
+- `audit_logs`: `oldValues`, `newValues`, `metadata`
+- `app_versions`: `code`, `dependencies`, `metadata`
+- `chat_messages`: `content`, `attachments` (✅ Already done)
+- `chat_conversations`: `initialPrompt`, `context`, `metadata` (✅ Partial)
+
+#### Phase 2: Database Read Operations (Decryption)
+Integrate `decrypt()` or `decryptObject()` calls after all database selects:
+
+**Files to Modify:**
+1. All query operations in `server/routes.ts`
+2. `server/chat-to-code-service.ts` (✅ Already completed for chat messages)
+3. Any middleware reading user data
+4. Authentication flows reading user credentials
+
+**Pattern:**
+```typescript
+// Before encryption integration
+const user = await db.select().from(users).where(eq(users.id, userId));
+
+// After encryption integration
+const user = await db.select().from(users).where(eq(users.id, userId));
+user.email = decrypt(user.email) || user.email;
+user.firstName = decrypt(user.firstName) || user.firstName;
+// ... repeat for all encrypted fields
+```
+
+#### Phase 3: Migration Strategy
+**Option A: Encrypt-in-Place (Recommended)**
+1. Deploy encryption code (encrypt on write, decrypt on read)
+2. Run migration script to re-encrypt existing records:
+   ```typescript
+   // Pseudo-code for migration
+   const allRecords = await db.select().from(tableName);
+   for (const record of allRecords) {
+     const encrypted = {
+       ...record,
+       sensitiveField: encrypt(record.sensitiveField)
+     };
+     await db.update(tableName).set(encrypted).where(eq(tableName.id, record.id));
+   }
+   ```
+3. Verify decryption works on sample records
+4. Mark migration complete
+
+**Option B: Blue-Green Migration**
+1. Create new encrypted columns (`email_encrypted`)
+2. Dual-write to both old and new columns
+3. Backfill encrypted columns from plaintext
+4. Switch read operations to encrypted columns
+5. Drop old plaintext columns
+
+#### Phase 4: Testing & Validation
+1. **Unit Tests**: Verify `encrypt()`/`decrypt()` round-trip for all data types
+2. **Integration Tests**: Test full CRUD operations with encryption
+3. **Performance Tests**: Measure encryption overhead (target: <10ms per operation)
+4. **Regression Tests**: Ensure existing functionality unaffected
+5. **Health Check**: Update `/health` endpoint to verify all PHI fields encrypted
+
+#### Phase 5: Documentation & Monitoring
+1. Update this document with confirmed encrypted fields
+2. Add encryption coverage metrics to health checks
+3. Create runbook for encryption key rotation
+4. Document recovery procedures for lost encryption keys
+5. Add compliance verification scripts
+
+### Pre-Production Checklist
+- [ ] All PHI fields encrypted in database writes
+- [ ] All PHI fields decrypted in database reads
+- [ ] Existing data migrated to encrypted format
+- [ ] Encryption tests passing (unit + integration)
+- [ ] Performance benchmarks acceptable (<10ms overhead)
+- [ ] Health check reports 100% PHI coverage
+- [ ] Key rotation procedure documented and tested
+- [ ] BAA executed with Neon (Scale+ plan)
+- [ ] Security audit completed
+- [ ] Incident response plan documented
+
+### Risk Mitigation
+**Risk**: Encryption key loss = permanent data loss  
+**Mitigation**: Multi-region encrypted key backup in cloud secret managers
+
+**Risk**: Performance degradation from encryption overhead  
+**Mitigation**: Benchmark early, optimize hot paths, consider selective encryption
+
+**Risk**: Migration failures leaving partial encrypted data  
+**Mitigation**: Database transactions, rollback plan, staging environment testing
 
 ---
 
