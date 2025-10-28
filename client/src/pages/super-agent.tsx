@@ -20,7 +20,9 @@ import {
   TrendingUp,
   Globe,
   Sparkles,
-  Activity
+  Activity,
+  CheckCircle,
+  Lightbulb
 } from "lucide-react";
 
 interface SuperAgentRequest {
@@ -363,31 +365,71 @@ export default function SuperAgent() {
                 <div className="space-y-6">
                   {/* Performance Metrics */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
-                      <div className="text-green-400 text-sm font-medium">Confidence</div>
-                      <div className="text-2xl font-bold text-white">
-                        {(response.confidence * 100).toFixed(1)}%
+                    {response.confidence !== undefined && (
+                      <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
+                        <div className="text-green-400 text-sm font-medium">Confidence</div>
+                        <div className="text-2xl font-bold text-white">
+                          {(response.confidence * 100).toFixed(1)}%
+                        </div>
                       </div>
-                    </div>
-                    <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-700">
-                      <div className="text-blue-400 text-sm font-medium">Execution Time</div>
-                      <div className="text-2xl font-bold text-white">
-                        {response.executionTime}ms
+                    )}
+                    {response.orchestrationPlan?.confidence && (
+                      <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
+                        <div className="text-green-400 text-sm font-medium">AI Confidence</div>
+                        <div className="text-2xl font-bold text-white">
+                          {response.orchestrationPlan.confidence}%
+                        </div>
                       </div>
-                    </div>
+                    )}
+                    {response.executionTime && (
+                      <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-700">
+                        <div className="text-blue-400 text-sm font-medium">Execution Time</div>
+                        <div className="text-2xl font-bold text-white">
+                          {response.executionTime}ms
+                        </div>
+                      </div>
+                    )}
+                    {response.success !== undefined && (
+                      <div className={`p-4 rounded-lg border ${response.success ? 'bg-green-900/30 border-green-700' : 'bg-red-900/30 border-red-700'}`}>
+                        <div className={`text-sm font-medium ${response.success ? 'text-green-400' : 'text-red-400'}`}>Status</div>
+                        <div className="text-2xl font-bold text-white">
+                          {response.success ? 'Success' : 'Failed'}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Capabilities Used */}
-                  <div>
-                    <h3 className="text-white font-semibold mb-2">AI Capabilities Used</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {response.capabilities_used.map((capability, index) => (
-                        <Badge key={index} variant="outline" className="text-blue-400 border-blue-400">
-                          {capability}
-                        </Badge>
-                      ))}
+                  {response.capabilities_used && response.capabilities_used.length > 0 && (
+                    <div>
+                      <h3 className="text-white font-semibold mb-2">AI Capabilities Used</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {response.capabilities_used.map((capability, index) => (
+                          <Badge key={index} variant="outline" className="text-blue-400 border-blue-400">
+                            {capability}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  
+                  {/* Active Agents (from orchestrateAI response) */}
+                  {response.activeAgents && (
+                    <div>
+                      <h3 className="text-white font-semibold mb-2">Active AI Agents</h3>
+                      <div className="grid grid-cols-2 gap-3">
+                        {Object.entries(response.activeAgents).map(([name, agent]: [string, any]) => (
+                          <div key={name} className="bg-blue-900/20 p-3 rounded-lg border border-blue-700">
+                            <div className="text-blue-300 font-medium text-sm mb-1">{name}</div>
+                            <div className="text-gray-400 text-xs mb-1">{agent.capability}</div>
+                            <Badge variant="outline" className="text-green-400 border-green-400 text-xs">
+                              {agent.status}
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Compliance Status */}
                   {response.compliance_status && (
@@ -431,6 +473,36 @@ export default function SuperAgent() {
                           <li key={index} className="flex items-center text-gray-300">
                             <div className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></div>
                             {action}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {/* Next Steps (from orchestrateAI) */}
+                  {response.nextSteps && response.nextSteps.length > 0 && (
+                    <div>
+                      <h3 className="text-white font-semibold mb-2">Next Steps</h3>
+                      <ul className="space-y-2">
+                        {response.nextSteps.map((step, index) => (
+                          <li key={index} className="flex items-start">
+                            <CheckCircle className="w-5 h-5 mr-2 text-blue-400 flex-shrink-0 mt-0.5" />
+                            <span className="text-gray-300">{step}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {/* Recommendations (from orchestrateAI) */}
+                  {response.recommendations && response.recommendations.length > 0 && (
+                    <div>
+                      <h3 className="text-white font-semibold mb-2">AI Recommendations</h3>
+                      <ul className="space-y-2">
+                        {response.recommendations.map((rec, index) => (
+                          <li key={index} className="flex items-start">
+                            <Lightbulb className="w-5 h-5 mr-2 text-yellow-400 flex-shrink-0 mt-0.5" />
+                            <span className="text-gray-300">{rec}</span>
                           </li>
                         ))}
                       </ul>
