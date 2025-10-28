@@ -100,6 +100,13 @@ export default function ClinicalAI() {
   const [allergies, setAllergies] = useState("");
   const [selectedStandards, setSelectedStandards] = useState<string[]>(['FHIR', 'HL7']);
 
+  // Standards Translation State
+  const [sourceData, setSourceData] = useState('{\n  "Patient": {\n    "name": "John Doe",\n    "birthDate": "1980-01-15",\n    "gender": "male"\n  }\n}');
+  const [sourceStandard, setSourceStandard] = useState("FHIR");
+  const [targetStandard, setTargetStandard] = useState("HL7");
+  const [targetCountry, setTargetCountry] = useState("US");
+  const [translationResult, setTranslationResult] = useState<any>(null);
+
   const clinicalAIMutation = useMutation({
     mutationFn: async (data: any) => {
       const response = await fetch('/api/clinical-ai/recommendations', {
@@ -119,6 +126,32 @@ export default function ClinicalAI() {
     onError: (error) => {
       toast({
         title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  });
+
+  const translationMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await fetch('/api/standards/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!response.ok) throw new Error('Standards translation failed');
+      return response.json();
+    },
+    onSuccess: (data) => {
+      setTranslationResult(data);
+      toast({
+        title: "Translation Successful",
+        description: `${data.mappingAccuracy}% mapping accuracy achieved`,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Translation Error",
         description: error.message,
         variant: "destructive",
       });
@@ -555,25 +588,231 @@ export default function ClinicalAI() {
                   AI-powered translation between FHIR, HL7, SNOMED, ICD-10, LOINC, and DICOM standards
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <Card className="p-4">
-                    <h3 className="font-semibold mb-2">Real-time Translation</h3>
-                    <p className="text-sm text-gray-600">
+              <CardContent className="space-y-6">
+                {/* Info Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Zap className="h-5 w-5 text-blue-600" />
+                      <h3 className="font-semibold">Real-time Translation</h3>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       Convert between healthcare standards while preserving semantic meaning
                     </p>
                   </Card>
-                  <Card className="p-4">
-                    <h3 className="font-semibold mb-2">193 Countries</h3>
-                    <p className="text-sm text-gray-600">
+                  <Card className="p-4 bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950 dark:to-teal-950">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Shield className="h-5 w-5 text-green-600" />
+                      <h3 className="font-semibold">193 Countries</h3>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       Multi-country compliance verification for global healthcare systems
                     </p>
                   </Card>
-                  <Card className="p-4">
-                    <h3 className="font-semibold mb-2">AI-Powered Mapping</h3>
-                    <p className="text-sm text-gray-600">
+                  <Card className="p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Brain className="h-5 w-5 text-purple-600" />
+                      <h3 className="font-semibold">AI-Powered Mapping</h3>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       Advanced AI algorithms ensure accurate data transformation
                     </p>
+                  </Card>
+                </div>
+
+                <Separator />
+
+                {/* Translation Form */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Translation Configuration</CardTitle>
+                      <CardDescription>Configure source and target standards</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="sourceStandard">Source Standard</Label>
+                          <Select value={sourceStandard} onValueChange={setSourceStandard}>
+                            <SelectTrigger id="sourceStandard" data-testid="select-source-standard">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="FHIR">FHIR (R4)</SelectItem>
+                              <SelectItem value="HL7">HL7 v2.8</SelectItem>
+                              <SelectItem value="SNOMED">SNOMED CT</SelectItem>
+                              <SelectItem value="ICD-10">ICD-10</SelectItem>
+                              <SelectItem value="LOINC">LOINC</SelectItem>
+                              <SelectItem value="DICOM">DICOM</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="targetStandard">Target Standard</Label>
+                          <Select value={targetStandard} onValueChange={setTargetStandard}>
+                            <SelectTrigger id="targetStandard" data-testid="select-target-standard">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="FHIR">FHIR (R4)</SelectItem>
+                              <SelectItem value="HL7">HL7 v2.8</SelectItem>
+                              <SelectItem value="SNOMED">SNOMED CT</SelectItem>
+                              <SelectItem value="ICD-10">ICD-10</SelectItem>
+                              <SelectItem value="LOINC">LOINC</SelectItem>
+                              <SelectItem value="DICOM">DICOM</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="targetCountry">Target Country (Optional)</Label>
+                        <Select value={targetCountry} onValueChange={setTargetCountry}>
+                          <SelectTrigger id="targetCountry" data-testid="select-target-country">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="US">United States</SelectItem>
+                            <SelectItem value="EU">European Union</SelectItem>
+                            <SelectItem value="CA">Canada</SelectItem>
+                            <SelectItem value="UK">United Kingdom</SelectItem>
+                            <SelectItem value="AU">Australia</SelectItem>
+                            <SelectItem value="JP">Japan</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="sourceData">Source Data (JSON)</Label>
+                        <Textarea
+                          id="sourceData"
+                          data-testid="textarea-source-data"
+                          value={sourceData}
+                          onChange={(e) => setSourceData(e.target.value)}
+                          placeholder="Enter source data in JSON format"
+                          rows={8}
+                          className="font-mono text-sm"
+                        />
+                      </div>
+
+                      <Button
+                        onClick={() => {
+                          try {
+                            const parsedData = JSON.parse(sourceData);
+                            translationMutation.mutate({
+                              sourceData: parsedData,
+                              sourceStandard,
+                              targetStandard,
+                              targetCountry
+                            });
+                          } catch (error) {
+                            toast({
+                              title: "Invalid JSON",
+                              description: "Please enter valid JSON data",
+                              variant: "destructive"
+                            });
+                          }
+                        }}
+                        disabled={translationMutation.isPending}
+                        className="w-full"
+                        data-testid="button-translate-standards"
+                      >
+                        {translationMutation.isPending ? (
+                          <>
+                            <Clock className="mr-2 h-4 w-4 animate-spin" />
+                            Translating...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="mr-2 h-4 w-4" />
+                            Translate Standards
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Results Display */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Translation Results</CardTitle>
+                      <CardDescription>
+                        {translationResult ? `${sourceStandard} → ${targetStandard}` : 'Results will appear here'}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {translationResult ? (
+                        <ScrollArea className="h-[400px]">
+                          <div className="space-y-4">
+                            {/* Mapping Accuracy */}
+                            <div>
+                              <Label className="text-sm font-medium">Mapping Accuracy</Label>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Progress value={translationResult.mappingAccuracy} className="flex-1" />
+                                <span className="text-sm font-semibold">{translationResult.mappingAccuracy}%</span>
+                              </div>
+                            </div>
+
+                            {/* Compliance Status */}
+                            <div>
+                              <Label className="text-sm font-medium">Compliance Status</Label>
+                              <Badge 
+                                variant={translationResult.complianceStatus === 'compliant' ? 'default' : 'secondary'}
+                                className="mt-1"
+                                data-testid="badge-compliance-status"
+                              >
+                                {translationResult.complianceStatus === 'compliant' ? (
+                                  <CheckCircle className="h-3 w-3 mr-1" />
+                                ) : (
+                                  <AlertTriangle className="h-3 w-3 mr-1" />
+                                )}
+                                {translationResult.complianceStatus.toUpperCase()}
+                              </Badge>
+                            </div>
+
+                            {/* Transformed Data */}
+                            <div>
+                              <Label className="text-sm font-medium">Transformed Data</Label>
+                              <pre className="mt-1 p-3 bg-gray-50 dark:bg-gray-900 rounded text-xs overflow-x-auto" data-testid="pre-transformed-data">
+                                {JSON.stringify(translationResult.transformedData, null, 2)}
+                              </pre>
+                            </div>
+
+                            {/* Audit Log */}
+                            <div>
+                              <Label className="text-sm font-medium">Audit Log</Label>
+                              <div className="mt-1 p-3 bg-blue-50 dark:bg-blue-950 rounded text-xs space-y-1">
+                                <div><strong>Timestamp:</strong> {new Date(translationResult.auditLog.timestamp).toLocaleString()}</div>
+                                <div><strong>Source Format:</strong> {translationResult.auditLog.sourceFormat}</div>
+                                <div><strong>Target Format:</strong> {translationResult.auditLog.targetFormat}</div>
+                                <div><strong>Rules Applied:</strong> {translationResult.auditLog.transformationRules.join(', ')}</div>
+                              </div>
+                            </div>
+
+                            {/* Validation Errors */}
+                            {translationResult.validationErrors && translationResult.validationErrors.length > 0 && (
+                              <Alert>
+                                <AlertTriangle className="h-4 w-4" />
+                                <AlertDescription>
+                                  <strong>Validation Issues:</strong>
+                                  <ul className="mt-2 space-y-1">
+                                    {translationResult.validationErrors.map((error: string, idx: number) => (
+                                      <li key={idx} className="text-sm">• {error}</li>
+                                    ))}
+                                  </ul>
+                                </AlertDescription>
+                              </Alert>
+                            )}
+                          </div>
+                        </ScrollArea>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center h-[400px] text-gray-400">
+                          <Database className="h-16 w-16 mb-4 opacity-30" />
+                          <p className="text-sm">No translation results yet</p>
+                          <p className="text-xs text-gray-500 mt-1">Configure and run a translation to see results</p>
+                        </div>
+                      )}
+                    </CardContent>
                   </Card>
                 </div>
               </CardContent>
