@@ -340,7 +340,7 @@ export default function AppBuilder() {
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {stack.frontend.features.slice(0, 3).map((feature: string) => (
+                      {stack.frontend.features?.slice(0, 3).map((feature: string) => (
                         <Badge key={feature} variant="outline" className="text-xs">
                           {feature}
                         </Badge>
