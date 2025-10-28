@@ -454,15 +454,17 @@ export default function SuperAgent() {
                     </div>
                   )}
 
-                  {/* Results Display */}
-                  <div>
-                    <h3 className="text-white font-semibold mb-2">Analysis Results</h3>
-                    <div className="bg-gray-900 p-4 rounded-lg border border-gray-600">
-                      <pre className="text-gray-300 text-sm overflow-auto max-h-64">
-                        {JSON.stringify(response.result, null, 2)}
-                      </pre>
+                  {/* Results Display - Only show raw JSON if we don't have structured data */}
+                  {!response.activeAgents && !response.nextSteps && !response.recommendations && response.result && (
+                    <div>
+                      <h3 className="text-white font-semibold mb-2">Analysis Results</h3>
+                      <div className="bg-gray-900 p-4 rounded-lg border border-gray-600">
+                        <pre className="text-gray-300 text-sm overflow-auto max-h-64">
+                          {JSON.stringify(response.result, null, 2)}
+                        </pre>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Next Actions */}
                   {response.next_actions && response.next_actions.length > 0 && (
