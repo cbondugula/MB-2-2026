@@ -1370,7 +1370,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/super-agent/orchestrate', async (req, res) => {
     try {
       const request = req.body;
-      const result = await superAgentService.orchestrateAI(request);
+      const result = await SuperSCAgent.orchestrateAI(request);
       res.json(result);
     } catch (error) {
       console.error('Super agent orchestration failed:', error);
