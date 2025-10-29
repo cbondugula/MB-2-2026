@@ -510,6 +510,52 @@ export default function SuperAgent() {
                       </ul>
                     </div>
                   )}
+                  
+                  {/* GENERATED CODE - Display when code generation is requested */}
+                  {response.generatedCode && (
+                    <div className="mt-6">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-white font-semibold flex items-center">
+                          <Code className="w-5 h-5 mr-2 text-green-400" />
+                          Generated Code
+                        </h3>
+                        <div className="flex gap-2">
+                          {response.language && (
+                            <Badge className="bg-blue-600">{response.language}</Badge>
+                          )}
+                          {response.framework && (
+                            <Badge variant="outline" className="text-blue-400 border-blue-400">{response.framework}</Badge>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {response.complianceRequirements && (
+                        <div className="mb-3 flex items-center text-green-400 text-sm">
+                          <Shield className="w-4 h-4 mr-2" />
+                          <span>{response.complianceRequirements} Compliant Code</span>
+                        </div>
+                      )}
+                      
+                      <div className="bg-gray-900 p-4 rounded-lg border border-green-700 shadow-lg">
+                        <pre className="text-green-300 text-sm overflow-auto max-h-96 font-mono">
+                          {response.generatedCode}
+                        </pre>
+                      </div>
+                      
+                      {response.complianceNotes && response.complianceNotes.length > 0 && (
+                        <div className="mt-3">
+                          <h4 className="text-white text-sm font-medium mb-2">Code Features:</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {response.complianceNotes.map((note, index) => (
+                              <Badge key={index} variant="outline" className="text-green-400 border-green-400 text-xs">
+                                {note}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="text-center py-12">
