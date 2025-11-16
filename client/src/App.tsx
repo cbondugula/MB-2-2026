@@ -53,6 +53,7 @@ import AdvancedAI from "@/pages/advanced-ai";
 import DualAdvancedClassical from "@/pages/dual-advanced-classical";
 import BCICapabilities from "@/pages/bci-capabilities";
 import AutoBusiness from "@/pages/auto-business";
+import PlatformAnalysis from "@/pages/platform-analysis";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -118,6 +119,7 @@ function Router() {
           <Route path="/executive-dashboard" component={ExecutiveDashboard} />
           <Route path="/medhelm" component={MedHELMDashboard} />
           <Route path="/langextract" component={LangExtractDashboard} />
+          <Route path="/platform-analysis" component={PlatformAnalysis} />
           <Route path="/apps/:appId" component={AppPreview} />
           <Route path="/my-apps" component={MyApps} />
         </>

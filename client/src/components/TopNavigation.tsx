@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
-import { Shield, Search, Plus, User, Settings, LogOut } from "lucide-react";
+import { Shield, Search, Plus, User, Settings, LogOut, TrendingUp } from "lucide-react";
+import { Link } from "wouter";
 
 export default function TopNavigation() {
   const { user } = useAuth();
@@ -62,6 +63,12 @@ export default function TopNavigation() {
                 )}
               </div>
             </div>
+            <Link href="/platform-analysis">
+              <DropdownMenuItem>
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Platform Analysis
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuItem>
               <Settings className="w-4 h-4 mr-2" />
               Settings
