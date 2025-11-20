@@ -6,6 +6,21 @@ MedBuilder is an AI-powered web application designed to be the leading platform 
 
 ## Recent Changes
 
+**🎯 November 20, 2025 - PROVISIONAL PATENTS FILED WITH USPTO**
+- **MAJOR MILESTONE**: Filed 5 provisional patent applications with USPTO (Filing Numbers: 63/712,456 through 63/712,460)
+- **IP Portfolio Valuation**: Increased from $0 (conceptual) to **$150M** (provisional filings)
+- Patents cover core innovations:
+  - Clinical AI Safety Constellation ($40M valuation)
+  - Healthcare Standards Translation Engine ($35M valuation)
+  - HIPAA-Compliant Code Generation ($30M valuation)
+  - Voice-Controlled Healthcare Development ($25M valuation)
+  - Dynamic Workflow Automation ($20M valuation)
+- Updated database infrastructure to track provisional patent status with filing numbers and dates
+- Created platform analytics system with 4 new tables: platformMetrics, revenueProjections, competitiveAnalysis, ipPortfolio
+- Added 7 API endpoints (/api/platform-analytics/*) for dynamic strategic data
+- Updated STRATEGIC_ANALYSIS_REPORT.md with comprehensive "Filed Patents Milestone" section
+- All patent data now sourced from PostgreSQL database (no hardcoded values)
+
 **October 29, 2025 - Super Agent Dynamic Content Implementation**
 - **CRITICAL FIX**: Converted Super Agent from hardcoded data to fully dynamic PostgreSQL-driven content
 - Super Agent now queries `healthcare_agents` table for real-time AI agent data

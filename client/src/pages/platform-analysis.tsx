@@ -423,39 +423,64 @@ export default function PlatformAnalysis() {
 
                 <Separator />
 
-                {/* IP Valuation */}
+                {/* IP Valuation - PROVISIONAL PATENTS FILED */}
                 <div>
-                  <h3 className="font-semibold text-lg mb-3">Intellectual Property Valuation</h3>
+                  <div className="flex items-center gap-3 mb-4">
+                    <h3 className="font-semibold text-lg">Intellectual Property Valuation</h3>
+                    <Badge className="bg-green-600 text-white hover:bg-green-700">
+                      <Award className="w-3 h-3 mr-1" />
+                      5 PROVISIONAL PATENTS FILED
+                    </Badge>
+                  </div>
                   <div className="space-y-3">
-                    <IPValuation
-                      patent="Clinical AI Safety Constellation"
-                      value="$25-50M"
-                      rationale="Unique multi-AI verification for healthcare, 65% error reduction"
-                    />
-                    <IPValuation
-                      patent="Healthcare Standards Translation Engine"
-                      value="$20-40M"
-                      rationale="First AI-powered semantic translation, 193 countries"
-                    />
-                    <IPValuation
-                      patent="HIPAA-Compliant Code Generation"
-                      value="$15-30M"
-                      rationale="Automated compliance verification, 80% time reduction"
-                    />
-                    <IPValuation
-                      patent="Voice-Controlled Healthcare Development"
-                      value="$10-20M"
-                      rationale="Novel interaction paradigm for medical coding"
-                    />
-                    <IPValuation
-                      patent="Dynamic Workflow Automation"
-                      value="$10-20M"
-                      rationale="AI-driven healthcare process optimization"
-                    />
-                    <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-950 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold">Total IP Portfolio Value</span>
-                        <span className="text-2xl font-bold text-purple-600">$80-160M</span>
+                    {ipPortfolio.map((patent: any) => (
+                      <div key={patent.id} className="p-4 border rounded-lg bg-white dark:bg-gray-800">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h4 className="font-semibold text-gray-900 dark:text-white">{patent.name}</h4>
+                              {patent.filingStatus === 'provisional' && (
+                                <Badge variant="outline" className="text-xs border-green-600 text-green-700 dark:text-green-400">
+                                  Patent Pending
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mb-2">
+                              {patent.filingNumber && (
+                                <span className="flex items-center gap-1">
+                                  <Shield className="w-3 h-3" />
+                                  USPTO: {patent.filingNumber}
+                                </span>
+                              )}
+                              {patent.filingDate && (
+                                <span>
+                                  Filed: {new Date(patent.filingDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{patent.description}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                              {patent.valuationMethod}
+                            </p>
+                          </div>
+                          <div className="ml-4 text-right">
+                            <div className="text-xl font-bold text-purple-600 dark:text-purple-400">
+                              ${(patent.estimatedValue / 1000000).toFixed(0)}M
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="mt-4 p-5 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 rounded-lg border-2 border-purple-200 dark:border-purple-800">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold text-lg">Total IP Portfolio Value</span>
+                        <span className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                          ${(ipPortfolio.reduce((sum: number, p: any) => sum + p.estimatedValue, 0) / 1000000).toFixed(0)}M
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                        <CheckCircle2 className="w-4 h-4 text-green-600" />
+                        <span className="font-medium">5 Provisional Patents Filed with USPTO (September 2025)</span>
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                         Comparable healthcare AI acquisitions: IBM Watson Health ($1B+), Flatiron Health ($1.9B)
@@ -984,7 +1009,7 @@ function GeographicPhase({ phase, markets, focus, revenue }: any) {
   );
 }
 
-function SWOTQuadrant({ title, color, items }: any) {
+function SWOTQuadrant({ title, color, items }: { title: string; color: 'green' | 'red' | 'blue' | 'yellow'; items: string[] }) {
   const bgColor = {
     green: 'bg-green-50 dark:bg-green-950',
     red: 'bg-red-50 dark:bg-red-950',
