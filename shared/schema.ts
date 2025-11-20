@@ -8,6 +8,7 @@ import {
   serial,
   boolean,
   integer,
+  bigint,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -1220,6 +1221,89 @@ export const templateUsageAnalytics = pgTable("template_usage_analytics", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Platform Metrics - Dynamic platform analysis and strategic metrics
+export const platformMetrics = pgTable("platform_metrics", {
+  id: serial("id").primaryKey(),
+  metricType: varchar("metric_type").notNull(), // revenue, market_size, customers, ip_value
+  metricCategory: varchar("metric_category").notNull(), // financial, operational, strategic
+  year: integer("year"), // For projections (2025, 2026, etc.)
+  quarter: integer("quarter"), // Q1, Q2, Q3, Q4
+  value: jsonb("value").notNull(), // Flexible metric value (number, object, array)
+  unit: varchar("unit"), // dollars, percentage, count, etc.
+  source: varchar("source"), // database, calculation, projection, external
+  confidence: varchar("confidence"), // high, medium, low
+  metadata: jsonb("metadata"), // Additional context
+  calculationMethod: text("calculation_method"), // How metric is derived
+  assumptions: jsonb("assumptions"), // Underlying assumptions for projections
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Revenue Projections - Detailed revenue modeling
+export const revenueProjections = pgTable("revenue_projections", {
+  id: serial("id").primaryKey(),
+  year: integer("year").notNull(),
+  quarter: integer("quarter"),
+  tier: varchar("tier").notNull(), // starter, professional, enterprise, enterprise_plus
+  customerCount: integer("customer_count"),
+  pricePerMonth: bigint("price_per_month", { mode: "number" }), // in cents
+  monthlyRecurringRevenue: bigint("monthly_recurring_revenue", { mode: "number" }), // in cents
+  annualRecurringRevenue: bigint("annual_recurring_revenue", { mode: "number" }), // in cents
+  churnRate: integer("churn_rate"), // percentage * 100
+  expansionRevenue: bigint("expansion_revenue", { mode: "number" }), // in cents
+  additionalRevenue: jsonb("additional_revenue"), // professional services, marketplace, etc.
+  assumptions: jsonb("assumptions"),
+  scenario: varchar("scenario").default("realistic"), // conservative, realistic, optimistic
+  confidence: varchar("confidence").default("medium"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Competitive Analysis - Dynamic competitive positioning
+export const competitiveAnalysis = pgTable("competitive_analysis", {
+  id: serial("id").primaryKey(),
+  competitorName: varchar("competitor_name").notNull(),
+  competitorType: varchar("competitor_type").notNull(), // direct, indirect, emerging
+  category: varchar("category"), // ai_coding, healthcare_it, ehr, cloud
+  strengths: jsonb("strengths"), // Array of strength descriptions
+  weaknesses: jsonb("weaknesses"), // Array of weakness descriptions
+  pricing: jsonb("pricing"), // Pricing tiers and models
+  marketShare: integer("market_share"), // percentage * 100
+  customerBase: integer("customer_base"),
+  funding: bigint("funding", { mode: "number" }), // Total funding in cents
+  valuation: bigint("valuation", { mode: "number" }), // in cents
+  differentiators: jsonb("differentiators"), // How we differentiate
+  threats: jsonb("threats"), // Competitive threats
+  opportunities: jsonb("opportunities"), // Partnership or acquisition opportunities
+  lastUpdated: timestamp("last_updated").defaultNow(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// IP Portfolio - Patent and innovation tracking
+export const ipPortfolio = pgTable("ip_portfolio", {
+  id: serial("id").primaryKey(),
+  innovationName: varchar("innovation_name").notNull(),
+  innovationType: varchar("innovation_type").notNull(), // patent, trade_secret, copyright
+  category: varchar("category"), // ai_safety, compliance, translation, voice_control
+  description: text("description"),
+  filingStatus: varchar("filing_status").notNull(), // conceptual, provisional, non_provisional, granted
+  filingNumber: varchar("filing_number"), // USPTO filing number
+  filingDate: timestamp("filing_date"),
+  grantDate: timestamp("grant_date"),
+  estimatedValue: bigint("estimated_value", { mode: "number" }), // in cents
+  valuationMethod: text("valuation_method"),
+  implementationStatus: varchar("implementation_status"), // planned, in_progress, completed, production
+  implementationProof: jsonb("implementation_proof"), // Links to code, demos, etc.
+  relatedServices: jsonb("related_services"), // Which backend services implement this
+  competitiveAdvantage: text("competitive_advantage"),
+  marketImpact: text("market_impact"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Audit Log Insert Schema and Types (HIPAA compliance)
 export const insertAuditLogSchema = createInsertSchema(auditLogs).omit({ id: true, timestamp: true });
 export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
@@ -1233,6 +1317,12 @@ export const insertAppVersionSchema = createInsertSchema(appVersions);
 export const insertAppDeploymentSchema = createInsertSchema(appDeployments);
 export const insertUserSettingsSchema = createInsertSchema(userSettings);
 export const insertTemplateUsageAnalyticsSchema = createInsertSchema(templateUsageAnalytics);
+
+// Platform Analytics Insert Schemas
+export const insertPlatformMetricsSchema = createInsertSchema(platformMetrics).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertRevenueProjectionsSchema = createInsertSchema(revenueProjections).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertCompetitiveAnalysisSchema = createInsertSchema(competitiveAnalysis).omit({ id: true, createdAt: true });
+export const insertIpPortfolioSchema = createInsertSchema(ipPortfolio).omit({ id: true, createdAt: true, updatedAt: true });
 
 // Chat-to-Code Types
 export type InsertChatConversation = z.infer<typeof insertChatConversationSchema>;
@@ -1249,3 +1339,13 @@ export type InsertUserSettings = z.infer<typeof insertUserSettingsSchema>;
 export type UserSettings = typeof userSettings.$inferSelect;
 export type InsertTemplateUsageAnalytics = z.infer<typeof insertTemplateUsageAnalyticsSchema>;
 export type TemplateUsageAnalytics = typeof templateUsageAnalytics.$inferSelect;
+
+// Platform Analytics Types
+export type InsertPlatformMetrics = z.infer<typeof insertPlatformMetricsSchema>;
+export type PlatformMetrics = typeof platformMetrics.$inferSelect;
+export type InsertRevenueProjections = z.infer<typeof insertRevenueProjectionsSchema>;
+export type RevenueProjections = typeof revenueProjections.$inferSelect;
+export type InsertCompetitiveAnalysis = z.infer<typeof insertCompetitiveAnalysisSchema>;
+export type CompetitiveAnalysis = typeof competitiveAnalysis.$inferSelect;
+export type InsertIpPortfolio = z.infer<typeof insertIpPortfolioSchema>;
+export type IpPortfolio = typeof ipPortfolio.$inferSelect;

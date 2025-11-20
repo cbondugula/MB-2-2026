@@ -23,9 +23,14 @@ import {
   executiveMetrics,
   executiveROI,
   executiveCompetitive,
-  executiveRevenue
+  executiveRevenue,
+  platformMetrics,
+  revenueProjections,
+  competitiveAnalysis,
+  ipPortfolio
 } from "@shared/schema";
 import { eq } from "drizzle-orm";
+import { seedPlatformAnalytics } from "./platform-analytics-seed";
 
 export async function seedDatabase() {
   try {
@@ -58,6 +63,10 @@ export async function seedDatabase() {
     await db.delete(executiveROI);
     await db.delete(executiveCompetitive);
     await db.delete(executiveRevenue);
+    await db.delete(platformMetrics);
+    await db.delete(revenueProjections);
+    await db.delete(competitiveAnalysis);
+    await db.delete(ipPortfolio);
     
     console.log('✅ Existing data cleared, starting fresh seed...');
 
@@ -1825,6 +1834,9 @@ export default function FHIRPatientSearch() {
     };
     await db.insert(executiveRevenue).values(executiveRevenueData);
 
+    // Seed platform analytics data (dynamic database-driven metrics)
+    await seedPlatformAnalytics();
+
     console.log('✅ Database seeded successfully!');
     console.log(`📊 Created: ${domains.length} healthcare domains, ${agents.length} healthcare agents, ${standards.length} healthcare standards`);
     console.log(`🏗️ Created: ${templateData.length} templates, ${componentData.length} components`);
@@ -1835,6 +1847,7 @@ export default function FHIRPatientSearch() {
     console.log(`🔨 Created: ${buildHistoryData.length} build records, ${envVarData.length} environment variables`);
     console.log(`👥 Created: ${collaboratorData.length} project collaborators`);
     console.log(`📈 Created: 4 executive metric datasets (metrics, ROI, competitive, revenue)`);
+    console.log(`💰 Created: Platform analytics data (revenue projections, IP portfolio, competitive analysis)`);
     console.log(`👤 Created: 1 user, 1 sample project`);
 
   } catch (error) {

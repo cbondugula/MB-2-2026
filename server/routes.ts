@@ -46,6 +46,7 @@ import { healthcareTestingRouter } from "./healthcare-testing-service";
 import { superCSAgentRoutes } from "./routes/super-cs-agent";
 import { multiAIInnovationService } from "./multi-ai-innovation-assessment";
 import { csAgentService } from "./cs-agent-dynamic-service";
+import { platformAnalyticsService } from "./platform-analytics-service";
 import { 
   globalRateLimiter,
   apiReadRateLimiter,
@@ -201,6 +202,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch revenue projections" });
+    }
+  });
+
+  // Platform Analytics APIs - Dynamic database-driven platform analysis
+  app.get('/api/platform-analytics/dashboard', async (req, res) => {
+    try {
+      const dashboardData = await platformAnalyticsService.getDashboardData();
+      res.json(dashboardData);
+    } catch (error) {
+      console.error('Failed to fetch platform analytics dashboard:', error);
+      res.status(500).json({ error: 'Failed to fetch platform analytics' });
+    }
+  });
+
+  app.get('/api/platform-analytics/revenue', async (req, res) => {
+    try {
+      const scenario = (req.query.scenario as string) || 'realistic';
+      const projections = await platformAnalyticsService.getRevenueProjections(scenario);
+      res.json(projections);
+    } catch (error) {
+      console.error('Failed to fetch revenue projections:', error);
+      res.status(500).json({ error: 'Failed to fetch revenue projections' });
+    }
+  });
+
+  app.get('/api/platform-analytics/market-metrics', async (req, res) => {
+    try {
+      const metrics = await platformAnalyticsService.getMarketMetrics();
+      res.json(metrics);
+    } catch (error) {
+      console.error('Failed to fetch market metrics:', error);
+      res.status(500).json({ error: 'Failed to fetch market metrics' });
+    }
+  });
+
+  app.get('/api/platform-analytics/ip-valuation', async (req, res) => {
+    try {
+      const valuation = await platformAnalyticsService.getIpValuation();
+      res.json(valuation);
+    } catch (error) {
+      console.error('Failed to fetch IP valuation:', error);
+      res.status(500).json({ error: 'Failed to fetch IP valuation' });
+    }
+  });
+
+  app.get('/api/platform-analytics/competitors', async (req, res) => {
+    try {
+      const competitors = await platformAnalyticsService.getCompetitors();
+      res.json(competitors);
+    } catch (error) {
+      console.error('Failed to fetch competitors:', error);
+      res.status(500).json({ error: 'Failed to fetch competitors' });
+    }
+  });
+
+  app.get('/api/platform-analytics/ip-portfolio', async (req, res) => {
+    try {
+      const portfolio = await platformAnalyticsService.getIpPortfolio();
+      res.json(portfolio);
+    } catch (error) {
+      console.error('Failed to fetch IP portfolio:', error);
+      res.status(500).json({ error: 'Failed to fetch IP portfolio' });
+    }
+  });
+
+  app.get('/api/platform-analytics/customers', async (req, res) => {
+    try {
+      const customerProjections = await platformAnalyticsService.getCustomerProjections();
+      res.json(customerProjections);
+    } catch (error) {
+      console.error('Failed to fetch customer projections:', error);
+      res.status(500).json({ error: 'Failed to fetch customer projections' });
     }
   });
 

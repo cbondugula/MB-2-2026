@@ -17,11 +17,34 @@ import {
   Brain,
   Lock,
   CheckCircle2,
-  Rocket
+  Rocket,
+  Loader2
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useQuery } from "@tanstack/react-query";
 
 export default function PlatformAnalysis() {
+  // Fetch platform analytics dashboard data
+  const { data: dashboardData, isLoading } = useQuery({
+    queryKey: ['/api/platform-analytics/dashboard'],
+  });
+  // Show loading state while fetching data
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-400">Loading platform analytics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const summary = (dashboardData as any)?.summary || {};
+  const ipPortfolio = (dashboardData as any)?.ip?.portfolio || [];
+  const competitors = (dashboardData as any)?.market?.competitors || [];
+  const revenueProjections = (dashboardData as any)?.revenue?.projections || [];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
