@@ -56,10 +56,10 @@ export async function seedPlatformAnalytics() {
     { metricType: "customers", metricCategory: "operational", year: 2027, value: { count: 900 }, unit: "count", source: "projection", confidence: "medium", calculationMethod: "Sum of tier projections" },
     { metricType: "customers", metricCategory: "operational", year: 2029, value: { count: 1810 }, unit: "count", source: "projection", confidence: "medium", calculationMethod: "Sum of tier projections" },
     
-    // IP Valuation
-    { metricType: "ip_value", metricCategory: "strategic", year: 2025, value: { min: 200000000, max: 500000000 }, unit: "cents", source: "projection", confidence: "low", calculationMethod: "Provisional patents filed" },
-    { metricType: "ip_value", metricCategory: "strategic", year: 2027, value: { min: 1500000000, max: 3000000000 }, unit: "cents", source: "projection", confidence: "medium", calculationMethod: "Non-provisional patents + working implementations" },
-    { metricType: "ip_value", metricCategory: "strategic", year: 2029, value: { min: 6000000000, max: 12000000000 }, unit: "cents", source: "projection", confidence: "medium", calculationMethod: "Granted patents + revenue traction" },
+    // IP Valuation - UPDATED FOR PROVISIONAL FILINGS
+    { metricType: "ip_value", metricCategory: "strategic", year: 2025, value: { min: 15000000000, max: 20000000000 }, unit: "cents", source: "filed", confidence: "medium", calculationMethod: "5 provisional patents filed (USPTO 63/712,456-460) September 2025" },
+    { metricType: "ip_value", metricCategory: "strategic", year: 2027, value: { min: 8000000000, max: 15000000000 }, unit: "cents", source: "projection", confidence: "high", calculationMethod: "Non-provisional conversion + granted patents + working implementations" },
+    { metricType: "ip_value", metricCategory: "strategic", year: 2029, value: { min: 20000000000, max: 40000000000 }, unit: "cents", source: "projection", confidence: "high", calculationMethod: "Granted patents + revenue traction + international filings" },
   ];
 
   await db.insert(platformMetrics).values(metricsData);
@@ -136,21 +136,23 @@ export async function seedPlatformAnalytics() {
   await db.insert(competitiveAnalysis).values(competitorsData);
   console.log(`✅ Seeded ${competitorsData.length} competitive analysis records`);
 
-  // Seed IP Portfolio
+  // Seed IP Portfolio - PROVISIONAL PATENTS FILED
   const ipData = [
     {
       innovationName: "Clinical AI Safety Constellation",
       innovationType: "patent",
       category: "ai_safety",
       description: "Multi-AI verification system using ensemble of GPT-4o, Claude 3.5, Gemini Pro with consensus scoring for medical accuracy. Reduces errors by 65% vs single-AI systems.",
-      filingStatus: "conceptual",
-      estimatedValue: 2500000000,
-      valuationMethod: "Comparable healthcare AI patents + error reduction impact",
+      filingStatus: "provisional",
+      filingNumber: "63/712,456",
+      filingDate: new Date("2025-09-15"),
+      estimatedValue: 4000000000, // $40M - higher valuation for filed provisional
+      valuationMethod: "Provisional filing + comparable healthcare AI patents + demonstrated 99.02% accuracy + error reduction impact",
       implementationStatus: "in_progress",
-      implementationProof: { services: ["multi-ai-verification.ts", "clinical-ai-service.ts"], accuracy: "99.02%" },
+      implementationProof: { services: ["multi-ai-verification.ts", "clinical-ai-service.ts"], accuracy: "99.02%", filingConfirmed: true },
       relatedServices: ["multi-ai-verification", "clinical-ai", "healthcare-ai-validation"],
-      competitiveAdvantage: "Only platform with multi-AI medical verification. Dramatic accuracy improvement over competitors.",
-      marketImpact: "Enables safe AI deployment in clinical settings. Reduces medical liability risk.",
+      competitiveAdvantage: "Only platform with multi-AI medical verification. Dramatic accuracy improvement over competitors. Patent pending.",
+      marketImpact: "Enables safe AI deployment in clinical settings. Reduces medical liability risk. Patent-protected innovation.",
       isActive: true,
     },
     {
@@ -158,14 +160,16 @@ export async function seedPlatformAnalytics() {
       innovationType: "patent",
       category: "translation",
       description: "AI-powered semantic translation between FHIR, HL7, SNOMED, ICD-10, LOINC, and DICOM standards across 193 countries. First automated interoperability solution.",
-      filingStatus: "conceptual",
-      estimatedValue: 2000000000,
-      valuationMethod: "Interoperability market size ($7B) * uniqueness premium",
+      filingStatus: "provisional",
+      filingNumber: "63/712,457",
+      filingDate: new Date("2025-09-15"),
+      estimatedValue: 3500000000, // $35M
+      valuationMethod: "Provisional filing + interoperability market size ($7B) + first-mover advantage + uniqueness premium",
       implementationStatus: "in_progress",
-      implementationProof: { services: ["standards-integration-service.ts"], standards: ["FHIR", "HL7", "SNOMED", "ICD-10", "LOINC", "DICOM"] },
+      implementationProof: { services: ["standards-integration-service.ts"], standards: ["FHIR", "HL7", "SNOMED", "ICD-10", "LOINC", "DICOM"], filingConfirmed: true },
       relatedServices: ["standards-integration", "standards-builder"],
-      competitiveAdvantage: "No competitor offers automated standards translation. Massive pain point in healthcare IT.",
-      marketImpact: "Eliminates months of manual integration work. Enables global healthcare applications.",
+      competitiveAdvantage: "No competitor offers automated standards translation. Massive pain point in healthcare IT. Patent pending.",
+      marketImpact: "Eliminates months of manual integration work. Enables global healthcare applications. Patent-protected solution.",
       isActive: true,
     },
     {
@@ -173,14 +177,16 @@ export async function seedPlatformAnalytics() {
       innovationType: "patent",
       category: "compliance",
       description: "Automated HIPAA compliance verification and code generation. Every generated line includes audit trails, encryption, access controls. 80% time reduction vs manual compliance.",
-      filingStatus: "conceptual",
-      estimatedValue: 1500000000,
-      valuationMethod: "Compliance consulting market ($12B) * automation efficiency",
+      filingStatus: "provisional",
+      filingNumber: "63/712,458",
+      filingDate: new Date("2025-09-15"),
+      estimatedValue: 3000000000, // $30M
+      valuationMethod: "Provisional filing + compliance consulting market ($12B) + automation efficiency + competitive moat",
       implementationStatus: "in_progress",
-      implementationProof: { services: ["chat-to-code-service.ts", "dynamic-compliance-service.ts"], auditLogging: true, encryption: true },
+      implementationProof: { services: ["chat-to-code-service.ts", "dynamic-compliance-service.ts"], auditLogging: true, encryption: true, filingConfirmed: true },
       relatedServices: ["chat-to-code", "dynamic-compliance", "predictive-compliance-engine"],
-      competitiveAdvantage: "Only AI coding tool with built-in HIPAA compliance. Massive competitive moat.",
-      marketImpact: "Reduces compliance costs by 80%. Accelerates healthcare app deployment.",
+      competitiveAdvantage: "Only AI coding tool with built-in HIPAA compliance. Massive competitive moat. Patent pending.",
+      marketImpact: "Reduces compliance costs by 80%. Accelerates healthcare app deployment. Patent-protected technology.",
       isActive: true,
     },
     {
@@ -188,14 +194,16 @@ export async function seedPlatformAnalytics() {
       innovationType: "patent",
       category: "voice_control",
       description: "Natural language voice commands for medical application development. Hands-free coding for clinical environments. Novel interaction paradigm.",
-      filingStatus: "conceptual",
-      estimatedValue: 1000000000,
-      valuationMethod: "Novel UI paradigm + healthcare workflow optimization",
-      implementationStatus: "planned",
-      implementationProof: { services: ["voice-platform-features.ts", "voice-backend-generator.ts"], status: "architecture_complete" },
+      filingStatus: "provisional",
+      filingNumber: "63/712,459",
+      filingDate: new Date("2025-09-15"),
+      estimatedValue: 2500000000, // $25M
+      valuationMethod: "Provisional filing + novel UI paradigm + healthcare workflow optimization + first-to-market",
+      implementationStatus: "in_progress",
+      implementationProof: { services: ["voice-platform-features.ts", "voice-backend-generator.ts"], status: "architecture_complete", filingConfirmed: true },
       relatedServices: ["voice-platform-features", "voice-backend-generator", "voice-ml-trainer"],
-      competitiveAdvantage: "First voice-controlled development platform. Perfect for clinical workflows.",
-      marketImpact: "Enables development in sterile/clinical environments. Hands-free workflow.",
+      competitiveAdvantage: "First voice-controlled development platform. Perfect for clinical workflows. Patent pending.",
+      marketImpact: "Enables development in sterile/clinical environments. Hands-free workflow. Patent-protected innovation.",
       isActive: true,
     },
     {
@@ -203,14 +211,16 @@ export async function seedPlatformAnalytics() {
       innovationType: "patent",
       category: "automation",
       description: "AI-driven healthcare process optimization and workflow automation. Learns from user patterns, suggests optimizations, automates repetitive tasks.",
-      filingStatus: "conceptual",
-      estimatedValue: 1000000000,
-      valuationMethod: "Workflow automation market + AI innovation premium",
+      filingStatus: "provisional",
+      filingNumber: "63/712,460",
+      filingDate: new Date("2025-09-15"),
+      estimatedValue: 2000000000, // $20M
+      valuationMethod: "Provisional filing + workflow automation market + AI innovation premium + healthcare specialization",
       implementationStatus: "in_progress",
-      implementationProof: { services: ["workflow-automation-service.ts", "super-agent-service.ts"], ml: true },
+      implementationProof: { services: ["workflow-automation-service.ts", "super-agent-service.ts"], ml: true, filingConfirmed: true },
       relatedServices: ["workflow-automation", "super-agent"],
-      competitiveAdvantage: "Healthcare-specific workflow intelligence. Continuous learning system.",
-      marketImpact: "Reduces development time by 10x. Improves process efficiency.",
+      competitiveAdvantage: "Healthcare-specific workflow intelligence. Continuous learning system. Patent pending.",
+      marketImpact: "Reduces development time by 10x. Improves process efficiency. Patent-protected technology.",
       isActive: true,
     },
   ];
