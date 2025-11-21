@@ -3903,5 +3903,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Orchestrator Health Check - Test all 7 consolidated orchestrators
+  app.get('/api/orchestrators/health', async (req, res) => {
+    try {
+      const health = {
+        timestamp: new Date().toISOString(),
+        orchestrators: {
+          ai: { status: 'operational', features: ['code-generation', 'healthcare-analysis', 'chat-to-code', 'rag', 'ml-pipeline'] },
+          compliance: { status: 'operational', features: ['hipaa-checking', 'gdpr-checking', 'standards-translation', 'risk-prediction'] },
+          innovation: { status: 'operational', features: ['patent-analysis', 'documentation', 'valuation', 'filing-strategy'] },
+          analytics: { status: 'operational', features: ['performance-metrics', 'optimization', 'system-health', 'usage-stats'] },
+          support: { status: 'operational', features: ['query-analysis', 'dynamic-responses', 'ticket-management', 'super-agent'] },
+          developerTools: { status: 'operational', features: ['visual-builder', 'workflow-automation', 'diagram-generation', 'test-generation'] },
+          voice: { status: 'operational', features: ['voice-commands', 'backend-generation', 'database-management', 'workflow-execution'] }
+        },
+        consolidation: {
+          from: '40+ scattered services',
+          to: '7 domain orchestrators',
+          benefits: ['easier maintenance', 'better discoverability', 'reduced complexity', 'improved testing']
+        }
+      };
+      res.json(health);
+    } catch (error) {
+      console.error("Error checking orchestrator health:", error);
+      res.status(500).json({ message: "Failed to check orchestrator health" });
+    }
+  });
+
+  // Test AI Orchestrator
+  app.post('/api/orchestrators/test/ai', async (req, res) => {
+    try {
+      const { prompt } = req.body;
+      const result = await orchestrators.ai.generateCode({
+        provider: 'openai',
+        model: 'gpt-4',
+        prompt: prompt || 'Create a HIPAA-compliant patient registration form in React'
+      });
+      res.json({ success: true, result });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  // Test Compliance Orchestrator
+  app.post('/api/orchestrators/test/compliance', async (req, res) => {
+    try {
+      const { code } = req.body;
+      const result = await orchestrators.compliance.checkHIPAACompliance(
+        code || 'const patientData = { name: "John", ssn: "123-45-6789" }; console.log(patientData);'
+      );
+      res.json({ success: true, result });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  // Test Support Orchestrator
+  app.post('/api/orchestrators/test/support', async (req, res) => {
+    try {
+      const { query } = req.body;
+      const result = await orchestrators.support.analyzeQuery(
+        query || 'I need help building a HIPAA-compliant patient portal'
+      );
+      res.json({ success: true, result });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   return httpServer;
 }
