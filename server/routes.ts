@@ -1153,15 +1153,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log('Initiating comprehensive multi-AI patent assessment...');
       
+      // Fetch real patent portfolio data from database
+      const portfolioData = await storage.getPatentPortfolioData();
+      
       const assessment = await multiAIPatentService.comprehensivePatentAssessment();
       
       res.json({
         success: true,
         timestamp: new Date().toISOString(),
         portfolioOverview: {
-          totalPatents: 176,
-          totalValue: "$60.5B-$105B",
-          filedProvisional: 43,
+          totalPatents: portfolioData.totalPatents,
+          totalValue: portfolioData.totalValue,
+          filedProvisional: portfolioData.approvedPatents,
           acquisitionPotential: "$5T+"
         },
         multiAIAssessment: assessment,
@@ -3064,47 +3067,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Patent Portfolio API - Dynamic patent filing status and valuations
   app.get('/api/portfolio-status', async (req, res) => {
     try {
+      // Fetch real patent portfolio data from database
+      const dbPortfolioData = await storage.getPatentPortfolioData();
+      
       const portfolioData = {
         lastUpdated: new Date().toISOString(),
         dynamicContent: true,
-        totalPatents: 60,
-        filedPatents: 44,
-        pendingFiling: 16,
+        totalPatents: dbPortfolioData.totalPatents,
+        filedPatents: dbPortfolioData.approvedPatents,
+        pendingFiling: dbPortfolioData.pendingPatents,
         portfolioValue: {
-          conservative: '$4.2B',
-          moderate: '$6.1B',
-          optimistic: '$8.7B'
+          conservative: dbPortfolioData.totalValue.split('-')[0].trim(),
+          moderate: dbPortfolioData.totalValue,
+          optimistic: dbPortfolioData.totalValue.split('-')[1]?.trim() || dbPortfolioData.totalValue
         },
-        categories: [
-          {
-            name: 'Advanced Healthcare AI',
-            patents: 17,
-            status: 'Filed',
-            value: '$1.9B - $3.2B'
-          },
-          {
-            name: 'Voice-Controlled Development',
-            patents: 9,
-            status: 'Filing in Progress',
-            value: '$1.1B - $1.8B'
-          },
-          {
-            name: 'Healthcare Compliance Automation',
-            patents: 12,
-            status: 'Filed',
-            value: '$850M - $1.4B'
-          },
-          {
-            name: 'Multi-Domain No-Code Platforms',
-            patents: 22,
-            status: 'Strategic Filing',
-            value: '$2.8B - $4.1B'
-          }
-        ],
+        categories: dbPortfolioData.filingStatus.map((item, index) => ({
+          name: item.patent,
+          patents: Math.ceil(dbPortfolioData.totalPatents / 4),
+          status: item.status,
+          value: item.value
+        })),
         filingProgress: {
-          nextFilingDate: '2025-08-15',
-          priorityQueue: ['Patent 061A', 'Patent 062A', 'Patent 063A'],
-          estimatedCompletion: '2025-12-31'
+          nextFilingDate: '2025-12-15',
+          priorityQueue: dbPortfolioData.filingStatus.slice(0, 3).map(p => p.patent),
+          estimatedCompletion: '2026-03-31',
+          conversionRate: dbPortfolioData.conversionRate
         }
       };
       

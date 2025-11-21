@@ -36,11 +36,48 @@ export class InnovationOrchestrator {
   constructor(private storage: IStorage) {}
 
   async analyzeInnovation(innovation: Partial<Innovation>): Promise<PatentAnalysis> {
-    const novelty = Math.random() * 30 + 70;
-    const technicalMerit = Math.random() * 20 + 75;
-    const commercialValue = Math.random() * 25 + 70;
+    // Query existing patent portfolio from database for prior art analysis
+    const portfolioData = await this.storage.getPatentPortfolioData();
+    const totalPatents = portfolioData.totalPatents || 0;
+    
+    // Calculate novelty based on existing patent count in portfolio
+    const similarPatentsCount = totalPatents > 0 ? Math.floor(totalPatents / 10) : 0;
+    const novelty = Math.max(50, 100 - (similarPatentsCount * 5));
+    
+    // Technical merit based on implementation details
+    const hasTechnicalDetails = innovation.technicalDetails && innovation.technicalDetails.length > 100;
+    const technicalMerit = hasTechnicalDetails ? 85 : 65;
+    
+    // Commercial value based on estimated value
+    const estimatedValue = innovation.estimatedValue || 0;
+    const commercialValue = Math.min(100, 50 + (estimatedValue / 1000000) * 10);
+    
     const patentability = (novelty + technicalMerit) / 2;
     const overallScore = (novelty + technicalMerit + commercialValue) / 3;
+
+    // Generate dynamic strengths based on actual data
+    const strengths: string[] = [];
+    if (novelty > 80) strengths.push('Novel approach with limited prior art');
+    if (technicalMerit > 75) strengths.push('Strong technical implementation');
+    if (commercialValue > 70) strengths.push('Clear commercial applications');
+    if (innovation.filingStatus) strengths.push('Documentation in progress');
+    if (totalPatents > 0) strengths.push(`Portfolio of ${totalPatents} patents provides strong IP foundation`);
+    
+    // Generate dynamic weaknesses
+    const weaknesses: string[] = [];
+    if (similarPatentsCount > 0) weaknesses.push(`Estimated ${similarPatentsCount} related patents in portfolio`);
+    if (!hasTechnicalDetails) weaknesses.push('Technical specifications need more detail');
+    
+    // Generate dynamic recommendations
+    const recommendations: string[] = [];
+    if (!innovation.filingStatus || innovation.filingStatus === 'conceptual') {
+      recommendations.push('File provisional patent to establish priority date');
+    }
+    recommendations.push('Develop working prototype for demonstration');
+    recommendations.push('Document technical specifications thoroughly');
+    if (commercialValue > 75) {
+      recommendations.push('Consider international filing strategy for high-value innovation');
+    }
 
     return {
       novelty,
@@ -48,22 +85,9 @@ export class InnovationOrchestrator {
       commercialValue,
       patentability,
       overallScore,
-      strengths: [
-        'Novel approach to healthcare AI integration',
-        'Strong technical implementation',
-        'Clear commercial applications',
-        'Addresses unmet market need'
-      ],
-      weaknesses: [
-        'Prior art exists in general AI domain',
-        'Implementation complexity may limit adoption'
-      ],
-      recommendations: [
-        'File provisional patent to establish priority date',
-        'Develop working prototype for demonstration',
-        'Document technical specifications thoroughly',
-        'Consider international filing strategy'
-      ]
+      strengths,
+      weaknesses,
+      recommendations
     };
   }
 
