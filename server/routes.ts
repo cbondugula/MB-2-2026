@@ -918,7 +918,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/code-completion', isAuthenticated, async (req: any, res) => {
     try {
       const { code, cursor, filePath, language, context, healthcareDomain } = req.body;
-      const result = await aiService.getCodeCompletion({
+      const result = await orchestrators.ai.getCodeCompletion({
         code,
         language,
         context: JSON.stringify({ ...context, isHealthcare: true }),
@@ -949,7 +949,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/code-analysis', isAuthenticated, async (req: any, res) => {
     try {
       const { code, filePath, analysisType, projectId } = req.body;
-      const fileHash = aiService.calculateCodeHash(code);
+      const fileHash = orchestrators.ai.calculateCodeHash(code);
       
       // Check cache first
       const cached = await storage.getCodeAnalysis(projectId, fileHash, analysisType);
@@ -957,7 +957,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.json(cached);
       }
       
-      const result = await aiService.analyzeCode({
+      const result = await orchestrators.ai.analyzeCode({
         type: analysisType || "code-review",
         code,
         context: `File: ${filePath}`,
@@ -986,7 +986,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/architecture-review', isAuthenticated, async (req: any, res) => {
     try {
       const { projectStructure, requirements, complianceLevel, stack, domain } = req.body;
-      const result = await aiService.reviewArchitecture(
+      const result = await orchestrators.ai.reviewArchitecture(
         stack || "react-node",
         domain || "clinical",
         requirements || []
@@ -1006,8 +1006,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const useMedGemma = req.body.useMedGemma !== false; // Default to Med-Gemma for medical analysis
       
       const result = useMedGemma 
-        ? await aiService.analyzeMedicalCode(analysisRequest)
-        : await aiService.analyzeCode(analysisRequest);
+        ? await orchestrators.ai.analyzeMedicalCode(analysisRequest)
+        : await orchestrators.ai.analyzeCode(analysisRequest);
       
       res.json({ ...result, aiModel: useMedGemma ? "Med-Gemma" : "GPT-4o" });
     } catch (error) {
@@ -1019,7 +1019,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/medical-analysis', isAuthenticated, async (req, res) => {
     try {
       const analysisRequest = req.body;
-      const result = await aiService.analyzeMedicalCode(analysisRequest);
+      const result = await orchestrators.ai.analyzeMedicalCode(analysisRequest);
       res.json({ ...result, aiModel: "Med-Gemma" });
     } catch (error) {
       console.error("Med-Gemma analysis error:", error);
@@ -1030,7 +1030,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/clinical-data', isAuthenticated, async (req, res) => {
     try {
       const { data, analysisType, clinicalContext } = req.body;
-      const result = await aiService.analyzeClinicalData(data, analysisType, clinicalContext);
+      const result = await orchestrators.ai.analyzeClinicalData(data, analysisType, clinicalContext);
       res.json({ ...result, aiModel: "Med-Gemma" });
     } catch (error) {
       console.error("Clinical data analysis error:", error);
@@ -1041,7 +1041,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/generate-medical-code', isAuthenticated, async (req, res) => {
     try {
       const { template, domain, requirements } = req.body;
-      const result = await aiService.generateMedicalCode(template, domain, requirements);
+      const result = await orchestrators.ai.generateMedicalCode(template, domain, requirements);
       res.json({ ...result, aiModel: "Med-Gemma" });
     } catch (error) {
       console.error("Medical code generation error:", error);
@@ -1053,7 +1053,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/bert-analysis', isAuthenticated, async (req, res) => {
     try {
       const { text, analysisType, model } = req.body;
-      const result = await aiService.analyzeWithHealthcareBERT(text, analysisType, model);
+      const result = await orchestrators.ai.analyzeWithHealthcareBERT(text, analysisType, model);
       res.json(result);
     } catch (error) {
       console.error("Healthcare BERT analysis error:", error);
@@ -1065,7 +1065,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/generate-global-healthcare', isAuthenticated, async (req, res) => {
     try {
       const { countries, languages, requirements } = req.body;
-      const result = await aiService.generateGlobalHealthcareApp(countries, languages, requirements);
+      const result = await orchestrators.ai.generateGlobalHealthcareApp(countries, languages, requirements);
       res.json({ ...result, aiModel: "Med-Gemma", countries: countries.length, languages: languages.length });
     } catch (error) {
       console.error("Global healthcare app generation error:", error);
@@ -1077,7 +1077,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/generate-standards-code', isAuthenticated, async (req, res) => {
     try {
       const { standards, configuration } = req.body;
-      const result = await aiService.generateStandardsCode(standards, configuration);
+      const result = await orchestrators.ai.generateStandardsCode(standards, configuration);
       res.json({ ...result, aiModel: "Med-Gemma", standards: standards.length });
     } catch (error) {
       console.error("Healthcare standards generation error:", error);
@@ -1186,7 +1186,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Ollama Local AI Routes
   app.get('/api/ai/ollama/status', isAuthenticated, async (req, res) => {
     try {
-      const status = await aiService.getOllamaStatus();
+      const status = await orchestrators.ai.getOllamaStatus();
       res.json(status);
     } catch (error) {
       console.error("Ollama status error:", error);
@@ -1197,7 +1197,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/ollama/generate', isAuthenticated, async (req, res) => {
     try {
       const { prompt, modelName, context } = req.body;
-      const result = await aiService.generateWithOllama(prompt, modelName, context);
+      const result = await orchestrators.ai.generateWithOllama(prompt, modelName, context);
       res.json(result);
     } catch (error) {
       console.error("Ollama generation error:", error);
@@ -1208,7 +1208,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/ollama/analyze', isAuthenticated, async (req, res) => {
     try {
       const { text, analysisType, modelName } = req.body;
-      const result = await aiService.analyzeWithLocalModel(text, analysisType, modelName);
+      const result = await orchestrators.ai.analyzeWithLocalModel(text, analysisType, modelName);
       res.json(result);
     } catch (error) {
       console.error("Ollama analysis error:", error);
@@ -1219,7 +1219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/ollama/clinical-support', isAuthenticated, async (req, res) => {
     try {
       const { symptoms, patientHistory, labResults, useLocal } = req.body;
-      const result = await aiService.generateClinicalDecisionSupport(
+      const result = await orchestrators.ai.generateClinicalDecisionSupport(
         symptoms, 
         patientHistory, 
         labResults, 
@@ -1235,7 +1235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/ai/generate-healthcare-agent', isAuthenticated, async (req, res) => {
     try {
       const { agentType, specialty, requirements, useLocal } = req.body;
-      const result = await aiService.generateHealthcareAgent(agentType, specialty, requirements, useLocal);
+      const result = await orchestrators.ai.generateHealthcareAgent(agentType, specialty, requirements, useLocal);
       res.json(result);
     } catch (error) {
       console.error("Healthcare agent generation error:", error);
@@ -2508,7 +2508,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const validatedContext = clinicalContextSchema.parse(context);
-      const recommendations = await clinicalAIService.getConstellationRecommendations(query, validatedContext);
+      const recommendations = await orchestrators.compliance.getConstellationRecommendations(query, validatedContext);
       
       res.json(recommendations);
     } catch (error) {
@@ -2522,7 +2522,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { sourceData, sourceStandard, targetStandard, targetCountry } = req.body;
       
-      const translationResult = await standardsIntegrationService.translateBetweenStandards(
+      const translationResult = await orchestrators.compliance.translateBetweenStandards(
         sourceData, 
         sourceStandard, 
         targetStandard, 
@@ -2541,7 +2541,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { data, standard, countries } = req.body;
       
-      const complianceResults = await standardsIntegrationService.verifyMultiCountryCompliance(
+      const complianceResults = await orchestrators.compliance.verifyMultiCountryCompliance(
         data, 
         standard, 
         countries
@@ -2559,7 +2559,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { requirements, framework, complianceLevel } = req.body;
       
-      const codeResult = await clinicalAIService.generateClinicalCode(
+      const codeResult = await orchestrators.compliance.generateClinicalCode(
         requirements,
         framework,
         complianceLevel
@@ -2577,7 +2577,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { apiType, operation, framework, complianceLevel } = req.body;
       
-      const codeResult = await standardsIntegrationService.generateStandardsCompliantCode(
+      const codeResult = await orchestrators.compliance.generateStandardsCompliantCode(
         apiType,
         operation,
         framework,
@@ -3112,7 +3112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // CS Agent routes - 100x Computer Agent capabilities with dynamic database data
   app.get('/cs-agent/health', async (req, res) => {
     try {
-      const healthStatus = await csAgentService.getHealthStatus();
+      const healthStatus = await orchestrators.support.getHealthStatus();
       res.json(healthStatus);
     } catch (error) {
       console.error('CS Agent health check failed:', error);
@@ -3125,7 +3125,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/cs-agent/analyze', async (req, res) => {
     try {
-      const analysis = await csAgentService.analyzePlatform();
+      const analysis = await orchestrators.support.analyzePlatform();
       res.json(analysis);
     } catch (error) {
       console.error('CS Agent platform analysis failed:', error);
@@ -3138,7 +3138,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/cs-agent/healthcare-analysis', async (req, res) => {
     try {
-      const analysis = await csAgentService.performHealthcareAnalysis();
+      const analysis = await orchestrators.support.performHealthcareAnalysis();
       res.json(analysis);
     } catch (error) {
       console.error('CS Agent healthcare analysis failed:', error);
@@ -3151,7 +3151,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/cs-agent/patent-analysis', async (req, res) => {
     try {
-      const analysis = await csAgentService.analyzePatentPortfolio();
+      const analysis = await orchestrators.support.analyzePatentPortfolio();
       res.json(analysis);
     } catch (error) {
       console.error('CS Agent patent analysis failed:', error);
@@ -3164,7 +3164,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/cs-agent/optimize', async (req, res) => {
     try {
-      const optimization = await csAgentService.optimizeSystem();
+      const optimization = await orchestrators.support.optimizeSystem();
       res.json(optimization);
     } catch (error) {
       console.error('CS Agent optimization failed:', error);
@@ -3178,7 +3178,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/cs-agent/resolve-error', async (req, res) => {
     try {
       const { type, message } = req.body;
-      const resolution = await csAgentService.resolveError({ type, message });
+      const resolution = await orchestrators.support.resolveError({ type, message });
       res.json(resolution);
     } catch (error) {
       console.error('CS Agent error resolution failed:', error);
@@ -3930,8 +3930,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Test AI Orchestrator
-  app.post('/api/orchestrators/test/ai', async (req, res) => {
+  // Test AI Orchestrator (AUTHENTICATED)
+  app.post('/api/orchestrators/test/ai', isAuthenticated, aiGenerationRateLimiter, async (req: any, res) => {
     try {
       const { prompt } = req.body;
       const result = await orchestrators.ai.generateCode({
@@ -3945,8 +3945,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Test Compliance Orchestrator
-  app.post('/api/orchestrators/test/compliance', async (req, res) => {
+  // Test Compliance Orchestrator (AUTHENTICATED)
+  app.post('/api/orchestrators/test/compliance', isAuthenticated, async (req: any, res) => {
     try {
       const { code } = req.body;
       const result = await orchestrators.compliance.checkHIPAACompliance(
@@ -3958,8 +3958,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Test Support Orchestrator
-  app.post('/api/orchestrators/test/support', async (req, res) => {
+  // Test Support Orchestrator (AUTHENTICATED)
+  app.post('/api/orchestrators/test/support', isAuthenticated, async (req: any, res) => {
     try {
       const { query } = req.body;
       const result = await orchestrators.support.analyzeQuery(

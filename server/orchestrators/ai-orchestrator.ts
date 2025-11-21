@@ -1,6 +1,8 @@
 import type { IStorage } from '../storage';
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
+import { aiService } from '../ai-service';
+import type { AIAnalysisRequest, CodeCompletionRequest } from '../ai-service';
 
 export interface AIProvider {
   name: string;
@@ -40,7 +42,7 @@ export class AIOrchestrator {
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     
     const response = await openai.chat.completions.create({
-      model: request.model || 'gpt-4',
+      model: request.model || 'gpt-4o',
       messages: [
         {
           role: 'system',
@@ -64,6 +66,66 @@ export class AIOrchestrator {
         total: response.usage?.total_tokens || 0
       }
     };
+  }
+
+  async getCodeCompletion(request: CodeCompletionRequest) {
+    return aiService.getCodeCompletion(request);
+  }
+
+  async analyzeCode(request: AIAnalysisRequest) {
+    return aiService.analyzeCode(request);
+  }
+
+  async analyzeMedicalCode(request: AIAnalysisRequest) {
+    return aiService.analyzeMedicalCode(request);
+  }
+
+  async reviewArchitecture(architecture: any, domain: string, stack: string) {
+    return aiService.reviewArchitecture(architecture, domain, stack);
+  }
+
+  async analyzeClinicalData(data: any, analysisType: string, clinicalContext?: string) {
+    return aiService.analyzeClinicalData(data, analysisType, clinicalContext);
+  }
+
+  async generateMedicalCode(template: string, domain: string, requirements: any) {
+    return aiService.generateMedicalCode(template, domain, requirements);
+  }
+
+  async analyzeWithHealthcareBERT(text: string, analysisType: string, model?: string) {
+    return aiService.analyzeWithHealthcareBERT(text, analysisType, model);
+  }
+
+  async generateGlobalHealthcareApp(countries: string[], languages: string[], requirements: any) {
+    return aiService.generateGlobalHealthcareApp(countries, languages, requirements);
+  }
+
+  async generateStandardsCode(standards: string[], configuration: any) {
+    return aiService.generateStandardsCode(standards, configuration);
+  }
+
+  async getOllamaStatus() {
+    return aiService.getOllamaStatus();
+  }
+
+  async generateWithOllama(prompt: string, modelName: string, context?: any) {
+    return aiService.generateWithOllama(prompt, modelName, context);
+  }
+
+  async analyzeWithLocalModel(text: string, analysisType: string, modelName?: string) {
+    return aiService.analyzeWithLocalModel(text, analysisType, modelName);
+  }
+
+  async generateClinicalDecisionSupport(patientData: any, clinicalScenario: string, medicalContext?: string) {
+    return aiService.generateClinicalDecisionSupport(patientData, clinicalScenario, medicalContext);
+  }
+
+  async generateHealthcareAgent(agentType: string, specialty: string, requirements: any, useLocal?: boolean) {
+    return aiService.generateHealthcareAgent(agentType, specialty, requirements, useLocal);
+  }
+
+  calculateCodeHash(code: string) {
+    return aiService.calculateCodeHash(code);
   }
 
   async analyzeHealthcareCode(code: string, context?: any): Promise<AIResponse> {

@@ -1,4 +1,6 @@
 import type { IStorage } from '../storage';
+import SuperSCAgent from '../super-agent-service';
+import { csAgentService } from '../cs-agent-dynamic-service';
 
 export interface SupportTicket {
   id: string;
@@ -168,6 +170,10 @@ export class SupportOrchestrator {
       organizationType: input.organizationType,
       country: input.country
     });
+  }
+
+  async processQuery(query: string, context?: any) {
+    return csAgentService.processQuery(query, context);
   }
 }
 

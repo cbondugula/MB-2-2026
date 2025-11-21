@@ -1,4 +1,6 @@
 import type { IStorage } from '../storage';
+import { clinicalAIService } from '../clinical-ai-service';
+import { standardsIntegrationService } from '../standards-integration-service';
 
 export interface ComplianceRule {
   id: string;
@@ -178,6 +180,26 @@ export class ComplianceOrchestrator {
 
   async getComplianceRules(standard: string): Promise<ComplianceRule[]> {
     return [];
+  }
+
+  async getConstellationRecommendations(query: string, context?: any) {
+    return clinicalAIService.getConstellationRecommendations(query, context);
+  }
+
+  async translateBetweenStandards(sourceStandard: string, targetStandard: string, data: any) {
+    return standardsIntegrationService.translateBetweenStandards(sourceStandard, targetStandard, data);
+  }
+
+  async verifyMultiCountryCompliance(code: string, countries: string[]) {
+    return standardsIntegrationService.verifyMultiCountryCompliance(code, countries);
+  }
+
+  async generateClinicalCode(template: string, domain: string, requirements: any) {
+    return clinicalAIService.generateClinicalCode(template, domain, requirements);
+  }
+
+  async generateStandardsCompliantCode(standards: string[], template: string, requirements: any) {
+    return standardsIntegrationService.generateStandardsCompliantCode(standards, template, requirements);
   }
 }
 
