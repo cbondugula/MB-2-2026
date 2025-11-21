@@ -4034,8 +4034,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           framework: 'react'
         },
         isHipaaCompliant: complianceResult.isCompliant || false,
-        organizationType: organizationType || 'healthcare',
-        targetCountry: country || 'United States'
+        settings: {
+          organizationType: organizationType || 'healthcare',
+          targetCountry: country || 'United States',
+          features: features || [],
+          complianceScore: complianceResult.score
+        }
       };
 
       console.log(`[${workflowId}] Saving project to database...`);
