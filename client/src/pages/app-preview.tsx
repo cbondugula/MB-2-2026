@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useState } from "react";
+import type { Project } from "@shared/schema";
 import { CodePreview } from "@/components/CodePreview";
 
 export default function AppPreview() {
@@ -29,12 +30,13 @@ export default function AppPreview() {
   const appId = params?.appId;
   const [copiedFile, setCopiedFile] = useState<string | null>(null);
 
-  const { data: appData, isLoading, error } = useQuery({
-    queryKey: ['/api/chat/apps', appId],
+  const { data: project, isLoading, error } = useQuery<Project>({
+    queryKey: ['/api/projects', appId],
     enabled: !!appId,
   });
 
-  const app = appData?.app;
+  const app = project;
+  const codeFiles = (app?.code as Record<string, string>) || {};
 
   const copyToClipboard = (content: string, fileName: string) => {
     navigator.clipboard.writeText(content);
@@ -79,7 +81,6 @@ export default function AppPreview() {
     );
   }
 
-  const codeFiles = app.code || {};
   const fileNames = Object.keys(codeFiles);
 
   return (
@@ -107,7 +108,7 @@ export default function AppPreview() {
                     {app.framework}
                   </Badge>
                   <Badge variant="secondary" className="bg-blue-900 text-blue-300 text-xs">
-                    {app.status}
+                    {app.projectType}
                   </Badge>
                 </div>
               </div>
@@ -176,16 +177,16 @@ export default function AppPreview() {
                 <div>
                   <p className="text-sm text-gray-400 mb-1">Tech Stack</p>
                   <div className="flex flex-wrap gap-1.5 mt-2">
-                    {app.techStack && (
+                    {app.techStack && typeof app.techStack === 'object' && (
                       <>
                         <Badge variant="outline" className="border-green-700 text-green-400 text-xs">
-                          {app.techStack.framework}
+                          {(app.techStack as any).frontend || app.framework}
                         </Badge>
                         <Badge variant="outline" className="border-blue-700 text-blue-400 text-xs">
-                          {app.techStack.language}
+                          {(app.techStack as any).backend || app.backend}
                         </Badge>
                         <Badge variant="outline" className="border-purple-700 text-purple-400 text-xs">
-                          {app.techStack.styling}
+                          {(app.techStack as any).database || app.database}
                         </Badge>
                       </>
                     )}
@@ -214,20 +215,13 @@ export default function AppPreview() {
               <CardContent className="space-y-3">
                 <div>
                   <p className="text-sm text-gray-400 mb-1">AI Model</p>
-                  <p className="text-sm text-gray-200">{app.aiModelUsed || "GPT-4"}</p>
+                  <p className="text-sm text-gray-200">GPT-4</p>
                 </div>
                 
-                {app.generationMetadata?.nextSteps && (
+                {app.settings && typeof app.settings === 'object' && (app.settings as any).complianceScore !== undefined && (
                   <div>
-                    <p className="text-sm text-gray-400 mb-2">Next Steps</p>
-                    <ul className="space-y-1.5">
-                      {app.generationMetadata.nextSteps.map((step: string, i: number) => (
-                        <li key={i} className="text-xs text-gray-300 flex items-start">
-                          <span className="text-green-400 mr-2">→</span>
-                          {step}
-                        </li>
-                      ))}
-                    </ul>
+                    <p className="text-sm text-gray-400 mb-1">HIPAA Compliance Score</p>
+                    <p className="text-2xl font-bold text-green-400">{(app.settings as any).complianceScore}%</p>
                   </div>
                 )}
               </CardContent>
