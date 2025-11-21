@@ -3964,5 +3964,125 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ===================================================================
+  // COMPLETE END-TO-END HEALTHCARE APP GENERATION WORKFLOW
+  // ===================================================================
+  app.post('/api/healthcare/generate-app', isAuthenticated, aiGenerationRateLimiter, async (req: any, res) => {
+    try {
+      const { description, organizationType, country, features } = req.body;
+      
+      // Step 1: Validate input
+      if (!description || description.trim().length < 10) {
+        return res.status(400).json({ 
+          success: false, 
+          error: 'Description must be at least 10 characters' 
+        });
+      }
+
+      const workflowId = `workflow-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+      const userId = req.user?.claims?.sub;
+      
+      // Defensive validation
+      if (!userId) {
+        console.error(`[${workflowId}] Missing user ID in request`);
+        return res.status(401).json({ 
+          success: false, 
+          error: 'Authentication required - user ID not found' 
+        });
+      }
+
+      // Step 2: Generate code using AI Orchestrator
+      console.log(`[${workflowId}] Starting healthcare app generation for user ${userId}`);
+      const codeGenResult = await orchestrators.ai.generateCode({
+        provider: 'openai',
+        model: 'gpt-4',
+        prompt: `Create a ${organizationType || 'healthcare'} application: ${description}. 
+        Include: ${features?.join(', ') || 'patient management, appointments, medical records'}.
+        Framework: React with TypeScript. Backend: Express.js with PostgreSQL.
+        Requirements: HIPAA-compliant, secure, production-ready.`,
+        context: {
+          organizationType: organizationType || 'healthcare',
+          country: country || 'United States',
+          compliance: country === 'United States' ? 'HIPAA' : 'GDPR'
+        }
+      });
+
+      // Step 3: Check HIPAA compliance
+      console.log(`[${workflowId}] Checking HIPAA compliance...`);
+      const complianceResult = await orchestrators.compliance.checkHIPAACompliance(
+        codeGenResult.code || ''
+      );
+
+      // Step 4: Save project to database (all required NOT NULL fields)
+      const projectData = {
+        name: description.substring(0, 100),
+        description: description,
+        userId: userId,
+        framework: 'react',  // Required NOT NULL field
+        backend: 'nodejs',   // Required NOT NULL field
+        projectType: 'web',  // Required NOT NULL field
+        database: 'postgresql',
+        techStack: {
+          frontend: 'React',
+          backend: 'Express.js',
+          database: 'PostgreSQL',
+          ai: 'GPT-4'
+        },
+        code: {
+          main: codeGenResult.code || '',
+          language: 'typescript',
+          framework: 'react'
+        },
+        isHipaaCompliant: complianceResult.isCompliant || false,
+        organizationType: organizationType || 'healthcare',
+        targetCountry: country || 'United States'
+      };
+
+      console.log(`[${workflowId}] Saving project to database...`);
+      const savedProject = await storage.createProject(projectData);
+
+      // Step 5: Return complete response with preview URL
+      const response = {
+        success: true,
+        workflowId,
+        project: {
+          id: savedProject.id,
+          name: savedProject.name,
+          description: savedProject.description,
+          previewUrl: `/apps/${savedProject.id}`,
+          editUrl: `/code-editor?project=${savedProject.id}`
+        },
+        generation: {
+          linesOfCode: codeGenResult.code?.split('\n').length || 0,
+          model: 'gpt-4',
+          timestamp: new Date().toISOString()
+        },
+        compliance: {
+          isCompliant: complianceResult.isCompliant,
+          score: complianceResult.score,
+          issues: complianceResult.issues || [],
+          recommendations: complianceResult.recommendations || []
+        },
+        nextSteps: [
+          'Review generated code in the editor',
+          'Test the application in preview mode',
+          'Customize UI/UX to match your brand',
+          'Deploy to production when ready'
+        ]
+      };
+
+      console.log(`[${workflowId}] Workflow complete! Project ID: ${savedProject.id}`);
+      res.json(response);
+
+    } catch (error: any) {
+      console.error('Healthcare app generation failed:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || 'Failed to generate healthcare app',
+        details: error.stack 
+      });
+    }
+  });
+
   return httpServer;
 }
