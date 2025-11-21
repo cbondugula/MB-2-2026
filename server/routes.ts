@@ -47,6 +47,7 @@ import { superCSAgentRoutes } from "./routes/super-cs-agent";
 import { multiAIInnovationService } from "./multi-ai-innovation-assessment";
 import { csAgentService } from "./cs-agent-dynamic-service";
 import { platformAnalyticsService } from "./platform-analytics-service";
+import { createOrchestrators, type Orchestrators } from "./orchestrators";
 import { 
   globalRateLimiter,
   apiReadRateLimiter,
@@ -133,6 +134,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).send('# Failed to collect metrics');
     }
   });
+
+  // Initialize orchestrators for domain-organized backend services
+  const orchestrators = createOrchestrators(storage);
 
   // Register AI Chat routes
   registerAIChatRoutes(app);
