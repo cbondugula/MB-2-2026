@@ -706,6 +706,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update project (PATCH)
+  app.patch('/api/projects/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // Check if user owns the project
+      if (project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Update project with provided fields
+      const updatedProject = await storage.updateProject(projectId, req.body);
+      
+      res.json(updatedProject);
+    } catch (error: any) {
+      console.error("Error updating project:", error);
+      res.status(500).json({ message: "Failed to update project" });
+    }
+  });
+
   app.post('/api/projects', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
@@ -4014,6 +4039,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       // Step 4: Save project to database (all required NOT NULL fields)
+      // HIPAA compliance threshold: 80% or higher score = compliant
+      const isHipaaCompliant = complianceResult.score >= 80;
+      
       const projectData = {
         name: description.substring(0, 100),
         description: description,
@@ -4033,12 +4061,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           language: 'typescript',
           framework: 'react'
         },
-        isHipaaCompliant: complianceResult.isCompliant || false,
+        isHipaaCompliant: isHipaaCompliant,
         settings: {
           organizationType: organizationType || 'healthcare',
           targetCountry: country || 'United States',
           features: features || [],
-          complianceScore: complianceResult.score
+          complianceScore: complianceResult.score,
+          compliancePassed: complianceResult.passed
         }
       };
 
@@ -4062,9 +4091,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           timestamp: new Date().toISOString()
         },
         compliance: {
-          isCompliant: complianceResult.isCompliant,
+          isCompliant: isHipaaCompliant,
+          passed: complianceResult.passed,
           score: complianceResult.score,
-          issues: complianceResult.issues || [],
+          issues: complianceResult.violations.map((v: any) => v.message),
           recommendations: complianceResult.recommendations || []
         },
         nextSteps: [

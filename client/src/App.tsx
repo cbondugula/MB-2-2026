@@ -48,6 +48,7 @@ import MedHELMDashboard from "@/pages/MedHELMDashboard";
 import LangExtractDashboard from "@/pages/LangExtractDashboard";
 import Documentation from "@/pages/documentation";
 import AppPreview from "@/pages/app-preview";
+import ProjectEditor from "@/pages/project-editor";
 import MyApps from "@/pages/my-apps";
 import AdvancedAI from "@/pages/advanced-ai";
 import DualAdvancedClassical from "@/pages/dual-advanced-classical";
@@ -70,6 +71,7 @@ function Router() {
           <Route path="/legal-documents" component={LegalDocuments} />
           <Route path="/documentation" component={Documentation} />
           <Route path="/apps/:appId" component={AppPreview} />
+          <Route path="/editor/:projectId" component={ProjectEditor} />
           <Route path="/my-apps" component={MyApps} />
         </>
       ) : (
@@ -121,6 +123,7 @@ function Router() {
           <Route path="/langextract" component={LangExtractDashboard} />
           <Route path="/platform-analysis" component={PlatformAnalysis} />
           <Route path="/apps/:appId" component={AppPreview} />
+          <Route path="/editor/:projectId" component={ProjectEditor} />
           <Route path="/my-apps" component={MyApps} />
         </>
       )}
