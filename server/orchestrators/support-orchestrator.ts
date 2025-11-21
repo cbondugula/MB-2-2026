@@ -175,6 +175,30 @@ export class SupportOrchestrator {
   async processQuery(query: string, context?: any) {
     return csAgentService.processQuery(query, context);
   }
+
+  async getHealthStatus() {
+    return csAgentService.getHealthStatus();
+  }
+
+  async analyzePlatform() {
+    return csAgentService.analyzePlatform();
+  }
+
+  async performHealthcareAnalysis() {
+    return csAgentService.performHealthcareAnalysis();
+  }
+
+  async analyzePatentPortfolio() {
+    return csAgentService.analyzePatentPortfolio();
+  }
+
+  async optimizeSystem() {
+    return csAgentService.optimizeSystem();
+  }
+
+  async resolveError(errorData: { type: string; message: string }) {
+    return csAgentService.resolveError(errorData);
+  }
 }
 
 export const createSupportOrchestrator = (storage: IStorage) => new SupportOrchestrator(storage);

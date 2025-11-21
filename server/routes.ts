@@ -44,7 +44,7 @@ import { bciRouter } from "./brain-computer-interface";
 import { tjcComplianceRouter } from "./tjc-compliance-service";
 import { healthcareTestingRouter } from "./healthcare-testing-service";
 import { superCSAgentRoutes } from "./routes/super-cs-agent";
-import { multiAIInnovationService } from "./multi-ai-innovation-assessment";
+// Removed: multiAIInnovationService - now handled by orchestrators
 import { csAgentService } from "./cs-agent-dynamic-service";
 import { platformAnalyticsService } from "./platform-analytics-service";
 import { createOrchestrators, type Orchestrators } from "./orchestrators";
@@ -119,7 +119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const metrics = await getAllMetrics();
       res.json(metrics);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ error: 'Failed to collect metrics' });
     }
   });
@@ -130,7 +130,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const prometheusMetrics = await getPrometheusMetrics();
       res.set('Content-Type', 'text/plain');
       res.send(prometheusMetrics);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).send('# Failed to collect metrics');
     }
   });
@@ -155,7 +155,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         timestamp: metrics.timestamp?.toISOString() || new Date().toISOString()
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch executive metrics" });
     }
   });
@@ -170,7 +170,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         timestamp: roi.timestamp?.toISOString() || new Date().toISOString()
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch ROI analysis" });
     }
   });
@@ -188,7 +188,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         complianceAutomation: competitive.complianceAutomation,
         timestamp: competitive.timestamp?.toISOString() || new Date().toISOString()
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch competitive analysis" });
     }
   });
@@ -204,7 +204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         timestamp: revenue.timestamp?.toISOString() || new Date().toISOString()
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch revenue projections" });
     }
   });
@@ -214,7 +214,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const dashboardData = await platformAnalyticsService.getDashboardData();
       res.json(dashboardData);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch platform analytics dashboard:', error);
       res.status(500).json({ error: 'Failed to fetch platform analytics' });
     }
@@ -225,7 +225,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const scenario = (req.query.scenario as string) || 'realistic';
       const projections = await platformAnalyticsService.getRevenueProjections(scenario);
       res.json(projections);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch revenue projections:', error);
       res.status(500).json({ error: 'Failed to fetch revenue projections' });
     }
@@ -235,7 +235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const metrics = await platformAnalyticsService.getMarketMetrics();
       res.json(metrics);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch market metrics:', error);
       res.status(500).json({ error: 'Failed to fetch market metrics' });
     }
@@ -245,7 +245,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const valuation = await platformAnalyticsService.getIpValuation();
       res.json(valuation);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch IP valuation:', error);
       res.status(500).json({ error: 'Failed to fetch IP valuation' });
     }
@@ -255,7 +255,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const competitors = await platformAnalyticsService.getCompetitors();
       res.json(competitors);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch competitors:', error);
       res.status(500).json({ error: 'Failed to fetch competitors' });
     }
@@ -265,7 +265,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const portfolio = await platformAnalyticsService.getIpPortfolio();
       res.json(portfolio);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch IP portfolio:', error);
       res.status(500).json({ error: 'Failed to fetch IP portfolio' });
     }
@@ -275,7 +275,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const customerProjections = await platformAnalyticsService.getCustomerProjections();
       res.json(customerProjections);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch customer projections:', error);
       res.status(500).json({ error: 'Failed to fetch customer projections' });
     }
@@ -341,7 +341,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       ];
       res.json(dynamicComponents);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch healthcare components" });
     }
   });
@@ -399,7 +399,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       ];
       res.json(dynamicTemplates);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch healthcare templates" });
     }
   });
@@ -432,7 +432,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         patternCount: Math.floor(20 + Math.random() * 15)
       };
       res.json(dynamicPatterns);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch voice patterns" });
     }
   });
@@ -469,7 +469,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         totalMappings: Math.floor(25 + Math.random() * 15)
       };
       res.json(dynamicMedicalMappings);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch medical mappings" });
     }
   });
@@ -502,7 +502,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         estimatedBuildTime: `${Math.floor(5 + Math.random() * 15)} minutes`
       };
       res.json({ success: true, infrastructure });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to generate backend infrastructure" });
     }
   });
@@ -559,7 +559,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         generatedAt: new Date().toISOString()
       };
       res.json(dynamicModelRegistry);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch ML model registry" });
     }
   });
@@ -591,7 +591,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         activeModels: healthcareBertModels.filter(m => m.status === 'available').length,
         generatedAt: new Date().toISOString()
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch healthcare BERT models" });
     }
   });
@@ -632,7 +632,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         generatedAt: new Date().toISOString()
       };
       res.json(healthcareTemplates);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ message: "Failed to fetch healthcare ML templates" });
     }
   });
@@ -643,7 +643,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       res.json(user);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
     }
@@ -655,7 +655,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const stats = await storage.getUserStats(userId);
       res.json(stats);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching stats:", error);
       res.status(500).json({ message: "Failed to fetch stats" });
     }
@@ -667,7 +667,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const activities = await storage.getUserRecentActivities(userId);
       res.json(activities);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching activities:", error);
       res.status(500).json({ message: "Failed to fetch activities" });
     }
@@ -679,7 +679,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const projects = await storage.getUserProjects(userId);
       res.json(projects);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching projects:", error);
       res.status(500).json({ message: "Failed to fetch projects" });
     }
@@ -700,7 +700,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(project);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching project:", error);
       res.status(500).json({ message: "Failed to fetch project" });
     }
@@ -725,7 +725,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       res.status(201).json(project);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating project:", error);
       res.status(500).json({ message: "Failed to create project" });
     }
@@ -752,7 +752,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       res.json(updatedProject);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating project:", error);
       res.status(500).json({ message: "Failed to update project" });
     }
@@ -770,7 +770,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       await storage.deleteProject(projectId);
       res.status(204).send();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting project:", error);
       res.status(500).json({ message: "Failed to delete project" });
     }
@@ -781,7 +781,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const templates = await storage.getTemplates();
       res.json(templates);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching templates:", error);
       res.status(500).json({ message: "Failed to fetch templates" });
     }
@@ -813,7 +813,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         totalCount: enhancedTemplates.length,
         lastUpdated: new Date().toISOString()
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch healthcare templates:', error);
       res.status(500).json({ message: 'Failed to fetch healthcare templates', error: error instanceof Error ? error.message : 'Unknown error' });
     }
@@ -824,7 +824,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const category = req.params.category;
       const templates = await storage.getTemplatesByCategory(category);
       res.json(templates);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching templates by category:", error);
       res.status(500).json({ message: "Failed to fetch templates" });
     }
@@ -840,7 +840,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(template);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching template:", error);
       res.status(500).json({ message: "Failed to fetch template" });
     }
@@ -851,7 +851,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const components = await storage.getComponents();
       res.json(components);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching components:", error);
       res.status(500).json({ message: "Failed to fetch components" });
     }
@@ -867,7 +867,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(component);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching component:", error);
       res.status(500).json({ message: "Failed to fetch component" });
     }
@@ -878,7 +878,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const category = req.params.category;
       const components = await storage.getComponentsByCategory(category);
       res.json(components);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching components by category:", error);
       res.status(500).json({ message: "Failed to fetch components" });
     }
@@ -889,7 +889,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const integrations = await storage.getApiIntegrations();
       res.json(integrations);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching API integrations:", error);
       res.status(500).json({ message: "Failed to fetch API integrations" });
     }
@@ -908,7 +908,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const activities = await storage.getProjectActivities(projectId);
       res.json(activities);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching activities:", error);
       res.status(500).json({ message: "Failed to fetch activities" });
     }
@@ -929,18 +929,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       // Log AI session
+      const cursorLine = cursor?.line || 0;
+      const rawConfidence = result.suggestions[0]?.confidence || 0.5;
+      const confidenceScore = typeof rawConfidence === 'number' && rawConfidence <= 1 
+        ? Math.round(rawConfidence * 100) // Convert 0.0-1.0 to 0-100
+        : Math.round(rawConfidence); // Already in 0-100 format
+      
       await storage.createAiSession({
         userId: req.user.claims.sub,
         projectId: context?.projectId,
         type: "code_completion",
         context: { code, cursor, filePath },
-        prompt: code.substring(Math.max(0, cursor.line - 5), cursor.line + 5),
+        prompt: code.substring(Math.max(0, cursorLine - 5), cursorLine + 5) || code.substring(0, 100),
         response: JSON.stringify(result),
-        confidence: result.suggestions[0]?.confidence || 50,
+        confidence: confidenceScore,
       });
       
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI completion error:", error);
       res.status(500).json({ message: "AI completion failed" });
     }
@@ -977,7 +983,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI analysis error:", error);
       res.status(500).json({ message: "Code analysis failed" });
     }
@@ -993,7 +999,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
       
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Architecture review error:", error);
       res.status(500).json({ message: "Architecture review failed" });
     }
@@ -1010,7 +1016,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         : await orchestrators.ai.analyzeCode(analysisRequest);
       
       res.json({ ...result, aiModel: useMedGemma ? "Med-Gemma" : "GPT-4o" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI code analysis error:", error);
       res.status(500).json({ message: "Failed to analyze code" });
     }
@@ -1021,7 +1027,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const analysisRequest = req.body;
       const result = await orchestrators.ai.analyzeMedicalCode(analysisRequest);
       res.json({ ...result, aiModel: "Med-Gemma" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Med-Gemma analysis error:", error);
       res.status(500).json({ message: "Failed to analyze with Med-Gemma" });
     }
@@ -1032,7 +1038,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { data, analysisType, clinicalContext } = req.body;
       const result = await orchestrators.ai.analyzeClinicalData(data, analysisType, clinicalContext);
       res.json({ ...result, aiModel: "Med-Gemma" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Clinical data analysis error:", error);
       res.status(500).json({ message: "Failed to analyze clinical data" });
     }
@@ -1043,7 +1049,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { template, domain, requirements } = req.body;
       const result = await orchestrators.ai.generateMedicalCode(template, domain, requirements);
       res.json({ ...result, aiModel: "Med-Gemma" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Medical code generation error:", error);
       res.status(500).json({ message: "Failed to generate medical code" });
     }
@@ -1055,7 +1061,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { text, analysisType, model } = req.body;
       const result = await orchestrators.ai.analyzeWithHealthcareBERT(text, analysisType, model);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Healthcare BERT analysis error:", error);
       res.status(500).json({ message: "Failed to analyze with healthcare BERT" });
     }
@@ -1067,7 +1073,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { countries, languages, requirements } = req.body;
       const result = await orchestrators.ai.generateGlobalHealthcareApp(countries, languages, requirements);
       res.json({ ...result, aiModel: "Med-Gemma", countries: countries.length, languages: languages.length });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Global healthcare app generation error:", error);
       res.status(500).json({ message: "Failed to generate global healthcare application" });
     }
@@ -1079,7 +1085,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { standards, configuration } = req.body;
       const result = await orchestrators.ai.generateStandardsCode(standards, configuration);
       res.json({ ...result, aiModel: "Med-Gemma", standards: standards.length });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Healthcare standards generation error:", error);
       res.status(500).json({ message: "Failed to generate healthcare standards implementation" });
     }
@@ -1114,7 +1120,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         recommendation: "Independent filing strategy with technical differentiation emphasis"
       });
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Patent conflict analysis failed:', error);
       res.status(500).json({ message: 'Patent conflict analysis failed', error: error.message });
     }
@@ -1136,7 +1142,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         patentabilityRecommendation: "Proceed with filing - strong novelty and non-obviousness"
       });
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Prior art analysis failed:', error);
       res.status(500).json({ message: 'Prior art analysis failed', error: error.message });
     }
@@ -1168,7 +1174,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Multi-AI patent assessment failed:', error);
       res.status(500).json({ 
         message: 'Multi-AI patent assessment failed', 
@@ -1188,7 +1194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const status = await orchestrators.ai.getOllamaStatus();
       res.json(status);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Ollama status error:", error);
       res.status(500).json({ message: "Failed to get Ollama status" });
     }
@@ -1199,7 +1205,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { prompt, modelName, context } = req.body;
       const result = await orchestrators.ai.generateWithOllama(prompt, modelName, context);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Ollama generation error:", error);
       res.status(500).json({ message: "Failed to generate with Ollama" });
     }
@@ -1210,7 +1216,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { text, analysisType, modelName } = req.body;
       const result = await orchestrators.ai.analyzeWithLocalModel(text, analysisType, modelName);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Ollama analysis error:", error);
       res.status(500).json({ message: "Failed to analyze with local model" });
     }
@@ -1226,7 +1232,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         useLocal
       );
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Clinical decision support error:", error);
       res.status(500).json({ message: "Failed to generate clinical decision support" });
     }
@@ -1237,7 +1243,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { agentType, specialty, requirements, useLocal } = req.body;
       const result = await orchestrators.ai.generateHealthcareAgent(agentType, specialty, requirements, useLocal);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Healthcare agent generation error:", error);
       res.status(500).json({ message: "Failed to generate healthcare agent" });
     }
@@ -1253,7 +1259,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         complianceLevel: complianceLevel as string,
       });
       res.json(templates);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching advanced templates:", error);
       res.status(500).json({ message: "Failed to fetch templates" });
     }
@@ -1269,7 +1275,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         type: type as string,
       });
       res.json(components);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching smart components:", error);
       res.status(500).json({ message: "Failed to fetch components" });
     }
@@ -1281,7 +1287,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const projectId = parseInt(req.params.projectId);
       const sessions = await storage.getCollaborationSessions(projectId);
       res.json(sessions);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching collaboration sessions:", error);
       res.status(500).json({ message: "Failed to fetch sessions" });
     }
@@ -1314,7 +1320,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(domains);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching healthcare domains:", error);
       res.status(500).json({ message: "Failed to fetch healthcare domains" });
     }
@@ -1325,7 +1331,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const domains = healthcareDomainService.getAllDomains();
       const categories = [...new Set(domains.map(d => d.category))];
       res.json(categories);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching domain categories:", error);
       res.status(500).json({ message: "Failed to fetch domain categories" });
     }
@@ -1342,7 +1348,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(domain);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching healthcare domain:", error);
       res.status(500).json({ message: "Failed to fetch healthcare domain" });
     }
@@ -1371,7 +1377,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(organizations);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching healthcare organizations:", error);
       res.status(500).json({ message: "Failed to fetch healthcare organizations" });
     }
@@ -1388,7 +1394,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "Academic Medical Center", "Ambulatory Surgery Center", "Urgent Care Center"
       ];
       res.json(organizationTypes);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching organization types:', error);
       res.status(500).json({ message: 'Failed to fetch organization types' });
     }
@@ -1406,7 +1412,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "Mature Enterprise (1000+ employees)"
       ];
       res.json(organizationSizes);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching organization sizes:', error);
       res.status(500).json({ message: 'Failed to fetch organization sizes' });
     }
@@ -1421,7 +1427,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "Joint Commission Standards", "CMS Requirements"
       ];
       res.json(complianceOptions);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching compliance options:', error);
       res.status(500).json({ message: 'Failed to fetch compliance options' });
     }
@@ -1437,7 +1443,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "Meditech", "NextGen", "Practice Fusion", "Kareo"
       ];
       res.json(integrationOptions);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching integration options:', error);
       res.status(500).json({ message: 'Failed to fetch integration options' });
     }
@@ -1449,7 +1455,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const request = req.body;
       const result = await SuperSCAgent.orchestrateAI(request);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Super agent orchestration failed:', error);
       res.status(500).json({ 
         success: false,
@@ -1465,7 +1471,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { workflowId, currentMetrics } = req.body;
       const optimization = await workflowAutomationService.optimizeWorkflowWithAI(workflowId, currentMetrics);
       res.json(optimization);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Workflow optimization failed:', error);
       res.status(500).json({ message: 'Workflow optimization failed', error: error.message });
     }
@@ -1476,7 +1482,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { workflowId, timeWindow, organizationType } = req.body;
       const predictions = await workflowAutomationService.predictResourceAllocation(workflowId, timeWindow, organizationType);
       res.json(predictions);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Resource prediction failed:', error);
       res.status(500).json({ message: 'Resource prediction failed', error: error.message });
     }
@@ -1487,7 +1493,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { workflowId, triggerEvent, currentState } = req.body;
       const adaptation = await workflowAutomationService.adaptProcessInRealTime(workflowId, triggerEvent, currentState);
       res.json(adaptation);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Real-time adaptation failed:', error);
       res.status(500).json({ message: 'Real-time adaptation failed', error: error.message });
     }
@@ -1498,7 +1504,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { workflowId, countries, regulations } = req.body;
       const compliance = await workflowAutomationService.automateGlobalCompliance(workflowId, countries, regulations);
       res.json(compliance);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Compliance automation failed:', error);
       res.status(500).json({ message: 'Compliance automation failed', error: error.message });
     }
@@ -1513,7 +1519,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         complianceRequirements
       );
       res.json(intelligentWorkflow);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Intelligent workflow creation failed:', error);
       res.status(500).json({ message: 'Intelligent workflow creation failed', error: error.message });
     }
@@ -1524,7 +1530,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { workflowId } = req.params;
       const performance = await workflowAutomationService.analyzeWorkflowPerformance(workflowId);
       res.json(performance);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Workflow performance analysis failed:', error);
       res.status(500).json({ message: 'Workflow performance analysis failed', error: error.message });
     }
@@ -1535,7 +1541,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const metrics = await SuperSCAgent.getScalabilityMetrics();
       res.json(metrics);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch scalability metrics:', error);
       res.status(500).json({ message: 'Failed to fetch scalability metrics', error: error instanceof Error ? error.message : 'Unknown error' });
     }
@@ -1566,7 +1572,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }));
       
       res.json(recentApps);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch recent applications:', error);
       res.status(500).json({ message: 'Failed to fetch recent applications', error: error.message });
     }
@@ -1597,7 +1603,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         total_time: batchResults.reduce((sum, r) => sum + r.executionTime, 0),
         results: batchResults
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Batch application generation failed:', error);
       res.status(500).json({ message: 'Batch application generation failed', error: error.message });
     }
@@ -1608,7 +1614,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const components = await visualBuilderService.getHealthcareComponents();
       res.json(components);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch visual components:', error);
       res.status(500).json({ message: 'Failed to fetch visual components', error: error.message });
     }
@@ -1618,7 +1624,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const templates = await visualBuilderService.getVisualTemplates();
       res.json(templates);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch visual templates:', error);
       res.status(500).json({ message: 'Failed to fetch visual templates', error: error.message });
     }
@@ -1667,7 +1673,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { application } = req.body;
       const deployment = await visualBuilderService.deployApplication(application);
       res.json(deployment);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Visual app deployment failed:', error);
       res.status(500).json({ message: 'Visual app deployment failed', error: error.message });
     }
@@ -1689,7 +1695,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         readyForDeploy: true,
         hipaaCompliant: true
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Code generation failed:', error);
       res.status(500).json({ message: 'Code generation failed', error: error.message });
     }
@@ -1705,7 +1711,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         libraries,
         count: libraries.length
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch ML libraries:', error);
       res.status(500).json({ message: 'Failed to fetch ML libraries', error: error.message });
     }
@@ -1721,7 +1727,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         pythonReady: true,
         deploymentReady: true
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('ML pipeline generation failed:', error);
       res.status(500).json({ message: 'ML pipeline generation failed', error: error.message });
     }
@@ -1736,7 +1742,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         result,
         executionTime: Date.now()
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Python execution failed:', error);
       res.status(500).json({ message: 'Python execution failed', error: error.message });
     }
@@ -1752,7 +1758,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         apiEndpoints: deployment.endpoints,
         documentation: deployment.documentation
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('ML model deployment failed:', error);
       res.status(500).json({ message: 'ML model deployment failed', error: error.message });
     }
@@ -1769,7 +1775,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         domain: config.healthcareDomain,
         readyToExecute: true
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Healthcare model generation failed:', error);
       res.status(500).json({ message: 'Healthcare model generation failed', error: error.message });
     }
@@ -1790,7 +1796,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         verificationModel: 'grok-2-1212',
         confidence: 'independent_ai_validation'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Grok verification failed:', error);
       res.status(500).json({ message: 'Grok verification failed', error: error.message });
     }
@@ -1807,7 +1813,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         independentMarketValidation: true,
         verificationModel: 'grok-2-1212'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Grok market verification failed:', error);
       res.status(500).json({ message: 'Grok market verification failed', error: error.message });
     }
@@ -1819,7 +1825,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { ultraSpeedOptimizer } = await import('./ultra-speed-optimization');
       const benchmark = await ultraSpeedOptimizer.runSpeedBenchmark();
       res.json(benchmark);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Speed benchmark failed:', error);
       res.status(500).json({ message: 'Speed benchmark failed', error: error.message });
     }
@@ -1830,7 +1836,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { ultraSpeedOptimizer } = await import('./ultra-speed-optimization');
       const metrics = await ultraSpeedOptimizer.getPerformanceMetrics();
       res.json(metrics);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Performance metrics failed:', error);
       res.status(500).json({ message: 'Performance metrics failed', error: error.message });
     }
@@ -1846,7 +1852,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: 'Platform optimized for maximum speed',
         timestamp: new Date().toISOString()
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Speed optimization failed:', error);
       res.status(500).json({ message: 'Speed optimization failed', error: error.message });
     }
@@ -1863,7 +1869,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         validationModel: 'gemini-2.5-pro-healthcare',
         clinicalSpecialization: 'healthcare_domain_expert'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Healthcare validation failed:', error);
       res.status(500).json({ message: 'Healthcare validation failed', error: error.message });
     }
@@ -1878,7 +1884,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         medicalWorkflowExpertise: true,
         validationModel: 'gemini-2.5-pro-clinical'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Clinical workflow validation failed:', error);
       res.status(500).json({ message: 'Clinical workflow validation failed', error: error.message });
     }
@@ -1893,7 +1899,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         regulatoryExpertise: true,
         validationModel: 'gemini-2.5-pro-regulatory'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Healthcare regulatory validation failed:', error);
       res.status(500).json({ message: 'Healthcare regulatory validation failed', error: error.message });
     }
@@ -1908,7 +1914,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         medicalAIExpertise: true,
         validationModel: 'gemini-2.5-pro-medical-ai'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Medical AI validation failed:', error);
       res.status(500).json({ message: 'Medical AI validation failed', error: error.message });
     }
@@ -1955,7 +1961,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         investmentRecommendation: 'Immediate patent filing and development acceleration',
         marketReadiness: 'High demand with no existing solutions'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Backend market analysis failed:', error);
       res.status(500).json({ message: 'Backend market analysis failed', error: error.message });
     }
@@ -1966,7 +1972,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const orgData = insertHealthcareOrganizationSchema.parse(req.body);
       const organization = await storage.createHealthcareOrganization(orgData);
       res.status(201).json(organization);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating healthcare organization:", error);
       res.status(500).json({ message: "Failed to create healthcare organization" });
     }
@@ -1996,7 +2002,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(publications);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching medical publications:", error);
       res.status(500).json({ message: "Failed to fetch medical publications" });
     }
@@ -2012,7 +2018,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(publication);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching publication:", error);
       res.status(500).json({ message: "Failed to fetch publication" });
     }
@@ -2044,7 +2050,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(standards);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching healthcare standards:", error);
       res.status(500).json({ message: "Failed to fetch healthcare standards" });
     }
@@ -2055,7 +2061,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const models = await storage.getAIModels();
       res.json(models);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching AI models:', error);
       res.status(500).json({ message: 'Failed to fetch AI models' });
     }
@@ -2081,7 +2087,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(agents);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching healthcare agents:", error);
       res.status(500).json({ message: "Failed to fetch healthcare agents" });
     }
@@ -2092,7 +2098,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const agentData = insertHealthcareAgentSchema.parse(req.body);
       const agent = await storage.createHealthcareAgent(agentData);
       res.status(201).json(agent);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating healthcare agent:", error);
       res.status(500).json({ message: "Failed to create healthcare agent" });
     }
@@ -2116,7 +2122,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(simulations);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching healthcare simulations:", error);
       res.status(500).json({ message: "Failed to fetch healthcare simulations" });
     }
@@ -2141,7 +2147,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const simulation = await storage.createHealthcareSimulation(simulationData);
       res.status(201).json(simulation);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating healthcare simulation:", error);
       res.status(500).json({ message: "Failed to create healthcare simulation" });
     }
@@ -2152,7 +2158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const capabilities = await advancedCapabilitiesService.enableAdvancedCapabilities(req.body);
       res.json(capabilities);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error enabling advanced capabilities:", error);
       res.status(500).json({ message: "Failed to enable advanced capabilities" });
     }
@@ -2205,7 +2211,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const simulation = await capabilities.services.immersiveHealthcare.createVRSimulation(type, parameters);
       res.json(simulation);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating VR simulation:", error);
       res.status(500).json({ message: "Failed to create VR simulation" });
     }
@@ -2261,7 +2267,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         modality
       );
       res.json(analysis);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error analyzing medical image:", error);
       res.status(500).json({ message: "Failed to analyze medical image" });
     }
@@ -2314,7 +2320,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const record = await capabilities.services.blockchainHealth.createHealthRecord(patientData);
       res.json(record);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating blockchain health record:", error);
       res.status(500).json({ message: "Failed to create blockchain health record" });
     }
@@ -2367,7 +2373,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const connection = await capabilities.services.iotMedical.connectMedicalDevice(deviceId, deviceType);
       res.json(connection);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error connecting medical device:", error);
       res.status(500).json({ message: "Failed to connect medical device" });
     }
@@ -2377,7 +2383,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/healthcare-stacks', async (req, res) => {
     try {
       res.json(HEALTHCARE_STACKS);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching healthcare stacks:", error);
       res.status(500).json({ message: "Failed to fetch healthcare stacks" });
     }
@@ -2388,7 +2394,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const stacks = await storage.getTechStacks();
       res.json(stacks);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching tech stacks:', error);
       res.status(500).json({ message: 'Failed to fetch tech stacks' });
     }
@@ -2398,7 +2404,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const capabilities = await storage.getBuildCapabilities();
       res.json(capabilities);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching build capabilities:', error);
       res.status(500).json({ message: 'Failed to fetch build capabilities' });
     }
@@ -2408,7 +2414,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const frameworks = await storage.getComplianceFrameworks();
       res.json(frameworks);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching compliance frameworks:', error);
       res.status(500).json({ message: 'Failed to fetch compliance frameworks' });
     }
@@ -2418,7 +2424,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const options = await storage.getDeploymentOptions();
       res.json(options);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching deployment options:', error);
       res.status(500).json({ message: 'Failed to fetch deployment options' });
     }
@@ -2429,7 +2435,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const appConfig = req.body;
       const buildResult = await storage.buildHealthcareApp(appConfig);
       res.json(buildResult);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error building app:', error);
       res.status(500).json({ message: 'Failed to build application' });
     }
@@ -2439,7 +2445,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const apps = await storage.getUserApps();
       res.json(apps);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching user apps:', error);
       res.status(500).json({ message: 'Failed to fetch user apps' });
     }
@@ -2450,7 +2456,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const templates = await storage.getAICodeTemplates();
       res.json(templates);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching code templates:', error);
       res.status(500).json({ message: 'Failed to fetch code templates' });
     }
@@ -2460,7 +2466,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const models = await storage.getAIModels();
       res.json(models);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching AI models:', error);
       res.status(500).json({ message: 'Failed to fetch AI models' });
     }
@@ -2470,7 +2476,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const examples = await storage.getCodeExamples();
       res.json(examples);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching code examples:', error);
       res.status(500).json({ message: 'Failed to fetch code examples' });
     }
@@ -2481,7 +2487,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const codeRequest = req.body;
       const generatedCode = await storage.generateCode(codeRequest);
       res.json(generatedCode);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating code:', error);
       res.status(500).json({ message: 'Failed to generate code' });
     }
@@ -2511,7 +2517,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const recommendations = await orchestrators.compliance.getConstellationRecommendations(query, validatedContext);
       
       res.json(recommendations);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Clinical AI recommendations error:', error);
       res.status(500).json({ message: 'Failed to generate clinical recommendations' });
     }
@@ -2530,7 +2536,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       res.json(translationResult);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Standards translation error:', error);
       res.status(500).json({ message: 'Failed to translate between standards' });
     }
@@ -2548,7 +2554,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       res.json(complianceResults);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Compliance check error:', error);
       res.status(500).json({ message: 'Failed to verify compliance' });
     }
@@ -2566,7 +2572,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       res.json(codeResult);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Clinical code generation error:', error);
       res.status(500).json({ message: 'Failed to generate clinical code' });
     }
@@ -2585,7 +2591,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       res.json(codeResult);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Standards code generation error:', error);
       res.status(500).json({ message: 'Failed to generate standards-compliant code' });
     }
@@ -2610,7 +2616,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         demonstration: result,
         technology: 'Voice-controlled backend generation'
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ 
         message: 'Voice backend demonstration failed',
         error: 'Implementation error'
@@ -2631,7 +2637,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         demonstration: result,
         technology: 'Voice-controlled database management'
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ 
         message: 'Voice database demonstration failed',
         error: 'Implementation error'
@@ -2658,7 +2664,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         analysis: domainAnalysis,
         recommendation: 'MULTI_DOMAIN_EXPANSION_STRATEGY'
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ 
         message: 'Domain expansion analysis failed',
         error: error.message 
@@ -2695,7 +2701,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           priorArtBarriers: 'ESTABLISHED'
         }
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ 
         message: 'IP security status check failed',
         error: error.message 
@@ -2745,7 +2751,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           complianceAchieved: 'ZERO static content policy enforced'
         }
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ 
         message: 'Static to dynamic conversion failed',
         error: error.message 
@@ -2769,7 +2775,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errorHandling: 'COMPREHENSIVE - Robust error states and recovery mechanisms'
         }
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).json({ 
         message: 'Conversion status check failed',
         error: error.message 
@@ -2885,7 +2891,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       };
       res.json(pricingData);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch pricing data:', error);
       res.status(500).json({ message: 'Failed to fetch pricing data', error: error instanceof Error ? error.message : 'Unknown error' });
     }
@@ -2988,7 +2994,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       res.json(components);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch healthcare components:', error);
       res.status(500).json({ message: 'Failed to fetch healthcare components', error: error instanceof Error ? error.message : 'Unknown error' });
     }
@@ -3049,7 +3055,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       res.json(globalData);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch global healthcare data:', error);
       res.status(500).json({ message: 'Failed to fetch global healthcare data', error: error instanceof Error ? error.message : 'Unknown error' });
     }
@@ -3103,18 +3109,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       res.json(portfolioData);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch patent portfolio status:', error);
       res.status(500).json({ message: 'Failed to fetch patent portfolio status', error: error instanceof Error ? error.message : 'Unknown error' });
     }
   });
 
-  // CS Agent routes - 100x Computer Agent capabilities with dynamic database data
-  app.get('/cs-agent/health', async (req, res) => {
+  // CS Agent routes - Support Orchestrator endpoints with authentication
+  app.get('/api/cs-agent/health-status', isAuthenticated, async (req: any, res) => {
     try {
       const healthStatus = await orchestrators.support.getHealthStatus();
       res.json(healthStatus);
-    } catch (error) {
+    } catch (error: any) {
       console.error('CS Agent health check failed:', error);
       res.status(500).json({ 
         error: 'CS Agent health check failed',
@@ -3123,11 +3129,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/cs-agent/analyze', async (req, res) => {
+  app.get('/api/cs-agent/analyze-platform', isAuthenticated, async (req: any, res) => {
     try {
       const analysis = await orchestrators.support.analyzePlatform();
       res.json(analysis);
-    } catch (error) {
+    } catch (error: any) {
       console.error('CS Agent platform analysis failed:', error);
       res.status(500).json({ 
         error: 'Platform analysis failed',
@@ -3136,11 +3142,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/cs-agent/healthcare-analysis', async (req, res) => {
+  app.get('/api/cs-agent/healthcare-analysis', isAuthenticated, async (req: any, res) => {
     try {
       const analysis = await orchestrators.support.performHealthcareAnalysis();
       res.json(analysis);
-    } catch (error) {
+    } catch (error: any) {
       console.error('CS Agent healthcare analysis failed:', error);
       res.status(500).json({ 
         error: 'Healthcare analysis failed',
@@ -3149,11 +3155,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/cs-agent/patent-analysis', async (req, res) => {
+  app.get('/api/cs-agent/analyze-patent-portfolio', isAuthenticated, async (req: any, res) => {
     try {
       const analysis = await orchestrators.support.analyzePatentPortfolio();
       res.json(analysis);
-    } catch (error) {
+    } catch (error: any) {
       console.error('CS Agent patent analysis failed:', error);
       res.status(500).json({ 
         error: 'Patent analysis failed',
@@ -3162,11 +3168,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/cs-agent/optimize', async (req, res) => {
+  app.get('/api/cs-agent/optimize-system', isAuthenticated, async (req: any, res) => {
     try {
       const optimization = await orchestrators.support.optimizeSystem();
       res.json(optimization);
-    } catch (error) {
+    } catch (error: any) {
       console.error('CS Agent optimization failed:', error);
       res.status(500).json({ 
         error: 'System optimization failed',
@@ -3175,12 +3181,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/cs-agent/resolve-error', async (req, res) => {
+  app.post('/api/cs-agent/resolve-error', isAuthenticated, async (req: any, res) => {
     try {
       const { type, message } = req.body;
       const resolution = await orchestrators.support.resolveError({ type, message });
       res.json(resolution);
-    } catch (error) {
+    } catch (error: any) {
       console.error('CS Agent error resolution failed:', error);
       res.status(500).json({ 
         error: 'Error resolution failed',
@@ -3273,7 +3279,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { input, patientData, models } = req.body;
       const result = await healthcareMLService.validateMedicalPrediction(input, patientData, models);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Medical validation error:", error);
       res.status(500).json({ message: "Failed to validate medical prediction" });
     }
@@ -3285,7 +3291,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { hospitalData, globalModel } = req.body;
       const result = await healthcareMLService.federatedTraining(hospitalData, globalModel);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Federated training error:", error);
       res.status(500).json({ message: "Failed to perform federated training" });
     }
@@ -3297,7 +3303,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { workflowData, historicalData } = req.body;
       const result = await healthcareMLService.optimizeWorkflow(workflowData, historicalData);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Workflow optimization error:", error);
       res.status(500).json({ message: "Failed to optimize workflow" });
     }
@@ -3309,7 +3315,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { dataStream, alertThresholds } = req.body;
       const result = await healthcareMLService.processRealTimeData(dataStream, alertThresholds);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Real-time processing error:", error);
       res.status(500).json({ message: "Failed to process real-time data" });
     }
@@ -3336,7 +3342,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       res.json(metrics);
-    } catch (error) {
+    } catch (error: any) {
       console.error("ML metrics error:", error);
       res.status(500).json({ message: "Failed to get ML metrics" });
     }
@@ -3383,7 +3389,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       res.json(models);
-    } catch (error) {
+    } catch (error: any) {
       console.error("ML models error:", error);
       res.status(500).json({ message: "Failed to get ML models" });
     }
@@ -3467,7 +3473,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         timestamp: new Date().toISOString()
       };
       res.json(status);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Training status error:", error);
       res.status(500).json({ message: "Failed to fetch training status" });
     }
@@ -3486,7 +3492,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         complianceScore: { hipaa: 98, gdpr: 96, fda: 94, overall: 96 }
       };
       res.json(analytics);
-    } catch (error) {
+    } catch (error: any) {
       console.error("ML analytics error:", error);
       res.status(500).json({ message: "Failed to fetch ML analytics" });
     }
@@ -3498,7 +3504,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Fetch dynamic pricing plans from storage/database
       const plans = await storage.getPricingPlans();
       res.json(plans);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching pricing plans:", error);
       res.status(500).json({ message: "Failed to fetch pricing plans" });
     }
@@ -3509,7 +3515,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Fetch real-time pricing statistics
       const stats = await storage.getPricingStats();
       res.json(stats);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching pricing stats:", error);
       res.status(500).json({ message: "Failed to fetch pricing stats" });
     }
@@ -3558,7 +3564,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const organization = await storage.createOrganization(organizationData);
       res.json(organization);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating organization:', error);
       res.status(500).json({ message: 'Failed to create organization' });
     }
@@ -3574,7 +3580,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const contract = await storage.generateContract(organizationId, planId, customPricing);
       
       res.json(contract);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating contract:', error);
       res.status(500).json({ message: 'Failed to generate contract' });
     }
@@ -3598,7 +3604,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error signing contract:', error);
       res.status(500).json({ message: 'Failed to sign contract' });
     }
@@ -3615,7 +3621,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const document = await storage.getLegalDocument(organizationId, documentType);
       
       res.json({ document, generatedAt: new Date().toISOString() });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating legal document:', error);
       res.status(500).json({ message: 'Failed to generate legal document' });
     }
@@ -3680,7 +3686,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       res.json(pricing);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error calculating pricing:', error);
       res.status(500).json({ message: 'Failed to calculate pricing' });
     }
@@ -3697,7 +3703,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         compliance: "VERIFIED"
       };
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in dual international accreditation:", error);
       res.status(500).json({ message: "Failed to process international accreditation" });
     }
@@ -3713,7 +3719,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         compliance: "VERIFIED"
       };
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in dual fellowship processing:", error);
       res.status(500).json({ message: "Failed to process fellowship programs" });
     }
@@ -3729,7 +3735,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         monitoring: "ACTIVE"
       };
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in dual continuous monitoring:", error);
       res.status(500).json({ message: "Failed to process continuous monitoring" });
     }
@@ -3745,7 +3751,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         assessment: "COMPLETED"
       };
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in dual milestone EPA assessment:", error);
       res.status(500).json({ message: "Failed to process milestone EPA assessment" });
     }
@@ -3760,7 +3766,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: "All systems operational"
       };
       res.json(status);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching patent implementation status:", error);
       res.status(500).json({ message: "Failed to fetch patent status" });
     }
@@ -3800,7 +3806,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       ];
       res.json(healthcareTemplates);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching healthcare templates:", error);
       res.status(500).json({ message: "Failed to fetch healthcare templates" });
     }
@@ -3835,7 +3841,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       ];
       res.json(healthcareStacks);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching healthcare stacks:", error);
       res.status(500).json({ message: "Failed to fetch healthcare stacks" });
     }
@@ -3851,7 +3857,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: 'initialized',
         message: 'Healthcare app project initialized successfully'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error initializing healthcare app:", error);
       res.status(500).json({ message: "Failed to initialize healthcare app" });
     }
@@ -3864,7 +3870,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         backend: { framework: 'Node.js + Express', apis: ['Patient API', 'Medical Records API'] }
       };
       res.json({ architecture, status: 'architecture_generated' });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating architecture:", error);
       res.status(500).json({ message: "Failed to generate architecture" });
     }
@@ -3874,7 +3880,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const medicalSchema = { tables: ['patients', 'medical_records', 'appointments', 'audit_logs'] };
       res.json({ schema: medicalSchema, status: 'schema_generated' });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating schema:", error);
       res.status(500).json({ message: "Failed to generate schema" });
     }
@@ -3884,7 +3890,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const frontendComponents = { pages: ['PatientDashboard', 'MedicalRecords', 'AppointmentScheduler'] };
       res.json({ frontend: frontendComponents, status: 'frontend_generated' });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating frontend:", error);
       res.status(500).json({ message: "Failed to generate frontend" });
     }
@@ -3897,7 +3903,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         complianceMonitoring: 'Real-time compliance checking'
       };
       res.json({ aiFeatures: aiImplementation, status: 'ai_features_added' });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding AI features:", error);
       res.status(500).json({ message: "Failed to add AI features" });
     }
@@ -3924,7 +3930,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       };
       res.json(health);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error checking orchestrator health:", error);
       res.status(500).json({ message: "Failed to check orchestrator health" });
     }

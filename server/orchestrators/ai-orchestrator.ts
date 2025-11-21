@@ -80,7 +80,7 @@ export class AIOrchestrator {
     return aiService.analyzeMedicalCode(request);
   }
 
-  async reviewArchitecture(architecture: any, domain: string, stack: string) {
+  async reviewArchitecture(architecture: any, domain?: string, stack?: string) {
     return aiService.reviewArchitecture(architecture, domain, stack);
   }
 
@@ -120,7 +120,7 @@ export class AIOrchestrator {
     return aiService.generateClinicalDecisionSupport(patientData, clinicalScenario, medicalContext);
   }
 
-  async generateHealthcareAgent(agentType: string, specialty: string, requirements: any, useLocal?: boolean) {
+  async generateHealthcareAgent(agentType: string, specialty?: string, requirements?: any, useLocal?: boolean) {
     return aiService.generateHealthcareAgent(agentType, specialty, requirements, useLocal);
   }
 

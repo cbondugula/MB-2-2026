@@ -186,7 +186,7 @@ export class ComplianceOrchestrator {
     return clinicalAIService.getConstellationRecommendations(query, context);
   }
 
-  async translateBetweenStandards(sourceStandard: string, targetStandard: string, data: any) {
+  async translateBetweenStandards(sourceStandard: string, targetStandard: string, data?: any) {
     return standardsIntegrationService.translateBetweenStandards(sourceStandard, targetStandard, data);
   }
 
@@ -198,8 +198,8 @@ export class ComplianceOrchestrator {
     return clinicalAIService.generateClinicalCode(template, domain, requirements);
   }
 
-  async generateStandardsCompliantCode(standards: string[], template: string, requirements: any) {
-    return standardsIntegrationService.generateStandardsCompliantCode(standards, template, requirements);
+  async generateStandardsCompliantCode(standards: string[], template?: string, requirements?: any, healthcare?: any) {
+    return standardsIntegrationService.generateStandardsCompliantCode(standards, template, requirements, healthcare);
   }
 }
 
