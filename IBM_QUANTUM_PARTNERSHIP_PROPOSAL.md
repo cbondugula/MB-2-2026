@@ -54,6 +54,125 @@ MedBuilder is an AI-powered healthcare application development platform that ena
 
 **Total Portfolio Value:** $300M-$450M
 
+### Intellectual Property Strategy
+
+#### Current Status: Provisional Patents Filed
+
+Our IP portfolio currently consists of provisional patent applications filed with the USPTO. We want to be transparent about this status and our clear path to full patent protection.
+
+**What Provisional Patents Provide:**
+- ✅ **USPTO-recognized priority date** (legally establishes our first-to-file position)
+- ✅ **"Patent pending" status** (enforceable disclosure protection)
+- ✅ **12-month window** to file non-provisional applications
+- ✅ **International filing rights** via Patent Cooperation Treaty (PCT)
+
+**Our Deadline:** September 2026 (non-provisional filing deadline)
+
+#### Non-Provisional Filing Plan
+
+We have a structured plan to convert all provisional patents to full utility patents well ahead of the deadline:
+
+| Phase | Timeline | Action | Status |
+|-------|----------|--------|--------|
+| 1 | Month 1-2 | Engage top-tier patent counsel with quantum/healthcare expertise | ✅ In Progress |
+| 2 | Month 3-4 | Complete prior art analysis for all 7 patents | ⏳ Scheduled |
+| 3 | Month 5-6 | Draft non-provisional claims with patent attorneys | ⏳ Scheduled |
+| 4 | Month 7-8 | USPTO non-provisional filings submitted | ⏳ Target: June 2026 |
+| 5 | Month 9-12 | Patent prosecution and examiner responses | ⏳ Scheduled |
+| 6 | Year 2+ | Patent grants and continuation filings | ⏳ Projected |
+
+**Key Milestone:** Non-provisional filings completed by **June 2026** (3 months ahead of deadline)
+
+#### Patent Prosecution Budget
+
+We have allocated dedicated resources for IP protection:
+
+| Category | Budget | Purpose |
+|----------|--------|---------|
+| Patent Counsel Retainer | $80,000 | Top-tier IP law firm with quantum computing expertise |
+| Prior Art Analysis | $25,000 | Comprehensive search and freedom-to-operate analysis |
+| Non-Provisional Filings | $50,000 | 7 utility patent applications ($7k each avg) |
+| PCT International Filings | $35,000 | International patent protection (EU, Asia) |
+| Prosecution Reserve | $30,000 | Examiner responses, amendments, continuations |
+| **Total IP Budget** | **$220,000** | **Fully allocated from operating budget** |
+
+**Note:** A portion of IBM's investment ($300k-$500k) would accelerate this timeline and strengthen our patent claims.
+
+#### Joint IP Development Opportunity
+
+We see significant value in collaborative IP development with IBM. This could include:
+
+**Potential Joint Patents:**
+1. **Quantum Drug Interaction Algorithm** - VQE-based molecular simulation for pharmaceutical applications
+2. **Quantum-Classical Hybrid Healthcare Workflow** - Optimal routing between classical AI and quantum compute
+3. **Error-Mitigated Medical Imaging Classification** - IBM error mitigation applied to healthcare VQC
+4. **Quantum-Enhanced HIPAA Compliance Verification** - Novel approach to compliance automation
+
+**Proposed Joint IP Terms:**
+- **Ownership:** 50/50 co-ownership of jointly developed patents
+- **Licensing:** Each party can license independently with revenue share
+- **First Right:** IBM has first right of negotiation for any MedBuilder IP sale
+- **Cross-License:** Mutual cross-licensing of relevant background IP
+
+#### Investment Use for IP Protection
+
+If IBM invests $3M-$5M, here's how a portion would strengthen our IP position:
+
+| Allocation | Amount | Impact |
+|------------|--------|--------|
+| Accelerated Patent Filing | $300,000 | File non-provisionals within 6 months vs 9 months |
+| Additional Patent Claims | $100,000 | Broader claim coverage, continuation patents |
+| International Coverage | $150,000 | Extended PCT coverage (China, Japan, South Korea) |
+| Defensive Patent Analysis | $50,000 | Freedom-to-operate for IBM Quantum integration |
+| **Total IP Acceleration** | **$600,000** | **Stronger, faster, broader IP protection** |
+
+This investment de-risks the IP for both parties and accelerates our path to full patent protection.
+
+#### Risk Mitigation for IBM
+
+We understand IBM's need for IP certainty. Here are the protections we offer:
+
+**Contractual Protections:**
+1. **Filing Milestone:** Non-provisional filing within 9 months (or investment tranche withheld)
+2. **Progress Reports:** Quarterly IP status updates to IBM
+3. **Audit Rights:** IBM can verify patent prosecution status
+4. **Failure Clause:** If non-provisional not filed by deadline, IBM can convert investment to loan
+
+**Milestone-Based Investment Option:**
+```
+Tranche 1: $1.5M (on signing)
+  - Begin IBM Quantum integration
+  - Engage patent counsel
+
+Tranche 2: $1.5M (at 6 months)
+  - Condition: Non-provisional patents filed
+  - Condition: 3+ quantum algorithms working
+
+Tranche 3: $2M (at 12 months)
+  - Condition: 100+ customers
+  - Condition: Patent prosecution advancing
+```
+
+This structure aligns incentives and reduces IBM's risk while giving MedBuilder the resources to execute.
+
+#### Why Provisional Status Shouldn't Delay Partnership
+
+**Industry Context:**
+- IBM itself holds hundreds of provisional patents at any given time
+- Major tech partnerships (Google, Microsoft, Apple) routinely involve provisional IP
+- Provisional status is standard for early-stage quantum computing companies
+- The 12-month window provides ample time for non-provisional conversion
+
+**Our Advantage:**
+- Priority date is LOCKED (competitors cannot file first)
+- Working product demonstrates patent viability
+- Clear execution plan with dedicated budget
+- Partnership accelerates, not delays, IP protection
+
+**Bottom Line:** The provisional patent status represents opportunity, not risk. Partnering now gives IBM first-mover advantage in quantum healthcare IP, with clear milestones to ensure full patent protection.
+
+---
+
 ### Why Healthcare Needs Quantum Computing
 
 **Current Healthcare Computing Limitations:**
