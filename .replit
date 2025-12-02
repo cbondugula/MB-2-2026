@@ -40,36 +40,8 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 35395
+localPort = 40241
 externalPort = 3000
-
-[[ports]]
-localPort = 35443
-externalPort = 3003
-
-[[ports]]
-localPort = 39367
-externalPort = 5000
-
-[[ports]]
-localPort = 43175
-externalPort = 3002
-
-[[ports]]
-localPort = 43789
-externalPort = 4200
-
-[[ports]]
-localPort = 45169
-externalPort = 5173
-
-[[ports]]
-localPort = 45527
-externalPort = 3001
-
-[[ports]]
-localPort = 46501
-externalPort = 6000
 
 [agent]
 integrations = ["perplexity_v0==1.0.0", "javascript_anthropic==1.0.0", "javascript_gemini==1.0.0", "javascript_openai==1.0.0", "javascript_database==1.0.0", "javascript_xai==1.0.0", "javascript_stripe==1.0.0", "javascript_log_in_with_replit==1.0.0"]

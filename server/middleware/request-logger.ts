@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { logRequest, logSecurityEvent } from "../logger";
+import { logRequest, logSecurityEvent, logError } from "../logger";
 import { metricsCollector } from "../metrics";
 import { nanoid } from "nanoid";
 
@@ -88,8 +88,6 @@ export function httpLoggingMiddleware(req: Request, res: Response, next: NextFun
  * Error logging middleware (should be last in chain)
  */
 export function errorLoggingMiddleware(err: any, req: Request, res: Response, next: NextFunction) {
-  const { logError } = require("../logger");
-  
   // Log the error with request context
   logError(err, {
     method: req.method,
