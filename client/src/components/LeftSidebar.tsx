@@ -47,18 +47,18 @@ export default function LeftSidebar() {
             Build
           </h3>
           {menuItems.map((item) => (
-            <Link key={item.path} href={item.path}>
-              <a
-                className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-all duration-200 ${
-                  isActive(item.path)
-                    ? "bg-medical-blue-50 dark:bg-medical-blue-900/30 text-medical-blue-600 dark:text-medical-blue-400 shadow-sm"
-                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
-                }`}
-                data-testid={`nav-${item.path.replace('/', '') || 'dashboard'}`}
-              >
-                <item.icon className={`w-5 h-5 ${isActive(item.path) ? 'text-medical-blue-500' : 'text-slate-400'}`} />
-                <span>{item.label}</span>
-              </a>
+            <Link
+              key={item.path}
+              href={item.path}
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-all duration-200 ${
+                isActive(item.path)
+                  ? "bg-medical-blue-50 dark:bg-medical-blue-900/30 text-medical-blue-600 dark:text-medical-blue-400 shadow-sm"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+              }`}
+              data-testid={`nav-${item.path.replace('/', '') || 'dashboard'}`}
+            >
+              <item.icon className={`w-5 h-5 ${isActive(item.path) ? 'text-medical-blue-500' : 'text-slate-400'}`} />
+              <span>{item.label}</span>
             </Link>
           ))}
         </div>
@@ -68,18 +68,18 @@ export default function LeftSidebar() {
             Resources
           </h3>
           {resourceItems.map((item) => (
-            <Link key={item.path} href={item.path}>
-              <a
-                className={`flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  isActive(item.path)
-                    ? "bg-medical-blue-50 dark:bg-medical-blue-900/30 text-medical-blue-600 dark:text-medical-blue-400"
-                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
-                }`}
-                data-testid={`nav-${item.path.replace('/', '')}`}
-              >
-                <item.icon className={`w-4 h-4 ${isActive(item.path) ? 'text-medical-blue-500' : 'text-slate-400'}`} />
-                <span className="text-sm">{item.label}</span>
-              </a>
+            <Link
+              key={item.path}
+              href={item.path}
+              className={`flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                isActive(item.path)
+                  ? "bg-medical-blue-50 dark:bg-medical-blue-900/30 text-medical-blue-600 dark:text-medical-blue-400"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+              }`}
+              data-testid={`nav-${item.path.replace('/', '')}`}
+            >
+              <item.icon className={`w-4 h-4 ${isActive(item.path) ? 'text-medical-blue-500' : 'text-slate-400'}`} />
+              <span className="text-sm">{item.label}</span>
             </Link>
           ))}
         </div>

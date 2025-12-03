@@ -18,13 +18,15 @@ export default function TopNavigation() {
   return (
     <nav className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-3 flex items-center justify-between sticky top-0 z-50">
       <div className="flex items-center space-x-4">
-        <Link href="/">
-          <a className="flex items-center space-x-3 hover:opacity-90 transition-opacity" data-testid="logo-link">
-            <div className="w-9 h-9 bg-gradient-to-br from-medical-blue-500 to-medical-blue-600 rounded-xl flex items-center justify-center shadow-sm">
-              <Shield className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-slate-900 dark:text-white">MedBuilder</span>
-          </a>
+        <Link
+          href="/"
+          className="flex items-center space-x-3 hover:opacity-90 transition-opacity"
+          data-testid="logo-link"
+        >
+          <div className="w-9 h-9 bg-gradient-to-br from-medical-blue-500 to-medical-blue-600 rounded-xl flex items-center justify-center shadow-sm">
+            <Shield className="w-5 h-5 text-white" />
+          </div>
+          <span className="text-xl font-bold text-slate-900 dark:text-white">MedBuilder</span>
         </Link>
         <Badge variant="secondary" className="bg-trust-green-100 dark:bg-trust-green-900/50 text-trust-green-700 dark:text-trust-green-300 border-trust-green-200 dark:border-trust-green-700">
           HIPAA Compliant
