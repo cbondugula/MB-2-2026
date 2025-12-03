@@ -7,90 +7,91 @@ import {
   FileCode, 
   Eye, 
   Shield, 
-  Cloud,
-  Folder,
-  CheckCircle,
-  Brain,
-  Activity,
-  Globe,
-  Building,
   Rocket,
-  Sparkles,
-  Stethoscope,
-  FileText
+  FolderOpen,
+  FileText,
+  BookOpen
 } from "lucide-react";
 
 export default function LeftSidebar() {
   const [location] = useLocation();
 
   const menuItems = [
-    { path: "/", label: "Dashboard", icon: Home },
-    { path: "/healthcare-app-builder", label: "Healthcare Apps", icon: Stethoscope },
-    { path: "/ai-workspace", label: "AI Workspace", icon: Brain },
-    { path: "/langextract", label: "Medical Text Analysis", icon: FileText },
-    { path: "/app-builder", label: "App Builder", icon: Rocket },
-    { path: "/ai-code-generator", label: "AI Code Generator", icon: Sparkles },
-    { path: "/bert-analysis", label: "BERT Analysis", icon: Activity },
-    { path: "/standards-builder", label: "Standards Builder", icon: Building },
-    { path: "/global-healthcare", label: "Global Healthcare", icon: Globe },
-    { path: "/code-editor", label: "Code Editor", icon: Code },
-    { path: "/components", label: "Components", icon: Puzzle },
-    { path: "/templates", label: "Templates", icon: FileCode },
-    { path: "/preview", label: "Preview", icon: Eye },
-    { path: "/hipaa-tools", label: "HIPAA Tools", icon: Shield },
-    { path: "/deploy", label: "Deploy", icon: Cloud },
+    { path: "/", label: "Dashboard", icon: Home, description: "Overview & Quick Actions" },
+    { path: "/app-builder", label: "Build App", icon: Rocket, description: "Create New Application" },
+    { path: "/templates", label: "Templates", icon: FileCode, description: "Start from Template" },
+    { path: "/components", label: "Components", icon: Puzzle, description: "Reusable Components" },
+    { path: "/code-editor", label: "Code Editor", icon: Code, description: "Edit Your Code" },
+    { path: "/preview", label: "Preview", icon: Eye, description: "Live Preview" },
+    { path: "/hipaa-tools", label: "Compliance", icon: Shield, description: "HIPAA & Security" },
+    { path: "/my-apps", label: "My Apps", icon: FolderOpen, description: "Your Projects" },
+  ];
+
+  const resourceItems = [
+    { path: "/documentation", label: "Documentation", icon: BookOpen },
+    { path: "/legal-documents", label: "Legal", icon: FileText },
   ];
 
   const isActive = (path: string) => {
     if (path === "/") {
-      return location === "/";
+      return location === "/" || location === "/dashboard";
     }
     return location.startsWith(path);
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
-      {/* Project Section */}
-      <div className="p-4 border-b border-slate-200">
-        <h3 className="text-sm font-semibold text-slate-900 mb-3">Current Project</h3>
-        <div className="bg-slate-50 rounded-lg p-3">
-          <div className="flex items-center space-x-2 mb-2">
-            <Folder className="w-4 h-4 text-medical-blue-500" />
-            <span className="font-medium text-slate-900">Telehealth Portal</span>
-          </div>
-          <div className="flex items-center space-x-2 text-xs text-slate-600">
-            <Shield className="w-3 h-3 text-trust-green-500" />
-            <span>HIPAA Compliant</span>
-          </div>
+    <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 flex flex-col h-full">
+      <nav className="flex-1 p-4 space-y-1">
+        <div className="mb-4">
+          <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-3 mb-2">
+            Build
+          </h3>
+          {menuItems.map((item) => (
+            <Link key={item.path} href={item.path}>
+              <a
+                className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-all duration-200 ${
+                  isActive(item.path)
+                    ? "bg-medical-blue-50 dark:bg-medical-blue-900/30 text-medical-blue-600 dark:text-medical-blue-400 shadow-sm"
+                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                }`}
+                data-testid={`nav-${item.path.replace('/', '') || 'dashboard'}`}
+              >
+                <item.icon className={`w-5 h-5 ${isActive(item.path) ? 'text-medical-blue-500' : 'text-slate-400'}`} />
+                <span>{item.label}</span>
+              </a>
+            </Link>
+          ))}
         </div>
-      </div>
 
-      {/* Navigation Menu */}
-      <nav className="flex-1 p-4 space-y-2">
-        {menuItems.map((item) => (
-          <Link key={item.path} href={item.path}>
-            <a
-              className={`flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-colors ${
-                isActive(item.path)
-                  ? "bg-medical-blue-50 text-medical-blue-600"
-                  : "text-slate-700 hover:bg-slate-100"
-              }`}
-            >
-              <item.icon className="w-4 h-4" />
-              <span>{item.label}</span>
-            </a>
-          </Link>
-        ))}
+        <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
+          <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-3 mb-2">
+            Resources
+          </h3>
+          {resourceItems.map((item) => (
+            <Link key={item.path} href={item.path}>
+              <a
+                className={`flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  isActive(item.path)
+                    ? "bg-medical-blue-50 dark:bg-medical-blue-900/30 text-medical-blue-600 dark:text-medical-blue-400"
+                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                }`}
+                data-testid={`nav-${item.path.replace('/', '')}`}
+              >
+                <item.icon className={`w-4 h-4 ${isActive(item.path) ? 'text-medical-blue-500' : 'text-slate-400'}`} />
+                <span className="text-sm">{item.label}</span>
+              </a>
+            </Link>
+          ))}
+        </div>
       </nav>
 
-      {/* Bottom Section */}
-      <div className="p-4 border-t border-slate-200">
-        <div className="bg-trust-green-50 border border-trust-green-200 rounded-lg p-3">
-          <div className="flex items-center space-x-2 mb-2">
-            <CheckCircle className="w-4 h-4 text-trust-green-500" />
-            <span className="text-sm font-medium text-trust-green-700">Compliance Status</span>
+      <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+        <div className="bg-gradient-to-r from-trust-green-50 to-trust-green-100 dark:from-trust-green-900/30 dark:to-trust-green-800/30 border border-trust-green-200 dark:border-trust-green-700 rounded-lg p-3">
+          <div className="flex items-center space-x-2 mb-1">
+            <Shield className="w-4 h-4 text-trust-green-600 dark:text-trust-green-400" />
+            <span className="text-sm font-semibold text-trust-green-700 dark:text-trust-green-300">HIPAA Ready</span>
           </div>
-          <p className="text-xs text-trust-green-600">All components verified</p>
+          <p className="text-xs text-trust-green-600 dark:text-trust-green-400">All apps built with compliance</p>
         </div>
       </div>
     </aside>
