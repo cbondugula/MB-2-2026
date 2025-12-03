@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import Pricing from "@/pages/pricing";
-import CustomPricing from "@/pages/custom-pricing";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/landing";
 import Dashboard from "@/pages/dashboard";
@@ -14,47 +13,13 @@ import Templates from "@/pages/templates";
 import Components from "@/pages/components";
 import Preview from "@/pages/preview";
 import HIPAATools from "@/pages/hipaa-tools";
-import AIWorkspace from "@/pages/ai-workspace";
-import BERTAnalysis from "@/pages/bert-analysis";
-import StandardsBuilder from "@/pages/standards-builder";
-import GlobalHealthcare from "@/pages/global-healthcare";
 import AppBuilder from "@/pages/app-builder";
-import AICodeGenerator from "@/pages/ai-code-generator";
-import ClinicalAI from "@/pages/clinical-ai";
-import AdvancedHealthcare from "@/pages/advanced-healthcare";
-import MLDashboard from "@/pages/ml-dashboard";
 import ContractOnboarding from "@/pages/contract-onboarding";
 import LegalDocuments from "@/pages/legal-documents";
-import SuperAgent from "@/pages/super-agent";
-import ScalabilityDashboard from "@/pages/scalability-dashboard";
-import VisualBuilder from "@/pages/visual-builder";
-import MLPythonIntegration from "@/pages/ml-python-integration";
-import MultiAIVerification from "@/pages/multi-ai-verification";
-import InnovationVerificationDashboard from "@/pages/innovation-verification-dashboard";
-import InnovationLinks from "@/pages/innovation-links";
-import TechnicalDiagrams from "@/pages/technical-diagrams";
-import OwnerDashboard from "@/pages/owner-dashboard";
-import CompetitiveIntelligence from "@/pages/competitive-intelligence";
-import CompetitiveAdvantage from "@/pages/competitive-advantage";
-import SuperCSAgent from "@/pages/super-cs-agent";
-import TJCCompliance from "@/pages/tjc-compliance";
-import HealthcareTesting from "@/pages/healthcare-testing";
-import HealthcareAppBuilder from "@/pages/healthcare-app-builder";
-import HealthcareDemo from "@/pages/healthcare-demo";
-import CSAgentDashboard from "@/pages/CSAgentDashboard";
-import MedicalProfessionalDashboard from "@/pages/MedicalProfessionalDashboard";
-import ExecutiveDashboard from "@/pages/ExecutiveDashboard";
-import MedHELMDashboard from "@/pages/MedHELMDashboard";
-import LangExtractDashboard from "@/pages/LangExtractDashboard";
 import Documentation from "@/pages/documentation";
 import AppPreview from "@/pages/app-preview";
 import ProjectEditor from "@/pages/project-editor";
 import MyApps from "@/pages/my-apps";
-import AdvancedAI from "@/pages/advanced-ai";
-import DualAdvancedClassical from "@/pages/dual-advanced-classical";
-import BCICapabilities from "@/pages/bci-capabilities";
-import AutoBusiness from "@/pages/auto-business";
-import PlatformAnalysis from "@/pages/platform-analysis";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -65,63 +30,26 @@ function Router() {
         <>
           <Route path="/" component={Landing} />
           <Route path="/pricing" component={Pricing} />
-          <Route path="/custom-pricing" component={CustomPricing} />
           <Route path="/templates" component={Templates} />
           <Route path="/contract-onboarding" component={ContractOnboarding} />
           <Route path="/legal-documents" component={LegalDocuments} />
           <Route path="/documentation" component={Documentation} />
           <Route path="/apps/:appId" component={AppPreview} />
-          <Route path="/editor/:projectId" component={ProjectEditor} />
-          <Route path="/my-apps" component={MyApps} />
         </>
       ) : (
         <>
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
-          <Route path="/advanced-ai" component={AdvancedAI} />
-          <Route path="/dual-advanced-classical" component={DualAdvancedClassical} />
-          <Route path="/bci-capabilities" component={BCICapabilities} />
-          <Route path="/auto-business" component={AutoBusiness} />
-          <Route path="/ai-workspace" component={AIWorkspace} />
-          <Route path="/bert-analysis" component={BERTAnalysis} />
-          <Route path="/standards-builder" component={StandardsBuilder} />
-          <Route path="/global-healthcare" component={GlobalHealthcare} />
+          <Route path="/app-builder" component={AppBuilder} />
           <Route path="/code-editor" component={CodeEditor} />
           <Route path="/templates" component={Templates} />
           <Route path="/components" component={Components} />
-          <Route path="/app-builder" component={AppBuilder} />
-          <Route path="/ai-code-generator" component={AICodeGenerator} />
-          <Route path="/clinical-ai" component={ClinicalAI} />
-          <Route path="/advanced-healthcare" component={AdvancedHealthcare} />
-          <Route path="/ml-dashboard" component={MLDashboard} />
           <Route path="/preview" component={Preview} />
           <Route path="/hipaa-tools" component={HIPAATools} />
           <Route path="/pricing" component={Pricing} />
-          <Route path="/custom-pricing" component={CustomPricing} />
           <Route path="/contract-onboarding" component={ContractOnboarding} />
           <Route path="/legal-documents" component={LegalDocuments} />
-          <Route path="/super-agent" component={SuperAgent} />
-          <Route path="/scalability-dashboard" component={ScalabilityDashboard} />
-          <Route path="/visual-builder" component={VisualBuilder} />
-          <Route path="/ml-python" component={MLPythonIntegration} />
-          <Route path="/multi-ai-verification" component={MultiAIVerification} />
-          <Route path="/innovation-verification" component={InnovationVerificationDashboard} />
-          <Route path="/innovation-links" component={InnovationLinks} />
-          <Route path="/technical-diagrams" component={TechnicalDiagrams} />
-          <Route path="/tjc-compliance" component={TJCCompliance} />
-          <Route path="/healthcare-testing" component={HealthcareTesting} />
-          <Route path="/healthcare-app-builder" component={HealthcareDemo} />
           <Route path="/documentation" component={Documentation} />
-          <Route path="/owner" component={OwnerDashboard} />
-          <Route path="/competitive-intelligence" component={CompetitiveIntelligence} />
-          <Route path="/competitive-advantage" component={CompetitiveAdvantage} />
-          <Route path="/super-cs-agent" component={SuperCSAgent} />
-          <Route path="/cs-agent" component={CSAgentDashboard} />
-          <Route path="/medical-dashboard" component={MedicalProfessionalDashboard} />
-          <Route path="/executive-dashboard" component={ExecutiveDashboard} />
-          <Route path="/medhelm" component={MedHELMDashboard} />
-          <Route path="/langextract" component={LangExtractDashboard} />
-          <Route path="/platform-analysis" component={PlatformAnalysis} />
           <Route path="/apps/:appId" component={AppPreview} />
           <Route path="/editor/:projectId" component={ProjectEditor} />
           <Route path="/my-apps" component={MyApps} />
