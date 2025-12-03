@@ -40,8 +40,18 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 40241
+localPort = 34369
+externalPort = 3001
+
+[[ports]]
+localPort = 36373
 externalPort = 3000
 
 [agent]
 integrations = ["perplexity_v0==1.0.0", "javascript_anthropic==1.0.0", "javascript_gemini==1.0.0", "javascript_openai==1.0.0", "javascript_database==1.0.0", "javascript_xai==1.0.0", "javascript_stripe==1.0.0", "javascript_log_in_with_replit==1.0.0"]
+
+[userenv]
+
+[userenv.shared]
+TESTING_VITE_STRIPE_PUBLIC_KEY = "\t sk_live_...7tRn"
+TESTING_STRIPE_SECRET_KEY = "pk_live_51Jn65hCo1D4x5h8yuS4c4nZHJuQ3cR5rnkJDLx3wuTVWqbkTNFm8hXKumbov4nMSO2EpntyX5G6V8uwV0cZa5Mpv00KWLIp7y1"
