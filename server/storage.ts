@@ -416,6 +416,8 @@ export interface IStorage {
   updateProjectPackageHealth(projectId: number, packages: InsertPackageHealth[]): Promise<PackageHealth[]>;
   getProjectPackageHealth(projectId: number): Promise<PackageHealth[]>;
   getVulnerablePackages(projectId: number): Promise<PackageHealth[]>;
+  createPackageHealth(data: InsertPackageHealth): Promise<PackageHealth>;
+  deletePackageHealth(projectId: number, packageName: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -2473,6 +2475,19 @@ This agreement incorporates organization-specific requirements and automatically
       .where(and(
         eq(packageHealth.projectId, projectId),
         eq(packageHealth.hasVulnerability, true)
+      ));
+  }
+
+  async createPackageHealth(data: InsertPackageHealth): Promise<PackageHealth> {
+    const [newPackage] = await db.insert(packageHealth).values(data).returning();
+    return newPackage;
+  }
+
+  async deletePackageHealth(projectId: number, packageName: string): Promise<void> {
+    await db.delete(packageHealth)
+      .where(and(
+        eq(packageHealth.projectId, projectId),
+        eq(packageHealth.packageName, packageName)
       ));
   }
 }

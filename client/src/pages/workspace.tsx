@@ -51,7 +51,18 @@ import {
   PlayCircle,
   XCircle,
   User,
-  Link2
+  Link2,
+  Package,
+  GitCommit,
+  GitMerge,
+  GitPullRequest,
+  RefreshCw,
+  Search,
+  Download,
+  Upload,
+  AlertTriangle,
+  Check,
+  Github
 } from "lucide-react";
 import {
   Dialog,
@@ -482,6 +493,10 @@ export default function Workspace() {
   const [terminalOutput, setTerminalOutput] = useState<Array<{command: string; output: string; timestamp: string}>>([]);
   const [aiPlanMode, setAiPlanMode] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<any>(null);
+  const [showGitPanel, setShowGitPanel] = useState(false);
+  const [showPackagesPanel, setShowPackagesPanel] = useState(false);
+  const [packageSearch, setPackageSearch] = useState("");
+  const [repoUrl, setRepoUrl] = useState("");
 
   const { data: project, isLoading, error } = useQuery<Project>({
     queryKey: ['/api/projects', projectId],
@@ -510,6 +525,30 @@ export default function Workspace() {
   const { data: aiPlans, refetch: refetchPlans } = useQuery<{plans: any[]}>({
     queryKey: ['/api/projects', projectId, 'ai-plans'],
     enabled: !!projectId && aiPlanMode,
+  });
+
+  // Git integration query
+  const { data: gitData, refetch: refetchGit } = useQuery<{integration: any, branches: any[]}>({
+    queryKey: ['/api/projects', projectId, 'git'],
+    enabled: !!projectId && showGitPanel,
+  });
+
+  // Git branches query
+  const { data: gitBranches, refetch: refetchBranches } = useQuery<{branches: any[]}>({
+    queryKey: ['/api/projects', projectId, 'git', 'branches'],
+    enabled: !!projectId && showGitPanel && !!gitData?.integration,
+  });
+
+  // Git sync history query
+  const { data: syncHistory } = useQuery<{history: any[]}>({
+    queryKey: ['/api/projects', projectId, 'git', 'sync-history'],
+    enabled: !!projectId && showGitPanel && !!gitData?.integration,
+  });
+
+  // Packages query
+  const { data: packagesData, refetch: refetchPackages } = useQuery<{packages: any[]}>({
+    queryKey: ['/api/projects', projectId, 'packages'],
+    enabled: !!projectId && showPackagesPanel,
   });
 
   const codeFiles = (project?.code as Record<string, string>) || {};
@@ -683,6 +722,121 @@ export default function Workspace() {
     }
   });
 
+  // Git connect mutation
+  const connectGitMutation = useMutation({
+    mutationFn: async (repoUrl: string) => {
+      const response = await apiRequest('POST', `/api/projects/${projectId}/git`, { repoUrl });
+      return await response.json();
+    },
+    onSuccess: () => {
+      refetchGit();
+      setRepoUrl("");
+      toast({
+        title: "Repository Connected",
+        description: "Your Git repository has been connected.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Connection Failed",
+        description: error.message || "Failed to connect repository",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Git sync mutation
+  const gitSyncMutation = useMutation({
+    mutationFn: async (direction: 'push' | 'pull') => {
+      const response = await apiRequest('POST', `/api/projects/${projectId}/git/sync`, { direction });
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      refetchGit();
+      refetchBranches();
+      toast({
+        title: "Sync Complete",
+        description: data.message || "Repository synced successfully.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Sync Failed",
+        description: error.message || "Failed to sync repository",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Package scan mutation
+  const packageScanMutation = useMutation({
+    mutationFn: async () => {
+      const packageJson = project?.dependencies || {};
+      const response = await apiRequest('POST', `/api/projects/${projectId}/packages/scan`, { packageJson });
+      return await response.json();
+    },
+    onSuccess: () => {
+      refetchPackages();
+      toast({
+        title: "Scan Complete",
+        description: "Package vulnerabilities have been scanned.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Scan Failed",
+        description: error.message || "Failed to scan packages",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Install package mutation
+  const installPackageMutation = useMutation({
+    mutationFn: async (packageName: string) => {
+      const response = await apiRequest('POST', `/api/projects/${projectId}/packages/install`, { packageName });
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      refetchPackages();
+      queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId] });
+      toast({
+        title: "Package Installed",
+        description: `${data.packageName} has been installed.`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Installation Failed",
+        description: error.message || "Failed to install package",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Uninstall package mutation
+  const uninstallPackageMutation = useMutation({
+    mutationFn: async (packageName: string) => {
+      const response = await apiRequest('DELETE', `/api/projects/${projectId}/packages/${encodeURIComponent(packageName)}`);
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      refetchPackages();
+      queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId] });
+      toast({
+        title: "Package Removed",
+        description: `${data.packageName} has been uninstalled.`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Uninstall Failed",
+        description: error.message || "Failed to uninstall package",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleDeploy = async () => {
     if (hasUnsavedChanges) {
       await saveProjectMutation.mutateAsync();
@@ -849,7 +1003,27 @@ export default function Workspace() {
             title="Version History"
             data-testid="history-button"
           >
-            <GitBranch className="w-4 h-4" />
+            <History className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowGitPanel(!showGitPanel)}
+            className={`text-gray-400 ${showGitPanel ? 'bg-orange-800 text-orange-300' : ''}`}
+            title="Git Workflow"
+            data-testid="git-button"
+          >
+            <Github className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowPackagesPanel(!showPackagesPanel)}
+            className={`text-gray-400 ${showPackagesPanel ? 'bg-purple-800 text-purple-300' : ''}`}
+            title="Packages"
+            data-testid="packages-button"
+          >
+            <Package className="w-4 h-4" />
           </Button>
           <Button
             variant="ghost"
@@ -1164,6 +1338,277 @@ export default function Workspace() {
                         <RotateCcw className="w-3 h-3 mr-1" />
                         Restore this version
                       </Button>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
+          )}
+          
+          {/* Git Panel */}
+          {showGitPanel && (
+            <div className="w-80 border-l border-gray-800 bg-gray-900 flex flex-col">
+              <div className="p-3 border-b border-gray-800 flex items-center justify-between">
+                <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                  <Github className="w-4 h-4 text-orange-400" />
+                  Git Workflow
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 text-gray-400"
+                  onClick={() => setShowGitPanel(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <ScrollArea className="flex-1">
+                <div className="p-3 space-y-4">
+                  {!gitData?.integration ? (
+                    <div className="space-y-3">
+                      <div className="text-sm text-gray-400 text-center py-4">
+                        <Github className="w-12 h-12 text-gray-600 mx-auto mb-2" />
+                        <p>Connect a Git repository</p>
+                      </div>
+                      <div className="space-y-2">
+                        <Input
+                          value={repoUrl}
+                          onChange={(e) => setRepoUrl(e.target.value)}
+                          placeholder="https://github.com/user/repo"
+                          className="bg-gray-800 border-gray-700 text-white text-sm"
+                          data-testid="git-repo-url-input"
+                        />
+                        <Button
+                          size="sm"
+                          className="w-full bg-orange-600 hover:bg-orange-700"
+                          onClick={() => connectGitMutation.mutate(repoUrl)}
+                          disabled={!repoUrl || connectGitMutation.isPending}
+                          data-testid="connect-git-button"
+                        >
+                          {connectGitMutation.isPending ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
+                            <Github className="w-4 h-4 mr-2" />
+                          )}
+                          Connect Repository
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="bg-gray-800 rounded p-3 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Github className="w-4 h-4 text-gray-400" />
+                          <span className="text-sm text-white font-medium truncate">
+                            {gitData.integration.repoName || 'Connected'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <GitBranch className="w-3 h-3" />
+                          {gitData.integration.currentBranch || 'main'}
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 border-gray-700 text-gray-300"
+                          onClick={() => gitSyncMutation.mutate('pull')}
+                          disabled={gitSyncMutation.isPending}
+                          data-testid="git-pull-button"
+                        >
+                          {gitSyncMutation.isPending ? (
+                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                          ) : (
+                            <Download className="w-3 h-3 mr-1" />
+                          )}
+                          Pull
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 border-gray-700 text-gray-300"
+                          onClick={() => gitSyncMutation.mutate('push')}
+                          disabled={gitSyncMutation.isPending}
+                          data-testid="git-push-button"
+                        >
+                          {gitSyncMutation.isPending ? (
+                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                          ) : (
+                            <Upload className="w-3 h-3 mr-1" />
+                          )}
+                          Push
+                        </Button>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="text-xs text-gray-500 uppercase flex items-center gap-1">
+                          <GitBranch className="w-3 h-3" />
+                          Branches
+                        </div>
+                        {gitBranches?.branches?.map((branch: any) => (
+                          <div
+                            key={branch.id}
+                            className={`p-2 rounded text-sm flex items-center justify-between ${
+                              branch.name === gitData.integration.currentBranch
+                                ? 'bg-orange-900/30 text-orange-300'
+                                : 'bg-gray-800 text-gray-300'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2 truncate">
+                              <GitBranch className="w-3 h-3" />
+                              <span className="truncate">{branch.name}</span>
+                            </div>
+                            {branch.name === gitData.integration.currentBranch && (
+                              <Badge className="bg-orange-600 text-white text-xs">current</Badge>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="text-xs text-gray-500 uppercase flex items-center gap-1">
+                          <GitCommit className="w-3 h-3" />
+                          Recent Syncs
+                        </div>
+                        {syncHistory?.history?.slice(0, 5).map((sync: any) => (
+                          <div key={sync.id} className="p-2 bg-gray-800 rounded text-xs space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className={`${sync.direction === 'push' ? 'text-green-400' : 'text-blue-400'}`}>
+                                {sync.direction === 'push' ? '↑ Push' : '↓ Pull'}
+                              </span>
+                              <span className="text-gray-500">
+                                {new Date(sync.createdAt).toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="text-gray-400 truncate">{sync.branch}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          )}
+          
+          {/* Packages Panel */}
+          {showPackagesPanel && (
+            <div className="w-80 border-l border-gray-800 bg-gray-900 flex flex-col">
+              <div className="p-3 border-b border-gray-800 flex items-center justify-between">
+                <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                  <Package className="w-4 h-4 text-purple-400" />
+                  Packages
+                </h3>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 text-gray-400"
+                    onClick={() => packageScanMutation.mutate()}
+                    disabled={packageScanMutation.isPending}
+                    title="Scan for vulnerabilities"
+                  >
+                    {packageScanMutation.isPending ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <RefreshCw className="w-3 h-3" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 text-gray-400"
+                    onClick={() => setShowPackagesPanel(false)}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="p-3 border-b border-gray-800">
+                <div className="flex gap-2">
+                  <Input
+                    value={packageSearch}
+                    onChange={(e) => setPackageSearch(e.target.value)}
+                    placeholder="Search packages..."
+                    className="bg-gray-800 border-gray-700 text-white text-sm"
+                    data-testid="package-search-input"
+                  />
+                  <Button
+                    size="sm"
+                    className="bg-purple-600 hover:bg-purple-700"
+                    onClick={() => {
+                      if (packageSearch.trim()) {
+                        installPackageMutation.mutate(packageSearch.trim());
+                        setPackageSearch("");
+                      }
+                    }}
+                    disabled={!packageSearch.trim() || installPackageMutation.isPending}
+                    data-testid="install-package-button"
+                  >
+                    {installPackageMutation.isPending ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Plus className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+              <ScrollArea className="flex-1">
+                <div className="p-3 space-y-2">
+                  {packagesData?.packages?.length === 0 && (
+                    <div className="text-sm text-gray-500 text-center py-8">
+                      <Package className="w-12 h-12 text-gray-600 mx-auto mb-2" />
+                      No packages tracked yet. Run a scan to detect packages.
+                    </div>
+                  )}
+                  {packagesData?.packages?.map((pkg: any) => (
+                    <div
+                      key={pkg.id}
+                      className={`p-3 rounded space-y-2 ${
+                        pkg.hasVulnerability
+                          ? 'bg-red-900/20 border border-red-800'
+                          : 'bg-gray-800'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-white font-medium">{pkg.packageName}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 text-gray-400 hover:text-red-400"
+                          onClick={() => uninstallPackageMutation.mutate(pkg.packageName)}
+                          disabled={uninstallPackageMutation.isPending}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        <Badge variant="outline" className="border-gray-700 text-gray-400">
+                          v{pkg.currentVersion || 'unknown'}
+                        </Badge>
+                        {pkg.hasVulnerability && (
+                          <Badge className={`${
+                            pkg.vulnerabilitySeverity === 'critical' ? 'bg-red-600' :
+                            pkg.vulnerabilitySeverity === 'high' ? 'bg-orange-600' :
+                            'bg-yellow-600'
+                          } text-white`}>
+                            <AlertTriangle className="w-3 h-3 mr-1" />
+                            {pkg.vulnerabilitySeverity}
+                          </Badge>
+                        )}
+                        {pkg.isOutdated && (
+                          <Badge className="bg-blue-600 text-white">
+                            Update available
+                          </Badge>
+                        )}
+                      </div>
+                      {pkg.latestVersion && pkg.currentVersion !== pkg.latestVersion && (
+                        <div className="text-xs text-gray-500">
+                          Latest: {pkg.latestVersion}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

@@ -7281,6 +7281,106 @@ Respond with ONLY valid JSON array, no explanation.`;
     }
   });
 
+  // Package install endpoint
+  app.post('/api/projects/:id/packages/install', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const { packageName } = req.body;
+      if (!packageName || typeof packageName !== 'string') {
+        return res.status(400).json({ message: "Package name is required" });
+      }
+
+      // Add to project's package health tracking
+      const packageHealthData = {
+        projectId,
+        packageManager: 'npm',
+        packageName: packageName.trim(),
+        currentVersion: 'latest',
+        latestVersion: 'latest',
+        isOutdated: false,
+        hasVulnerability: false,
+        vulnerabilitySeverity: null,
+        license: 'unknown',
+        isLicenseCompliant: true,
+        lastCheckedAt: new Date(),
+      };
+
+      await storage.createPackageHealth(packageHealthData);
+
+      // Log the action
+      await storage.createComplianceAuditEvent({
+        projectId,
+        eventType: 'package_install',
+        eventCategory: 'configuration',
+        description: `Package ${packageName.trim()} installed`,
+        metadata: { packageName: packageName.trim() },
+        userId: req.user.claims.sub,
+        severity: 'info',
+      });
+
+      res.json({ 
+        success: true, 
+        packageName: packageName.trim(),
+        message: `Package ${packageName.trim()} has been added to tracking` 
+      });
+    } catch (error: any) {
+      console.error("Error installing package:", error);
+      res.status(500).json({ message: "Failed to install package" });
+    }
+  });
+
+  // Package uninstall endpoint
+  app.delete('/api/projects/:id/packages/:packageName', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const packageName = decodeURIComponent(req.params.packageName);
+      if (!packageName) {
+        return res.status(400).json({ message: "Package name is required" });
+      }
+
+      // Remove from package health tracking
+      await storage.deletePackageHealth(projectId, packageName);
+
+      // Log the action
+      await storage.createComplianceAuditEvent({
+        projectId,
+        eventType: 'package_uninstall',
+        eventCategory: 'configuration',
+        description: `Package ${packageName} uninstalled`,
+        metadata: { packageName },
+        userId: req.user.claims.sub,
+        severity: 'info',
+      });
+
+      res.json({ 
+        success: true, 
+        packageName,
+        message: `Package ${packageName} has been removed from tracking` 
+      });
+    } catch (error: any) {
+      console.error("Error uninstalling package:", error);
+      res.status(500).json({ message: "Failed to uninstall package" });
+    }
+  });
+
   app.post('/api/debug/logs', isAuthenticated, async (req: any, res) => {
     try {
       const logSchema = z.object({
