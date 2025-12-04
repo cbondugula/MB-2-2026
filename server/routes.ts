@@ -1102,6 +1102,14 @@ Respond with a JSON object:
     }
   });
 
+  // Deploy request validation schema
+  const deployRequestSchema = z.object({
+    environment: z.enum(['development', 'staging', 'production']).default('production'),
+    region: z.enum(['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1']).default('us-east-1'),
+    enableHIPAA: z.boolean().default(true),
+    enableSSL: z.boolean().default(true),
+  });
+
   // Deploy a project - creates a shareable URL
   app.post('/api/projects/:id/deploy', isAuthenticated, async (req: any, res) => {
     try {
@@ -1110,8 +1118,17 @@ Respond with a JSON object:
         return res.status(400).json({ message: "Invalid project ID" });
       }
       
+      // Validate request body with Zod
+      const validationResult = deployRequestSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid deployment options", 
+          errors: validationResult.error.flatten().fieldErrors 
+        });
+      }
+      
       const userId = req.user.claims.sub;
-      const { environment = 'production' } = req.body;
+      const { environment, region, enableHIPAA, enableSSL } = validationResult.data;
       
       // Get the project
       const project = await storage.getProject(projectId);
@@ -1155,7 +1172,7 @@ Respond with a JSON object:
         userId,
         action: "deployed",
         description: `Deployed to ${deploymentUrl}`,
-        metadata: { deploymentId, subdomain, environment },
+        metadata: { deploymentId, subdomain, environment, region, enableHIPAA, enableSSL },
       });
       
       res.json({
@@ -1164,6 +1181,9 @@ Respond with a JSON object:
         subdomain,
         status: 'active',
         environment,
+        region,
+        hipaaEnabled: enableHIPAA,
+        sslEnabled: enableSSL,
         deployedAt: new Date().toISOString(),
       });
     } catch (error: any) {

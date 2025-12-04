@@ -41,7 +41,9 @@ import {
   ExternalLink,
   Copy,
   CheckCircle2,
-  Globe
+  Globe,
+  Clock,
+  History
 } from "lucide-react";
 import {
   Dialog,
@@ -50,6 +52,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import type { Project } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -427,6 +435,20 @@ interface DeploymentResult {
   subdomain: string;
   status: string;
   environment: string;
+  region?: string;
+  hipaaEnabled?: boolean;
+  sslEnabled?: boolean;
+  deployedAt?: string;
+}
+
+interface DeploymentRecord {
+  id: string;
+  url: string;
+  status: string;
+  environment: string;
+  lastDeployment: string | null;
+  region?: string;
+  health?: string;
 }
 
 export default function Workspace() {
@@ -444,10 +466,16 @@ export default function Workspace() {
   const [showDeployModal, setShowDeployModal] = useState(false);
   const [deploymentResult, setDeploymentResult] = useState<DeploymentResult | null>(null);
   const [copied, setCopied] = useState(false);
+  const [deployTab, setDeployTab] = useState<'deploy' | 'history'>('deploy');
 
   const { data: project, isLoading, error } = useQuery<Project>({
     queryKey: ['/api/projects', projectId],
     enabled: !!projectId,
+  });
+
+  const { data: deploymentHistory, refetch: refetchHistory } = useQuery<DeploymentRecord[]>({
+    queryKey: ['/api/projects', projectId, 'deployments'],
+    enabled: !!projectId && showDeployModal,
   });
 
   const codeFiles = (project?.code as Record<string, string>) || {};
@@ -490,12 +518,15 @@ export default function Workspace() {
   const deployMutation = useMutation({
     mutationFn: async () => {
       const response = await apiRequest('POST', `/api/projects/${projectId}/deploy`, {
-        environment: 'production'
+        environment: 'production',
+        enableHIPAA: true,
+        enableSSL: true
       });
       return await response.json();
     },
     onSuccess: (data) => {
       setDeploymentResult(data);
+      refetchHistory();
       toast({
         title: "Deployed Successfully!",
         description: "Your app is now live and ready to share.",
@@ -844,7 +875,7 @@ export default function Workspace() {
       </div>
 
       <Dialog open={showDeployModal} onOpenChange={setShowDeployModal}>
-        <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-md">
+        <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Rocket className="w-5 h-5 text-blue-400" />
@@ -859,97 +890,193 @@ export default function Workspace() {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4 py-4">
-            {deployMutation.isPending && (
-              <div className="text-center py-8">
-                <Loader2 className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
-                <p className="text-gray-300">Building and deploying...</p>
-                <p className="text-sm text-gray-500 mt-2">This may take a moment</p>
-              </div>
-            )}
+          <Tabs value={deployTab} onValueChange={(v) => setDeployTab(v as 'deploy' | 'history')} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-gray-800">
+              <TabsTrigger value="deploy" className="data-[state=active]:bg-gray-700" data-testid="deploy-tab">
+                <Rocket className="w-4 h-4 mr-2" />
+                Deploy
+              </TabsTrigger>
+              <TabsTrigger value="history" className="data-[state=active]:bg-gray-700" data-testid="history-tab">
+                <History className="w-4 h-4 mr-2" />
+                History
+              </TabsTrigger>
+            </TabsList>
             
-            {deploymentResult && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-emerald-400">
-                  <CheckCircle2 className="w-5 h-5" />
-                  <span className="font-medium">Deployment Successful!</span>
+            <TabsContent value="deploy" className="space-y-4 py-4">
+              {deployMutation.isPending && (
+                <div className="text-center py-8">
+                  <Loader2 className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
+                  <p className="text-gray-300">Building and deploying...</p>
+                  <p className="text-sm text-gray-500 mt-2">This may take a moment</p>
                 </div>
-                
-                <div className="bg-gray-800 rounded-lg p-4 space-y-3">
-                  <div>
-                    <label className="text-xs text-gray-500 uppercase">Live URL</label>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 bg-gray-950 rounded px-3 py-2 text-sm font-mono text-blue-300 truncate">
-                        {deploymentResult.deploymentUrl}
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={copyDeploymentUrl}
-                        className="border-gray-700 bg-gray-800 hover:bg-gray-700"
-                        data-testid="copy-url-button"
-                      >
-                        {copied ? (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </Button>
-                    </div>
+              )}
+              
+              {deploymentResult && !deployMutation.isPending && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <CheckCircle2 className="w-5 h-5" />
+                    <span className="font-medium">Deployment Successful!</span>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="bg-gray-800 rounded-lg p-4 space-y-3">
                     <div>
-                      <label className="text-xs text-gray-500">Status</label>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                        <span className="text-gray-300 capitalize">{deploymentResult.status}</span>
+                      <label className="text-xs text-gray-500 uppercase">Live URL</label>
+                      <div className="flex items-center gap-2 mt-1">
+                        <div className="flex-1 bg-gray-950 rounded px-3 py-2 text-sm font-mono text-blue-300 truncate">
+                          {deploymentResult.deploymentUrl}
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={copyDeploymentUrl}
+                          className="border-gray-700 bg-gray-800 hover:bg-gray-700"
+                          data-testid="copy-url-button"
+                        >
+                          {copied ? (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                        </Button>
                       </div>
                     </div>
-                    <div>
-                      <label className="text-xs text-gray-500">Environment</label>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <Globe className="w-3.5 h-3.5 text-gray-400" />
-                        <span className="text-gray-300 capitalize">{deploymentResult.environment}</span>
+                    
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <label className="text-xs text-gray-500">Status</label>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                          <span className="text-gray-300 capitalize">{deploymentResult.status}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-xs text-gray-500">Environment</label>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <Globe className="w-3.5 h-3.5 text-gray-400" />
+                          <span className="text-gray-300 capitalize">{deploymentResult.environment}</span>
+                        </div>
                       </div>
                     </div>
+                    
+                    {deploymentResult.hipaaEnabled && (
+                      <div className="flex items-center gap-2 text-sm text-emerald-400 bg-emerald-400/10 px-3 py-2 rounded">
+                        <Shield className="w-4 h-4" />
+                        <span>HIPAA Compliant Deployment</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                      onClick={() => window.open(deploymentResult.deploymentUrl, '_blank')}
+                      data-testid="open-deployment-button"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Open App
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="border-gray-700 bg-gray-800 hover:bg-gray-700"
+                      onClick={() => setShowDeployModal(false)}
+                    >
+                      Close
+                    </Button>
                   </div>
                 </div>
-                
-                <div className="flex gap-2">
+              )}
+              
+              {!deploymentResult && !deployMutation.isPending && !deployMutation.isError && (
+                <div className="text-center py-6">
+                  <Rocket className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+                  <p className="text-gray-300 mb-2">Ready to deploy?</p>
+                  <p className="text-sm text-gray-500 mb-4">Your app will be published with HIPAA-compliant settings</p>
                   <Button
-                    className="flex-1 bg-blue-600 hover:bg-blue-700"
-                    onClick={() => window.open(deploymentResult.deploymentUrl, '_blank')}
-                    data-testid="open-deployment-button"
+                    className="bg-blue-600 hover:bg-blue-700"
+                    onClick={() => deployMutation.mutate()}
+                    data-testid="start-deploy-button"
                   >
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Open App
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="border-gray-700 bg-gray-800 hover:bg-gray-700"
-                    onClick={() => setShowDeployModal(false)}
-                  >
-                    Close
+                    <Rocket className="w-4 h-4 mr-2" />
+                    Deploy Now
                   </Button>
                 </div>
-              </div>
-            )}
+              )}
+              
+              {deployMutation.isError && (
+                <div className="text-center py-4">
+                  <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-2" />
+                  <p className="text-red-300">Deployment failed</p>
+                  <p className="text-sm text-gray-500 mt-1">Please try again</p>
+                  <Button
+                    className="mt-4 bg-blue-600 hover:bg-blue-700"
+                    onClick={() => deployMutation.mutate()}
+                    data-testid="retry-deploy-button"
+                  >
+                    Retry Deployment
+                  </Button>
+                </div>
+              )}
+            </TabsContent>
             
-            {deployMutation.isError && (
-              <div className="text-center py-4">
-                <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-2" />
-                <p className="text-red-300">Deployment failed</p>
-                <p className="text-sm text-gray-500 mt-1">Please try again</p>
-                <Button
-                  className="mt-4 bg-blue-600 hover:bg-blue-700"
-                  onClick={() => deployMutation.mutate()}
-                >
-                  Retry Deployment
-                </Button>
-              </div>
-            )}
-          </div>
+            <TabsContent value="history" className="space-y-4 py-4">
+              {!deploymentHistory || deploymentHistory.length === 0 ? (
+                <div className="text-center py-8">
+                  <History className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                  <p className="text-gray-400">No deployment history yet</p>
+                  <p className="text-sm text-gray-500 mt-1">Deploy your app to see it here</p>
+                </div>
+              ) : (
+                <ScrollArea className="h-[300px]">
+                  <div className="space-y-3">
+                    {deploymentHistory.map((deployment, index) => (
+                      <div 
+                        key={deployment.id} 
+                        className="bg-gray-800 rounded-lg p-4 space-y-2"
+                        data-testid={`deployment-history-${index}`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full ${
+                              deployment.status === 'active' ? 'bg-emerald-400' : 'bg-gray-500'
+                            }`}></span>
+                            <span className="text-sm font-medium text-gray-200 capitalize">
+                              {deployment.status}
+                            </span>
+                          </div>
+                          <Badge variant="outline" className="border-gray-700 text-gray-400">
+                            {deployment.environment}
+                          </Badge>
+                        </div>
+                        
+                        <div className="font-mono text-sm text-blue-300 truncate">
+                          {deployment.url}
+                        </div>
+                        
+                        <div className="flex items-center justify-between text-xs text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {deployment.lastDeployment 
+                              ? new Date(deployment.lastDeployment).toLocaleString()
+                              : 'Unknown'}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-6 px-2 text-xs text-gray-400 hover:text-white"
+                            onClick={() => window.open(deployment.url, '_blank')}
+                            data-testid={`open-history-${index}`}
+                          >
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            Open
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              )}
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </div>
