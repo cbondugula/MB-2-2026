@@ -170,60 +170,141 @@ function FileTreeNode({
   );
 }
 
+interface AIMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  suggestions?: string[];
+  codeChanges?: Array<{ filePath: string; content: string }>;
+  applied?: boolean;
+}
+
 function AIAssistant({ 
   projectId, 
-  onCodeGenerated 
+  activeFile,
+  onCodeGenerated,
+  onSave
 }: { 
   projectId: string;
+  activeFile?: string;
   onCodeGenerated: (files: Record<string, string>) => void;
+  onSave: () => void;
 }) {
   const [prompt, setPrompt] = useState("");
-  const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
+  const [messages, setMessages] = useState<AIMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [pendingPrompt, setPendingPrompt] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const handleSendMessage = async () => {
-    if (!prompt.trim()) return;
-    
-    const userMessage = prompt;
-    setPrompt("");
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+  const sendToAI = async (messageToSend: string, shouldApply: boolean = false) => {
+    console.log('[AI] sendToAI called with:', messageToSend, 'apply:', shouldApply);
     setIsLoading(true);
     
     try {
-      const response = await apiRequest('POST', '/api/ai/code-assist', {
-        projectId,
-        prompt: userMessage,
-        type: 'code_generation'
+      const response = await apiRequest('POST', `/api/projects/${projectId}/ai-assist`, {
+        prompt: messageToSend,
+        currentFile: activeFile,
+        action: shouldApply ? 'apply' : 'preview'
       });
       
       const data = await response.json();
+      console.log('[AI] Got response:', data);
       
-      if (data.code) {
-        onCodeGenerated(data.code);
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: data.message || "I've updated the code based on your request. Check the editor to see the changes."
-        }]);
+      if (data.success) {
+        // If AI generated code changes, update the editor
+        if (data.codeChanges && data.codeChanges.length > 0) {
+          const newFiles: Record<string, string> = {};
+          data.codeChanges.forEach((change: { filePath: string; content: string }) => {
+            newFiles[change.filePath] = change.content;
+          });
+          onCodeGenerated(newFiles);
+          
+          if (data.applied) {
+            toast({
+              title: "Changes Applied & Saved",
+              description: `Applied and saved ${data.codeChanges.length} file(s) to your project.`,
+            });
+            queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId] });
+          } else {
+            toast({
+              title: "Preview Ready",
+              description: `Previewing ${data.codeChanges.length} file change(s). Click 'Apply' to save.`,
+            });
+          }
+        }
+        
+        if (shouldApply) {
+          // Update the last message to mark as applied
+          setMessages(prev => prev.map((msg, idx) => 
+            idx === prev.length - 1 && msg.role === 'assistant'
+              ? { ...msg, applied: true }
+              : msg
+          ));
+        } else {
+          // Add assistant response
+          setMessages(prev => {
+            console.log('[AI] Adding assistant message, prev length:', prev.length);
+            return [...prev, { 
+              role: 'assistant' as const, 
+              content: data.response || "I've analyzed your request.",
+              suggestions: data.suggestions,
+              codeChanges: data.codeChanges,
+              applied: data.applied
+            }];
+          });
+        }
       } else {
         setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: data.message || "I've processed your request."
+          role: 'assistant' as const, 
+          content: data.message || data.response || "I've processed your request."
         }]);
       }
     } catch (error: any) {
+      console.error('[AI] Error:', error);
       toast({
         title: "AI Error",
         description: error.message || "Failed to get AI response",
         variant: "destructive"
       });
       setMessages(prev => [...prev, { 
-        role: 'assistant', 
+        role: 'assistant' as const, 
         content: "Sorry, I encountered an error. Please try again."
       }]);
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  const handleSendMessage = () => {
+    const currentPrompt = prompt.trim();
+    if (!currentPrompt) {
+      console.log('[AI] Empty prompt, returning');
+      return;
+    }
+    
+    console.log('[AI] Sending message:', currentPrompt);
+    
+    // Clear input and add user message FIRST
+    setPrompt("");
+    setMessages(prev => {
+      console.log('[AI] Adding user message, prev length:', prev.length);
+      return [...prev, { role: 'user' as const, content: currentPrompt }];
+    });
+    setPendingPrompt(currentPrompt);
+    
+    // Send to AI after state update
+    sendToAI(currentPrompt, false);
+  };
+  
+  const handleApplyChanges = () => {
+    if (!pendingPrompt) {
+      toast({
+        title: "Cannot Apply",
+        description: "No pending changes to apply.",
+        variant: "destructive"
+      });
+      return;
+    }
+    sendToAI(pendingPrompt, true);
   };
 
   return (
@@ -252,6 +333,45 @@ function AIAssistant({
               }`}
             >
               {msg.content}
+              {msg.codeChanges && msg.codeChanges.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-gray-700">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-xs text-emerald-400">
+                      {msg.applied ? '✓ Applied' : `${msg.codeChanges.length} file(s) ready`}
+                    </p>
+                    {!msg.applied && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={handleApplyChanges}
+                        className="h-6 text-xs bg-emerald-700 hover:bg-emerald-600 text-white"
+                        disabled={isLoading}
+                      >
+                        Apply & Save
+                      </Button>
+                    )}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {msg.codeChanges.map(c => c.filePath).join(', ')}
+                  </div>
+                </div>
+              )}
+              {msg.suggestions && msg.suggestions.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-gray-700">
+                  <p className="text-xs text-gray-500 mb-1">Suggestions:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {msg.suggestions.map((s, j) => (
+                      <button
+                        key={j}
+                        onClick={() => setPrompt(s)}
+                        className="text-xs px-2 py-0.5 bg-gray-700 hover:bg-gray-600 rounded text-gray-300"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ))}
           {isLoading && (
@@ -574,67 +694,70 @@ export default function Workspace() {
           </div>
         )}
 
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {Object.keys(editedFiles).length > 0 ? (
-            <SandpackProvider
-              template="react-ts"
-              files={sandpackFiles}
-              theme="dark"
-              options={{
-                activeFile: `/${activeFile}`,
-                visibleFiles: Object.keys(sandpackFiles),
-                recompileMode: "delayed",
-                recompileDelay: 500,
-              }}
-            >
-              <SandpackLayout style={{ height: '100%', border: 'none' }}>
-                <div className="flex-1 flex">
-                  <div className={`${showAI ? 'w-1/2' : 'w-2/3'} border-r border-gray-800`}>
-                    <SandpackCodeEditor
-                      showTabs
-                      showLineNumbers
-                      showInlineErrors
-                      wrapContent
-                      closableTabs
-                      style={{ height: showConsole ? 'calc(100% - 200px)' : '100%' }}
-                    />
-                    {showConsole && (
-                      <div className="h-[200px] border-t border-gray-800">
-                        <SandpackConsole />
-                      </div>
-                    )}
-                  </div>
-                  <div className={`${showAI ? 'w-1/2' : 'w-1/3'} flex`}>
-                    <div className={showAI ? 'w-1/2' : 'w-full'}>
+        <div className="flex-1 flex overflow-hidden">
+          <div className={`${showAI ? 'w-2/3' : 'w-full'} flex flex-col overflow-hidden`}>
+            {Object.keys(editedFiles).length > 0 ? (
+              <SandpackProvider
+                template="react-ts"
+                files={sandpackFiles}
+                theme="dark"
+                options={{
+                  activeFile: `/${activeFile}`,
+                  visibleFiles: Object.keys(sandpackFiles),
+                  recompileMode: "delayed",
+                  recompileDelay: 500,
+                }}
+              >
+                <SandpackLayout style={{ height: '100%', border: 'none' }}>
+                  <div className="flex-1 flex">
+                    <div className="w-1/2 border-r border-gray-800">
+                      <SandpackCodeEditor
+                        showTabs
+                        showLineNumbers
+                        showInlineErrors
+                        wrapContent
+                        closableTabs
+                        style={{ height: showConsole ? 'calc(100% - 200px)' : '100%' }}
+                      />
+                      {showConsole && (
+                        <div className="h-[200px] border-t border-gray-800">
+                          <SandpackConsole />
+                        </div>
+                      )}
+                    </div>
+                    <div className="w-1/2">
                       <SandpackPreview
                         showNavigator
                         showRefreshButton
                         style={{ height: '100%' }}
                       />
                     </div>
-                    {showAI && (
-                      <div className="w-1/2">
-                        <AIAssistant
-                          projectId={projectId || ''}
-                          onCodeGenerated={handleAICodeGenerated}
-                        />
-                      </div>
-                    )}
+                  </div>
+                </SandpackLayout>
+              </SandpackProvider>
+            ) : (
+              <div className="flex-1 flex items-center justify-center bg-gray-900">
+                <div className="text-center space-y-4">
+                  <FileCode className="w-16 h-16 text-gray-600 mx-auto" />
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-300">No files yet</h3>
+                    <p className="text-gray-500 text-sm">
+                      Click the + button to add your first file
+                    </p>
                   </div>
                 </div>
-              </SandpackLayout>
-            </SandpackProvider>
-          ) : (
-            <div className="flex-1 flex items-center justify-center bg-gray-900">
-              <div className="text-center space-y-4">
-                <FileCode className="w-16 h-16 text-gray-600 mx-auto" />
-                <div>
-                  <h3 className="text-lg font-medium text-gray-300">No files yet</h3>
-                  <p className="text-gray-500 text-sm">
-                    Click the + button to add your first file
-                  </p>
-                </div>
               </div>
+            )}
+          </div>
+          
+          {showAI && (
+            <div className="w-1/3 border-l border-gray-800">
+              <AIAssistant
+                projectId={projectId || ''}
+                activeFile={activeFile}
+                onCodeGenerated={handleAICodeGenerated}
+                onSave={() => saveProjectMutation.mutate()}
+              />
             </div>
           )}
         </div>

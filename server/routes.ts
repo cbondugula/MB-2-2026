@@ -957,6 +957,151 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================================================
+  // AI CODE ASSIST - AI-Powered Code Generation for Projects
+  // ============================================================================
+  
+  // Validation schema for AI assist request
+  const aiAssistSchema = z.object({
+    prompt: z.string().min(1, "Prompt is required").max(5000, "Prompt too long"),
+    currentFile: z.string().optional(),
+    action: z.enum(['preview', 'apply']).default('preview')
+  });
+  
+  app.post('/api/projects/:id/ai-assist', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const userId = req.user.claims.sub;
+      
+      // Validate request body
+      const parseResult = aiAssistSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid request", 
+          errors: parseResult.error.flatten().fieldErrors 
+        });
+      }
+      const { prompt, currentFile, action } = parseResult.data;
+      
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      if (project.userId !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Get current project files for context
+      const projectFiles = (project.code as Record<string, string>) || {};
+      const currentFileContent = currentFile ? projectFiles[currentFile] : null;
+      
+      // Build context for the AI
+      const fileList = Object.keys(projectFiles).join(', ');
+      const systemPrompt = `You are an expert healthcare software developer working on a HIPAA-compliant application.
+Current project: "${project.name}"
+Available files: ${fileList}
+${currentFile ? `Currently editing: ${currentFile}` : ''}
+${currentFileContent ? `Current file content:\n${currentFileContent}` : ''}
+
+Your task is to help the user with their coding request. Follow these rules:
+1. Always maintain HIPAA compliance for any healthcare data
+2. Use TypeScript/React best practices
+3. Follow existing code patterns in the project
+4. Provide complete, working code snippets
+5. Explain your changes briefly
+
+Respond with a JSON object:
+{
+  "response": "Your explanation to the user",
+  "codeChanges": [
+    {
+      "filePath": "path/to/file.tsx",
+      "content": "complete file content",
+      "action": "update" | "create"
+    }
+  ],
+  "suggestions": ["suggestion1", "suggestion2"]
+}`;
+
+      // Use OpenAI to generate code assistance
+      const OpenAI = (await import('openai')).default;
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: prompt }
+        ],
+        response_format: { type: "json_object" },
+        max_tokens: 4000
+      });
+      
+      const rawContent = completion.choices[0]?.message?.content;
+      if (!rawContent) {
+        return res.status(500).json({ 
+          success: false, 
+          message: "AI did not return a response. Please try again." 
+        });
+      }
+      
+      let aiResponse: { response?: string; codeChanges?: Array<{ filePath: string; content: string; action?: string }>; suggestions?: string[] };
+      try {
+        aiResponse = JSON.parse(rawContent);
+      } catch (parseError) {
+        return res.status(500).json({ 
+          success: false, 
+          message: "AI response was malformed. Please try again." 
+        });
+      }
+      
+      // Validate codeChanges if present
+      const validCodeChanges = aiResponse.codeChanges?.filter(change => {
+        // Validate file path: must be a safe path, no path traversal
+        if (!change.filePath || typeof change.filePath !== 'string') return false;
+        if (change.filePath.includes('..') || change.filePath.startsWith('/')) return false;
+        if (typeof change.content !== 'string') return false;
+        return true;
+      }) || [];
+      
+      // If action is 'apply', automatically apply the code changes
+      if (action === 'apply' && validCodeChanges.length > 0) {
+        let updatedCode = { ...projectFiles };
+        for (const change of validCodeChanges) {
+          updatedCode[change.filePath] = change.content;
+        }
+        await storage.updateProject(projectId, { code: updatedCode });
+        
+        // Add activity log
+        await storage.addProjectActivity({
+          projectId,
+          userId,
+          action: "ai_code_applied",
+          description: `AI applied changes: ${prompt.substring(0, 50)}...`,
+          metadata: { prompt, filesChanged: validCodeChanges.map(c => c.filePath) },
+        });
+      }
+      
+      res.json({
+        success: true,
+        response: aiResponse.response || "I've processed your request.",
+        codeChanges: validCodeChanges,
+        suggestions: aiResponse.suggestions || [],
+        applied: action === 'apply' && validCodeChanges.length > 0
+      });
+    } catch (error: any) {
+      console.error("Error with AI code assist:", error);
+      res.status(500).json({ 
+        message: "Failed to get AI assistance", 
+        error: error.message 
+      });
+    }
+  });
+
   // Create a project from a template
   app.post('/api/projects/from-template/:templateId', isAuthenticated, async (req: any, res) => {
     try {
