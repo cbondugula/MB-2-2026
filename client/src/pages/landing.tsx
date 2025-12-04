@@ -4,11 +4,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Shield, Code, Zap, Sparkles, Cpu, Terminal, Activity, Brain, Network, TrendingUp, CheckCircle, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { ChatToCode } from "@/components/ChatToCode";
+
+type ExamplePrompt = {
+  id: number;
+  prompt: string;
+  category: string;
+  userMode: string;
+  icon: string | null;
+  description: string | null;
+  isActive: boolean;
+  sortOrder: number;
+};
 
 // Load testing agent in development
 if (import.meta.env.DEV) {
@@ -44,6 +56,14 @@ export default function Landing() {
     retry: false,
   });
 
+  const { data: fetchedPrompts = [], isLoading: promptsLoading } = useQuery<ExamplePrompt[]>({
+    queryKey: ['/api/example-prompts', userMode],
+  });
+
+  const examplePrompts = fetchedPrompts
+    .filter(p => p.userMode === userMode)
+    .map(p => p.prompt);
+
   // Debug logging
   useEffect(() => {
     if (showDemo) {
@@ -53,26 +73,6 @@ export default function Landing() {
       console.log('Models:', deployedModels, 'Loading:', modelsLoading, 'Error:', modelsError);
     }
   }, [showDemo, mlMetrics, trainingJobs, deployedModels, mlLoading, trainingLoading, modelsLoading]);
-
-  const healthcarePrompts = [
-    "I need an app to schedule patient appointments and send reminders",
-    "Create a simple form for patients to update their medical history",
-    "Build a medication tracker that alerts patients when to take pills",
-    "I want to track patient vitals and create progress reports",
-    "Create a secure messaging app for my clinic staff",
-    "Build a tool to manage patient referrals between doctors"
-  ];
-
-  const developerPrompts = [
-    "Create a HIPAA-compliant patient registration form with real-time validation",
-    "Build a telemedicine platform with video calling and secure messaging",
-    "Generate an EHR integration dashboard with FHIR R4 support",
-    "Design a clinical decision support system with AI recommendations",
-    "Create a medical device data collection app with IoT sensors",
-    "Build a pharmaceutical drug tracking system with blockchain"
-  ];
-
-  const examplePrompts = userMode === 'healthcare' ? healthcarePrompts : developerPrompts;
 
   const handleGenerateApp = () => {
     if (!prompt.trim()) return;
@@ -242,18 +242,27 @@ export default function Landing() {
               {userMode === 'healthcare' ? 'Common requests from healthcare professionals:' : 'Try these technical examples:'}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl mx-auto">
-              {examplePrompts.map((example, index) => (
-                <button
-                  key={index}
-                  onClick={() => setPrompt(example)}
-                  className="text-left p-5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl transition-all hover:border-green-500 text-sm text-gray-300 hover:text-white group"
-                >
-                  <div className="flex items-start space-x-3">
-                    <Terminal className="w-4 h-4 mt-1 text-green-500 flex-shrink-0 group-hover:text-green-400" />
-                    <span className="leading-relaxed">{example}</span>
-                  </div>
-                </button>
-              ))}
+              {promptsLoading ? (
+                <>
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <Skeleton key={i} className="h-20 bg-gray-800" />
+                  ))}
+                </>
+              ) : (
+                examplePrompts.map((example, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setPrompt(example)}
+                    className="text-left p-5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl transition-all hover:border-green-500 text-sm text-gray-300 hover:text-white group"
+                    data-testid={`example-prompt-${index}`}
+                  >
+                    <div className="flex items-start space-x-3">
+                      <Terminal className="w-4 h-4 mt-1 text-green-500 flex-shrink-0 group-hover:text-green-400" />
+                      <span className="leading-relaxed">{example}</span>
+                    </div>
+                  </button>
+                ))
+              )}
             </div>
           </div>
 

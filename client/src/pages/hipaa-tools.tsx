@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
 import { 
   Shield, 
   ScanLine, 
@@ -25,12 +27,53 @@ import {
   Settings
 } from "lucide-react";
 
+type ComplianceCheck = {
+  id: number;
+  name: string;
+  category: string;
+  status: string;
+  icon: string;
+  description: string | null;
+  lastChecked: string | null;
+  isActive: boolean;
+  sortOrder: number;
+};
+
+type AuditLogEntry = {
+  id: number;
+  action: string;
+  actor: string;
+  timestamp: string;
+  details: any;
+  resourceType: string | null;
+  resourceId: string | null;
+  ipAddress: string | null;
+  userAgent: string | null;
+};
+
+const iconMap: Record<string, any> = {
+  Lock, Key, Activity, Database, Users, Clock, Eye, Shield
+};
+
 export default function HIPAATools() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading } = useAuth();
   const [scanProgress, setScanProgress] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
-  const [complianceScore] = useState(92);
+
+  const { data: complianceChecks = [], isLoading: checksLoading } = useQuery<ComplianceCheck[]>({
+    queryKey: ['/api/compliance-checks'],
+  });
+
+  const { data: auditLogs = [], isLoading: logsLoading } = useQuery<AuditLogEntry[]>({
+    queryKey: ['/api/audit-logs'],
+  });
+
+  const passedChecks = complianceChecks.filter(c => c.status === 'passed').length;
+  const warningChecks = complianceChecks.filter(c => c.status === 'warning').length;
+  const complianceScore = complianceChecks.length > 0 
+    ? Math.round((passedChecks / complianceChecks.length) * 100) 
+    : 0;
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -65,25 +108,6 @@ export default function HIPAATools() {
       });
     }, 500);
   };
-
-  const complianceItems = [
-    { name: "Data Encryption", status: "passed", icon: Lock },
-    { name: "Access Control", status: "passed", icon: Key },
-    { name: "Audit Logging", status: "passed", icon: Activity },
-    { name: "Data Backup", status: "passed", icon: Database },
-    { name: "User Authentication", status: "passed", icon: Users },
-    { name: "Session Management", status: "warning", icon: Clock },
-    { name: "Data Masking", status: "passed", icon: Eye },
-    { name: "Network Security", status: "passed", icon: Shield },
-  ];
-
-  const auditLogs = [
-    { id: 1, action: "Data Access", user: "Dr. Smith", timestamp: "2025-01-18 10:30 AM", resource: "Patient Record #12345" },
-    { id: 2, action: "Data Modification", user: "Nurse Johnson", timestamp: "2025-01-18 09:15 AM", resource: "Appointment Schedule" },
-    { id: 3, action: "Login Attempt", user: "Admin User", timestamp: "2025-01-18 08:45 AM", resource: "System Dashboard" },
-    { id: 4, action: "Data Export", user: "Dr. Wilson", timestamp: "2025-01-18 08:30 AM", resource: "Lab Results" },
-    { id: 5, action: "Configuration Change", user: "IT Admin", timestamp: "2025-01-18 07:20 AM", resource: "Security Settings" },
-  ];
 
   if (!isAuthenticated && !isLoading) {
     return null;
@@ -135,13 +159,26 @@ export default function HIPAATools() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-400 mb-2">7/8</div>
-              <p className="text-sm text-gray-400 mb-2">Checks passed</p>
-              <Badge className="bg-yellow-900/50 text-yellow-300 border-yellow-700">
-                1 Warning
-              </Badge>
-            </div>
+            {checksLoading ? (
+              <div className="text-center space-y-2">
+                <Skeleton className="h-10 w-16 mx-auto bg-gray-800" />
+                <Skeleton className="h-4 w-24 mx-auto bg-gray-800" />
+              </div>
+            ) : (
+              <div className="text-center">
+                <div className="text-4xl font-bold text-emerald-400 mb-2">{passedChecks}/{complianceChecks.length}</div>
+                <p className="text-sm text-gray-400 mb-2">Checks passed</p>
+                {warningChecks > 0 ? (
+                  <Badge className="bg-yellow-900/50 text-yellow-300 border-yellow-700">
+                    {warningChecks} Warning{warningChecks > 1 ? 's' : ''}
+                  </Badge>
+                ) : (
+                  <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                    All Passed
+                  </Badge>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -153,13 +190,20 @@ export default function HIPAATools() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-400 mb-2">247</div>
-              <p className="text-sm text-gray-400 mb-2">Events logged today</p>
-              <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
-                All Secure
-              </Badge>
-            </div>
+            {logsLoading ? (
+              <div className="text-center space-y-2">
+                <Skeleton className="h-10 w-16 mx-auto bg-gray-800" />
+                <Skeleton className="h-4 w-24 mx-auto bg-gray-800" />
+              </div>
+            ) : (
+              <div className="text-center">
+                <div className="text-4xl font-bold text-emerald-400 mb-2">{auditLogs.length}</div>
+                <p className="text-sm text-gray-400 mb-2">Events logged</p>
+                <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                  All Secure
+                </Badge>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -266,32 +310,43 @@ export default function HIPAATools() {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {complianceItems.map((item) => (
-                  <div key={item.name} className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      item.status === 'passed' ? 'bg-emerald-900/50' : 'bg-yellow-900/50'
-                    }`}>
-                      <item.icon className={`w-4 h-4 ${
-                        item.status === 'passed' ? 'text-emerald-400' : 'text-yellow-400'
-                      }`} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-white">{item.name}</span>
-                        {item.status === 'passed' ? (
-                          <CheckCircle className="w-4 h-4 text-emerald-400" />
-                        ) : (
-                          <AlertTriangle className="w-4 h-4 text-yellow-400" />
-                        )}
+              {checksLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <Skeleton key={i} className="h-16 bg-gray-800" />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {complianceChecks.map((item) => {
+                    const IconComponent = iconMap[item.icon] || Shield;
+                    return (
+                      <div key={item.id} className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg" data-testid={`compliance-item-${item.id}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                          item.status === 'passed' ? 'bg-emerald-900/50' : 'bg-yellow-900/50'
+                        }`}>
+                          <IconComponent className={`w-4 h-4 ${
+                            item.status === 'passed' ? 'text-emerald-400' : 'text-yellow-400'
+                          }`} />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-white">{item.name}</span>
+                            {item.status === 'passed' ? (
+                              <CheckCircle className="w-4 h-4 text-emerald-400" />
+                            ) : (
+                              <AlertTriangle className="w-4 h-4 text-yellow-400" />
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-400">
+                            {item.description || (item.status === 'passed' ? 'Compliant' : 'Needs attention')}
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-400">
-                        {item.status === 'passed' ? 'Compliant' : 'Needs attention'}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -308,24 +363,37 @@ export default function HIPAATools() {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {auditLogs.map((log) => (
-                  <div key={log.id} className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg">
-                    <div className="w-10 h-10 bg-emerald-900/50 rounded-full flex items-center justify-center">
-                      <Activity className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-white">{log.action}</span>
-                        <span className="text-sm text-gray-500">{log.timestamp}</span>
+              {logsLoading ? (
+                <div className="space-y-4">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Skeleton key={i} className="h-20 bg-gray-800" />
+                  ))}
+                </div>
+              ) : auditLogs.length === 0 ? (
+                <div className="text-center py-8 text-gray-400">
+                  <Activity className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>No audit events recorded yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {auditLogs.map((log) => (
+                    <div key={log.id} className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg" data-testid={`audit-log-${log.id}`}>
+                      <div className="w-10 h-10 bg-emerald-900/50 rounded-full flex items-center justify-center">
+                        <Activity className="w-5 h-5 text-emerald-400" />
                       </div>
-                      <p className="text-sm text-gray-400">
-                        User: {log.user} • Resource: {log.resource}
-                      </p>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-white">{log.action}</span>
+                          <span className="text-sm text-gray-500">{new Date(log.timestamp).toLocaleString()}</span>
+                        </div>
+                        <p className="text-sm text-gray-400">
+                          User: {log.actor} {log.resourceType && log.resourceId && `• ${log.resourceType}: ${log.resourceId}`}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
               <div className="mt-6 flex justify-center">
                 <Button variant="outline" className="bg-gray-900 border-gray-700 text-gray-200 hover:bg-gray-800">
                   <Eye className="w-4 h-4 mr-2" />
