@@ -43,7 +43,15 @@ import {
   CheckCircle2,
   Globe,
   Clock,
-  History
+  History,
+  Users,
+  GitBranch,
+  RotateCcw,
+  ListChecks,
+  PlayCircle,
+  XCircle,
+  User,
+  Link2
 } from "lucide-react";
 import {
   Dialog,
@@ -461,12 +469,19 @@ export default function Workspace() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showAI, setShowAI] = useState(true);
   const [showConsole, setShowConsole] = useState(false);
+  const [showTerminal, setShowTerminal] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showCollabPanel, setShowCollabPanel] = useState(false);
   const [newFileName, setNewFileName] = useState("");
   const [showNewFileInput, setShowNewFileInput] = useState(false);
   const [showDeployModal, setShowDeployModal] = useState(false);
   const [deploymentResult, setDeploymentResult] = useState<DeploymentResult | null>(null);
   const [copied, setCopied] = useState(false);
   const [deployTab, setDeployTab] = useState<'deploy' | 'history'>('deploy');
+  const [terminalInput, setTerminalInput] = useState("");
+  const [terminalOutput, setTerminalOutput] = useState<Array<{command: string; output: string; timestamp: string}>>([]);
+  const [aiPlanMode, setAiPlanMode] = useState(false);
+  const [currentPlan, setCurrentPlan] = useState<any>(null);
 
   const { data: project, isLoading, error } = useQuery<Project>({
     queryKey: ['/api/projects', projectId],
@@ -476,6 +491,25 @@ export default function Workspace() {
   const { data: deploymentHistory, refetch: refetchHistory } = useQuery<DeploymentRecord[]>({
     queryKey: ['/api/projects', projectId, 'deployments'],
     enabled: !!projectId && showDeployModal,
+  });
+
+  // Version history query
+  const { data: versionHistory, refetch: refetchVersions } = useQuery<{versions: any[]}>({
+    queryKey: ['/api/projects', projectId, 'versions'],
+    enabled: !!projectId && showVersionHistory,
+  });
+
+  // Collaborators query
+  const { data: collaborators } = useQuery<{collaborators: any[], count: number}>({
+    queryKey: ['/api/projects', projectId, 'collaborators'],
+    enabled: !!projectId,
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
+
+  // AI Plans query
+  const { data: aiPlans, refetch: refetchPlans } = useQuery<{plans: any[]}>({
+    queryKey: ['/api/projects', projectId, 'ai-plans'],
+    enabled: !!projectId && aiPlanMode,
   });
 
   const codeFiles = (project?.code as Record<string, string>) || {};
@@ -541,12 +575,127 @@ export default function Workspace() {
     }
   });
 
+  // Terminal command mutation
+  const terminalMutation = useMutation({
+    mutationFn: async (command: string) => {
+      const response = await apiRequest('POST', `/api/projects/${projectId}/terminal`, { command });
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      setTerminalOutput(prev => [...prev, {
+        command: terminalInput,
+        output: data.output,
+        timestamp: data.timestamp
+      }]);
+      setTerminalInput("");
+    },
+    onError: (error: any) => {
+      setTerminalOutput(prev => [...prev, {
+        command: terminalInput,
+        output: `Error: ${error.message}`,
+        timestamp: new Date().toISOString()
+      }]);
+    }
+  });
+
+  // Version restore mutation
+  const restoreVersionMutation = useMutation({
+    mutationFn: async (versionId: number) => {
+      const response = await apiRequest('POST', `/api/projects/${projectId}/versions/${versionId}/restore`);
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId] });
+      refetchVersions();
+      toast({
+        title: "Version Restored",
+        description: `File ${data.restoredFile} has been restored.`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Restore Failed",
+        description: error.message || "Failed to restore version",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // AI Plan mutation
+  const createPlanMutation = useMutation({
+    mutationFn: async (prompt: string) => {
+      const response = await apiRequest('POST', `/api/projects/${projectId}/ai-plan`, { prompt });
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      setCurrentPlan(data.plan);
+      refetchPlans();
+      toast({
+        title: "Plan Created",
+        description: "Review the plan and approve to execute.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Plan Failed",
+        description: error.message || "Failed to create AI plan",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Execute AI Plan mutation
+  const executePlanMutation = useMutation({
+    mutationFn: async (planId: number) => {
+      const response = await apiRequest('POST', `/api/projects/${projectId}/ai-plans/${planId}/execute`);
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/projects', projectId] });
+      setCurrentPlan(null);
+      refetchPlans();
+      toast({
+        title: "Plan Executed",
+        description: data.message,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Execution Failed",
+        description: error.message || "Failed to execute plan",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Generate invite link mutation
+  const inviteMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('POST', `/api/projects/${projectId}/collaboration/invite`);
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      navigator.clipboard.writeText(window.location.origin + data.inviteLink);
+      toast({
+        title: "Invite Link Copied",
+        description: "Share this link with collaborators.",
+      });
+    }
+  });
+
   const handleDeploy = async () => {
     if (hasUnsavedChanges) {
       await saveProjectMutation.mutateAsync();
     }
     setShowDeployModal(true);
     deployMutation.mutate();
+  };
+
+  const handleTerminalSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (terminalInput.trim()) {
+      terminalMutation.mutate(terminalInput.trim());
+    }
   };
 
   const copyDeploymentUrl = () => {
@@ -678,6 +827,30 @@ export default function Workspace() {
         </div>
         
         <div className="flex items-center gap-2">
+          {/* Collaborators indicator */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowCollabPanel(!showCollabPanel)}
+            className={`text-gray-400 ${showCollabPanel ? 'bg-gray-800' : ''}`}
+            title="Collaborators"
+            data-testid="collab-button"
+          >
+            <Users className="w-4 h-4" />
+            {collaborators && collaborators.count > 0 && (
+              <span className="ml-1 text-xs bg-emerald-600 text-white px-1 rounded-full">{collaborators.count}</span>
+            )}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowVersionHistory(!showVersionHistory)}
+            className={`text-gray-400 ${showVersionHistory ? 'bg-gray-800' : ''}`}
+            title="Version History"
+            data-testid="history-button"
+          >
+            <GitBranch className="w-4 h-4" />
+          </Button>
           <Button
             variant="ghost"
             size="sm"
@@ -689,8 +862,10 @@ export default function Workspace() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setShowConsole(!showConsole)}
-            className={`text-gray-400 ${showConsole ? 'bg-gray-800' : ''}`}
+            onClick={() => setShowTerminal(!showTerminal)}
+            className={`text-gray-400 ${showTerminal ? 'bg-gray-800' : ''}`}
+            title="Terminal"
+            data-testid="terminal-button"
           >
             <Terminal className="w-4 h-4" />
           </Button>
@@ -701,6 +876,16 @@ export default function Workspace() {
             className={`text-gray-400 ${showAI ? 'bg-gray-800' : ''}`}
           >
             <Sparkles className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setAiPlanMode(!aiPlanMode)}
+            className={`text-gray-400 ${aiPlanMode ? 'bg-emerald-800 text-emerald-300' : ''}`}
+            title="Plan Mode"
+            data-testid="plan-mode-button"
+          >
+            <ListChecks className="w-4 h-4" />
           </Button>
           <Button
             onClick={() => saveProjectMutation.mutate()}
@@ -871,7 +1056,234 @@ export default function Workspace() {
               />
             </div>
           )}
+          
+          {/* Collaboration Panel */}
+          {showCollabPanel && (
+            <div className="w-64 border-l border-gray-800 bg-gray-900 flex flex-col">
+              <div className="p-3 border-b border-gray-800 flex items-center justify-between">
+                <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                  <Users className="w-4 h-4 text-emerald-400" />
+                  Collaborators
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 text-gray-400"
+                  onClick={() => setShowCollabPanel(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="flex-1 p-3 space-y-3">
+                <Button
+                  size="sm"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700"
+                  onClick={() => inviteMutation.mutate()}
+                  disabled={inviteMutation.isPending}
+                  data-testid="invite-collaborator-button"
+                >
+                  {inviteMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Link2 className="w-4 h-4 mr-2" />
+                  )}
+                  Copy Invite Link
+                </Button>
+                
+                <div className="space-y-2">
+                  <div className="text-xs text-gray-500 uppercase">Active ({collaborators?.count || 0})</div>
+                  {collaborators?.collaborators?.map((user: any, i: number) => (
+                    <div key={user.id || i} className="flex items-center gap-2 p-2 bg-gray-800 rounded">
+                      <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs font-medium">
+                        {user.username?.charAt(0)?.toUpperCase() || 'U'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm text-white truncate">{user.username || 'Anonymous'}</div>
+                        <div className="text-xs text-gray-500">{user.role || 'viewer'}</div>
+                      </div>
+                      <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                    </div>
+                  ))}
+                  {(!collaborators?.collaborators || collaborators.collaborators.length === 0) && (
+                    <div className="text-sm text-gray-500 text-center py-4">
+                      No collaborators yet. Share the invite link to add team members.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Version History Panel */}
+          {showVersionHistory && (
+            <div className="w-72 border-l border-gray-800 bg-gray-900 flex flex-col">
+              <div className="p-3 border-b border-gray-800 flex items-center justify-between">
+                <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                  <GitBranch className="w-4 h-4 text-blue-400" />
+                  Version History
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 text-gray-400"
+                  onClick={() => setShowVersionHistory(false)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <ScrollArea className="flex-1">
+                <div className="p-3 space-y-2">
+                  {versionHistory?.versions?.length === 0 && (
+                    <div className="text-sm text-gray-500 text-center py-8">
+                      <History className="w-12 h-12 text-gray-600 mx-auto mb-2" />
+                      No version history yet. Changes are saved automatically.
+                    </div>
+                  )}
+                  {versionHistory?.versions?.map((version: any) => (
+                    <div key={version.id} className="bg-gray-800 rounded p-3 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-400">
+                          {new Date(version.createdAt).toLocaleString()}
+                        </span>
+                        <Badge variant="outline" className="border-gray-700 text-gray-400 text-xs">
+                          v{version.versionNumber}
+                        </Badge>
+                      </div>
+                      <div className="text-sm text-white truncate">{version.filePath}</div>
+                      {version.changeDescription && (
+                        <div className="text-xs text-gray-500">{version.changeDescription}</div>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="w-full text-xs text-blue-400 hover:text-blue-300"
+                        onClick={() => restoreVersionMutation.mutate(version.id)}
+                        disabled={restoreVersionMutation.isPending}
+                        data-testid={`restore-version-${version.id}`}
+                      >
+                        <RotateCcw className="w-3 h-3 mr-1" />
+                        Restore this version
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
+          )}
         </div>
+        
+        {/* Terminal Panel */}
+        {showTerminal && (
+          <div className="h-48 border-t border-gray-800 bg-gray-950 flex flex-col">
+            <div className="p-2 border-b border-gray-800 flex items-center justify-between bg-gray-900">
+              <h3 className="text-xs font-medium text-white flex items-center gap-2">
+                <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                Terminal
+              </h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 w-5 p-0 text-gray-400"
+                onClick={() => setShowTerminal(false)}
+              >
+                <X className="w-3 h-3" />
+              </Button>
+            </div>
+            <ScrollArea className="flex-1 p-2">
+              <div className="font-mono text-xs space-y-1">
+                {terminalOutput.map((entry, i) => (
+                  <div key={i} className="space-y-0.5">
+                    <div className="text-emerald-400">$ {entry.command}</div>
+                    <pre className="text-gray-400 whitespace-pre-wrap">{entry.output}</pre>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+            <form onSubmit={handleTerminalSubmit} className="p-2 border-t border-gray-800 flex gap-2">
+              <span className="text-emerald-400 font-mono text-sm">$</span>
+              <Input
+                value={terminalInput}
+                onChange={(e) => setTerminalInput(e.target.value)}
+                placeholder="Enter command..."
+                className="flex-1 h-7 text-xs bg-transparent border-none focus-visible:ring-0 text-white font-mono"
+                disabled={terminalMutation.isPending}
+                data-testid="terminal-input"
+              />
+              <Button
+                type="submit"
+                size="sm"
+                className="h-7 px-2"
+                disabled={terminalMutation.isPending}
+              >
+                {terminalMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <PlayCircle className="w-3 h-3" />}
+              </Button>
+            </form>
+          </div>
+        )}
+        
+        {/* AI Plan Mode Panel */}
+        {aiPlanMode && currentPlan && (
+          <div className="fixed bottom-4 right-4 w-96 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-50">
+            <div className="p-3 border-b border-gray-800 flex items-center justify-between">
+              <h3 className="text-sm font-medium text-white flex items-center gap-2">
+                <ListChecks className="w-4 h-4 text-emerald-400" />
+                AI Plan
+              </h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 w-6 p-0 text-gray-400"
+                onClick={() => setCurrentPlan(null)}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div className="text-sm text-white font-medium">{currentPlan.title}</div>
+              <div className="space-y-2">
+                {currentPlan.steps?.map((step: any, i: number) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
+                      step.status === 'completed' ? 'bg-emerald-600 text-white' :
+                      step.status === 'in_progress' ? 'bg-blue-600 text-white' :
+                      'bg-gray-700 text-gray-400'
+                    }`}>
+                      {step.status === 'completed' ? '✓' : i + 1}
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-300">{step.description}</div>
+                      {step.status === 'in_progress' && (
+                        <div className="text-xs text-blue-400 mt-1">In progress...</div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                  onClick={() => executePlanMutation.mutate(currentPlan.id)}
+                  disabled={executePlanMutation.isPending}
+                  data-testid="execute-plan-button"
+                >
+                  {executePlanMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                  )}
+                  Execute Plan
+                </Button>
+                <Button
+                  variant="outline"
+                  className="border-gray-700"
+                  onClick={() => setCurrentPlan(null)}
+                >
+                  <XCircle className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <Dialog open={showDeployModal} onOpenChange={setShowDeployModal}>

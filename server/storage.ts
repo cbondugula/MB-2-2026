@@ -8,6 +8,9 @@ import {
   aiSessions,
   codeAnalysis,
   collaborationSessions,
+  fileVersions,
+  aiPlans,
+  terminalSessions,
   advancedTemplates,
   smartComponents,
   healthcareDomains,
@@ -49,6 +52,12 @@ import {
   type InsertCodeAnalysis,
   type CollaborationSession,
   type InsertCollaborationSession,
+  type FileVersion,
+  type InsertFileVersion,
+  type AiPlan,
+  type InsertAiPlan,
+  type TerminalSession,
+  type InsertTerminalSession,
   type AdvancedTemplate,
   type SmartComponent,
   type HealthcareDomain,
@@ -181,6 +190,23 @@ export interface IStorage {
   upsertCollaborationSession(session: InsertCollaborationSession): Promise<CollaborationSession>;
   getCollaborationSessions(projectId: number): Promise<CollaborationSession[]>;
   updateCollaborationSessionStatus(sessionId: string, status: string): Promise<void>;
+  
+  // Version History operations
+  createFileVersion(version: InsertFileVersion): Promise<FileVersion>;
+  getFileVersions(projectId: number, filePath: string): Promise<FileVersion[]>;
+  getProjectVersionHistory(projectId: number, limit?: number): Promise<FileVersion[]>;
+  getFileVersion(id: number): Promise<FileVersion | undefined>;
+  
+  // AI Plan Mode operations
+  createAiPlan(plan: InsertAiPlan): Promise<AiPlan>;
+  getAiPlan(id: number): Promise<AiPlan | undefined>;
+  getProjectAiPlans(projectId: number): Promise<AiPlan[]>;
+  updateAiPlanStatus(id: number, status: string, approvedAt?: Date, completedAt?: Date): Promise<void>;
+  updateAiPlanStep(id: number, currentStep: number, executionLog: any): Promise<void>;
+  
+  // Terminal Session operations
+  createTerminalSession(session: InsertTerminalSession): Promise<TerminalSession>;
+  getProjectTerminalHistory(projectId: number, limit?: number): Promise<TerminalSession[]>;
   
   // Advanced Template operations
   getAdvancedTemplates(filters: {
@@ -523,6 +549,82 @@ export class DatabaseStorage implements IStorage {
       .update(collaborationSessions)
       .set({ status, lastActivity: new Date() })
       .where(eq(collaborationSessions.sessionId, sessionId));
+  }
+
+  // Version History operations
+  async createFileVersion(version: InsertFileVersion): Promise<FileVersion> {
+    const [result] = await db.insert(fileVersions).values(version).returning();
+    return result;
+  }
+
+  async getFileVersions(projectId: number, filePath: string): Promise<FileVersion[]> {
+    return await db
+      .select()
+      .from(fileVersions)
+      .where(and(eq(fileVersions.projectId, projectId), eq(fileVersions.filePath, filePath)))
+      .orderBy(desc(fileVersions.version));
+  }
+
+  async getProjectVersionHistory(projectId: number, limit: number = 50): Promise<FileVersion[]> {
+    return await db
+      .select()
+      .from(fileVersions)
+      .where(eq(fileVersions.projectId, projectId))
+      .orderBy(desc(fileVersions.createdAt))
+      .limit(limit);
+  }
+
+  async getFileVersion(id: number): Promise<FileVersion | undefined> {
+    const [result] = await db.select().from(fileVersions).where(eq(fileVersions.id, id));
+    return result;
+  }
+
+  // AI Plan Mode operations
+  async createAiPlan(plan: InsertAiPlan): Promise<AiPlan> {
+    const [result] = await db.insert(aiPlans).values(plan).returning();
+    return result;
+  }
+
+  async getAiPlan(id: number): Promise<AiPlan | undefined> {
+    const [result] = await db.select().from(aiPlans).where(eq(aiPlans.id, id));
+    return result;
+  }
+
+  async getProjectAiPlans(projectId: number): Promise<AiPlan[]> {
+    return await db
+      .select()
+      .from(aiPlans)
+      .where(eq(aiPlans.projectId, projectId))
+      .orderBy(desc(aiPlans.createdAt));
+  }
+
+  async updateAiPlanStatus(id: number, status: string, approvedAt?: Date, completedAt?: Date): Promise<void> {
+    await db
+      .update(aiPlans)
+      .set({ status, approvedAt, completedAt })
+      .where(eq(aiPlans.id, id));
+  }
+
+  async updateAiPlanStep(id: number, currentStep: number, executionLog: any): Promise<void> {
+    await db
+      .update(aiPlans)
+      .set({ currentStep, executionLog })
+      .where(eq(aiPlans.id, id));
+  }
+
+  // Terminal Session operations
+  async createTerminalSession(session: InsertTerminalSession): Promise<TerminalSession> {
+    const [result] = await db.insert(terminalSessions).values(session).returning();
+    return result;
+  }
+
+  async getProjectTerminalHistory(projectId: number, limit: number = 100): Promise<TerminalSession[]> {
+    return await db
+      .select()
+      .from(terminalSessions)
+      .where(eq(terminalSessions.projectId, projectId))
+      .orderBy(desc(terminalSessions.executedAt))
+      .limit(limit);
   }
 
   // Advanced Template operations

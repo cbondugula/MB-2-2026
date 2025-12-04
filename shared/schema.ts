@@ -379,6 +379,48 @@ export const advancedTemplates = pgTable("advanced_templates", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Version History for file changes
+export const fileVersions = pgTable("file_versions", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  filePath: varchar("file_path").notNull(),
+  content: text("content").notNull(),
+  version: integer("version").notNull(),
+  userId: varchar("user_id").notNull(),
+  changeType: varchar("change_type").notNull(), // "create", "update", "delete"
+  changeSummary: text("change_summary"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_file_versions_project").on(table.projectId),
+  index("idx_file_versions_path").on(table.filePath),
+]);
+
+// AI Plan Mode - Shows step-by-step actions before executing
+export const aiPlans = pgTable("ai_plans", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  prompt: text("prompt").notNull(),
+  status: varchar("status").notNull().default("pending"), // "pending", "approved", "executing", "completed", "cancelled"
+  steps: jsonb("steps").notNull(), // Array of { id, action, description, status, filePath?, code? }
+  currentStep: integer("current_step").default(0),
+  executionLog: jsonb("execution_log"), // Array of execution results
+  createdAt: timestamp("created_at").defaultNow(),
+  approvedAt: timestamp("approved_at"),
+  completedAt: timestamp("completed_at"),
+});
+
+// Console/Terminal command history
+export const terminalSessions = pgTable("terminal_sessions", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  command: text("command").notNull(),
+  output: text("output"),
+  exitCode: integer("exit_code"),
+  executedAt: timestamp("executed_at").defaultNow(),
+});
+
 // Smart Components with AI Context
 export const smartComponents = pgTable("smart_components", {
   id: serial("id").primaryKey(),
@@ -501,6 +543,9 @@ export const insertProjectActivitySchema = createInsertSchema(projectActivities)
 export const insertAiSessionSchema = createInsertSchema(aiSessions);
 export const insertCodeAnalysisSchema = createInsertSchema(codeAnalysis);
 export const insertCollaborationSessionSchema = createInsertSchema(collaborationSessions);
+export const insertFileVersionSchema = createInsertSchema(fileVersions).omit({ id: true, createdAt: true });
+export const insertAiPlanSchema = createInsertSchema(aiPlans).omit({ id: true, createdAt: true });
+export const insertTerminalSessionSchema = createInsertSchema(terminalSessions).omit({ id: true, executedAt: true });
 export const insertAdvancedTemplateSchema = createInsertSchema(advancedTemplates);
 export const insertSmartComponentSchema = createInsertSchema(smartComponents);
 export const insertHealthcareDomainSchema = createInsertSchema(healthcareDomains);
@@ -662,6 +707,12 @@ export type InsertCodeAnalysis = z.infer<typeof insertCodeAnalysisSchema>;
 export type CodeAnalysis = typeof codeAnalysis.$inferSelect;
 export type InsertCollaborationSession = z.infer<typeof insertCollaborationSessionSchema>;
 export type CollaborationSession = typeof collaborationSessions.$inferSelect;
+export type InsertFileVersion = z.infer<typeof insertFileVersionSchema>;
+export type FileVersion = typeof fileVersions.$inferSelect;
+export type InsertAiPlan = z.infer<typeof insertAiPlanSchema>;
+export type AiPlan = typeof aiPlans.$inferSelect;
+export type InsertTerminalSession = z.infer<typeof insertTerminalSessionSchema>;
+export type TerminalSession = typeof terminalSessions.$inferSelect;
 export type InsertAdvancedTemplate = z.infer<typeof insertAdvancedTemplateSchema>;
 export type AdvancedTemplate = typeof advancedTemplates.$inferSelect;
 export type InsertSmartComponent = z.infer<typeof insertSmartComponentSchema>;

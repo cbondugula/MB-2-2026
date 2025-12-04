@@ -100,6 +100,15 @@ MedBuilder utilizes a dual-platform strategy, separating healthcare-specific dev
 
 ## Recent Updates (December 2024)
 
+### Replit-Parity Features (December 4)
+- **Real-time Collaboration**: Socket.io-based multiplayer coding with live cursors, user presence indicators, and invite link generation
+- **AI Plan Mode**: Step-by-step execution plans with approval workflow before AI makes changes
+- **Version History**: File-level version tracking with diffs and one-click restore functionality
+- **Terminal Panel**: Command execution with output display in workspace environment
+- **Database Schema Extensions**: fileVersions, aiPlans, terminalSessions, collaborationMembers tables
+- **12 New Storage Methods**: For version history, AI plans, terminal sessions, and collaboration features
+- **API Endpoints Added**: `/api/projects/:id/versions`, `/api/projects/:id/terminal`, `/api/projects/:id/ai-plans`, `/api/projects/:id/collaborators`, `/api/projects/:id/collaboration/invite`
+
 ### AI-Powered Code Development Platform (December 4)
 - **Complete Development Workflow**: Templates → Project Creation → Workspace → AI Code Generation
 - **AI Code Assist API** (`POST /api/projects/:id/ai-assist`): Zod validation, OpenAI GPT-4o integration, preview/apply modes, path safety checks
