@@ -8,6 +8,7 @@ import {
   healthcareAgents,
   healthcareStandards,
   healthcareSimulations,
+  healthcareBlueprints,
   techStacks,
   aiModels,
   codeExamples,
@@ -53,6 +54,7 @@ export async function seedDatabase() {
     await db.delete(healthcareDomains);
     await db.delete(healthcareAgents);
     await db.delete(healthcareStandards);
+    await db.delete(healthcareBlueprints);
     await db.delete(techStacks);
     await db.delete(aiModels);
     await db.delete(codeExamples);
@@ -1426,6 +1428,525 @@ export default function FHIRPatientSearch() {
 
     await db.insert(components).values(componentData);
 
+    // Seed healthcare blueprints (FHIR, telehealth, eRx, lab flows with compliance scaffolding)
+    const healthcareBlueprintData = [
+      // FHIR CRUD Blueprints
+      {
+        name: 'FHIR Patient CRUD Operations',
+        description: 'Complete Create, Read, Update, Delete operations for FHIR Patient resources with validation and audit logging',
+        category: 'fhir',
+        subcategory: 'patient-management',
+        complianceLevel: 'hipaa',
+        fhirResources: ['Patient', 'Person', 'RelatedPerson', 'Practitioner'],
+        apiEndpoints: [
+          { method: 'POST', path: '/fhir/Patient', description: 'Create new patient' },
+          { method: 'GET', path: '/fhir/Patient/:id', description: 'Read patient by ID' },
+          { method: 'PUT', path: '/fhir/Patient/:id', description: 'Update patient' },
+          { method: 'DELETE', path: '/fhir/Patient/:id', description: 'Soft delete patient' },
+          { method: 'GET', path: '/fhir/Patient', description: 'Search patients' }
+        ],
+        dataModels: {
+          patient: { identifier: 'array', name: 'HumanName[]', telecom: 'ContactPoint[]', gender: 'code', birthDate: 'date', address: 'Address[]' }
+        },
+        uiComponents: ['PatientForm', 'PatientList', 'PatientDetail', 'PatientSearch'],
+        workflows: [
+          { step: 1, action: 'Validate patient data', required: true },
+          { step: 2, action: 'Check for duplicates', required: true },
+          { step: 3, action: 'Create FHIR resource', required: true },
+          { step: 4, action: 'Log audit event', required: true },
+          { step: 5, action: 'Send confirmation', required: false }
+        ],
+        integrations: ['Epic', 'Cerner', 'Allscripts', 'MEDITECH'],
+        validationRules: ['MRN uniqueness', 'SSN format', 'Birth date validity', 'Address verification'],
+        complianceChecks: ['PHI encryption', 'Access control', 'Audit trail', 'Data minimization'],
+        code: {
+          server: 'fhir-patient-crud.ts',
+          client: 'PatientManagement.tsx',
+          types: 'patient.types.ts',
+          validation: 'patient.validation.ts'
+        },
+        documentation: 'Complete FHIR R4 Patient resource implementation with full HIPAA compliance including encryption, access control, and audit logging.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['FHIR', 'Patient', 'CRUD', 'HIPAA', 'R4']
+      },
+      {
+        name: 'FHIR Observation CRUD',
+        description: 'FHIR Observation resource operations for vitals, lab results, and clinical findings',
+        category: 'fhir',
+        subcategory: 'clinical-data',
+        complianceLevel: 'hipaa',
+        fhirResources: ['Observation', 'DiagnosticReport', 'Specimen'],
+        apiEndpoints: [
+          { method: 'POST', path: '/fhir/Observation', description: 'Create observation' },
+          { method: 'GET', path: '/fhir/Observation/:id', description: 'Get observation' },
+          { method: 'GET', path: '/fhir/Observation', description: 'Search observations' },
+          { method: 'PUT', path: '/fhir/Observation/:id', description: 'Update observation' }
+        ],
+        dataModels: {
+          observation: { status: 'code', category: 'CodeableConcept[]', code: 'CodeableConcept', subject: 'Reference', value: 'Quantity|CodeableConcept|string' }
+        },
+        uiComponents: ['VitalsChart', 'LabResultsTable', 'ObservationForm', 'TrendGraph'],
+        workflows: [
+          { step: 1, action: 'Validate LOINC codes', required: true },
+          { step: 2, action: 'Link to patient', required: true },
+          { step: 3, action: 'Store observation', required: true },
+          { step: 4, action: 'Trigger alerts if abnormal', required: true }
+        ],
+        integrations: ['Lab Information Systems', 'Vital Signs Monitors', 'EHR Systems'],
+        validationRules: ['Valid LOINC codes', 'Reference ranges', 'Unit validation', 'Temporal consistency'],
+        complianceChecks: ['Data integrity', 'PHI protection', 'Access logging'],
+        code: {
+          server: 'fhir-observation-crud.ts',
+          client: 'ObservationManagement.tsx',
+          types: 'observation.types.ts'
+        },
+        documentation: 'FHIR Observation resource for vitals, lab results, and clinical findings with trend analysis capabilities.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['FHIR', 'Observation', 'Vitals', 'Lab Results', 'LOINC']
+      },
+      {
+        name: 'FHIR Encounter Management',
+        description: 'Healthcare encounter tracking for visits, admissions, and discharges',
+        category: 'fhir',
+        subcategory: 'encounter-management',
+        complianceLevel: 'hipaa',
+        fhirResources: ['Encounter', 'EpisodeOfCare', 'Location', 'Appointment'],
+        apiEndpoints: [
+          { method: 'POST', path: '/fhir/Encounter', description: 'Create encounter' },
+          { method: 'GET', path: '/fhir/Encounter/:id', description: 'Get encounter' },
+          { method: 'PATCH', path: '/fhir/Encounter/:id', description: 'Update encounter status' },
+          { method: 'GET', path: '/fhir/Encounter', description: 'List encounters' }
+        ],
+        dataModels: {
+          encounter: { status: 'code', class: 'Coding', type: 'CodeableConcept[]', subject: 'Reference', participant: 'BackboneElement[]', period: 'Period' }
+        },
+        uiComponents: ['EncounterTimeline', 'AdmissionForm', 'DischargeWorkflow', 'StatusTracker'],
+        workflows: [
+          { step: 1, action: 'Check-in patient', required: true },
+          { step: 2, action: 'Assign location', required: true },
+          { step: 3, action: 'Track status changes', required: true },
+          { step: 4, action: 'Generate discharge summary', required: false }
+        ],
+        integrations: ['ADT Systems', 'Scheduling Systems', 'Bed Management'],
+        validationRules: ['Valid encounter status', 'Provider assignment', 'Location availability'],
+        complianceChecks: ['Consent verification', 'Insurance eligibility', 'Audit trail'],
+        code: {
+          server: 'fhir-encounter.ts',
+          client: 'EncounterManagement.tsx',
+          types: 'encounter.types.ts'
+        },
+        documentation: 'Complete encounter lifecycle management from admission to discharge with ADT integration.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['FHIR', 'Encounter', 'ADT', 'Admission', 'Discharge']
+      },
+      // Telehealth Blueprints
+      {
+        name: 'Telehealth Video Visit Platform',
+        description: 'Complete telehealth video consultation system with HIPAA-compliant video, screen sharing, and clinical documentation',
+        category: 'telehealth',
+        subcategory: 'video-visits',
+        complianceLevel: 'hipaa',
+        fhirResources: ['Appointment', 'Encounter', 'CommunicationRequest', 'Device'],
+        apiEndpoints: [
+          { method: 'POST', path: '/telehealth/sessions', description: 'Create video session' },
+          { method: 'GET', path: '/telehealth/sessions/:id/token', description: 'Get join token' },
+          { method: 'POST', path: '/telehealth/sessions/:id/end', description: 'End session' },
+          { method: 'GET', path: '/telehealth/sessions/:id/recording', description: 'Get recording' }
+        ],
+        dataModels: {
+          session: { participants: 'array', startTime: 'datetime', endTime: 'datetime', recording: 'url', notes: 'text' }
+        },
+        uiComponents: ['VideoCall', 'WaitingRoom', 'ScreenShare', 'Chat', 'VitalsCapture', 'DocumentViewer'],
+        workflows: [
+          { step: 1, action: 'Patient checks in', required: true },
+          { step: 2, action: 'Provider joins', required: true },
+          { step: 3, action: 'Video session active', required: true },
+          { step: 4, action: 'Session documentation', required: true },
+          { step: 5, action: 'Billing capture', required: true }
+        ],
+        integrations: ['Twilio Video', 'Vonage', 'Zoom Healthcare', 'WebRTC'],
+        validationRules: ['Bandwidth requirements', 'Browser compatibility', 'Consent verification'],
+        complianceChecks: ['End-to-end encryption', 'BAA with video provider', 'Recording consent', 'Access logging'],
+        code: {
+          server: 'telehealth-video.ts',
+          client: 'TelehealthPlatform.tsx',
+          webrtc: 'video-service.ts',
+          types: 'telehealth.types.ts'
+        },
+        documentation: 'HIPAA-compliant telehealth platform with WebRTC video, waiting room, screen sharing, and clinical documentation.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['Telehealth', 'Video', 'WebRTC', 'HIPAA', 'Virtual Care']
+      },
+      {
+        name: 'Remote Patient Monitoring (RPM)',
+        description: 'Continuous remote patient monitoring with device integration, alerts, and care team notifications',
+        category: 'telehealth',
+        subcategory: 'remote-monitoring',
+        complianceLevel: 'hipaa',
+        fhirResources: ['Device', 'DeviceMetric', 'Observation', 'CommunicationRequest'],
+        apiEndpoints: [
+          { method: 'POST', path: '/rpm/devices', description: 'Register device' },
+          { method: 'POST', path: '/rpm/readings', description: 'Submit reading' },
+          { method: 'GET', path: '/rpm/patients/:id/readings', description: 'Get patient readings' },
+          { method: 'POST', path: '/rpm/alerts', description: 'Create alert' }
+        ],
+        dataModels: {
+          device: { type: 'string', serial: 'string', patient: 'reference' },
+          reading: { deviceId: 'reference', value: 'number', unit: 'string', timestamp: 'datetime' }
+        },
+        uiComponents: ['DeviceList', 'ReadingsChart', 'AlertPanel', 'PatientDashboard', 'ThresholdConfig'],
+        workflows: [
+          { step: 1, action: 'Device enrollment', required: true },
+          { step: 2, action: 'Continuous data ingestion', required: true },
+          { step: 3, action: 'Threshold monitoring', required: true },
+          { step: 4, action: 'Alert generation', required: true },
+          { step: 5, action: 'Care team notification', required: true }
+        ],
+        integrations: ['Bluetooth devices', 'Apple HealthKit', 'Google Fit', 'Withings', 'Omron'],
+        validationRules: ['Device authentication', 'Reading validity', 'Timestamp accuracy'],
+        complianceChecks: ['Device security', 'Data transmission encryption', 'Access control'],
+        code: {
+          server: 'rpm-service.ts',
+          client: 'RPMDashboard.tsx',
+          iot: 'device-integration.ts'
+        },
+        documentation: 'Complete RPM solution with device integration, real-time monitoring, and care team alerting.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['RPM', 'IoT', 'Monitoring', 'Devices', 'Alerts']
+      },
+      {
+        name: 'Asynchronous Telehealth (Store-and-Forward)',
+        description: 'Store-and-forward telemedicine for dermatology, radiology, and specialist consultations',
+        category: 'telehealth',
+        subcategory: 'async-consultations',
+        complianceLevel: 'hipaa',
+        fhirResources: ['DocumentReference', 'Media', 'DiagnosticReport', 'Task'],
+        apiEndpoints: [
+          { method: 'POST', path: '/async/cases', description: 'Create consultation case' },
+          { method: 'POST', path: '/async/cases/:id/media', description: 'Upload media' },
+          { method: 'POST', path: '/async/cases/:id/response', description: 'Submit specialist response' },
+          { method: 'GET', path: '/async/cases', description: 'List cases' }
+        ],
+        dataModels: {
+          case: { patient: 'reference', referrer: 'reference', specialist: 'reference', media: 'array', status: 'string' }
+        },
+        uiComponents: ['CaseSubmission', 'ImageUploader', 'SpecialistReview', 'ResponseForm'],
+        workflows: [
+          { step: 1, action: 'Case creation', required: true },
+          { step: 2, action: 'Media capture/upload', required: true },
+          { step: 3, action: 'Specialist assignment', required: true },
+          { step: 4, action: 'Review and response', required: true },
+          { step: 5, action: 'Referring provider notification', required: true }
+        ],
+        integrations: ['PACS', 'Dermatology imaging', 'Secure messaging'],
+        validationRules: ['Image quality', 'Required clinical context', 'Turnaround time'],
+        complianceChecks: ['Media encryption', 'Access logging', 'Retention policies'],
+        code: {
+          server: 'async-telehealth.ts',
+          client: 'AsyncConsultation.tsx',
+          media: 'media-handler.ts'
+        },
+        documentation: 'Asynchronous telehealth platform for specialist consultations with secure media handling.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['Store-and-Forward', 'Dermatology', 'Radiology', 'eConsult']
+      },
+      // Electronic Prescribing (eRx) Blueprints
+      {
+        name: 'Electronic Prescribing (eRx) System',
+        description: 'EPCS-compliant electronic prescribing with drug interactions, formulary checking, and pharmacy routing',
+        category: 'erx',
+        subcategory: 'prescribing',
+        complianceLevel: 'hipaa',
+        fhirResources: ['MedicationRequest', 'Medication', 'MedicationDispense', 'Practitioner'],
+        apiEndpoints: [
+          { method: 'POST', path: '/erx/prescriptions', description: 'Create prescription' },
+          { method: 'GET', path: '/erx/drug-interactions', description: 'Check interactions' },
+          { method: 'GET', path: '/erx/formulary', description: 'Check formulary' },
+          { method: 'POST', path: '/erx/prescriptions/:id/send', description: 'Send to pharmacy' },
+          { method: 'GET', path: '/erx/prescriptions/:id/status', description: 'Check status' }
+        ],
+        dataModels: {
+          prescription: { medication: 'CodeableConcept', dosage: 'Dosage', quantity: 'Quantity', refills: 'number', pharmacy: 'reference' }
+        },
+        uiComponents: ['DrugSearch', 'DosageBuilder', 'InteractionWarnings', 'PharmacySelector', 'PrescriptionReview'],
+        workflows: [
+          { step: 1, action: 'Drug selection', required: true },
+          { step: 2, action: 'Dosage configuration', required: true },
+          { step: 3, action: 'Interaction check', required: true },
+          { step: 4, action: 'Formulary verification', required: true },
+          { step: 5, action: 'Provider signature', required: true },
+          { step: 6, action: 'Pharmacy transmission', required: true }
+        ],
+        integrations: ['Surescripts', 'DrFirst', 'RxNorm', 'FDB', 'Medi-Span'],
+        validationRules: ['DEA validation', 'Controlled substance limits', 'Age-appropriate dosing', 'Allergy check'],
+        complianceChecks: ['EPCS compliance', 'Two-factor authentication', 'Audit trail', 'DEA requirements'],
+        code: {
+          server: 'erx-service.ts',
+          client: 'EPrescribing.tsx',
+          surescripts: 'surescripts-integration.ts',
+          types: 'prescription.types.ts'
+        },
+        documentation: 'Complete electronic prescribing system with EPCS compliance for controlled substances, drug interaction checking, and Surescripts integration.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['eRx', 'EPCS', 'Surescripts', 'Prescribing', 'Controlled Substances']
+      },
+      {
+        name: 'Medication Reconciliation',
+        description: 'Comprehensive medication list management with reconciliation workflows for transitions of care',
+        category: 'erx',
+        subcategory: 'medication-management',
+        complianceLevel: 'hipaa',
+        fhirResources: ['MedicationStatement', 'MedicationRequest', 'List', 'AllergyIntolerance'],
+        apiEndpoints: [
+          { method: 'GET', path: '/medrec/patients/:id/medications', description: 'Get medication list' },
+          { method: 'POST', path: '/medrec/reconciliations', description: 'Start reconciliation' },
+          { method: 'PATCH', path: '/medrec/reconciliations/:id', description: 'Update reconciliation' },
+          { method: 'POST', path: '/medrec/reconciliations/:id/complete', description: 'Complete reconciliation' }
+        ],
+        dataModels: {
+          reconciliation: { patient: 'reference', medications: 'array', discrepancies: 'array', status: 'string' }
+        },
+        uiComponents: ['MedicationList', 'ReconciliationWorkflow', 'DiscrepancyResolver', 'MedHistory'],
+        workflows: [
+          { step: 1, action: 'Import current medications', required: true },
+          { step: 2, action: 'Identify discrepancies', required: true },
+          { step: 3, action: 'Resolve with patient/provider', required: true },
+          { step: 4, action: 'Update medication list', required: true },
+          { step: 5, action: 'Document reconciliation', required: true }
+        ],
+        integrations: ['PDMP', 'Pharmacy benefit managers', 'EHR medication modules'],
+        validationRules: ['Complete medication history', 'Allergy documentation', 'Duplicate therapy check'],
+        complianceChecks: ['Transition of care requirements', 'CMS quality measures', 'Audit logging'],
+        code: {
+          server: 'medication-reconciliation.ts',
+          client: 'MedReconciliation.tsx',
+          types: 'medrec.types.ts'
+        },
+        documentation: 'Medication reconciliation system for safe transitions of care with discrepancy detection and resolution workflows.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['Medication Reconciliation', 'Transitions of Care', 'Patient Safety']
+      },
+      // Lab Flows Blueprints
+      {
+        name: 'Laboratory Order Management',
+        description: 'Complete lab order workflow from requisition to result delivery with LIS integration',
+        category: 'labs',
+        subcategory: 'order-management',
+        complianceLevel: 'hipaa',
+        fhirResources: ['ServiceRequest', 'Specimen', 'Observation', 'DiagnosticReport'],
+        apiEndpoints: [
+          { method: 'POST', path: '/labs/orders', description: 'Create lab order' },
+          { method: 'GET', path: '/labs/orders/:id', description: 'Get order details' },
+          { method: 'GET', path: '/labs/orders/:id/status', description: 'Check order status' },
+          { method: 'POST', path: '/labs/specimens', description: 'Register specimen' },
+          { method: 'POST', path: '/labs/results', description: 'Submit results' }
+        ],
+        dataModels: {
+          labOrder: { patient: 'reference', tests: 'array', priority: 'code', specimen: 'reference', status: 'code' },
+          result: { order: 'reference', observations: 'array', interpretation: 'code', attachments: 'array' }
+        },
+        uiComponents: ['OrderBuilder', 'TestCatalog', 'SpecimenTracker', 'ResultsViewer', 'StatusDashboard'],
+        workflows: [
+          { step: 1, action: 'Test selection', required: true },
+          { step: 2, action: 'Order creation', required: true },
+          { step: 3, action: 'Specimen collection', required: true },
+          { step: 4, action: 'Processing', required: true },
+          { step: 5, action: 'Result entry', required: true },
+          { step: 6, action: 'Review and release', required: true },
+          { step: 7, action: 'Provider notification', required: true }
+        ],
+        integrations: ['HL7 v2 ORM/ORU', 'LOINC', 'SNOMED CT', 'Lab Information Systems'],
+        validationRules: ['Order completeness', 'Specimen requirements', 'Result ranges', 'Critical value flags'],
+        complianceChecks: ['CLIA compliance', 'Chain of custody', 'Result verification', 'Audit trail'],
+        code: {
+          server: 'lab-order-service.ts',
+          client: 'LabOrderManagement.tsx',
+          hl7: 'hl7-integration.ts',
+          types: 'lab.types.ts'
+        },
+        documentation: 'End-to-end laboratory order management with LIS integration, specimen tracking, and result delivery.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['Labs', 'LIS', 'HL7', 'LOINC', 'Orders']
+      },
+      {
+        name: 'Point-of-Care Testing (POCT)',
+        description: 'Point-of-care testing management with device integration, QC, and result documentation',
+        category: 'labs',
+        subcategory: 'poct',
+        complianceLevel: 'hipaa',
+        fhirResources: ['Observation', 'Device', 'Specimen', 'DeviceMetric'],
+        apiEndpoints: [
+          { method: 'POST', path: '/poct/tests', description: 'Record POCT result' },
+          { method: 'GET', path: '/poct/devices', description: 'List POCT devices' },
+          { method: 'POST', path: '/poct/qc', description: 'Record QC result' },
+          { method: 'GET', path: '/poct/patients/:id/history', description: 'Get patient POCT history' }
+        ],
+        dataModels: {
+          poctResult: { device: 'reference', patient: 'reference', test: 'code', value: 'Quantity', operator: 'reference' }
+        },
+        uiComponents: ['POCTEntry', 'DeviceManager', 'QCTracking', 'ResultHistory'],
+        workflows: [
+          { step: 1, action: 'Device verification', required: true },
+          { step: 2, action: 'Patient identification', required: true },
+          { step: 3, action: 'Test performance', required: true },
+          { step: 4, action: 'Result entry', required: true },
+          { step: 5, action: 'Documentation', required: true }
+        ],
+        integrations: ['POCT devices', 'Glucose meters', 'COVID rapid tests', 'Connectivity managers'],
+        validationRules: ['QC in range', 'Operator certification', 'Device calibration', 'Result plausibility'],
+        complianceChecks: ['CLIA POCT waiver', 'Operator training records', 'QC documentation'],
+        code: {
+          server: 'poct-service.ts',
+          client: 'POCTManagement.tsx',
+          devices: 'poct-devices.ts'
+        },
+        documentation: 'Point-of-care testing platform with device integration, quality control, and CLIA compliance.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['POCT', 'Glucose', 'QC', 'CLIA', 'Rapid Testing']
+      },
+      {
+        name: 'Anatomic Pathology Workflow',
+        description: 'Surgical pathology and cytology workflow with specimen tracking, slide management, and reporting',
+        category: 'labs',
+        subcategory: 'pathology',
+        complianceLevel: 'hipaa',
+        fhirResources: ['Specimen', 'DiagnosticReport', 'Observation', 'Media', 'DocumentReference'],
+        apiEndpoints: [
+          { method: 'POST', path: '/pathology/cases', description: 'Create pathology case' },
+          { method: 'POST', path: '/pathology/cases/:id/specimens', description: 'Add specimen' },
+          { method: 'POST', path: '/pathology/cases/:id/images', description: 'Upload slide images' },
+          { method: 'POST', path: '/pathology/cases/:id/report', description: 'Create report' }
+        ],
+        dataModels: {
+          pathCase: { patient: 'reference', specimens: 'array', slides: 'array', diagnosis: 'CodeableConcept[]', report: 'text' }
+        },
+        uiComponents: ['CaseWorkflow', 'SpecimenProcessor', 'SlideViewer', 'ReportEditor', 'SynopticReporting'],
+        workflows: [
+          { step: 1, action: 'Specimen accessioning', required: true },
+          { step: 2, action: 'Gross examination', required: true },
+          { step: 3, action: 'Histology processing', required: true },
+          { step: 4, action: 'Microscopic examination', required: true },
+          { step: 5, action: 'Diagnosis and reporting', required: true },
+          { step: 6, action: 'Sign-out', required: true }
+        ],
+        integrations: ['LIS', 'Digital pathology', 'CAP synoptic templates', 'Voice recognition'],
+        validationRules: ['Specimen identification', 'Slide labeling', 'Report completeness', 'Synoptic elements'],
+        complianceChecks: ['CAP compliance', 'Two-identifier verification', 'Amendment tracking'],
+        code: {
+          server: 'pathology-service.ts',
+          client: 'PathologyWorkflow.tsx',
+          imaging: 'slide-viewer.ts'
+        },
+        documentation: 'Complete anatomic pathology workflow from specimen receipt to final diagnosis with digital pathology support.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['Pathology', 'Surgical Path', 'Cytology', 'Digital Pathology']
+      },
+      // Patient Intake & Scheduling
+      {
+        name: 'Patient Self-Service Portal',
+        description: 'Complete patient portal with intake forms, appointment scheduling, messaging, and health records access',
+        category: 'patient-intake',
+        subcategory: 'self-service',
+        complianceLevel: 'hipaa',
+        fhirResources: ['Patient', 'Appointment', 'Communication', 'DocumentReference', 'Consent'],
+        apiEndpoints: [
+          { method: 'POST', path: '/portal/intake', description: 'Submit intake forms' },
+          { method: 'GET', path: '/portal/appointments', description: 'List appointments' },
+          { method: 'POST', path: '/portal/appointments', description: 'Request appointment' },
+          { method: 'GET', path: '/portal/records', description: 'Access health records' },
+          { method: 'POST', path: '/portal/messages', description: 'Send message to care team' }
+        ],
+        dataModels: {
+          intake: { demographics: 'object', insurance: 'object', medicalHistory: 'object', consents: 'array' }
+        },
+        uiComponents: ['IntakeWizard', 'AppointmentScheduler', 'SecureMessaging', 'RecordsViewer', 'ConsentManager'],
+        workflows: [
+          { step: 1, action: 'Identity verification', required: true },
+          { step: 2, action: 'Demographics update', required: true },
+          { step: 3, action: 'Insurance verification', required: true },
+          { step: 4, action: 'Medical history', required: true },
+          { step: 5, action: 'Consent collection', required: true }
+        ],
+        integrations: ['Identity verification services', 'Insurance eligibility', 'Secure messaging'],
+        validationRules: ['Required field completion', 'Insurance validity', 'Consent requirements'],
+        complianceChecks: ['Patient identity verification', 'HIPAA authorization', 'Consent documentation'],
+        code: {
+          server: 'patient-portal.ts',
+          client: 'PatientPortal.tsx',
+          auth: 'patient-auth.ts'
+        },
+        documentation: 'Comprehensive patient self-service portal with secure access to records, scheduling, and messaging.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['Patient Portal', 'Self-Service', 'Intake', 'Scheduling']
+      },
+      {
+        name: 'Appointment Scheduling System',
+        description: 'Intelligent appointment scheduling with provider availability, resource management, and waitlist',
+        category: 'scheduling',
+        subcategory: 'appointments',
+        complianceLevel: 'hipaa',
+        fhirResources: ['Appointment', 'Schedule', 'Slot', 'Practitioner', 'Location'],
+        apiEndpoints: [
+          { method: 'GET', path: '/scheduling/slots', description: 'Find available slots' },
+          { method: 'POST', path: '/scheduling/appointments', description: 'Book appointment' },
+          { method: 'PATCH', path: '/scheduling/appointments/:id', description: 'Modify appointment' },
+          { method: 'DELETE', path: '/scheduling/appointments/:id', description: 'Cancel appointment' },
+          { method: 'POST', path: '/scheduling/waitlist', description: 'Add to waitlist' }
+        ],
+        dataModels: {
+          slot: { schedule: 'reference', start: 'datetime', end: 'datetime', status: 'code' },
+          appointment: { patient: 'reference', practitioner: 'reference', slot: 'reference', type: 'CodeableConcept', status: 'code' }
+        },
+        uiComponents: ['SlotFinder', 'CalendarView', 'BookingForm', 'AppointmentList', 'WaitlistManager'],
+        workflows: [
+          { step: 1, action: 'Select service type', required: true },
+          { step: 2, action: 'Choose provider', required: false },
+          { step: 3, action: 'Select available slot', required: true },
+          { step: 4, action: 'Confirm booking', required: true },
+          { step: 5, action: 'Send reminders', required: true }
+        ],
+        integrations: ['Provider calendars', 'SMS reminders', 'Email notifications', 'EHR scheduling'],
+        validationRules: ['Slot availability', 'Provider availability', 'Resource conflicts', 'Patient eligibility'],
+        complianceChecks: ['Appointment confirmation', 'Reminder consent', 'No-show tracking'],
+        code: {
+          server: 'scheduling-service.ts',
+          client: 'AppointmentScheduler.tsx',
+          calendar: 'calendar-integration.ts'
+        },
+        documentation: 'Full-featured appointment scheduling with smart slot management and automated reminders.',
+        version: '1.0.0',
+        isVerified: true,
+        downloadCount: 0,
+        tags: ['Scheduling', 'Appointments', 'Calendar', 'Reminders']
+      }
+    ];
+
+    await db.insert(healthcareBlueprints).values(healthcareBlueprintData);
+
     // Seed sample project
     const [sampleProject] = await db.insert(projects).values({
       name: 'MedBuilder Demo Portal',
@@ -1839,7 +2360,7 @@ export default function FHIRPatientSearch() {
 
     console.log('✅ Database seeded successfully!');
     console.log(`📊 Created: ${domains.length} healthcare domains, ${agents.length} healthcare agents, ${standards.length} healthcare standards`);
-    console.log(`🏗️ Created: ${templateData.length} templates, ${componentData.length} components`);
+    console.log(`🏗️ Created: ${templateData.length} templates, ${componentData.length} components, ${healthcareBlueprintData.length} healthcare blueprints`);
     console.log(`🛠️ Created: ${techStackData.length} tech stacks, ${aiModelData.length} AI models, ${codeExampleData.length} code examples`);
     console.log(`🔧 Created: ${buildCapabilityData.length} build capabilities, ${pricingPlanData.length} pricing plans`);
     console.log(`📦 Created: ${gitRepoData.length} repositories, ${deploymentData.length} deployments`);

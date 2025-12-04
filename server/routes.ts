@@ -6252,6 +6252,15 @@ Respond with ONLY valid JSON array, no explanation.`;
 
   app.post('/api/projects/:id/git/branches/:branchId/checkout', isAuthenticated, async (req: any, res) => {
     try {
+      const paramsSchema = z.object({
+        id: z.string().regex(/^\d+$/, "Invalid project ID"),
+        branchId: z.string().regex(/^\d+$/, "Invalid branch ID"),
+      });
+      const paramsValidation = paramsSchema.safeParse(req.params);
+      if (!paramsValidation.success) {
+        return res.status(400).json({ message: "Invalid parameters", errors: paramsValidation.error.errors });
+      }
+      
       const projectId = parseInt(req.params.id);
       const branchId = parseInt(req.params.branchId);
       
@@ -6294,14 +6303,23 @@ Respond with ONLY valid JSON array, no explanation.`;
   // Git Sync
   app.get('/api/projects/:id/git/sync-history', isAuthenticated, async (req: any, res) => {
     try {
+      const querySchema = z.object({
+        limit: z.string().regex(/^\d+$/).transform(Number).optional()
+      });
+      const queryValidation = querySchema.safeParse(req.query);
+      
       const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
       const project = await storage.getProject(projectId);
       if (!project || project.userId !== req.user.claims.sub) {
         return res.status(403).json({ message: "Access denied" });
       }
       
-      const limit = req.query.limit ? parseInt(req.query.limit) : 50;
-      const history = await storage.getProjectSyncHistory(projectId, limit);
+      const limit = queryValidation.success && queryValidation.data.limit ? queryValidation.data.limit : 50;
+      const history = await storage.getProjectSyncHistory(projectId, Math.min(limit, 100));
       res.json({ history });
     } catch (error: any) {
       console.error("Error fetching sync history:", error);
@@ -6461,6 +6479,15 @@ Respond with ONLY valid JSON array, no explanation.`;
 
   app.patch('/api/projects/:id/pr-previews/:previewId', isAuthenticated, async (req: any, res) => {
     try {
+      const paramsSchema = z.object({
+        id: z.string().regex(/^\d+$/, "Invalid project ID"),
+        previewId: z.string().regex(/^\d+$/, "Invalid preview ID"),
+      });
+      const paramsValidation = paramsSchema.safeParse(req.params);
+      if (!paramsValidation.success) {
+        return res.status(400).json({ message: "Invalid parameters", errors: paramsValidation.error.errors });
+      }
+      
       const projectId = parseInt(req.params.id);
       const previewId = parseInt(req.params.previewId);
       
@@ -6497,6 +6524,15 @@ Respond with ONLY valid JSON array, no explanation.`;
 
   app.delete('/api/projects/:id/pr-previews/:previewId', isAuthenticated, async (req: any, res) => {
     try {
+      const paramsSchema = z.object({
+        id: z.string().regex(/^\d+$/, "Invalid project ID"),
+        previewId: z.string().regex(/^\d+$/, "Invalid preview ID"),
+      });
+      const paramsValidation = paramsSchema.safeParse(req.params);
+      if (!paramsValidation.success) {
+        return res.status(400).json({ message: "Invalid parameters", errors: paramsValidation.error.errors });
+      }
+      
       const projectId = parseInt(req.params.id);
       const previewId = parseInt(req.params.previewId);
       
@@ -6595,6 +6631,141 @@ Respond with ONLY valid JSON array, no explanation.`;
     } catch (error: any) {
       console.error("Error fetching blueprint:", error);
       res.status(500).json({ message: "Failed to fetch blueprint" });
+    }
+  });
+
+  // Apply healthcare blueprint to project
+  app.post('/api/projects/:id/apply-blueprint', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const applySchema = z.object({
+        blueprintId: z.number().positive(),
+        options: z.object({
+          generateCode: z.boolean().optional().default(true),
+          includeTests: z.boolean().optional().default(true),
+          includeDocumentation: z.boolean().optional().default(true),
+        }).optional().default({})
+      });
+      
+      const validation = applySchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid request", errors: validation.error.errors });
+      }
+      
+      const blueprint = await storage.getHealthcareBlueprint(validation.data.blueprintId);
+      if (!blueprint) {
+        return res.status(404).json({ message: "Blueprint not found" });
+      }
+      
+      // Merge blueprint configuration into project
+      const existingCode = (project.code as Record<string, any>) || {};
+      const blueprintConfig = {
+        appliedBlueprints: [
+          ...(existingCode.appliedBlueprints || []),
+          {
+            id: blueprint.id,
+            name: blueprint.name,
+            category: blueprint.category,
+            appliedAt: new Date().toISOString()
+          }
+        ],
+        fhirResources: [
+          ...(existingCode.fhirResources || []),
+          ...(blueprint.fhirResources || [])
+        ].filter((v, i, a) => a.indexOf(v) === i), // Deduplicate
+        apiEndpoints: [
+          ...(existingCode.apiEndpoints || []),
+          ...(blueprint.apiEndpoints || [])
+        ],
+        uiComponents: [
+          ...(existingCode.uiComponents || []),
+          ...(blueprint.uiComponents || [])
+        ].filter((v, i, a) => a.indexOf(v) === i),
+        complianceChecks: [
+          ...(existingCode.complianceChecks || []),
+          ...(blueprint.complianceChecks || [])
+        ].filter((v, i, a) => a.indexOf(v) === i),
+        integrations: [
+          ...(existingCode.integrations || []),
+          ...(blueprint.integrations || [])
+        ].filter((v, i, a) => a.indexOf(v) === i),
+        workflows: [
+          ...(existingCode.workflows || []),
+          { blueprintName: blueprint.name, steps: blueprint.workflows }
+        ]
+      };
+      
+      await storage.updateProject(projectId, {
+        code: { ...existingCode, ...blueprintConfig }
+      });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'configuration',
+        description: `Applied healthcare blueprint: ${blueprint.name} (${blueprint.category})`,
+        resourceType: 'blueprint',
+        resourceId: String(blueprint.id),
+        metadata: { 
+          blueprintCategory: blueprint.category,
+          complianceLevel: blueprint.complianceLevel 
+        },
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      const updatedProject = await storage.getProject(projectId);
+      
+      res.json({ 
+        success: true, 
+        message: `Blueprint "${blueprint.name}" applied successfully`,
+        blueprint: {
+          id: blueprint.id,
+          name: blueprint.name,
+          category: blueprint.category,
+          complianceLevel: blueprint.complianceLevel
+        },
+        project: updatedProject
+      });
+    } catch (error: any) {
+      console.error("Error applying blueprint:", error);
+      res.status(500).json({ message: "Failed to apply blueprint" });
+    }
+  });
+
+  // Get blueprint categories and stats
+  app.get('/api/healthcare/blueprints/categories/stats', async (req, res) => {
+    try {
+      const blueprints = await storage.getHealthcareBlueprints();
+      
+      const categoryStats = blueprints.reduce((acc, bp) => {
+        if (!acc[bp.category]) {
+          acc[bp.category] = { count: 0, verified: 0, totalDownloads: 0 };
+        }
+        acc[bp.category].count++;
+        if (bp.isVerified) acc[bp.category].verified++;
+        acc[bp.category].totalDownloads += bp.downloadCount || 0;
+        return acc;
+      }, {} as Record<string, { count: number; verified: number; totalDownloads: number }>);
+      
+      res.json({
+        totalBlueprints: blueprints.length,
+        categories: categoryStats,
+        complianceLevels: ['hipaa', 'fda', 'gdpr', 'soc2']
+      });
+    } catch (error: any) {
+      console.error("Error fetching blueprint stats:", error);
+      res.status(500).json({ message: "Failed to fetch blueprint stats" });
     }
   });
 
