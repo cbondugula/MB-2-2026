@@ -100,6 +100,29 @@ MedBuilder utilizes a dual-platform strategy, separating healthcare-specific dev
 
 ## Recent Updates (December 2024)
 
+### PHI Guardrail & Compliance Scanner (December 4)
+- **PHI Pattern Detection**: 15+ pattern types (SSN, MRN, NPI, DEA, phone, email, DOB, address, diagnosis codes, CPT codes, medications, lab values, vital signs, insurance IDs, credit cards)
+- **Egress Risk Analysis**: Detection of outbound API calls to untrusted domains with risk categorization (high/medium/low)
+- **AI Model Safety Grading**: 5 checks (BAA coverage, PHI in prompts, response logging, model context limits, error handling)
+- **Scan Types**: Static (pattern matching), Dynamic (pattern + egress), Egress (outbound risk only), Full (all checks + model safety)
+- **New API Endpoints**: `POST /api/projects/:id/phi-scans`, `POST /api/phi/lint` (real-time linting), `POST /api/projects/:id/model-safety`, `POST /api/projects/:id/egress-check`
+- **Implementation Files**: server/phi-scanner.ts with scanCodeForPhi, performStaticAnalysis, performEgressAnalysis, gradeModelSafety
+
+### Package Health & Debugger (December 4)
+- **Dependency Scanning**: Automatic vulnerability detection with severity levels (critical, high, moderate, low)
+- **HIPAA-Safe Recommendations**: Prioritized upgrade suggestions based on security and compliance requirements
+- **License Compliance**: Checking for GPL and other potentially problematic licenses in healthcare contexts
+- **Dependency Graph**: Visual representation of package relationships
+- **Project Health Dashboard**: Combined score from package vulnerabilities, PHI scan results, and environment status
+- **New API Endpoints**: `POST /api/projects/:id/packages/scan`, `GET /api/projects/:id/packages/hipaa-recommendations`, `GET /api/projects/:id/packages/dependency-graph`, `GET /api/projects/:id/debug/health`, `POST /api/debug/logs`
+- **Implementation Files**: server/package-health.ts with scanPackageJson, getHipaaUpgradeRecommendations, getDependencyGraph
+
+### Healthcare Blueprint Library (December 4)
+- **13 Comprehensive Blueprints**: FHIR Patient CRUD, FHIR Observation, FHIR Encounter, Telehealth Video, Remote Patient Monitoring, Async Telehealth, eRx Prescribing, Medication Reconciliation, Lab Order Management, POCT, Pathology Workflow, Patient Portal, Appointment Scheduling
+- **Blueprint Categories**: fhir, telehealth, erx, labs, patient-intake, scheduling
+- **Apply to Project**: Blueprints can be merged into project configuration with compliance checks preserved
+- **API Endpoints**: `GET /api/healthcare/blueprints`, `GET /api/healthcare/blueprints/:id`, `POST /api/projects/:id/apply-blueprint`, `GET /api/healthcare/blueprints/categories/stats`
+
 ### HIPAA Deploy & Secrets Manager (December 4)
 - **8 New Database Tables**: projectEnvironments, projectSecrets, hipaaDeployments, complianceAuditEvents, gitIntegrations, healthcareBlueprints, phiScanResults, packageHealth
 - **Environment Management**: Support for development, staging, production environments with HIPAA compliance settings
@@ -107,9 +130,6 @@ MedBuilder utilizes a dual-platform strategy, separating healthcare-specific dev
 - **HIPAA Deployments**: Full deployment lifecycle with SSL/WAF/encryption verification and rollback capability
 - **Compliance Audit Trail**: All sensitive operations logged with BAA evidence export functionality
 - **Git Integration**: Repository linking with branch management and sync status
-- **Healthcare Blueprints**: FHIR/HL7 compliant template library with compliance level ratings
-- **PHI Scanning**: Static and dynamic code analysis for PHI exposure detection
-- **Package Health**: Dependency vulnerability tracking and HIPAA-safe upgrade recommendations
 - **30+ New API Endpoints**: Full CRUD for environments, secrets, deployments, audit events, git sync, blueprints, PHI scans, and package health
 - **Security Features**: Authentication checks, ownership verification, secret value masking, compliance audit logging for all sensitive operations
 

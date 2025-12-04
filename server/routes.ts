@@ -6789,26 +6789,108 @@ Respond with ONLY valid JSON array, no explanation.`;
   app.post('/api/projects/:id/phi-scans', isAuthenticated, async (req: any, res) => {
     try {
       const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
       const project = await storage.getProject(projectId);
       if (!project || project.userId !== req.user.claims.sub) {
         return res.status(403).json({ message: "Access denied" });
       }
       
       const phiScanSchema = z.object({
-        scanType: z.enum(['static', 'dynamic', 'full']).default('static'),
-        triggeredBy: z.enum(['manual', 'auto', 'commit']).default('manual')
+        scanType: z.enum(['static', 'dynamic', 'egress', 'full']).default('static'),
+        triggeredBy: z.enum(['manual', 'auto', 'commit', 'deploy', 'scheduled']).default('manual'),
+        codeToScan: z.record(z.string()).optional()
       });
       const validation = phiScanSchema.safeParse(req.body);
       if (!validation.success) {
         return res.status(400).json({ message: "Invalid scan parameters", errors: validation.error.errors });
       }
       
+      const { performStaticAnalysis, performEgressAnalysis, gradeModelSafety } = await import('./phi-scanner');
+      
+      const projectCode = validation.data.codeToScan || (project.code as Record<string, string>) || {};
+      
+      let scanResults: any = {
+        status: 'completed',
+        totalFiles: 0,
+        filesScanned: 0,
+        issuesFound: 0,
+        criticalIssues: 0,
+        warningIssues: 0,
+        infoIssues: 0,
+        findings: [],
+        phiPatterns: [],
+        egressRisks: [],
+        modelSafetyScore: 100,
+        recommendations: [],
+        scanDuration: 0
+      };
+      
+      try {
+        if (validation.data.scanType === 'egress') {
+          const egressResult = performEgressAnalysis(projectCode);
+          scanResults = { ...scanResults, ...egressResult };
+        } else if (validation.data.scanType === 'dynamic') {
+          const staticResult = performStaticAnalysis(projectCode);
+          const egressResult = performEgressAnalysis(projectCode);
+          scanResults = {
+            ...scanResults,
+            ...staticResult,
+            egressRisks: egressResult.egressRisks || [],
+            recommendations: [
+              ...(staticResult.recommendations || []),
+              ...(egressResult.recommendations || [])
+            ].filter((v, i, a) => a.indexOf(v) === i)
+          };
+        } else if (validation.data.scanType === 'full') {
+          const staticResult = performStaticAnalysis(projectCode);
+          const egressResult = performEgressAnalysis(projectCode);
+          const modelSafety = gradeModelSafety(projectCode);
+          scanResults = {
+            ...scanResults,
+            ...staticResult,
+            egressRisks: egressResult.egressRisks || [],
+            modelSafetyScore: modelSafety.score,
+            recommendations: [
+              ...(staticResult.recommendations || []),
+              ...(egressResult.recommendations || []),
+              ...modelSafety.recommendations
+            ].filter((v, i, a) => a.indexOf(v) === i)
+          };
+        } else {
+          const staticResult = performStaticAnalysis(projectCode);
+          scanResults = { ...scanResults, ...staticResult };
+        }
+      } catch (scanError: any) {
+        console.error("Error during PHI scan:", scanError);
+        return res.status(500).json({ 
+          message: "PHI scan failed", 
+          error: scanError.message || 'Unknown error during scan'
+        });
+      }
+      
+      const finalStatus = scanResults.status || 'completed';
+      
       const scan = await storage.createPhiScanResult({
         projectId,
         userId: req.user.claims.sub,
         scanType: validation.data.scanType,
         triggeredBy: validation.data.triggeredBy,
-        status: 'pending',
+        status: finalStatus,
+        totalFiles: scanResults.totalFiles || 0,
+        filesScanned: scanResults.filesScanned || 0,
+        issuesFound: scanResults.issuesFound || 0,
+        criticalIssues: scanResults.criticalIssues || 0,
+        warningIssues: scanResults.warningIssues || 0,
+        infoIssues: scanResults.infoIssues || 0,
+        findings: scanResults.findings || [],
+        phiPatterns: scanResults.phiPatterns || [],
+        egressRisks: scanResults.egressRisks || [],
+        modelSafetyScore: scanResults.modelSafetyScore ?? 100,
+        recommendations: scanResults.recommendations || [],
+        scanDuration: scanResults.scanDuration || 0,
       });
       
       await storage.createComplianceAuditEvent({
@@ -6816,14 +6898,30 @@ Respond with ONLY valid JSON array, no explanation.`;
         userId: req.user.claims.sub,
         eventType: 'phi_scan',
         eventCategory: 'security',
-        description: `PHI scan (${validation.data.scanType}) initiated`,
+        description: `PHI scan (${validation.data.scanType}) completed: ${scanResults.issuesFound || 0} issues found, ${scanResults.criticalIssues || 0} critical`,
         resourceType: 'phi_scan',
         resourceId: String(scan.id),
+        metadata: {
+          scanType: validation.data.scanType,
+          issuesFound: scanResults.issuesFound,
+          criticalIssues: scanResults.criticalIssues,
+          modelSafetyScore: scanResults.modelSafetyScore
+        },
         ipAddress: req.ip,
         userAgent: req.get('User-Agent'),
       });
       
-      res.json({ scan });
+      res.json({ 
+        scan,
+        summary: {
+          totalIssues: scanResults.issuesFound || 0,
+          critical: scanResults.criticalIssues || 0,
+          warnings: scanResults.warningIssues || 0,
+          info: scanResults.infoIssues || 0,
+          modelSafetyScore: scanResults.modelSafetyScore,
+          egressRisks: scanResults.egressRisks?.length || 0
+        }
+      });
     } catch (error: any) {
       console.error("Error creating PHI scan:", error);
       res.status(500).json({ message: "Failed to create PHI scan" });
@@ -6843,6 +6941,130 @@ Respond with ONLY valid JSON array, no explanation.`;
     } catch (error: any) {
       console.error("Error fetching latest PHI scan:", error);
       res.status(500).json({ message: "Failed to fetch latest PHI scan" });
+    }
+  });
+
+  app.post('/api/phi/lint', isAuthenticated, async (req: any, res) => {
+    try {
+      const lintSchema = z.object({
+        code: z.string().min(1),
+        filename: z.string().optional().default('code.txt')
+      });
+      
+      const validation = lintSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid request", errors: validation.error.errors });
+      }
+      
+      const { scanCodeForPhi } = await import('./phi-scanner');
+      
+      const result = scanCodeForPhi([{
+        path: validation.data.filename,
+        content: validation.data.code
+      }]);
+      
+      res.json({
+        hasIssues: result.findings.length > 0,
+        critical: result.findings.filter(f => f.severity === 'critical').length,
+        warnings: result.findings.filter(f => f.severity === 'warning').length,
+        info: result.findings.filter(f => f.severity === 'info').length,
+        findings: result.findings.map(f => ({
+          line: f.line,
+          type: f.type,
+          severity: f.severity,
+          description: f.description,
+          suggestion: f.suggestion
+        })),
+        phiPatterns: result.phiPatterns,
+        recommendations: result.recommendations.slice(0, 3)
+      });
+    } catch (error: any) {
+      console.error("Error linting for PHI:", error);
+      res.status(500).json({ message: "Failed to lint for PHI" });
+    }
+  });
+
+  app.post('/api/projects/:id/model-safety', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const safetySchema = z.object({
+        codeToCheck: z.record(z.string()).optional()
+      });
+      
+      const validation = safetySchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid request", errors: validation.error.errors });
+      }
+      
+      const { gradeModelSafety } = await import('./phi-scanner');
+      
+      const projectCode = validation.data.codeToCheck || (project.code as Record<string, string>) || {};
+      const result = gradeModelSafety(projectCode);
+      
+      res.json({
+        score: result.score,
+        grade: result.score >= 90 ? 'A' : result.score >= 80 ? 'B' : result.score >= 70 ? 'C' : result.score >= 60 ? 'D' : 'F',
+        passed: result.score >= 80,
+        checks: result.checks,
+        recommendations: result.recommendations
+      });
+    } catch (error: any) {
+      console.error("Error checking model safety:", error);
+      res.status(500).json({ message: "Failed to check model safety" });
+    }
+  });
+
+  app.post('/api/projects/:id/egress-check', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const egressSchema = z.object({
+        codeToCheck: z.record(z.string()).optional()
+      });
+      
+      const validation = egressSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid request", errors: validation.error.errors });
+      }
+      
+      const { performEgressAnalysis } = await import('./phi-scanner');
+      
+      const projectCode = validation.data.codeToCheck || (project.code as Record<string, string>) || {};
+      const result = performEgressAnalysis(projectCode);
+      
+      const egressRisks = result.egressRisks || [];
+      const highRisk = egressRisks.filter((r: any) => r.riskLevel === 'high');
+      const mediumRisk = egressRisks.filter((r: any) => r.riskLevel === 'medium');
+      
+      res.json({
+        totalEndpoints: egressRisks.length,
+        highRisk: highRisk.length,
+        mediumRisk: mediumRisk.length,
+        lowRisk: egressRisks.length - highRisk.length - mediumRisk.length,
+        blocked: 0,
+        egressRisks: egressRisks,
+        recommendations: result.recommendations
+      });
+    } catch (error: any) {
+      console.error("Error checking egress:", error);
+      res.status(500).json({ message: "Failed to check egress" });
     }
   });
 
@@ -6876,6 +7098,222 @@ Respond with ONLY valid JSON array, no explanation.`;
     } catch (error: any) {
       console.error("Error fetching vulnerable packages:", error);
       res.status(500).json({ message: "Failed to fetch vulnerable packages" });
+    }
+  });
+
+  app.post('/api/projects/:id/packages/scan', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const scanSchema = z.object({
+        packageJson: z.object({
+          dependencies: z.record(z.string()).optional(),
+          devDependencies: z.record(z.string()).optional()
+        }).optional()
+      });
+      
+      const validation = scanSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid request", errors: validation.error.errors });
+      }
+      
+      const { scanPackageJson } = await import('./package-health');
+      
+      const packageJson = validation.data.packageJson || {
+        dependencies: (project.code as Record<string, any>)?.dependencies || {},
+        devDependencies: (project.code as Record<string, any>)?.devDependencies || {}
+      };
+      
+      const result = scanPackageJson(packageJson, projectId);
+      
+      if (result.packages.length > 0) {
+        await storage.updateProjectPackageHealth(projectId, result.packages);
+      }
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'security',
+        description: `Package scan completed: ${result.summary.totalPackages} packages, ${result.summary.vulnerablePackages} vulnerable`,
+        resourceType: 'package_health',
+        metadata: result.summary,
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({
+        summary: result.summary,
+        packages: result.packages,
+        recommendations: result.recommendations
+      });
+    } catch (error: any) {
+      console.error("Error scanning packages:", error);
+      res.status(500).json({ message: "Failed to scan packages" });
+    }
+  });
+
+  app.get('/api/projects/:id/packages/hipaa-recommendations', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const packages = await storage.getProjectPackageHealth(projectId);
+      
+      const { getHipaaUpgradeRecommendations } = await import('./package-health');
+      
+      const recommendations = getHipaaUpgradeRecommendations(
+        packages.map(p => ({
+          packageName: p.packageName,
+          currentVersion: p.currentVersion || '',
+          latestVersion: p.latestVersion || '',
+          hasVulnerability: p.hasVulnerability || false,
+          vulnerabilitySeverity: p.vulnerabilitySeverity
+        }))
+      );
+      
+      res.json({
+        totalPackages: packages.length,
+        vulnerablePackages: packages.filter(p => p.hasVulnerability).length,
+        recommendations,
+        summary: {
+          critical: recommendations.filter(r => r.priority === 'critical').length,
+          high: recommendations.filter(r => r.priority === 'high').length,
+          medium: recommendations.filter(r => r.priority === 'medium').length,
+          low: recommendations.filter(r => r.priority === 'low').length
+        }
+      });
+    } catch (error: any) {
+      console.error("Error getting HIPAA recommendations:", error);
+      res.status(500).json({ message: "Failed to get HIPAA recommendations" });
+    }
+  });
+
+  app.get('/api/projects/:id/packages/dependency-graph', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const { getDependencyGraph } = await import('./package-health');
+      
+      const dependencies = (project.code as Record<string, any>)?.dependencies || {};
+      const graph = getDependencyGraph(dependencies);
+      
+      res.json(graph);
+    } catch (error: any) {
+      console.error("Error getting dependency graph:", error);
+      res.status(500).json({ message: "Failed to get dependency graph" });
+    }
+  });
+
+  app.post('/api/debug/logs', isAuthenticated, async (req: any, res) => {
+    try {
+      const logSchema = z.object({
+        projectId: z.number().positive(),
+        level: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+        message: z.string(),
+        metadata: z.record(z.any()).optional(),
+        source: z.string().optional().default('client')
+      });
+      
+      const validation = logSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid request", errors: validation.error.errors });
+      }
+      
+      const project = await storage.getProject(validation.data.projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      console.log(`[${validation.data.level.toUpperCase()}] [Project ${validation.data.projectId}] [${validation.data.source}] ${validation.data.message}`, validation.data.metadata || {});
+      
+      res.json({ success: true, logged: true });
+    } catch (error: any) {
+      console.error("Error logging:", error);
+      res.status(500).json({ message: "Failed to log" });
+    }
+  });
+
+  app.get('/api/projects/:id/debug/health', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const [packages, latestPhiScan, environments] = await Promise.all([
+        storage.getProjectPackageHealth(projectId),
+        storage.getLatestPhiScan(projectId),
+        storage.getProjectEnvironments(projectId)
+      ]);
+      
+      const vulnerablePackages = packages.filter(p => p.hasVulnerability);
+      const criticalPackages = packages.filter(p => p.vulnerabilitySeverity === 'critical');
+      
+      const healthScore = Math.max(0, 100 - 
+        (criticalPackages.length * 20) - 
+        (vulnerablePackages.length * 5) -
+        (latestPhiScan?.criticalIssues || 0) * 10 -
+        (latestPhiScan?.warningIssues || 0) * 2
+      );
+      
+      res.json({
+        projectId,
+        healthScore,
+        grade: healthScore >= 90 ? 'A' : healthScore >= 80 ? 'B' : healthScore >= 70 ? 'C' : healthScore >= 60 ? 'D' : 'F',
+        status: healthScore >= 80 ? 'healthy' : healthScore >= 60 ? 'warning' : 'critical',
+        details: {
+          packages: {
+            total: packages.length,
+            vulnerable: vulnerablePackages.length,
+            critical: criticalPackages.length
+          },
+          phiScan: latestPhiScan ? {
+            lastScan: latestPhiScan.createdAt,
+            issuesFound: latestPhiScan.issuesFound,
+            criticalIssues: latestPhiScan.criticalIssues,
+            modelSafetyScore: latestPhiScan.modelSafetyScore
+          } : null,
+          environments: environments.length
+        },
+        recommendations: [
+          ...(criticalPackages.length > 0 ? [`Update ${criticalPackages.length} critical packages immediately`] : []),
+          ...(vulnerablePackages.length > 3 ? [`Review ${vulnerablePackages.length} vulnerable packages`] : []),
+          ...((latestPhiScan?.criticalIssues || 0) > 0 ? ['Address PHI scan critical issues'] : []),
+          ...(healthScore >= 90 ? ['Project health is excellent'] : [])
+        ]
+      });
+    } catch (error: any) {
+      console.error("Error getting project health:", error);
+      res.status(500).json({ message: "Failed to get project health" });
     }
   });
 
