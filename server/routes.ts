@@ -1221,6 +1221,356 @@ Respond with a JSON object:
     }
   });
 
+  // ==================== HIPAA COMPLIANCE CHECKER ====================
+  
+  const hipaaCheckRequestSchema = z.object({
+    code: z.record(z.string()).optional(),
+    checkType: z.enum(['full', 'quick', 'code-only']).default('full'),
+  });
+
+  app.post('/api/projects/:id/hipaa-check', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const validationResult = hipaaCheckRequestSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid request", 
+          errors: validationResult.error.flatten().fieldErrors 
+        });
+      }
+      
+      const userId = req.user.claims.sub;
+      const { checkType } = validationResult.data;
+      
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      if (project.userId !== userId) {
+        return res.status(403).json({ message: "You don't have permission to check this project" });
+      }
+      
+      const codeFiles = (project.code as Record<string, string>) || {};
+      const issues: Array<{
+        file: string;
+        line?: number;
+        severity: 'critical' | 'high' | 'medium' | 'low';
+        rule: string;
+        message: string;
+        recommendation: string;
+      }> = [];
+      
+      const hipaaPatterns = [
+        { pattern: /console\.log.*patient|console\.log.*ssn|console\.log.*medical/gi, rule: 'PHI_LOGGING', severity: 'critical' as const, message: 'Potential PHI logged to console', recommendation: 'Remove console.log statements that may expose Protected Health Information' },
+        { pattern: /password.*=.*['"][^'"]+['"]|apiKey.*=.*['"][^'"]+['"]/gi, rule: 'HARDCODED_SECRETS', severity: 'critical' as const, message: 'Hardcoded credentials detected', recommendation: 'Use environment variables for sensitive credentials' },
+        { pattern: /http:\/\/(?!localhost)/gi, rule: 'INSECURE_TRANSPORT', severity: 'high' as const, message: 'Non-HTTPS URL detected', recommendation: 'Use HTTPS for all external communications' },
+        { pattern: /localStorage\.setItem.*patient|localStorage\.setItem.*medical|localStorage\.setItem.*health/gi, rule: 'UNENCRYPTED_STORAGE', severity: 'high' as const, message: 'PHI stored in unencrypted localStorage', recommendation: 'Use encrypted storage for sensitive health data' },
+        { pattern: /eval\s*\(|new\s+Function\s*\(/gi, rule: 'CODE_INJECTION', severity: 'critical' as const, message: 'Potential code injection vulnerability', recommendation: 'Avoid eval() and new Function() - use safer alternatives' },
+        { pattern: /innerHTML\s*=/gi, rule: 'XSS_RISK', severity: 'medium' as const, message: 'innerHTML assignment may cause XSS', recommendation: 'Use textContent or sanitize HTML input' },
+        { pattern: /SELECT\s+\*\s+FROM.*\+|SELECT.*WHERE.*\+\s*req\./gi, rule: 'SQL_INJECTION', severity: 'critical' as const, message: 'Potential SQL injection vulnerability', recommendation: 'Use parameterized queries or ORM' },
+      ];
+      
+      for (const [filePath, content] of Object.entries(codeFiles)) {
+        const lines = content.split('\n');
+        
+        for (const pattern of hipaaPatterns) {
+          let match;
+          while ((match = pattern.pattern.exec(content)) !== null) {
+            const lineNumber = content.substring(0, match.index).split('\n').length;
+            issues.push({
+              file: filePath,
+              line: lineNumber,
+              severity: pattern.severity,
+              rule: pattern.rule,
+              message: pattern.message,
+              recommendation: pattern.recommendation,
+            });
+          }
+          pattern.pattern.lastIndex = 0;
+        }
+      }
+      
+      const criticalCount = issues.filter(i => i.severity === 'critical').length;
+      const highCount = issues.filter(i => i.severity === 'high').length;
+      const mediumCount = issues.filter(i => i.severity === 'medium').length;
+      const lowCount = issues.filter(i => i.severity === 'low').length;
+      
+      const complianceScore = Math.max(0, 100 - (criticalCount * 25) - (highCount * 10) - (mediumCount * 5) - (lowCount * 2));
+      const complianceLevel = complianceScore >= 95 ? 'Excellent' : 
+                              complianceScore >= 85 ? 'Good' : 
+                              complianceScore >= 70 ? 'Satisfactory' : 
+                              complianceScore >= 50 ? 'Needs Improvement' : 'Critical Issues';
+      
+      await storage.addProjectActivity({
+        projectId,
+        userId,
+        action: "hipaa_check",
+        description: `HIPAA compliance check: ${complianceLevel} (${complianceScore}%)`,
+        metadata: { checkType, issuesFound: issues.length, complianceScore },
+      });
+      
+      res.json({
+        projectId,
+        complianceScore,
+        complianceLevel,
+        hipaaCompliant: criticalCount === 0 && highCount === 0,
+        summary: {
+          totalIssues: issues.length,
+          critical: criticalCount,
+          high: highCount,
+          medium: mediumCount,
+          low: lowCount,
+        },
+        issues,
+        recommendations: [
+          ...(criticalCount > 0 ? ['Address all critical issues before deployment'] : []),
+          ...(highCount > 0 ? ['Review and fix high-severity security issues'] : []),
+          ...(!codeFiles['encryption.ts'] && !codeFiles['utils/encryption.ts'] ? ['Add encryption utilities for PHI handling'] : []),
+        ],
+        checkedAt: new Date().toISOString(),
+      });
+    } catch (error: any) {
+      console.error("Error running HIPAA check:", error);
+      res.status(500).json({ message: "Failed to run HIPAA compliance check", error: error.message });
+    }
+  });
+
+  // ==================== FHIR/EHR VALIDATION ====================
+  
+  const fhirValidationSchema = z.object({
+    resourceType: z.enum(['Patient', 'Observation', 'Condition', 'Medication', 'Appointment', 'Encounter', 'Practitioner', 'Organization']),
+    resource: z.record(z.any()),
+    version: z.enum(['R4', 'STU3', 'DSTU2']).default('R4'),
+  });
+
+  app.post('/api/fhir/validate', isAuthenticated, async (req: any, res) => {
+    try {
+      const validationResult = fhirValidationSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid FHIR resource", 
+          errors: validationResult.error.flatten().fieldErrors 
+        });
+      }
+      
+      const { resourceType, resource, version } = validationResult.data;
+      const userId = req.user.claims.sub;
+      
+      const errors: Array<{ path: string; message: string; severity: 'error' | 'warning' }> = [];
+      const warnings: string[] = [];
+      
+      if (!resource.id) {
+        errors.push({ path: 'id', message: 'Resource must have an id', severity: 'error' });
+      }
+      
+      if (!resource.meta?.versionId) {
+        warnings.push('Resource should include meta.versionId for version tracking');
+      }
+      
+      switch (resourceType) {
+        case 'Patient':
+          if (!resource.name || !Array.isArray(resource.name) || resource.name.length === 0) {
+            errors.push({ path: 'name', message: 'Patient must have at least one name', severity: 'error' });
+          }
+          if (!resource.gender) {
+            warnings.push('Patient should include gender');
+          }
+          if (!resource.birthDate) {
+            warnings.push('Patient should include birthDate');
+          }
+          break;
+          
+        case 'Observation':
+          if (!resource.status) {
+            errors.push({ path: 'status', message: 'Observation must have a status', severity: 'error' });
+          }
+          if (!resource.code?.coding) {
+            errors.push({ path: 'code', message: 'Observation must have a coded value', severity: 'error' });
+          }
+          if (!resource.subject?.reference) {
+            errors.push({ path: 'subject', message: 'Observation must reference a subject', severity: 'error' });
+          }
+          break;
+          
+        case 'Medication':
+          if (!resource.code?.coding) {
+            errors.push({ path: 'code', message: 'Medication must have a coded value', severity: 'error' });
+          }
+          break;
+          
+        case 'Appointment':
+          if (!resource.status) {
+            errors.push({ path: 'status', message: 'Appointment must have a status', severity: 'error' });
+          }
+          if (!resource.start || !resource.end) {
+            errors.push({ path: 'start/end', message: 'Appointment must have start and end times', severity: 'error' });
+          }
+          break;
+      }
+      
+      const isValid = errors.filter(e => e.severity === 'error').length === 0;
+      
+      res.json({
+        resourceType,
+        version,
+        valid: isValid,
+        errors,
+        warnings,
+        validatedAt: new Date().toISOString(),
+        recommendations: isValid ? [] : ['Fix all validation errors before submitting to EHR system'],
+      });
+    } catch (error: any) {
+      console.error("Error validating FHIR resource:", error);
+      res.status(500).json({ message: "Failed to validate FHIR resource", error: error.message });
+    }
+  });
+
+  app.get('/api/fhir/resource-templates', async (req, res) => {
+    try {
+      const templates = {
+        Patient: {
+          resourceType: 'Patient',
+          id: '',
+          meta: { versionId: '1', lastUpdated: new Date().toISOString() },
+          name: [{ use: 'official', family: '', given: [''] }],
+          gender: 'unknown',
+          birthDate: '',
+          telecom: [{ system: 'phone', value: '' }],
+          address: [{ use: 'home', line: [''], city: '', state: '', postalCode: '' }],
+        },
+        Observation: {
+          resourceType: 'Observation',
+          id: '',
+          status: 'final',
+          code: { coding: [{ system: 'http://loinc.org', code: '', display: '' }] },
+          subject: { reference: 'Patient/' },
+          effectiveDateTime: new Date().toISOString(),
+          valueQuantity: { value: 0, unit: '', system: 'http://unitsofmeasure.org', code: '' },
+        },
+        Medication: {
+          resourceType: 'Medication',
+          id: '',
+          code: { coding: [{ system: 'http://www.nlm.nih.gov/research/umls/rxnorm', code: '', display: '' }] },
+          status: 'active',
+          form: { coding: [{ system: 'http://snomed.info/sct', code: '', display: '' }] },
+        },
+        Appointment: {
+          resourceType: 'Appointment',
+          id: '',
+          status: 'proposed',
+          serviceType: [{ coding: [{ system: 'http://snomed.info/sct', code: '', display: '' }] }],
+          start: '',
+          end: '',
+          participant: [{ actor: { reference: 'Patient/' }, status: 'needs-action' }],
+        },
+      };
+      
+      res.json({ templates, version: 'R4' });
+    } catch (error: any) {
+      console.error("Error fetching FHIR templates:", error);
+      res.status(500).json({ message: "Failed to fetch FHIR templates" });
+    }
+  });
+
+  // ==================== AUDIT TRAIL LOGGING ====================
+  
+  const auditLogQuerySchema = z.object({
+    projectId: z.string().optional(),
+    action: z.string().optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    limit: z.number().min(1).max(1000).default(100),
+    offset: z.number().min(0).default(0),
+  });
+
+  app.get('/api/audit-logs', isAuthenticated, async (req: any, res) => {
+    try {
+      const validationResult = auditLogQuerySchema.safeParse({
+        ...req.query,
+        limit: req.query.limit ? parseInt(req.query.limit) : 100,
+        offset: req.query.offset ? parseInt(req.query.offset) : 0,
+      });
+      
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid query parameters", 
+          errors: validationResult.error.flatten().fieldErrors 
+        });
+      }
+      
+      const userId = req.user.claims.sub;
+      const { projectId, action, startDate, endDate, limit, offset } = validationResult.data;
+      
+      const auditLogs = await storage.getAuditLogs({
+        userId,
+        projectId: projectId ? parseInt(projectId) : undefined,
+        action,
+        startDate: startDate ? new Date(startDate) : undefined,
+        endDate: endDate ? new Date(endDate) : undefined,
+        limit,
+        offset,
+      });
+      
+      res.json({
+        logs: auditLogs,
+        pagination: {
+          limit,
+          offset,
+          total: auditLogs.length,
+        },
+        queriedAt: new Date().toISOString(),
+      });
+    } catch (error: any) {
+      console.error("Error fetching audit logs:", error);
+      res.status(500).json({ message: "Failed to fetch audit logs" });
+    }
+  });
+
+  app.get('/api/projects/:id/audit-logs', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const userId = req.user.claims.sub;
+      
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      if (project.userId !== userId) {
+        return res.status(403).json({ message: "You don't have permission to view audit logs for this project" });
+      }
+      
+      const limit = req.query.limit ? parseInt(req.query.limit) : 100;
+      const offset = req.query.offset ? parseInt(req.query.offset) : 0;
+      
+      const auditLogs = await storage.getAuditLogs({
+        userId,
+        projectId,
+        limit,
+        offset,
+      });
+      
+      res.json({
+        projectId,
+        logs: auditLogs,
+        pagination: { limit, offset, total: auditLogs.length },
+        queriedAt: new Date().toISOString(),
+      });
+    } catch (error: any) {
+      console.error("Error fetching project audit logs:", error);
+      res.status(500).json({ message: "Failed to fetch audit logs" });
+    }
+  });
+
   // Create a project from a template
   app.post('/api/projects/from-template/:templateId', isAuthenticated, async (req: any, res) => {
     try {

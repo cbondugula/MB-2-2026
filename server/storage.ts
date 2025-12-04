@@ -97,7 +97,7 @@ import {
   insertContractSchema,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, desc, and, sql, gte, lte } from "drizzle-orm";
 
 export interface IStorage {
   // User operations (mandatory for Replit Auth)
@@ -156,6 +156,17 @@ export interface IStorage {
   // Activity operations
   getProjectActivities(projectId: number): Promise<ProjectActivity[]>;
   addProjectActivity(activity: InsertProjectActivity): Promise<ProjectActivity>;
+  
+  // Audit Log operations
+  getAuditLogs(filters: {
+    userId?: string;
+    projectId?: number;
+    action?: string;
+    startDate?: Date;
+    endDate?: Date;
+    limit?: number;
+    offset?: number;
+  }): Promise<ProjectActivity[]>;
   
   // AI Assistant operations
   createAiSession(session: InsertAiSession): Promise<AiSession>;
@@ -388,7 +399,48 @@ export class DatabaseStorage implements IStorage {
     return newActivity;
   }
 
-
+  async getAuditLogs(filters: {
+    userId?: string;
+    projectId?: number;
+    action?: string;
+    startDate?: Date;
+    endDate?: Date;
+    limit?: number;
+    offset?: number;
+  }): Promise<ProjectActivity[]> {
+    const conditions = [];
+    
+    if (filters.userId) {
+      conditions.push(eq(projectActivities.userId, filters.userId));
+    }
+    if (filters.projectId) {
+      conditions.push(eq(projectActivities.projectId, filters.projectId));
+    }
+    if (filters.action) {
+      conditions.push(eq(projectActivities.action, filters.action));
+    }
+    if (filters.startDate) {
+      conditions.push(gte(projectActivities.createdAt, filters.startDate));
+    }
+    if (filters.endDate) {
+      conditions.push(lte(projectActivities.createdAt, filters.endDate));
+    }
+    
+    const query = db.select().from(projectActivities);
+    
+    if (conditions.length > 0) {
+      return await query
+        .where(and(...conditions))
+        .orderBy(desc(projectActivities.createdAt))
+        .limit(filters.limit || 100)
+        .offset(filters.offset || 0);
+    }
+    
+    return await query
+      .orderBy(desc(projectActivities.createdAt))
+      .limit(filters.limit || 100)
+      .offset(filters.offset || 0);
+  }
 
   // AI Assistant operations
   async createAiSession(session: InsertAiSession): Promise<AiSession> {
