@@ -51,6 +51,10 @@ externalPort = 3000
 localPort = 41957
 externalPort = 3002
 
+[[ports]]
+localPort = 44345
+externalPort = 3003
+
 [agent]
 integrations = ["perplexity_v0==1.0.0", "javascript_anthropic==1.0.0", "javascript_gemini==1.0.0", "javascript_openai==1.0.0", "javascript_database==1.0.0", "javascript_xai==1.0.0", "javascript_stripe==1.0.0", "javascript_log_in_with_replit==1.0.0"]
 
