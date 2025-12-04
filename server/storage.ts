@@ -1189,6 +1189,54 @@ export default function MedicationTracker() {
     }
   }
 
+  async createDeployment(deploymentData: {
+    id: string;
+    projectId: number;
+    subdomain: string;
+    deploymentUrl: string;
+    status: string;
+    environment: string;
+    deployedBy: string;
+    deployedAt: Date;
+  }): Promise<Deployment> {
+    try {
+      const [deployment] = await db.insert(deployments).values({
+        id: deploymentData.id,
+        projectId: deploymentData.projectId,
+        name: `Deployment ${deploymentData.subdomain}`,
+        url: deploymentData.deploymentUrl,
+        status: deploymentData.status,
+        environment: deploymentData.environment,
+        region: 'us-east-1',
+        lastDeployment: deploymentData.deployedAt,
+        version: '1.0.0',
+        health: 'healthy',
+        traffic: '0 req/s',
+        uptime: '100%',
+        ssl: true,
+        customDomain: false,
+        buildTime: '2.3s',
+        memoryUsage: '128MB',
+        cpuUsage: '5%',
+      }).returning();
+      return deployment;
+    } catch (error) {
+      console.error('Failed to create deployment:', error);
+      throw error;
+    }
+  }
+
+  async getProjectDeployments(projectId: number): Promise<Deployment[]> {
+    try {
+      return await db.select().from(deployments)
+        .where(eq(deployments.projectId, projectId))
+        .orderBy(desc(deployments.lastDeployment));
+    } catch (error) {
+      console.error('Failed to fetch project deployments:', error);
+      return [];
+    }
+  }
+
   async getCodeReviews(): Promise<CodeReview[]> {
     try {
       return await db.select().from(codeReviews).orderBy(desc(codeReviews.createdAt));

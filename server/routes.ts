@@ -1102,6 +1102,105 @@ Respond with a JSON object:
     }
   });
 
+  // Deploy a project - creates a shareable URL
+  app.post('/api/projects/:id/deploy', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const userId = req.user.claims.sub;
+      const { environment = 'production' } = req.body;
+      
+      // Get the project
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // Verify ownership
+      if (project.userId !== userId) {
+        return res.status(403).json({ message: "You don't have permission to deploy this project" });
+      }
+      
+      // Generate unique subdomain from project name
+      const sanitizedName = project.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '-')
+        .replace(/-+/g, '-')
+        .substring(0, 30);
+      const uniqueId = Date.now().toString(36);
+      const subdomain = `${sanitizedName}-${uniqueId}`;
+      
+      // Create deployment record
+      const deploymentId = `deploy-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      const deploymentUrl = `https://${subdomain}.medbuilder.app`;
+      
+      // Store deployment record
+      const deployment = await storage.createDeployment({
+        id: deploymentId,
+        projectId,
+        subdomain,
+        deploymentUrl,
+        status: 'active',
+        environment,
+        deployedBy: userId,
+        deployedAt: new Date(),
+      });
+      
+      // Add activity log
+      await storage.addProjectActivity({
+        projectId,
+        userId,
+        action: "deployed",
+        description: `Deployed to ${deploymentUrl}`,
+        metadata: { deploymentId, subdomain, environment },
+      });
+      
+      res.json({
+        id: deploymentId,
+        deploymentUrl,
+        subdomain,
+        status: 'active',
+        environment,
+        deployedAt: new Date().toISOString(),
+      });
+    } catch (error: any) {
+      console.error("Error deploying project:", error);
+      res.status(500).json({ message: "Failed to deploy project", error: error.message });
+    }
+  });
+
+  // Get deployments for a project
+  app.get('/api/projects/:id/deployments', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+      
+      const userId = req.user.claims.sub;
+      
+      // Get the project
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // Verify ownership
+      if (project.userId !== userId) {
+        return res.status(403).json({ message: "You don't have permission to view these deployments" });
+      }
+      
+      const deployments = await storage.getProjectDeployments(projectId);
+      res.json(deployments);
+    } catch (error: any) {
+      console.error("Error fetching deployments:", error);
+      res.status(500).json({ message: "Failed to fetch deployments" });
+    }
+  });
+
   // Create a project from a template
   app.post('/api/projects/from-template/:templateId', isAuthenticated, async (req: any, res) => {
     try {
