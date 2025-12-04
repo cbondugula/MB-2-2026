@@ -21,6 +21,7 @@ import AppPreview from "@/pages/app-preview";
 import ProjectEditor from "@/pages/project-editor";
 import MyApps from "@/pages/my-apps";
 import Checkout from "@/pages/checkout";
+import CustomPricing from "@/pages/custom-pricing";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -31,6 +32,7 @@ function Router() {
         <>
           <Route path="/" component={Landing} />
           <Route path="/pricing" component={Pricing} />
+          <Route path="/custom-pricing" component={CustomPricing} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/templates" component={Templates} />
           <Route path="/contract-onboarding" component={ContractOnboarding} />
@@ -49,6 +51,7 @@ function Router() {
           <Route path="/preview" component={Preview} />
           <Route path="/hipaa-tools" component={HIPAATools} />
           <Route path="/pricing" component={Pricing} />
+          <Route path="/custom-pricing" component={CustomPricing} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/contract-onboarding" component={ContractOnboarding} />
           <Route path="/legal-documents" component={LegalDocuments} />
