@@ -167,6 +167,20 @@ MedBuilder utilizes a dual-platform strategy, separating healthcare-specific dev
 - **AI Assist Endpoint**: Generates healthcare-focused code with HIPAA awareness
 - **Authentication**: Replit Auth with project ownership verification
 
+### Viral Growth Features (December 4)
+- **Public Template Gallery** (`/gallery`): Browse, search, and fork HIPAA-compliant healthcare templates without login
+- **Community Showcase** (`/showcase`): Featured projects, voting system, category filters (clinical, telehealth, research, admin, patient-facing)
+- **Template Marketplace** (`/marketplace`): Premium templates with pricing, free tier, purchase flow, seller program (80% revenue share)
+- **MedBuilder Academy** (`/academy`): Learning platform with courses, HIPAA certification path, progress tracking, badges
+- **Database Schema**: 30+ new tables including publicTemplates, sharedLinks, showcases, showcaseVotes, usageQuotas, wearableIntegrations, telehealthSessions, ehrIntegrations, voiceCommands, translations, locales, marketplaceTemplates, badges, userBadges, courses, lessons, enrollments, teams, teamMembers, teamInvites, whiteLabelBranding, complianceRecommendations
+- **Backend Routes** (`/api/viral/*`): Full API for all viral growth features with auth checks, usage quotas, and HIPAA compliance
+- **Free Tier Limits**: 3 projects, 5 templates, 50 AI calls/month, 1 deployment, community support
+- **Healthcare Integrations**: Wearables (Apple Health, Google Fit, Fitbit), Telehealth (Jitsi, Doxy.me), EHR (Epic, Cerner, Allscripts)
+- **Voice Commands**: Voice-controlled development with intent parsing and command execution
+- **Gamification**: Badges, points, leaderboards, course completion awards
+- **Teams & Enterprise**: Organization management, team invites, seat management, white-label branding
+- **AI Compliance Coach**: Automated compliance scanning with recommendations and resolution tracking
+
 ### Pending Configuration
 - STRIPE_SECRET_KEY needs to be set with the correct secret key (starts with 'sk_test_' or 'sk_live_')
 - Current key is a publishable key (pk_) which only works on frontend

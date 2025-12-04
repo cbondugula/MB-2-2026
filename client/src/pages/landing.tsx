@@ -99,12 +99,36 @@ export default function Landing() {
             
             <div className="flex items-center space-x-3">
               <Button 
-                onClick={() => setShowDemo(!showDemo)}
-                variant="outline"
-                className="bg-gray-700/50 border-gray-500 text-gray-100 hover:bg-gray-600 hover:text-white hover:border-gray-400"
+                asChild
+                variant="ghost"
+                className="text-gray-300 hover:text-white hover:bg-gray-700/50"
                 size="sm"
               >
-                {showDemo ? 'Hide Demo' : 'View Demo'}
+                <Link href="/gallery">Gallery</Link>
+              </Button>
+              <Button 
+                asChild
+                variant="ghost"
+                className="text-gray-300 hover:text-white hover:bg-gray-700/50"
+                size="sm"
+              >
+                <Link href="/showcase">Showcase</Link>
+              </Button>
+              <Button 
+                asChild
+                variant="ghost"
+                className="text-gray-300 hover:text-white hover:bg-gray-700/50"
+                size="sm"
+              >
+                <Link href="/marketplace">Marketplace</Link>
+              </Button>
+              <Button 
+                asChild
+                variant="ghost"
+                className="text-gray-300 hover:text-white hover:bg-gray-700/50"
+                size="sm"
+              >
+                <Link href="/academy">Academy</Link>
               </Button>
               <Button 
                 asChild
@@ -113,14 +137,6 @@ export default function Landing() {
                 size="sm"
               >
                 <Link href="/pricing">Pricing</Link>
-              </Button>
-              <Button 
-                asChild
-                variant="outline"
-                className="bg-blue-700/20 border-blue-500 text-blue-200 hover:bg-blue-600 hover:text-white hover:border-blue-400"
-                size="sm"
-              >
-                <Link href="/legal-documents">Legal Docs</Link>
               </Button>
               <Button 
                 onClick={() => setShowChat(true)}

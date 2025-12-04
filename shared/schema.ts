@@ -1724,6 +1724,558 @@ export const quickActions = pgTable("quick_actions", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// ============================================
+// VIRAL GROWTH FEATURES (Reaching Millions)
+// ============================================
+
+// Public Template Gallery - Templates can be shared publicly
+export const publicTemplates = pgTable("public_templates", {
+  id: serial("id").primaryKey(),
+  templateId: integer("template_id").notNull(),
+  visibility: varchar("visibility").default("public"), // public, unlisted, private
+  shareSlug: varchar("share_slug").unique(),
+  ogImage: varchar("og_image"),
+  ogTitle: varchar("og_title"),
+  ogDescription: text("og_description"),
+  forkCount: integer("fork_count").default(0),
+  viewCount: integer("view_count").default(0),
+  likeCount: integer("like_count").default(0),
+  featuredAt: timestamp("featured_at"),
+  authorId: varchar("author_id"),
+  authorName: varchar("author_name"),
+  tags: jsonb("tags"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Shared Links - Shareable URLs for projects and apps
+export const sharedLinks = pgTable("shared_links", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id"),
+  templateId: integer("template_id"),
+  userId: varchar("user_id").notNull(),
+  slug: varchar("slug").unique().notNull(),
+  title: varchar("title"),
+  description: text("description"),
+  ogImage: varchar("og_image"),
+  ogMeta: jsonb("og_meta"),
+  accessType: varchar("access_type").default("view"), // view, fork, edit
+  password: varchar("password"),
+  expiresAt: timestamp("expires_at"),
+  maxViews: integer("max_views"),
+  viewCount: integer("view_count").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Community Showcase - User-created app gallery
+export const showcases = pgTable("showcases", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  title: varchar("title").notNull(),
+  description: text("description"),
+  shortDescription: varchar("short_description"),
+  thumbnailUrl: varchar("thumbnail_url"),
+  demoUrl: varchar("demo_url"),
+  sourceUrl: varchar("source_url"),
+  category: varchar("category"), // telehealth, ehr, patient-portal, research, etc.
+  tags: jsonb("tags"),
+  techStack: jsonb("tech_stack"),
+  likes: integer("likes").default(0),
+  views: integer("views").default(0),
+  forks: integer("forks").default(0),
+  isFeatured: boolean("is_featured").default(false),
+  featuredAt: timestamp("featured_at"),
+  status: varchar("status").default("pending"), // pending, approved, rejected, featured
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Showcase Votes - Upvotes for community showcases
+export const showcaseVotes = pgTable("showcase_votes", {
+  id: serial("id").primaryKey(),
+  showcaseId: integer("showcase_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  voteType: varchar("vote_type").default("up"), // up, down
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Usage Quotas - Free tier limits
+export const usageQuotas = pgTable("usage_quotas", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().unique(),
+  tier: varchar("tier").default("free"), // free, starter, professional, enterprise
+  aiCallsUsed: integer("ai_calls_used").default(0),
+  aiCallsLimit: integer("ai_calls_limit").default(50),
+  projectsUsed: integer("projects_used").default(0),
+  projectsLimit: integer("projects_limit").default(3),
+  templatesUsed: integer("templates_used").default(0),
+  templatesLimit: integer("templates_limit").default(5),
+  storageUsedMb: integer("storage_used_mb").default(0),
+  storageLimitMb: integer("storage_limit_mb").default(100),
+  collaboratorsLimit: integer("collaborators_limit").default(1),
+  deploymentsUsed: integer("deployments_used").default(0),
+  deploymentsLimit: integer("deployments_limit").default(1),
+  resetsAt: timestamp("resets_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Wearable Integrations - Apple HealthKit, Google Fit, etc.
+export const wearableIntegrations = pgTable("wearable_integrations", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  provider: varchar("provider").notNull(), // apple_health, google_fit, fitbit, garmin, samsung_health
+  status: varchar("status").default("disconnected"), // connected, disconnected, error
+  scopes: jsonb("scopes"), // ["heart_rate", "steps", "sleep", "blood_pressure"]
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  tokenExpiresAt: timestamp("token_expires_at"),
+  lastSyncAt: timestamp("last_sync_at"),
+  syncFrequency: varchar("sync_frequency").default("hourly"), // realtime, hourly, daily
+  settings: jsonb("settings"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Wearable Data - Synced health data from wearables
+export const wearableData = pgTable("wearable_data", {
+  id: serial("id").primaryKey(),
+  integrationId: integer("integration_id").notNull(),
+  dataType: varchar("data_type").notNull(), // heart_rate, steps, sleep, blood_pressure, blood_glucose, spo2
+  value: jsonb("value").notNull(),
+  unit: varchar("unit"),
+  recordedAt: timestamp("recorded_at").notNull(),
+  sourceDevice: varchar("source_device"),
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Telehealth Sessions - Video call integration
+export const telehealthSessions = pgTable("telehealth_sessions", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  hostId: varchar("host_id").notNull(),
+  provider: varchar("provider").default("jitsi"), // jitsi, zoom, doxy, agora, twilio
+  roomId: varchar("room_id").notNull(),
+  roomUrl: varchar("room_url"),
+  title: varchar("title"),
+  description: text("description"),
+  scheduledAt: timestamp("scheduled_at"),
+  startedAt: timestamp("started_at"),
+  endedAt: timestamp("ended_at"),
+  duration: integer("duration"), // in minutes
+  status: varchar("status").default("scheduled"), // scheduled, waiting, active, ended, cancelled
+  participants: jsonb("participants"),
+  maxParticipants: integer("max_participants").default(10),
+  isRecorded: boolean("is_recorded").default(false),
+  recordingUrl: varchar("recording_url"),
+  settings: jsonb("settings"),
+  hipaaCompliant: boolean("hipaa_compliant").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// EHR Integrations - Epic, Cerner, Allscripts connectors
+export const ehrIntegrations = pgTable("ehr_integrations", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  vendor: varchar("vendor").notNull(), // epic, cerner, allscripts, meditech, athena
+  clientId: varchar("client_id"),
+  clientSecret: text("client_secret"),
+  fhirEndpoint: varchar("fhir_endpoint"),
+  authEndpoint: varchar("auth_endpoint"),
+  tokenEndpoint: varchar("token_endpoint"),
+  scopes: jsonb("scopes"),
+  status: varchar("status").default("pending"), // pending, connected, error, revoked
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  tokenExpiresAt: timestamp("token_expires_at"),
+  lastSyncAt: timestamp("last_sync_at"),
+  settings: jsonb("settings"),
+  sandboxMode: boolean("sandbox_mode").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// EHR Sync Logs - Track EHR data synchronization
+export const ehrSyncLogs = pgTable("ehr_sync_logs", {
+  id: serial("id").primaryKey(),
+  integrationId: integer("integration_id").notNull(),
+  resourceType: varchar("resource_type").notNull(), // Patient, Observation, Encounter, etc.
+  action: varchar("action").notNull(), // read, create, update, delete
+  resourceId: varchar("resource_id"),
+  status: varchar("status").default("success"), // success, error, pending
+  requestData: jsonb("request_data"),
+  responseData: jsonb("response_data"),
+  errorMessage: text("error_message"),
+  duration: integer("duration"), // in milliseconds
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Voice Commands - Voice-controlled development
+export const voiceCommands = pgTable("voice_commands", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  transcript: text("transcript").notNull(),
+  confidence: integer("confidence"), // 0-100
+  intent: varchar("intent"), // create_component, add_field, run_test, deploy, etc.
+  action: varchar("action"), // The parsed action to execute
+  parameters: jsonb("parameters"), // Extracted parameters from voice command
+  result: jsonb("result"),
+  status: varchar("status").default("pending"), // pending, processing, completed, error
+  errorMessage: text("error_message"),
+  audioUrl: varchar("audio_url"),
+  duration: integer("duration"), // in milliseconds
+  language: varchar("language").default("en-US"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Voice Models - Custom voice model configurations
+export const voiceModels = pgTable("voice_models", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  provider: varchar("provider").default("whisper"), // whisper, google, azure, deepgram
+  modelId: varchar("model_id"),
+  language: varchar("language").default("en-US"),
+  vocabulary: jsonb("vocabulary"), // Custom medical terms
+  intents: jsonb("intents"), // Supported voice commands
+  settings: jsonb("settings"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Translations - Multi-language support (i18n)
+export const translations = pgTable("translations", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id"),
+  locale: varchar("locale").notNull(), // en-US, es-ES, zh-CN, etc.
+  namespace: varchar("namespace").default("common"), // common, errors, forms, etc.
+  key: varchar("key").notNull(),
+  value: text("value").notNull(),
+  context: text("context"),
+  status: varchar("status").default("draft"), // draft, review, approved
+  translatedBy: varchar("translated_by"), // user or 'ai'
+  approvedBy: varchar("approved_by"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Locales - Supported languages
+export const locales = pgTable("locales", {
+  id: serial("id").primaryKey(),
+  code: varchar("code").notNull().unique(), // en-US, es-ES, etc.
+  name: varchar("name").notNull(), // English (US), Spanish (Spain)
+  nativeName: varchar("native_name").notNull(), // English, Español
+  direction: varchar("direction").default("ltr"), // ltr, rtl
+  isActive: boolean("is_active").default(true),
+  isDefault: boolean("is_default").default(false),
+  completionPercent: integer("completion_percent").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Offline Manifests - Service worker offline support
+export const offlineManifests = pgTable("offline_manifests", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  version: varchar("version").notNull(),
+  assets: jsonb("assets"), // List of files to cache
+  routes: jsonb("routes"), // Routes available offline
+  size: integer("size"), // Total size in bytes
+  strategy: varchar("strategy").default("network-first"), // cache-first, network-first, stale-while-revalidate
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Sync Queue - Offline data sync queue
+export const syncQueue = pgTable("sync_queue", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  projectId: integer("project_id"),
+  action: varchar("action").notNull(), // create, update, delete
+  resourceType: varchar("resource_type").notNull(),
+  resourceId: varchar("resource_id"),
+  data: jsonb("data"),
+  status: varchar("status").default("pending"), // pending, syncing, synced, error
+  retryCount: integer("retry_count").default(0),
+  errorMessage: text("error_message"),
+  createdAt: timestamp("created_at").defaultNow(),
+  syncedAt: timestamp("synced_at"),
+});
+
+// Template Marketplace - Buy/sell templates
+export const marketplaceTemplates = pgTable("marketplace_templates", {
+  id: serial("id").primaryKey(),
+  templateId: integer("template_id").notNull(),
+  sellerId: varchar("seller_id").notNull(),
+  title: varchar("title").notNull(),
+  description: text("description"),
+  longDescription: text("long_description"),
+  price: integer("price").default(0), // in cents, 0 = free
+  currency: varchar("currency").default("USD"),
+  category: varchar("category"),
+  tags: jsonb("tags"),
+  screenshots: jsonb("screenshots"),
+  demoUrl: varchar("demo_url"),
+  version: varchar("version").default("1.0.0"),
+  downloads: integer("downloads").default(0),
+  rating: integer("rating").default(0), // 0-500 (divide by 100 for 0-5 stars)
+  reviewCount: integer("review_count").default(0),
+  status: varchar("status").default("pending"), // pending, approved, rejected, suspended
+  featuredAt: timestamp("featured_at"),
+  payoutAccount: varchar("payout_account"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Marketplace Purchases - Track template purchases
+export const marketplacePurchases = pgTable("marketplace_purchases", {
+  id: serial("id").primaryKey(),
+  marketplaceTemplateId: integer("marketplace_template_id").notNull(),
+  buyerId: varchar("buyer_id").notNull(),
+  sellerId: varchar("seller_id").notNull(),
+  price: integer("price").notNull(),
+  currency: varchar("currency").default("USD"),
+  status: varchar("status").default("completed"), // pending, completed, refunded
+  stripePaymentId: varchar("stripe_payment_id"),
+  downloadedAt: timestamp("downloaded_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Marketplace Reviews - Template reviews
+export const marketplaceReviews = pgTable("marketplace_reviews", {
+  id: serial("id").primaryKey(),
+  marketplaceTemplateId: integer("marketplace_template_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  rating: integer("rating").notNull(), // 1-5
+  title: varchar("title"),
+  content: text("content"),
+  isVerifiedPurchase: boolean("is_verified_purchase").default(false),
+  helpfulCount: integer("helpful_count").default(0),
+  status: varchar("status").default("published"), // published, hidden, flagged
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Badges - Achievement system
+export const badges = pgTable("badges", {
+  id: serial("id").primaryKey(),
+  code: varchar("code").notNull().unique(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  iconUrl: varchar("icon_url"),
+  iconName: varchar("icon_name"),
+  category: varchar("category"), // skill, achievement, certification, contribution
+  tier: varchar("tier").default("bronze"), // bronze, silver, gold, platinum
+  criteria: jsonb("criteria"), // Requirements to earn badge
+  points: integer("points").default(10),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User Badges - Badges earned by users
+export const userBadges = pgTable("user_badges", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  badgeId: integer("badge_id").notNull(),
+  earnedAt: timestamp("earned_at").defaultNow(),
+  metadata: jsonb("metadata"),
+});
+
+// User Points - Gamification points
+export const userPoints = pgTable("user_points", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().unique(),
+  totalPoints: integer("total_points").default(0),
+  level: integer("level").default(1),
+  levelName: varchar("level_name").default("Beginner"),
+  streakDays: integer("streak_days").default(0),
+  longestStreak: integer("longest_streak").default(0),
+  lastActivityAt: timestamp("last_activity_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Courses - MedBuilder Academy
+export const courses = pgTable("courses", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug").notNull().unique(),
+  title: varchar("title").notNull(),
+  description: text("description"),
+  shortDescription: varchar("short_description"),
+  thumbnailUrl: varchar("thumbnail_url"),
+  instructorId: varchar("instructor_id"),
+  instructorName: varchar("instructor_name"),
+  category: varchar("category"), // hipaa, development, telehealth, fhir, etc.
+  difficulty: varchar("difficulty").default("beginner"), // beginner, intermediate, advanced
+  duration: integer("duration"), // total minutes
+  lessonCount: integer("lesson_count").default(0),
+  enrollmentCount: integer("enrollment_count").default(0),
+  rating: integer("rating").default(0),
+  reviewCount: integer("review_count").default(0),
+  price: integer("price").default(0), // in cents, 0 = free
+  isFree: boolean("is_free").default(true),
+  isFeatured: boolean("is_featured").default(false),
+  isPublished: boolean("is_published").default(false),
+  prerequisites: jsonb("prerequisites"),
+  skills: jsonb("skills"), // Skills learned
+  certification: jsonb("certification"), // Certificate details if any
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Lessons - Course lessons
+export const lessons = pgTable("lessons", {
+  id: serial("id").primaryKey(),
+  courseId: integer("course_id").notNull(),
+  slug: varchar("slug").notNull(),
+  title: varchar("title").notNull(),
+  description: text("description"),
+  content: text("content"),
+  videoUrl: varchar("video_url"),
+  duration: integer("duration"), // in minutes
+  sortOrder: integer("sort_order").default(0),
+  lessonType: varchar("lesson_type").default("video"), // video, text, quiz, project, code
+  resources: jsonb("resources"), // downloadable files, links
+  codeExample: jsonb("code_example"),
+  quiz: jsonb("quiz"), // Quiz questions
+  isPreview: boolean("is_preview").default(false),
+  isPublished: boolean("is_published").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Enrollments - Course enrollments
+export const enrollments = pgTable("enrollments", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  courseId: integer("course_id").notNull(),
+  status: varchar("status").default("active"), // active, completed, paused
+  progress: integer("progress").default(0), // 0-100
+  completedLessons: jsonb("completed_lessons"),
+  lastLessonId: integer("last_lesson_id"),
+  startedAt: timestamp("started_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+  certificateUrl: varchar("certificate_url"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Teams - Team/Enterprise management (for viral growth)
+export const teams = pgTable("teams", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  slug: varchar("slug").unique(),
+  description: text("description"),
+  logoUrl: varchar("logo_url"),
+  website: varchar("website"),
+  industry: varchar("industry"), // hospital, clinic, research, pharma, etc.
+  size: varchar("size"), // 1-10, 11-50, 51-200, 201-500, 500+
+  ownerId: varchar("owner_id").notNull(),
+  tier: varchar("tier").default("team"), // team, business, enterprise
+  seats: integer("seats").default(5),
+  usedSeats: integer("used_seats").default(1),
+  settings: jsonb("settings"),
+  features: jsonb("features"), // enabled features
+  billingEmail: varchar("billing_email"),
+  stripeCustomerId: varchar("stripe_customer_id"),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Team Members - Team members
+export const teamMembers = pgTable("team_members", {
+  id: serial("id").primaryKey(),
+  teamId: integer("team_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  role: varchar("role").default("member"), // owner, admin, member, viewer
+  permissions: jsonb("permissions"),
+  invitedBy: varchar("invited_by"),
+  invitedAt: timestamp("invited_at"),
+  joinedAt: timestamp("joined_at"),
+  status: varchar("status").default("pending"), // pending, active, suspended
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Team Invites - Pending invites
+export const teamInvites = pgTable("team_invites", {
+  id: serial("id").primaryKey(),
+  teamId: integer("team_id").notNull(),
+  email: varchar("email").notNull(),
+  role: varchar("role").default("member"),
+  invitedBy: varchar("invited_by").notNull(),
+  token: varchar("token").unique(),
+  expiresAt: timestamp("expires_at"),
+  status: varchar("status").default("pending"), // pending, accepted, expired, revoked
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// White Label Branding - Custom branding for teams
+export const whiteLabelBranding = pgTable("white_label_branding", {
+  id: serial("id").primaryKey(),
+  teamId: integer("team_id").notNull().unique(),
+  logoUrl: varchar("logo_url"),
+  logoLightUrl: varchar("logo_light_url"),
+  faviconUrl: varchar("favicon_url"),
+  appName: varchar("app_name"),
+  customDomain: varchar("custom_domain"),
+  primaryColor: varchar("primary_color"),
+  secondaryColor: varchar("secondary_color"),
+  accentColor: varchar("accent_color"),
+  fontFamily: varchar("font_family"),
+  customCss: text("custom_css"),
+  headerHtml: text("header_html"),
+  footerHtml: text("footer_html"),
+  emailFromName: varchar("email_from_name"),
+  emailFromAddress: varchar("email_from_address"),
+  supportEmail: varchar("support_email"),
+  privacyUrl: varchar("privacy_url"),
+  termsUrl: varchar("terms_url"),
+  isActive: boolean("is_active").default(false),
+  verifiedAt: timestamp("verified_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Compliance Recommendations - AI Compliance Coach
+export const complianceRecommendations = pgTable("compliance_recommendations", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  rule: varchar("rule").notNull(), // hipaa-encryption, audit-logging, access-control, etc.
+  category: varchar("category").notNull(), // security, privacy, access, audit
+  severity: varchar("severity").default("medium"), // critical, high, medium, low
+  title: varchar("title").notNull(),
+  description: text("description"),
+  currentState: text("current_state"),
+  recommendation: text("recommendation"),
+  codeExample: text("code_example"),
+  affectedFiles: jsonb("affected_files"),
+  status: varchar("status").default("open"), // open, in_progress, resolved, dismissed
+  resolvedAt: timestamp("resolved_at"),
+  resolvedBy: varchar("resolved_by"),
+  aiGenerated: boolean("ai_generated").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Compliance Events - Track compliance actions
+export const complianceEvents = pgTable("compliance_events", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  eventType: varchar("event_type").notNull(), // scan, fix, dismiss, escalate
+  recommendationId: integer("recommendation_id"),
+  details: jsonb("details"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Audit Log Insert Schema and Types (HIPAA compliance)
 export const insertAuditLogSchema = createInsertSchema(auditLogs).omit({ id: true, timestamp: true });
 export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
@@ -1785,3 +2337,162 @@ export type InsertPlatformFeature = z.infer<typeof insertPlatformFeatureSchema>;
 export type PlatformFeature = typeof platformFeatures.$inferSelect;
 export type InsertQuickAction = z.infer<typeof insertQuickActionSchema>;
 export type QuickAction = typeof quickActions.$inferSelect;
+
+// ============================================
+// VIRAL GROWTH FEATURES - Insert Schemas & Types
+// ============================================
+
+// Public Templates
+export const insertPublicTemplateSchema = createInsertSchema(publicTemplates).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertPublicTemplate = z.infer<typeof insertPublicTemplateSchema>;
+export type PublicTemplate = typeof publicTemplates.$inferSelect;
+
+// Shared Links
+export const insertSharedLinkSchema = createInsertSchema(sharedLinks).omit({ id: true, createdAt: true });
+export type InsertSharedLink = z.infer<typeof insertSharedLinkSchema>;
+export type SharedLink = typeof sharedLinks.$inferSelect;
+
+// Showcases
+export const insertShowcaseSchema = createInsertSchema(showcases).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertShowcase = z.infer<typeof insertShowcaseSchema>;
+export type Showcase = typeof showcases.$inferSelect;
+
+// Showcase Votes
+export const insertShowcaseVoteSchema = createInsertSchema(showcaseVotes).omit({ id: true, createdAt: true });
+export type InsertShowcaseVote = z.infer<typeof insertShowcaseVoteSchema>;
+export type ShowcaseVote = typeof showcaseVotes.$inferSelect;
+
+// Usage Quotas
+export const insertUsageQuotaSchema = createInsertSchema(usageQuotas).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertUsageQuota = z.infer<typeof insertUsageQuotaSchema>;
+export type UsageQuota = typeof usageQuotas.$inferSelect;
+
+// Wearable Integrations
+export const insertWearableIntegrationSchema = createInsertSchema(wearableIntegrations).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertWearableIntegration = z.infer<typeof insertWearableIntegrationSchema>;
+export type WearableIntegration = typeof wearableIntegrations.$inferSelect;
+
+// Wearable Data
+export const insertWearableDataSchema = createInsertSchema(wearableData).omit({ id: true, createdAt: true });
+export type InsertWearableData = z.infer<typeof insertWearableDataSchema>;
+export type WearableData = typeof wearableData.$inferSelect;
+
+// Telehealth Sessions
+export const insertTelehealthSessionSchema = createInsertSchema(telehealthSessions).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertTelehealthSession = z.infer<typeof insertTelehealthSessionSchema>;
+export type TelehealthSession = typeof telehealthSessions.$inferSelect;
+
+// EHR Integrations
+export const insertEhrIntegrationSchema = createInsertSchema(ehrIntegrations).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertEhrIntegration = z.infer<typeof insertEhrIntegrationSchema>;
+export type EhrIntegration = typeof ehrIntegrations.$inferSelect;
+
+// EHR Sync Logs
+export const insertEhrSyncLogSchema = createInsertSchema(ehrSyncLogs).omit({ id: true, createdAt: true });
+export type InsertEhrSyncLog = z.infer<typeof insertEhrSyncLogSchema>;
+export type EhrSyncLog = typeof ehrSyncLogs.$inferSelect;
+
+// Voice Commands
+export const insertVoiceCommandSchema = createInsertSchema(voiceCommands).omit({ id: true, createdAt: true });
+export type InsertVoiceCommand = z.infer<typeof insertVoiceCommandSchema>;
+export type VoiceCommand = typeof voiceCommands.$inferSelect;
+
+// Voice Models
+export const insertVoiceModelSchema = createInsertSchema(voiceModels).omit({ id: true, createdAt: true });
+export type InsertVoiceModel = z.infer<typeof insertVoiceModelSchema>;
+export type VoiceModel = typeof voiceModels.$inferSelect;
+
+// Translations
+export const insertTranslationSchema = createInsertSchema(translations).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertTranslation = z.infer<typeof insertTranslationSchema>;
+export type Translation = typeof translations.$inferSelect;
+
+// Locales
+export const insertLocaleSchema = createInsertSchema(locales).omit({ id: true, createdAt: true });
+export type InsertLocale = z.infer<typeof insertLocaleSchema>;
+export type Locale = typeof locales.$inferSelect;
+
+// Offline Manifests
+export const insertOfflineManifestSchema = createInsertSchema(offlineManifests).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertOfflineManifest = z.infer<typeof insertOfflineManifestSchema>;
+export type OfflineManifest = typeof offlineManifests.$inferSelect;
+
+// Sync Queue
+export const insertSyncQueueSchema = createInsertSchema(syncQueue).omit({ id: true, createdAt: true });
+export type InsertSyncQueue = z.infer<typeof insertSyncQueueSchema>;
+export type SyncQueueItem = typeof syncQueue.$inferSelect;
+
+// Marketplace Templates
+export const insertMarketplaceTemplateSchema = createInsertSchema(marketplaceTemplates).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertMarketplaceTemplate = z.infer<typeof insertMarketplaceTemplateSchema>;
+export type MarketplaceTemplate = typeof marketplaceTemplates.$inferSelect;
+
+// Marketplace Purchases
+export const insertMarketplacePurchaseSchema = createInsertSchema(marketplacePurchases).omit({ id: true, createdAt: true });
+export type InsertMarketplacePurchase = z.infer<typeof insertMarketplacePurchaseSchema>;
+export type MarketplacePurchase = typeof marketplacePurchases.$inferSelect;
+
+// Marketplace Reviews
+export const insertMarketplaceReviewSchema = createInsertSchema(marketplaceReviews).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertMarketplaceReview = z.infer<typeof insertMarketplaceReviewSchema>;
+export type MarketplaceReview = typeof marketplaceReviews.$inferSelect;
+
+// Badges
+export const insertBadgeSchema = createInsertSchema(badges).omit({ id: true, createdAt: true });
+export type InsertBadge = z.infer<typeof insertBadgeSchema>;
+export type Badge = typeof badges.$inferSelect;
+
+// User Badges
+export const insertUserBadgeSchema = createInsertSchema(userBadges).omit({ id: true });
+export type InsertUserBadge = z.infer<typeof insertUserBadgeSchema>;
+export type UserBadge = typeof userBadges.$inferSelect;
+
+// User Points
+export const insertUserPointsSchema = createInsertSchema(userPoints).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertUserPoints = z.infer<typeof insertUserPointsSchema>;
+export type UserPoints = typeof userPoints.$inferSelect;
+
+// Courses
+export const insertCourseSchema = createInsertSchema(courses).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertCourse = z.infer<typeof insertCourseSchema>;
+export type Course = typeof courses.$inferSelect;
+
+// Lessons
+export const insertLessonSchema = createInsertSchema(lessons).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertLesson = z.infer<typeof insertLessonSchema>;
+export type Lesson = typeof lessons.$inferSelect;
+
+// Enrollments
+export const insertEnrollmentSchema = createInsertSchema(enrollments).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertEnrollment = z.infer<typeof insertEnrollmentSchema>;
+export type Enrollment = typeof enrollments.$inferSelect;
+
+// Teams
+export const insertTeamSchema = createInsertSchema(teams).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertTeam = z.infer<typeof insertTeamSchema>;
+export type Team = typeof teams.$inferSelect;
+
+// Team Members
+export const insertTeamMemberSchema = createInsertSchema(teamMembers).omit({ id: true, createdAt: true });
+export type InsertTeamMember = z.infer<typeof insertTeamMemberSchema>;
+export type TeamMember = typeof teamMembers.$inferSelect;
+
+// Team Invites
+export const insertTeamInviteSchema = createInsertSchema(teamInvites).omit({ id: true, createdAt: true });
+export type InsertTeamInvite = z.infer<typeof insertTeamInviteSchema>;
+export type TeamInvite = typeof teamInvites.$inferSelect;
+
+// White Label Branding
+export const insertWhiteLabelBrandingSchema = createInsertSchema(whiteLabelBranding).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertWhiteLabelBranding = z.infer<typeof insertWhiteLabelBrandingSchema>;
+export type WhiteLabelBranding = typeof whiteLabelBranding.$inferSelect;
+
+// Compliance Recommendations
+export const insertComplianceRecommendationSchema = createInsertSchema(complianceRecommendations).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertComplianceRecommendation = z.infer<typeof insertComplianceRecommendationSchema>;
+export type ComplianceRecommendation = typeof complianceRecommendations.$inferSelect;
+
+// Compliance Events
+export const insertComplianceEventSchema = createInsertSchema(complianceEvents).omit({ id: true, createdAt: true });
+export type InsertComplianceEvent = z.infer<typeof insertComplianceEventSchema>;
+export type ComplianceEvent = typeof complianceEvents.$inferSelect;

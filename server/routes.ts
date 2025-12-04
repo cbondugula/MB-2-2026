@@ -44,6 +44,7 @@ import { bciRouter } from "./brain-computer-interface";
 import { tjcComplianceRouter } from "./tjc-compliance-service";
 import { healthcareTestingRouter } from "./healthcare-testing-service";
 import { superCSAgentRoutes } from "./routes/super-cs-agent";
+import { viralGrowthRouter } from "./routes/viral-growth";
 // Removed: multiAIInnovationService - now handled by orchestrators
 import { csAgentService } from "./cs-agent-dynamic-service";
 import { platformAnalyticsService } from "./platform-analytics-service";
@@ -3703,6 +3704,9 @@ Respond with a JSON object:
   
   // Super CS Agent Routes
   app.use('/api/super-cs-agent', superCSAgentRoutes);
+
+  // Viral Growth Features Routes (Public Gallery, Sharing, Marketplace, Teams, etc.)
+  app.use('/api/viral', viralGrowthRouter);
 
   app.post('/api/super-agent/convert-static-to-dynamic', async (req, res) => {
     try {

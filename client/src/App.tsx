@@ -23,6 +23,10 @@ import MyApps from "@/pages/my-apps";
 import Checkout from "@/pages/checkout";
 import CustomPricing from "@/pages/custom-pricing";
 import Workspace from "@/pages/workspace";
+import Gallery from "@/pages/gallery";
+import Showcase from "@/pages/showcase";
+import Marketplace from "@/pages/marketplace";
+import Academy from "@/pages/academy";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -40,6 +44,10 @@ function Router() {
           <Route path="/legal-documents" component={LegalDocuments} />
           <Route path="/documentation" component={Documentation} />
           <Route path="/apps/:appId" component={AppPreview} />
+          <Route path="/gallery" component={Gallery} />
+          <Route path="/showcase" component={Showcase} />
+          <Route path="/marketplace" component={Marketplace} />
+          <Route path="/academy" component={Academy} />
         </>
       ) : (
         <>
@@ -61,6 +69,10 @@ function Router() {
           <Route path="/editor/:projectId" component={ProjectEditor} />
           <Route path="/workspace/:projectId" component={Workspace} />
           <Route path="/my-apps" component={MyApps} />
+          <Route path="/gallery" component={Gallery} />
+          <Route path="/showcase" component={Showcase} />
+          <Route path="/marketplace" component={Marketplace} />
+          <Route path="/academy" component={Academy} />
         </>
       )}
       <Route component={NotFound} />
