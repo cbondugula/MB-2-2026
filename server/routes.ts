@@ -4819,6 +4819,59 @@ Respond with ONLY valid JSON array, no explanation.`;
     }
   });
 
+  // Dynamic data endpoints - database-driven content
+  app.get('/api/compliance-checks', async (req, res) => {
+    try {
+      const checks = await storage.getComplianceChecks();
+      res.json(checks);
+    } catch (error: any) {
+      console.error("Error fetching compliance checks:", error);
+      res.status(500).json({ message: "Failed to fetch compliance checks" });
+    }
+  });
+
+  app.get('/api/example-prompts', async (req, res) => {
+    try {
+      const { userMode } = req.query;
+      const prompts = await storage.getExamplePrompts(userMode as string);
+      res.json(prompts);
+    } catch (error: any) {
+      console.error("Error fetching example prompts:", error);
+      res.status(500).json({ message: "Failed to fetch example prompts" });
+    }
+  });
+
+  app.get('/api/platform-features', async (req, res) => {
+    try {
+      const features = await storage.getPlatformFeatures();
+      res.json(features);
+    } catch (error: any) {
+      console.error("Error fetching platform features:", error);
+      res.status(500).json({ message: "Failed to fetch platform features" });
+    }
+  });
+
+  app.get('/api/quick-actions', async (req, res) => {
+    try {
+      const actions = await storage.getQuickActions();
+      res.json(actions);
+    } catch (error: any) {
+      console.error("Error fetching quick actions:", error);
+      res.status(500).json({ message: "Failed to fetch quick actions" });
+    }
+  });
+
+  app.get('/api/audit-logs', isAuthenticated, async (req, res) => {
+    try {
+      const { limit = 50 } = req.query;
+      const logs = await storage.getAuditLogs(Number(limit));
+      res.json(logs);
+    } catch (error: any) {
+      console.error("Error fetching audit logs:", error);
+      res.status(500).json({ message: "Failed to fetch audit logs" });
+    }
+  });
+
   // Stripe payment routes
   app.post("/api/create-payment-intent", async (req: any, res) => {
     try {

@@ -28,7 +28,11 @@ import {
   platformMetrics,
   revenueProjections,
   competitiveAnalysis,
-  ipPortfolio
+  ipPortfolio,
+  complianceChecks,
+  examplePrompts,
+  platformFeatures,
+  quickActions
 } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import { seedPlatformAnalytics } from "./platform-analytics-seed";
@@ -69,6 +73,10 @@ export async function seedDatabase() {
     await db.delete(revenueProjections);
     await db.delete(competitiveAnalysis);
     await db.delete(ipPortfolio);
+    await db.delete(complianceChecks);
+    await db.delete(examplePrompts);
+    await db.delete(platformFeatures);
+    await db.delete(quickActions);
     
     console.log('✅ Existing data cleared, starting fresh seed...');
 
@@ -965,6 +973,302 @@ export default function FHIRPatientSearch() {
     ];
 
     await db.insert(pricingPlans).values(pricingPlanData);
+
+    // Seed compliance checks (HIPAA security items)
+    const complianceCheckData = [
+      {
+        name: 'Data Encryption',
+        description: 'Ensure all PHI is encrypted at rest and in transit using AES-256',
+        category: 'security',
+        iconName: 'Lock',
+        checkType: 'automatic',
+        severity: 'critical',
+        defaultStatus: 'passed',
+        remediationSteps: ['Enable TLS 1.3', 'Configure AES-256 encryption', 'Verify key management'],
+        sortOrder: 1,
+        isActive: true
+      },
+      {
+        name: 'Access Control',
+        description: 'Role-based access control with minimum necessary privilege',
+        category: 'access',
+        iconName: 'Key',
+        checkType: 'automatic',
+        severity: 'critical',
+        defaultStatus: 'passed',
+        remediationSteps: ['Implement RBAC', 'Configure MFA', 'Review access permissions'],
+        sortOrder: 2,
+        isActive: true
+      },
+      {
+        name: 'Audit Logging',
+        description: 'Comprehensive logging of all PHI access and modifications',
+        category: 'audit',
+        iconName: 'Activity',
+        checkType: 'automatic',
+        severity: 'high',
+        defaultStatus: 'passed',
+        remediationSteps: ['Enable audit logs', 'Configure log retention', 'Set up monitoring'],
+        sortOrder: 3,
+        isActive: true
+      },
+      {
+        name: 'Data Backup',
+        description: 'Regular encrypted backups with tested recovery procedures',
+        category: 'security',
+        iconName: 'Database',
+        checkType: 'automatic',
+        severity: 'high',
+        defaultStatus: 'passed',
+        remediationSteps: ['Configure automated backups', 'Test recovery procedures', 'Verify encryption'],
+        sortOrder: 4,
+        isActive: true
+      },
+      {
+        name: 'User Authentication',
+        description: 'Strong authentication mechanisms with password policies',
+        category: 'access',
+        iconName: 'Users',
+        checkType: 'automatic',
+        severity: 'critical',
+        defaultStatus: 'passed',
+        remediationSteps: ['Enforce strong passwords', 'Enable MFA', 'Configure session timeouts'],
+        sortOrder: 5,
+        isActive: true
+      },
+      {
+        name: 'Session Management',
+        description: 'Secure session handling with automatic timeout',
+        category: 'access',
+        iconName: 'Clock',
+        checkType: 'automatic',
+        severity: 'medium',
+        defaultStatus: 'warning',
+        remediationSteps: ['Reduce session timeout', 'Enable secure cookies', 'Implement session revocation'],
+        sortOrder: 6,
+        isActive: true
+      },
+      {
+        name: 'Data Masking',
+        description: 'PHI masking in logs and non-production environments',
+        category: 'privacy',
+        iconName: 'Eye',
+        checkType: 'automatic',
+        severity: 'high',
+        defaultStatus: 'passed',
+        remediationSteps: ['Configure data masking', 'Review log outputs', 'Mask test data'],
+        sortOrder: 7,
+        isActive: true
+      },
+      {
+        name: 'Network Security',
+        description: 'Firewall rules and network segmentation for PHI systems',
+        category: 'security',
+        iconName: 'Shield',
+        checkType: 'manual',
+        severity: 'critical',
+        defaultStatus: 'passed',
+        remediationSteps: ['Configure firewalls', 'Implement network segmentation', 'Enable DDoS protection'],
+        sortOrder: 8,
+        isActive: true
+      }
+    ];
+
+    await db.insert(complianceChecks).values(complianceCheckData);
+
+    // Seed example prompts for landing page
+    const examplePromptData = [
+      {
+        prompt: 'I need an app to schedule patient appointments and send reminders',
+        category: 'scheduling',
+        userMode: 'healthcare',
+        description: 'Patient appointment management system',
+        complexity: 'medium',
+        sortOrder: 1,
+        isActive: true
+      },
+      {
+        prompt: 'Create a simple form for patients to update their medical history',
+        category: 'patient-intake',
+        userMode: 'healthcare',
+        description: 'Patient medical history intake form',
+        complexity: 'simple',
+        sortOrder: 2,
+        isActive: true
+      },
+      {
+        prompt: 'Build a medication tracker that alerts patients when to take pills',
+        category: 'medication',
+        userMode: 'healthcare',
+        description: 'Medication reminder and tracking app',
+        complexity: 'medium',
+        sortOrder: 3,
+        isActive: true
+      },
+      {
+        prompt: 'I want to track patient vitals and create progress reports',
+        category: 'clinical',
+        userMode: 'healthcare',
+        description: 'Patient vitals monitoring dashboard',
+        complexity: 'medium',
+        sortOrder: 4,
+        isActive: true
+      },
+      {
+        prompt: 'Create a secure messaging app for my clinic staff',
+        category: 'communication',
+        userMode: 'healthcare',
+        description: 'HIPAA-compliant staff messaging',
+        complexity: 'medium',
+        sortOrder: 5,
+        isActive: true
+      },
+      {
+        prompt: 'Build a tool to manage patient referrals between doctors',
+        category: 'referral',
+        userMode: 'healthcare',
+        description: 'Patient referral management system',
+        complexity: 'complex',
+        sortOrder: 6,
+        isActive: true
+      },
+      {
+        prompt: 'Create a HIPAA-compliant patient registration form with real-time validation',
+        category: 'patient-intake',
+        userMode: 'developer',
+        description: 'Secure patient registration with validation',
+        complexity: 'medium',
+        sortOrder: 1,
+        isActive: true
+      },
+      {
+        prompt: 'Build a telemedicine platform with video calling and secure messaging',
+        category: 'telehealth',
+        userMode: 'developer',
+        description: 'Full-featured telehealth platform',
+        complexity: 'complex',
+        sortOrder: 2,
+        isActive: true
+      },
+      {
+        prompt: 'Generate an EHR integration dashboard with FHIR R4 support',
+        category: 'integration',
+        userMode: 'developer',
+        description: 'EHR integration with FHIR standards',
+        complexity: 'complex',
+        sortOrder: 3,
+        isActive: true
+      },
+      {
+        prompt: 'Design a clinical decision support system with AI recommendations',
+        category: 'clinical-ai',
+        userMode: 'developer',
+        description: 'AI-powered clinical decision support',
+        complexity: 'complex',
+        sortOrder: 4,
+        isActive: true
+      },
+      {
+        prompt: 'Create a medical device data collection app with IoT sensors',
+        category: 'iot',
+        userMode: 'developer',
+        description: 'IoT medical device integration',
+        complexity: 'complex',
+        sortOrder: 5,
+        isActive: true
+      },
+      {
+        prompt: 'Build a pharmaceutical drug tracking system with blockchain',
+        category: 'pharma',
+        userMode: 'developer',
+        description: 'Blockchain-based drug tracking',
+        complexity: 'complex',
+        sortOrder: 6,
+        isActive: true
+      }
+    ];
+
+    await db.insert(examplePrompts).values(examplePromptData);
+
+    // Seed platform features (pricing page benefits)
+    const platformFeatureData = [
+      {
+        title: 'HIPAA Compliant',
+        description: 'Built-in compliance automation for healthcare regulations',
+        iconName: 'Shield',
+        category: 'compliance',
+        sortOrder: 1,
+        isActive: true
+      },
+      {
+        title: 'AI-Powered',
+        description: 'Advanced AI models for intelligent code generation',
+        iconName: 'Cpu',
+        category: 'ai',
+        sortOrder: 2,
+        isActive: true
+      },
+      {
+        title: 'Global Standards',
+        description: 'HL7 FHIR, DICOM, ICD-10 support out of the box',
+        iconName: 'Globe',
+        category: 'standards',
+        sortOrder: 3,
+        isActive: true
+      },
+      {
+        title: 'Secure by Design',
+        description: 'Enterprise-grade security with BAA and SOC 2 compliance',
+        iconName: 'HeartPulse',
+        category: 'security',
+        sortOrder: 4,
+        isActive: true
+      }
+    ];
+
+    await db.insert(platformFeatures).values(platformFeatureData);
+
+    // Seed quick actions for dashboard
+    const quickActionData = [
+      {
+        title: 'Build New App',
+        description: 'Create a healthcare application with AI assistance',
+        iconName: 'Rocket',
+        href: '/app-builder',
+        isPrimary: true,
+        sortOrder: 1,
+        isActive: true
+      },
+      {
+        title: 'Browse Templates',
+        description: 'Start from a pre-built HIPAA-compliant template',
+        iconName: 'FileCode',
+        href: '/templates',
+        isPrimary: false,
+        sortOrder: 2,
+        isActive: true
+      },
+      {
+        title: 'My Apps',
+        description: 'View and manage your existing projects',
+        iconName: 'FolderOpen',
+        href: '/my-apps',
+        isPrimary: false,
+        sortOrder: 3,
+        isActive: true
+      },
+      {
+        title: 'Components',
+        description: 'Explore reusable UI components',
+        iconName: 'Puzzle',
+        href: '/components',
+        isPrimary: false,
+        sortOrder: 4,
+        isActive: true
+      }
+    ];
+
+    await db.insert(quickActions).values(quickActionData);
 
     // Seed healthcare domains
     const domains = [
@@ -2369,6 +2673,8 @@ export default function FHIRPatientSearch() {
     console.log(`👥 Created: ${collaboratorData.length} project collaborators`);
     console.log(`📈 Created: 4 executive metric datasets (metrics, ROI, competitive, revenue)`);
     console.log(`💰 Created: Platform analytics data (revenue projections, IP portfolio, competitive analysis)`);
+    console.log(`🔒 Created: ${complianceCheckData.length} compliance checks, ${examplePromptData.length} example prompts`);
+    console.log(`🎯 Created: ${platformFeatureData.length} platform features, ${quickActionData.length} quick actions`);
     console.log(`👤 Created: 1 user, 1 sample project`);
 
   } catch (error) {

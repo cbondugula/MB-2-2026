@@ -48,6 +48,11 @@ import {
   healthcareBlueprints,
   phiScanResults,
   packageHealth,
+  complianceChecks,
+  examplePrompts,
+  platformFeatures,
+  quickActions,
+  auditLogs,
   type User,
   type UpsertUser,
   type Project,
@@ -117,6 +122,11 @@ import {
   type InsertPhiScanResult,
   type PackageHealth,
   type InsertPackageHealth,
+  type ComplianceCheck,
+  type ExamplePrompt,
+  type PlatformFeature,
+  type QuickAction,
+  type AuditLog,
   insertHealthcareDomainSchema,
   insertHealthcareAgentSchema,
   insertHealthcareStandardSchema,
@@ -1792,6 +1802,62 @@ This agreement incorporates organization-specific requirements and automatically
       }
     };
   }
+
+  // Dynamic content operations - database-driven content
+  async getComplianceChecks(): Promise<ComplianceCheck[]> {
+    try {
+      const checks = await db.select().from(complianceChecks).where(eq(complianceChecks.isActive, true)).orderBy(complianceChecks.sortOrder);
+      return checks;
+    } catch (error) {
+      console.error('Failed to fetch compliance checks:', error);
+      return [];
+    }
+  }
+
+  async getExamplePrompts(userMode?: string): Promise<ExamplePrompt[]> {
+    try {
+      if (userMode) {
+        const prompts = await db.select().from(examplePrompts).where(and(eq(examplePrompts.isActive, true), eq(examplePrompts.userMode, userMode))).orderBy(examplePrompts.sortOrder);
+        return prompts;
+      }
+      const prompts = await db.select().from(examplePrompts).where(eq(examplePrompts.isActive, true)).orderBy(examplePrompts.sortOrder);
+      return prompts;
+    } catch (error) {
+      console.error('Failed to fetch example prompts:', error);
+      return [];
+    }
+  }
+
+  async getPlatformFeatures(): Promise<PlatformFeature[]> {
+    try {
+      const features = await db.select().from(platformFeatures).where(eq(platformFeatures.isActive, true)).orderBy(platformFeatures.sortOrder);
+      return features;
+    } catch (error) {
+      console.error('Failed to fetch platform features:', error);
+      return [];
+    }
+  }
+
+  async getQuickActions(): Promise<QuickAction[]> {
+    try {
+      const actions = await db.select().from(quickActions).where(eq(quickActions.isActive, true)).orderBy(quickActions.sortOrder);
+      return actions;
+    } catch (error) {
+      console.error('Failed to fetch quick actions:', error);
+      return [];
+    }
+  }
+
+  async getAuditLogs(limit: number = 50): Promise<AuditLog[]> {
+    try {
+      const logs = await db.select().from(auditLogs).orderBy(desc(auditLogs.timestamp)).limit(limit);
+      return logs;
+    } catch (error) {
+      console.error('Failed to fetch audit logs:', error);
+      return [];
+    }
+  }
+
   // CS Agent dynamic data operations implementation
   async getCSAgentMetrics(): Promise<{
     totalProjects: number;

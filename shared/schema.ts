@@ -1670,6 +1670,60 @@ export const ipPortfolio = pgTable("ip_portfolio", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Compliance Checks - HIPAA security check items
+export const complianceChecks = pgTable("compliance_checks", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  category: varchar("category").notNull(), // security, privacy, access, audit
+  iconName: varchar("icon_name").default("Shield"),
+  checkType: varchar("check_type").notNull(), // automatic, manual, hybrid
+  severity: varchar("severity").default("high"), // critical, high, medium, low
+  defaultStatus: varchar("default_status").default("pending"), // passed, warning, failed, pending
+  remediationSteps: jsonb("remediation_steps"), // Steps to fix if failed
+  sortOrder: integer("sort_order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Example Prompts - Database-driven landing page prompts
+export const examplePrompts = pgTable("example_prompts", {
+  id: serial("id").primaryKey(),
+  prompt: text("prompt").notNull(),
+  category: varchar("category").notNull(), // healthcare, developer, clinical, research
+  userMode: varchar("user_mode").notNull(), // healthcare, developer
+  description: text("description"),
+  complexity: varchar("complexity").default("medium"), // simple, medium, complex
+  sortOrder: integer("sort_order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Platform Features - Feature benefit cards
+export const platformFeatures = pgTable("platform_features", {
+  id: serial("id").primaryKey(),
+  title: varchar("title").notNull(),
+  description: text("description").notNull(),
+  iconName: varchar("icon_name").default("Shield"),
+  category: varchar("category"), // compliance, ai, development, security
+  sortOrder: integer("sort_order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Quick Actions - Dashboard quick action buttons
+export const quickActions = pgTable("quick_actions", {
+  id: serial("id").primaryKey(),
+  title: varchar("title").notNull(),
+  description: text("description").notNull(),
+  iconName: varchar("icon_name").default("Rocket"),
+  href: varchar("href").notNull(),
+  isPrimary: boolean("is_primary").default(false),
+  sortOrder: integer("sort_order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Audit Log Insert Schema and Types (HIPAA compliance)
 export const insertAuditLogSchema = createInsertSchema(auditLogs).omit({ id: true, timestamp: true });
 export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
@@ -1715,3 +1769,19 @@ export type InsertCompetitiveAnalysis = z.infer<typeof insertCompetitiveAnalysis
 export type CompetitiveAnalysis = typeof competitiveAnalysis.$inferSelect;
 export type InsertIpPortfolio = z.infer<typeof insertIpPortfolioSchema>;
 export type IpPortfolio = typeof ipPortfolio.$inferSelect;
+
+// Dynamic Data Insert Schemas
+export const insertComplianceCheckSchema = createInsertSchema(complianceChecks).omit({ id: true, createdAt: true });
+export const insertExamplePromptSchema = createInsertSchema(examplePrompts).omit({ id: true, createdAt: true });
+export const insertPlatformFeatureSchema = createInsertSchema(platformFeatures).omit({ id: true, createdAt: true });
+export const insertQuickActionSchema = createInsertSchema(quickActions).omit({ id: true, createdAt: true });
+
+// Dynamic Data Types
+export type InsertComplianceCheck = z.infer<typeof insertComplianceCheckSchema>;
+export type ComplianceCheck = typeof complianceChecks.$inferSelect;
+export type InsertExamplePrompt = z.infer<typeof insertExamplePromptSchema>;
+export type ExamplePrompt = typeof examplePrompts.$inferSelect;
+export type InsertPlatformFeature = z.infer<typeof insertPlatformFeatureSchema>;
+export type PlatformFeature = typeof platformFeatures.$inferSelect;
+export type InsertQuickAction = z.infer<typeof insertQuickActionSchema>;
+export type QuickAction = typeof quickActions.$inferSelect;
