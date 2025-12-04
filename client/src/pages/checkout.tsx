@@ -93,6 +93,7 @@ const CheckoutForm = ({ selectedPlan }: { selectedPlan: any }) => {
 export default function Checkout() {
   const [clientSecret, setClientSecret] = useState("");
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
   const [, setLocation] = useLocation();
 
   // Get plan from URL params or default to Professional
@@ -161,19 +162,51 @@ export default function Checkout() {
         const data = await response.json();
         if (data.clientSecret) {
           setClientSecret(data.clientSecret);
+        } else if (data.error) {
+          setError(data.error);
         }
       })
-      .catch((error) => {
-        console.error('Error creating payment intent:', error);
+      .catch((err) => {
+        console.error('Error creating payment intent:', err);
+        setError('Unable to set up payment. Please try again later.');
       });
   }, []);
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Shield className="w-8 h-8 text-red-500" />
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Payment Setup Issue</h2>
+          <p className="text-gray-400 mb-6">{error}</p>
+          <div className="flex flex-col space-y-3">
+            <Link href="/pricing">
+              <Button className="w-full bg-emerald-600 hover:bg-emerald-700" data-testid="button-back-pricing">
+                Back to Pricing
+              </Button>
+            </Link>
+            <Button 
+              variant="outline" 
+              className="border-gray-600 text-gray-300"
+              onClick={() => window.location.reload()}
+              data-testid="button-retry"
+            >
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!clientSecret) {
     return (
       <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-gray-400">Setting up your subscription...</p>
+          <p className="text-gray-400" data-testid="text-loading">Setting up your subscription...</p>
         </div>
       </div>
     );

@@ -3557,7 +3557,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/create-payment-intent", async (req: any, res) => {
     try {
       const Stripe = (await import('stripe')).default;
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+      const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+      
+      if (!stripeSecretKey) {
+        console.error('STRIPE_SECRET_KEY is not configured');
+        return res.status(500).json({ error: 'Payment system not configured' });
+      }
+      
+      const stripe = new Stripe(stripeSecretKey);
 
       const { planName, billing, amount } = req.body;
       
