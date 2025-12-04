@@ -65,9 +65,10 @@ export default function HIPAATools() {
     queryKey: ['/api/compliance-checks'],
   });
 
-  const { data: auditLogs = [], isLoading: logsLoading } = useQuery<AuditLogEntry[]>({
+  const { data: auditLogsData, isLoading: logsLoading } = useQuery<{ logs: AuditLogEntry[], pagination?: any }>({
     queryKey: ['/api/audit-logs'],
   });
+  const auditLogs = auditLogsData?.logs ?? [];
 
   const passedChecks = complianceChecks.filter(c => c.status === 'passed').length;
   const warningChecks = complianceChecks.filter(c => c.status === 'warning').length;
