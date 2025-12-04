@@ -91,3 +91,23 @@ MedBuilder utilizes a dual-platform strategy, separating healthcare-specific dev
 - tsx
 - ESBuild
 - PostCSS
+
+### Payment Integration
+- Stripe for subscription billing
+- Three pricing tiers: Starter ($29/mo), Professional ($79/mo), Enterprise ($299/mo)
+- Monthly/yearly toggle with 17% yearly savings
+- **Note**: Requires STRIPE_SECRET_KEY (starts with 'sk_') in Secrets for payment processing
+
+## Recent Updates (December 2024)
+
+### Completed Features
+- Full Stripe payment integration UI with checkout flow
+- Pricing page with 3 tiers and billing toggle
+- Enhanced error handling for Stripe configuration
+- All core pages tested and working (landing, pricing, templates, dashboard, documentation, HIPAA tools)
+- Consistent dark green/black theme across all pages
+- Back button navigation on all pages
+
+### Pending Configuration
+- STRIPE_SECRET_KEY needs to be set with the correct secret key (starts with 'sk_test_' or 'sk_live_')
+- Current key is a publishable key (pk_) which only works on frontend
