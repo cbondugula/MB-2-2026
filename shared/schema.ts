@@ -1062,7 +1062,7 @@ export const chatConversations = pgTable("chat_conversations", {
   title: varchar("title").notNull(), // Auto-generated or user-provided
   initialPrompt: text("initial_prompt"), // First message that started the conversation
   status: varchar("status").notNull().default("active"), // active, completed, archived
-  generatedAppId: varchar("generated_app_id").references(() => generatedApps.id, { onDelete: "set null" }), // Link to app if conversation resulted in app creation
+  generatedAppId: varchar("generated_app_id"), // Link to app if conversation resulted in app creation (no FK to avoid circular ref)
   conversationType: varchar("conversation_type").default("chat"), // chat, voice, quick-action
   context: jsonb("context"), // Store conversation context, user preferences, healthcare specialty, etc.
   metadata: jsonb("metadata"), // Additional metadata (device info, location, etc.)
@@ -1099,7 +1099,7 @@ export const chatMessages = pgTable("chat_messages", {
 export const generatedApps = pgTable("generated_apps", {
   id: varchar("id").primaryKey().notNull(),
   userId: varchar("user_id").notNull(), // No FK constraint to support guest users
-  conversationId: varchar("conversation_id").references(() => chatConversations.id),
+  conversationId: varchar("conversation_id"), // Link to conversation (no FK to avoid circular ref)
   projectId: integer("project_id").references(() => projects.id), // Link to project if user saves as project
   name: varchar("name").notNull(),
   description: text("description"),
