@@ -100,6 +100,14 @@ MedBuilder utilizes a dual-platform strategy, separating healthcare-specific dev
 
 ## Recent Updates (December 2024)
 
+### AI-Powered Code Development Platform (December 4)
+- **Complete Development Workflow**: Templates → Project Creation → Workspace → AI Code Generation
+- **AI Code Assist API** (`POST /api/projects/:id/ai-assist`): Zod validation, OpenAI GPT-4o integration, preview/apply modes, path safety checks
+- **Full-Featured Workspace**: Sandpack-powered code editor with file tree, live preview, console panel
+- **AI Assistant Chat**: Fixed state persistence by rendering outside SandpackProvider; chat messages display correctly
+- **Apply & Save**: AI-generated code can be previewed then persisted to database with one click
+- **Project File Management**: Full CRUD operations with auth/ownership enforcement
+
 ### Completed Features
 - Full Stripe payment integration UI with checkout flow
 - Pricing page with 3 tiers and billing toggle
@@ -107,6 +115,13 @@ MedBuilder utilizes a dual-platform strategy, separating healthcare-specific dev
 - All core pages tested and working (landing, pricing, templates, dashboard, documentation, HIPAA tools)
 - Consistent dark green/black theme across all pages
 - Back button navigation on all pages
+- 14 HIPAA-compliant healthcare templates seeded via database
+
+### Platform Architecture
+- **Workspace Page** (`/workspace/:id`): Main development environment with Sandpack editor
+- **Templates Page** (`/templates`): Browse and use healthcare templates
+- **AI Assist Endpoint**: Generates healthcare-focused code with HIPAA awareness
+- **Authentication**: Replit Auth with project ownership verification
 
 ### Pending Configuration
 - STRIPE_SECRET_KEY needs to be set with the correct secret key (starts with 'sk_test_' or 'sk_live_')
