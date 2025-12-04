@@ -1418,7 +1418,7 @@ Respond with a JSON object:
       res.json({
         resourceType,
         version,
-        valid: isValid,
+        isValid,
         errors,
         warnings,
         validatedAt: new Date().toISOString(),
