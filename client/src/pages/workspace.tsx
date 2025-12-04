@@ -36,8 +36,20 @@ import {
   ChevronRight,
   ChevronDown,
   X,
-  Shield
+  Shield,
+  Rocket,
+  ExternalLink,
+  Copy,
+  CheckCircle2,
+  Globe
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { Project } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -409,6 +421,14 @@ function AIAssistant({
   );
 }
 
+interface DeploymentResult {
+  id: string;
+  deploymentUrl: string;
+  subdomain: string;
+  status: string;
+  environment: string;
+}
+
 export default function Workspace() {
   const [, params] = useRoute("/workspace/:projectId");
   const projectId = params?.projectId;
@@ -421,6 +441,9 @@ export default function Workspace() {
   const [showConsole, setShowConsole] = useState(false);
   const [newFileName, setNewFileName] = useState("");
   const [showNewFileInput, setShowNewFileInput] = useState(false);
+  const [showDeployModal, setShowDeployModal] = useState(false);
+  const [deploymentResult, setDeploymentResult] = useState<DeploymentResult | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const { data: project, isLoading, error } = useQuery<Project>({
     queryKey: ['/api/projects', projectId],
@@ -463,6 +486,49 @@ export default function Workspace() {
       });
     }
   });
+
+  const deployMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('POST', `/api/projects/${projectId}/deploy`, {
+        environment: 'production'
+      });
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      setDeploymentResult(data);
+      toast({
+        title: "Deployed Successfully!",
+        description: "Your app is now live and ready to share.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Deployment Failed",
+        description: error.message || "Failed to deploy project",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const handleDeploy = async () => {
+    if (hasUnsavedChanges) {
+      await saveProjectMutation.mutateAsync();
+    }
+    setShowDeployModal(true);
+    deployMutation.mutate();
+  };
+
+  const copyDeploymentUrl = () => {
+    if (deploymentResult?.deploymentUrl) {
+      navigator.clipboard.writeText(deploymentResult.deploymentUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      toast({
+        title: "Copied!",
+        description: "Deployment URL copied to clipboard.",
+      });
+    }
+  };
 
   const handleFileChange = useCallback((path: string, content: string) => {
     setEditedFiles(prev => ({
@@ -619,6 +685,20 @@ export default function Workspace() {
             )}
             Save
           </Button>
+          <Button
+            onClick={handleDeploy}
+            disabled={deployMutation.isPending}
+            size="sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            data-testid="deploy-button"
+          >
+            {deployMutation.isPending ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Rocket className="w-4 h-4 mr-2" />
+            )}
+            Deploy
+          </Button>
         </div>
       </header>
 
@@ -762,6 +842,116 @@ export default function Workspace() {
           )}
         </div>
       </div>
+
+      <Dialog open={showDeployModal} onOpenChange={setShowDeployModal}>
+        <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Rocket className="w-5 h-5 text-blue-400" />
+              Deploy Your App
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              {deployMutation.isPending 
+                ? "Deploying your application..." 
+                : deploymentResult 
+                  ? "Your app is now live!" 
+                  : "Deploy your application to get a shareable URL."}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            {deployMutation.isPending && (
+              <div className="text-center py-8">
+                <Loader2 className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
+                <p className="text-gray-300">Building and deploying...</p>
+                <p className="text-sm text-gray-500 mt-2">This may take a moment</p>
+              </div>
+            )}
+            
+            {deploymentResult && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-emerald-400">
+                  <CheckCircle2 className="w-5 h-5" />
+                  <span className="font-medium">Deployment Successful!</span>
+                </div>
+                
+                <div className="bg-gray-800 rounded-lg p-4 space-y-3">
+                  <div>
+                    <label className="text-xs text-gray-500 uppercase">Live URL</label>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex-1 bg-gray-950 rounded px-3 py-2 text-sm font-mono text-blue-300 truncate">
+                        {deploymentResult.deploymentUrl}
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={copyDeploymentUrl}
+                        className="border-gray-700 bg-gray-800 hover:bg-gray-700"
+                        data-testid="copy-url-button"
+                      >
+                        {copied ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <label className="text-xs text-gray-500">Status</label>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span className="text-gray-300 capitalize">{deploymentResult.status}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-500">Environment</label>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <Globe className="w-3.5 h-3.5 text-gray-400" />
+                        <span className="text-gray-300 capitalize">{deploymentResult.environment}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    onClick={() => window.open(deploymentResult.deploymentUrl, '_blank')}
+                    data-testid="open-deployment-button"
+                  >
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Open App
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="border-gray-700 bg-gray-800 hover:bg-gray-700"
+                    onClick={() => setShowDeployModal(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            )}
+            
+            {deployMutation.isError && (
+              <div className="text-center py-4">
+                <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-2" />
+                <p className="text-red-300">Deployment failed</p>
+                <p className="text-sm text-gray-500 mt-1">Please try again</p>
+                <Button
+                  className="mt-4 bg-blue-600 hover:bg-blue-700"
+                  onClick={() => deployMutation.mutate()}
+                >
+                  Retry Deployment
+                </Button>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
