@@ -1,305 +1,323 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Code, ArrowRight, Building, Shield, Zap, Star, Globe, Cpu } from "lucide-react";
+import { Check, Code, ArrowLeft, Building, Shield, Zap, Crown, Users, Globe, Cpu, HeartPulse } from "lucide-react";
 import { useState } from "react";
-import { Link } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { Link, useLocation } from "wouter";
+import PageLayout from "@/components/PageLayout";
 
 export default function Pricing() {
-  // Dynamic enterprise analytics integration
-  const { data: enterpriseMetrics, isLoading: metricsLoading } = useQuery({
-    queryKey: ['/api/enterprise/metrics'],
-    retry: false,
-  });
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
+  const [, setLocation] = useLocation();
 
-  const { data: patentPortfolio, isLoading: patentLoading } = useQuery({
-    queryKey: ['/api/patents/valuation'],
-    retry: false,
-  });
-
-  const automatedFeatures = [
+  const plans = [
     {
-      icon: <Zap className="w-6 h-6" />,
-      name: 'AI-Powered Development',
-      price: 'Included',
-      value: '$2,500/mo',
-      description: 'Revolutionary voice commands for complete application creation'
+      name: 'Starter',
+      description: 'Perfect for individual developers and small projects',
+      icon: Zap,
+      monthly: 29,
+      yearly: 290,
+      popular: false,
+      features: [
+        "Up to 5 healthcare apps",
+        "HIPAA compliance checking",
+        "Basic AI code generation",
+        "Standard templates library",
+        "Email support",
+        "Basic analytics dashboard",
+        "Community access"
+      ],
+      cta: 'Start Free Trial'
     },
     {
-      icon: <Shield className="w-6 h-6" />,
-      name: 'Global Compliance Automation',
-      price: 'Included', 
-      value: '$1,800/mo',
-      description: 'Automated HIPAA, GDPR, and 193-country regulatory compliance'
+      name: 'Professional',
+      description: 'For growing teams building production healthcare apps',
+      icon: Shield,
+      monthly: 79,
+      yearly: 790,
+      popular: true,
+      features: [
+        "Up to 25 healthcare apps",
+        "Advanced HIPAA compliance automation",
+        "GPT-4 powered AI code generation",
+        "Premium templates & components",
+        "Priority email & chat support",
+        "Up to 5 team members",
+        "EHR integrations (HL7 FHIR)",
+        "Advanced analytics & reporting",
+        "Custom branding"
+      ],
+      cta: 'Start Free Trial'
     },
     {
-      icon: <Cpu className="w-6 h-6" />,
-      name: 'Multi-AI Verification',
-      price: 'Included',
-      value: '$3,200/mo', 
-      description: 'Advanced AI models for healthcare code verification and optimization'
-    },
-    {
-      icon: <Building className="w-6 h-6" />,
-      name: 'Enterprise Integration Hub',
-      price: 'Included',
-      value: '$4,500/mo',
-      description: 'Epic, Cerner, AllScripts, and 50+ healthcare system integrations'
-    },
-    {
-      icon: <Globe className="w-6 h-6" />,
-      name: 'Advanced AI Platform',
-      price: 'Included',
-      value: '$8,000/mo',
-      description: 'Next-generation advanced AI hybrid processing architecture'
-    },
-    {
-      icon: <Star className="w-6 h-6" />,
-      name: 'Clinical AI Decision Support',
-      price: 'Included', 
-      value: '$6,500/mo',
-      description: 'Healthcare-specific AI with medical NER and clinical classification'
+      name: 'Enterprise',
+      description: 'For organizations requiring unlimited scale and support',
+      icon: Crown,
+      monthly: 299,
+      yearly: 2990,
+      popular: false,
+      features: [
+        "Unlimited healthcare apps",
+        "Enterprise HIPAA & GDPR compliance",
+        "Multi-model AI (GPT-4, Claude, Gemini)",
+        "All templates & components",
+        "24/7 dedicated support",
+        "Unlimited team members",
+        "Complete EHR ecosystem integration",
+        "Epic, Cerner, AllScripts connectors",
+        "Custom AI model training",
+        "SOC 2 Type II compliance",
+        "SLA guarantees",
+        "Dedicated account manager"
+      ],
+      cta: 'Contact Sales'
     }
   ];
 
-  const organizationMultipliers = [
-    { type: 'Hospital Systems', multiplier: '3.5x', basePrice: 'Starting $15,000/mo' },
-    { type: 'Pharmaceutical Companies', multiplier: '4.0x', basePrice: 'Starting $18,000/mo' },
-    { type: 'Medical Device Companies', multiplier: '3.2x', basePrice: 'Starting $14,000/mo' },
-    { type: 'Research Institutions', multiplier: '2.8x', basePrice: 'Starting $12,000/mo' },
-    { type: 'Health Insurance', multiplier: '3.6x', basePrice: 'Starting $16,000/mo' },
-    { type: 'Telehealth Providers', multiplier: '2.5x', basePrice: 'Starting $11,000/mo' }
-  ];
+  const handleSelectPlan = (planName: string) => {
+    if (planName === 'Enterprise') {
+      setLocation('/custom-pricing');
+    } else {
+      setLocation(`/checkout?plan=${planName}&billing=${billingPeriod}`);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-mono">
-      {/* Header - Matching Landing Page */}
-      <header className="bg-gray-800/50 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-3">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                <Code className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <span className="text-xl font-semibold text-white">MedBuilder</span>
-                <Badge variant="secondary" className="ml-2 text-xs bg-green-900 text-green-300">
-                  Enterprise AI
-                </Badge>
-              </div>
-            </Link>
-            <div className="flex items-center space-x-3">
-              <Button 
-                variant="outline"
-                className="border-gray-600 text-gray-300 hover:bg-gray-700"
-                onClick={() => window.location.href = '/documentation'}
-              >
-                Documentation
-              </Button>
-              <Button 
-                className="bg-green-600 hover:bg-green-700 text-white"
-                onClick={() => window.location.href = '/api/login'}
-              >
-                Deploy Enterprise
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-8">
-            <Badge className="bg-green-600 text-white px-4 py-2 text-sm font-medium mb-6">
-              Enterprise AI Technology
-            </Badge>
-            <h1 className="text-5xl font-bold text-white mb-6">
-              Complete Healthcare Platform
-              <span className="block text-green-400">Deployed in 5 Minutes</span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto mb-8">
-              World's first fully-automated enterprise healthcare development platform. 
-              No sales calls, no demos, no waiting. Advanced AI completely automates your entire setup.
-            </p>
-          </div>
-
-          {/* Value Proposition Cards */}
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <Card className="bg-gray-800 border-gray-700">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Zero Sales Process</h3>
-                <p className="text-gray-400 text-sm">Complete automation eliminates all traditional enterprise sales</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-gray-800 border-gray-700">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Instant Compliance</h3>
-                <p className="text-gray-400 text-sm">Automated HIPAA, GDPR and 193-country regulatory compliance</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-gray-800 border-gray-700">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Building className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Enterprise Ready</h3>
-                <p className="text-gray-400 text-sm">Complete platform with unlimited users and integrations</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Primary CTA */}
-          <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-8 max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Configure Your Enterprise Platform Now
-            </h2>
-            <p className="text-green-100 mb-6">
-              Advanced AI automatically configures your complete healthcare development environment
-            </p>
-            <Button 
-              className="bg-white text-green-700 hover:bg-gray-100 font-semibold px-8 py-4 text-lg w-full md:w-auto"
-              onClick={() => window.location.href = '/custom-pricing'}
+    <PageLayout
+      title="Pricing"
+      description="Choose the right plan for your healthcare development needs"
+      showBackButton={true}
+    >
+      <div className="max-w-7xl mx-auto">
+        {/* Billing Toggle */}
+        <div className="flex justify-center mb-12">
+          <div className="bg-gray-800 rounded-lg p-1 inline-flex">
+            <button
+              onClick={() => setBillingPeriod('monthly')}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                billingPeriod === 'monthly'
+                  ? 'bg-emerald-600 text-white'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+              data-testid="billing-monthly"
             >
-              Configure Enterprise Contract
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <p className="text-green-100 text-sm mt-4">
-              • Complete automation • No sales teams • Instant deployment
-            </p>
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingPeriod('yearly')}
+              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+                billingPeriod === 'yearly'
+                  ? 'bg-emerald-600 text-white'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+              data-testid="billing-yearly"
+            >
+              Yearly
+              <Badge className="ml-2 bg-emerald-900 text-emerald-300 text-xs">Save 17%</Badge>
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* Revolutionary Automated Features Section */}
-      <div className="bg-gray-800 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Everything Included & Automated
-            </h2>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto">
-              Revolutionary enterprise features worth $26,500/month - completely automated and included in your platform.
-              Advanced AI eliminates all manual configuration, sales processes, and human intervention.
-            </p>
-          </div>
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          {plans.map((plan) => {
+            const Icon = plan.icon;
+            const price = billingPeriod === 'yearly' ? plan.yearly : plan.monthly;
+            const period = billingPeriod === 'yearly' ? '/year' : '/month';
 
-          {/* Automated Features Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {automatedFeatures.map((feature, index) => (
-              <Card key={index} className="bg-gray-900 border-gray-700 hover:border-green-500 transition-colors">
-                <CardContent className="p-6">
+            return (
+              <Card 
+                key={plan.name}
+                className={`bg-gray-900 border-2 transition-all hover:border-emerald-500 ${
+                  plan.popular ? 'border-emerald-500 relative' : 'border-gray-800'
+                }`}
+                data-testid={`plan-card-${plan.name.toLowerCase()}`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <Badge className="bg-emerald-600 text-white px-4 py-1">
+                      Most Popular
+                    </Badge>
+                  </div>
+                )}
+                
+                <CardHeader className="pt-8">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-green-100">
-                      {feature.icon}
-                    </div>
-                    <div className="text-right">
-                      <div className="text-green-400 font-bold text-lg">{feature.price}</div>
-                      <div className="text-gray-500 text-sm line-through">{feature.value}</div>
+                    <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                      <Icon className="w-6 h-6 text-white" />
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{feature.name}</h3>
-                  <p className="text-gray-400 text-sm">{feature.description}</p>
+                  <CardTitle className="text-2xl text-white">{plan.name}</CardTitle>
+                  <CardDescription className="text-gray-400">
+                    {plan.description}
+                  </CardDescription>
+                  <div className="mt-4">
+                    <span className="text-4xl font-bold text-white">${price}</span>
+                    <span className="text-gray-400 ml-1">{period}</span>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                  <Button
+                    className={`w-full py-3 ${
+                      plan.popular
+                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                        : 'bg-gray-800 hover:bg-gray-700 text-white border border-gray-700'
+                    }`}
+                    onClick={() => handleSelectPlan(plan.name)}
+                    data-testid={`select-plan-${plan.name.toLowerCase()}`}
+                  >
+                    {plan.cta}
+                  </Button>
+
+                  <div className="pt-4 space-y-3">
+                    {plan.features.map((feature, index) => (
+                      <div key={index} className="flex items-start space-x-3">
+                        <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-300 text-sm">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          {/* Enterprise Organization Pricing */}
-          <div className="bg-gray-900 rounded-xl p-8 mb-16">
-            <h3 className="text-3xl font-bold text-white mb-6 text-center">
-              Automated Enterprise Pricing by Organization Type
-            </h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {organizationMultipliers.map((org, index) => (
-                <Card key={index} className="bg-gray-800 border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <h4 className="text-lg font-semibold text-white mb-2">{org.type}</h4>
-                    <div className="text-2xl font-bold text-green-400 mb-2">{org.multiplier}</div>
-                    <p className="text-gray-400 text-sm mb-4">{org.basePrice}</p>
-                    <Button 
-                      className="w-full bg-green-600 hover:bg-green-700"
-                      onClick={() => window.location.href = '/custom-pricing'}
-                    >
-                      Configure Platform
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* Final Enterprise CTA */}
-          <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-12 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Deploy Your Complete Enterprise Platform Now
-            </h2>
-            <p className="text-xl text-green-100 mb-8 max-w-3xl mx-auto">
-              Revolutionary AI completely automates enterprise setup, compliance, integrations, and deployment. 
-              No sales teams, no waiting, no manual processes. Complete platform ready in 5 minutes.
-            </p>
-            
-            <div className="flex flex-col md:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
-              <Button 
-                className="bg-white text-green-700 hover:bg-gray-100 font-bold px-8 py-4 text-lg flex-1"
-                onClick={() => window.location.href = '/custom-pricing'}
-              >
-                Configure Enterprise Contract
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button 
-                variant="outline"
-                className="border-green-300 text-green-100 hover:bg-green-700 px-6 py-4 text-lg"
-                onClick={() => window.location.href = '/api/login?demo=true'}
-              >
-                View Live Demo
-              </Button>
+        {/* Feature Comparison */}
+        <div className="bg-gray-900 rounded-xl p-8 border border-gray-800 mb-16">
+          <h2 className="text-2xl font-bold text-white text-center mb-8">
+            Why Choose MedBuilder?
+          </h2>
+          
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-6 h-6 text-emerald-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">HIPAA Compliant</h3>
+              <p className="text-gray-400 text-sm">
+                Built-in compliance automation for healthcare regulations
+              </p>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-6 mt-8 text-green-100 text-sm">
-              <span>• Zero sales process</span>
-              <span>• Complete automation</span>
-              <span>• Instant deployment</span>
-              <span>• Global compliance</span>
-              <span>• Unlimited scaling</span>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Cpu className="w-6 h-6 text-emerald-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">AI-Powered</h3>
+              <p className="text-gray-400 text-sm">
+                Advanced AI models for intelligent code generation
+              </p>
             </div>
+            
+            <div className="text-center">
+              <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Globe className="w-6 h-6 text-emerald-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Global Standards</h3>
+              <p className="text-gray-400 text-sm">
+                HL7 FHIR, DICOM, ICD-10 support out of the box
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Users className="w-6 h-6 text-emerald-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Team Collaboration</h3>
+              <p className="text-gray-400 text-sm">
+                Real-time collaboration for healthcare development teams
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Enterprise CTA */}
+        <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-xl p-8 text-center">
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Need a Custom Solution?
+          </h2>
+          <p className="text-emerald-100 mb-6 max-w-2xl mx-auto">
+            For large healthcare organizations, hospitals, and enterprise deployments, 
+            we offer custom pricing and dedicated support.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              className="bg-white text-emerald-700 hover:bg-gray-100 font-semibold px-8"
+              onClick={() => setLocation('/custom-pricing')}
+              data-testid="button-custom-pricing"
+            >
+              Configure Enterprise Contract
+            </Button>
+            <Button 
+              variant="outline"
+              className="border-emerald-300 text-emerald-100 hover:bg-emerald-700"
+              onClick={() => setLocation('/documentation')}
+              data-testid="button-view-docs"
+            >
+              View Documentation
+            </Button>
+          </div>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-white text-center mb-8">
+            Frequently Asked Questions
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card className="bg-gray-900 border-gray-800">
+              <CardHeader>
+                <CardTitle className="text-lg text-white">Can I change plans later?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-400 text-sm">
+                  Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, 
+                  and we'll prorate any differences.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gray-900 border-gray-800">
+              <CardHeader>
+                <CardTitle className="text-lg text-white">Is there a free trial?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-400 text-sm">
+                  Yes! All plans come with a 14-day free trial with full access to all features. 
+                  No credit card required to start.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gray-900 border-gray-800">
+              <CardHeader>
+                <CardTitle className="text-lg text-white">What payment methods do you accept?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-400 text-sm">
+                  We accept all major credit cards (Visa, MasterCard, American Express) and 
+                  bank transfers for Enterprise plans.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gray-900 border-gray-800">
+              <CardHeader>
+                <CardTitle className="text-lg text-white">Is my data secure?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-400 text-sm">
+                  Absolutely. We're HIPAA compliant, SOC 2 Type II certified, and use 
+                  enterprise-grade encryption for all data.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
-
-      {/* Footer - Matching Landing Page */}
-      <footer className="bg-gray-800 border-t border-gray-700 py-6">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-6 h-6 bg-green-500 rounded flex items-center justify-center">
-                <Code className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-white font-medium">MedBuilder</span>
-              <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
-                Enterprise v1.0.0
-              </Badge>
-            </div>
-            
-            <div className="flex items-center space-x-6 text-sm text-gray-400">
-              <span>Enterprise Healthcare Platform</span>
-              <span>•</span>
-              <span>Complete Automation</span>
-              <span>•</span>
-              <span>Instant Deployment</span>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </PageLayout>
   );
 }

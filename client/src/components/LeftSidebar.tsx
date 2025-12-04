@@ -9,7 +9,8 @@ import {
   Rocket,
   FolderOpen,
   FileText,
-  BookOpen
+  BookOpen,
+  CreditCard
 } from "lucide-react";
 
 export default function LeftSidebar() {
@@ -27,6 +28,7 @@ export default function LeftSidebar() {
   ];
 
   const resourceItems = [
+    { path: "/pricing", label: "Pricing", icon: CreditCard },
     { path: "/documentation", label: "Documentation", icon: BookOpen },
     { path: "/legal-documents", label: "Legal", icon: FileText },
   ];

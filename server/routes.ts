@@ -3554,29 +3554,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Stripe payment routes
-  app.post("/api/create-subscription", isAuthenticated, async (req: any, res) => {
+  app.post("/api/create-payment-intent", async (req: any, res) => {
     try {
-      const { planId, billingPeriod } = req.body;
+      const Stripe = (await import('stripe')).default;
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+
+      const { planName, billing, amount } = req.body;
       
-      // Plan pricing mapping
-      const plans = {
-        starter: { monthly: 49, annual: 39 },
-        professional: { monthly: 129, annual: 99 },
-        enterprise: { monthly: 499, annual: 399 }
-      };
-      
-      const plan = plans[planId as keyof typeof plans];
-      if (!plan) {
-        return res.status(400).json({ error: 'Invalid plan ID' });
+      // Validate the amount
+      if (!amount || amount < 100) {
+        return res.status(400).json({ error: 'Invalid amount' });
       }
+
+      // Create a PaymentIntent with the order amount and currency
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount, // Already in cents from frontend
+        currency: "usd",
+        automatic_payment_methods: {
+          enabled: true,
+        },
+        metadata: {
+          planName: planName || 'Unknown',
+          billing: billing || 'monthly'
+        }
+      });
+
+      res.json({
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      });
+    } catch (error: any) {
+      console.error('Stripe error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Legacy subscription route (redirects to new flow)
+  app.post("/api/create-subscription", async (req: any, res) => {
+    try {
+      const { planId, billingPeriod, amount } = req.body;
       
-      const amount = plan[billingPeriod as keyof typeof plan] * 100; // Convert to cents
-      
-      // For demo purposes, we'll create a simple checkout URL
-      // In production, integrate with Stripe properly
-      const checkoutUrl = `https://checkout.stripe.com/pay/demo?amount=${amount}&plan=${planId}&billing=${billingPeriod}`;
-      
-      res.json({ checkoutUrl });
+      // Redirect to the new payment intent flow
+      res.redirect(307, '/api/create-payment-intent');
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

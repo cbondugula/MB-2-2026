@@ -152,18 +152,19 @@ export default function Checkout() {
     setSelectedPlan({ ...plan, billing, price });
 
     // Create PaymentIntent as soon as the page loads
-    apiRequest("POST", "/api/create-subscription", { 
+    apiRequest("POST", "/api/create-payment-intent", { 
       planName,
       billing,
       amount: price * 100 // Convert to cents
     })
-      .then((data) => {
+      .then(async (response) => {
+        const data = await response.json();
         if (data.clientSecret) {
           setClientSecret(data.clientSecret);
         }
       })
       .catch((error) => {
-        console.error('Error creating subscription:', error);
+        console.error('Error creating payment intent:', error);
       });
   }, []);
 
