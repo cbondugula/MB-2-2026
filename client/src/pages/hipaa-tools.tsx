@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import TopNavigation from "@/components/TopNavigation";
-import LeftSidebar from "@/components/LeftSidebar";
+import PageLayout from "@/components/PageLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +14,6 @@ import {
   ClipboardCheck,
   AlertTriangle,
   CheckCircle,
-  XCircle,
   Download,
   Eye,
   Lock,
@@ -32,7 +30,7 @@ export default function HIPAATools() {
   const { isAuthenticated, isLoading } = useAuth();
   const [scanProgress, setScanProgress] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
-  const [complianceScore, setComplianceScore] = useState(92);
+  const [complianceScore] = useState(92);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -60,7 +58,6 @@ export default function HIPAATools() {
           toast({
             title: "Security Scan Complete",
             description: "Your application passed all HIPAA compliance checks.",
-            variant: "default",
           });
           return 100;
         }
@@ -88,346 +85,309 @@ export default function HIPAATools() {
     { id: 5, action: "Configuration Change", user: "IT Admin", timestamp: "2025-01-18 07:20 AM", resource: "Security Settings" },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 bg-medical-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Shield className="w-6 h-6 text-white animate-pulse" />
-          </div>
-          <p className="text-slate-600">Loading HIPAA Tools...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isLoading) {
     return null;
   }
 
+  const headerActions = (
+    <>
+      <Button variant="outline" size="sm" className="bg-gray-900 border-gray-700 text-gray-200 hover:bg-gray-800">
+        <Download className="w-4 h-4 mr-2" />
+        Export Report
+      </Button>
+      <Button variant="outline" size="sm" className="bg-gray-900 border-gray-700 text-gray-200 hover:bg-gray-800">
+        <Settings className="w-4 h-4 mr-2" />
+        Settings
+      </Button>
+    </>
+  );
+
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <TopNavigation />
-      
-      <div className="flex h-screen">
-        <LeftSidebar />
-        
-        <main className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <header className="bg-white border-b border-slate-200 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <Shield className="w-5 h-5 text-medical-blue-500" />
-                  <h1 className="text-xl font-bold text-slate-900">HIPAA Compliance Tools</h1>
-                </div>
-                <Badge variant="secondary" className="bg-trust-green-100 text-trust-green-700">
-                  <CheckCircle className="w-3 h-3 mr-1" />
-                  Compliant
-                </Badge>
-              </div>
-              
-              <div className="flex items-center space-x-3">
-                <Button variant="outline" size="sm">
-                  <Download className="w-4 h-4 mr-2" />
-                  Export Report
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Settings
-                </Button>
-              </div>
+    <PageLayout 
+      title="HIPAA Compliance Tools" 
+      description="Security scanning, compliance checking, and audit management"
+      isLoading={isLoading}
+      headerActions={headerActions}
+    >
+      {/* Compliance Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <Card className="bg-gray-900 border-gray-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center space-x-2 text-white">
+              <Shield className="w-5 h-5 text-emerald-400" />
+              <span>Compliance Score</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-emerald-400 mb-2">{complianceScore}%</div>
+              <Progress value={complianceScore} className="w-full h-2 mb-2" />
+              <p className="text-sm text-gray-400">Excellent compliance rating</p>
             </div>
-          </header>
+          </CardContent>
+        </Card>
 
-          {/* Content */}
-          <div className="flex-1 p-6 overflow-y-auto">
-            {/* Compliance Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <Card className="border-slate-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center space-x-2">
-                    <Shield className="w-5 h-5 text-trust-green-500" />
-                    <span>Compliance Score</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-trust-green-600 mb-2">{complianceScore}%</div>
-                    <Progress value={complianceScore} className="w-full h-2 mb-2" />
-                    <p className="text-sm text-slate-600">Excellent compliance rating</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-slate-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center space-x-2">
-                    <CheckCircle className="w-5 h-5 text-medical-blue-500" />
-                    <span>Security Checks</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-medical-blue-600 mb-2">7/8</div>
-                    <p className="text-sm text-slate-600 mb-2">Checks passed</p>
-                    <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-200">
-                      1 Warning
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-slate-200">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center space-x-2">
-                    <Activity className="w-5 h-5 text-healthcare-teal-500" />
-                    <span>Audit Events</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-healthcare-teal-600 mb-2">247</div>
-                    <p className="text-sm text-slate-600 mb-2">Events logged today</p>
-                    <Badge variant="outline" className="bg-trust-green-50 text-trust-green-600 border-trust-green-200">
-                      All Secure
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
+        <Card className="bg-gray-900 border-gray-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center space-x-2 text-white">
+              <CheckCircle className="w-5 h-5 text-emerald-400" />
+              <span>Security Checks</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-emerald-400 mb-2">7/8</div>
+              <p className="text-sm text-gray-400 mb-2">Checks passed</p>
+              <Badge className="bg-yellow-900/50 text-yellow-300 border-yellow-700">
+                1 Warning
+              </Badge>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Tools Tabs */}
-            <Tabs defaultValue="security-scan" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="security-scan">Security Scan</TabsTrigger>
-                <TabsTrigger value="compliance">Compliance Check</TabsTrigger>
-                <TabsTrigger value="audit-trail">Audit Trail</TabsTrigger>
-                <TabsTrigger value="baa-generator">BAA Generator</TabsTrigger>
-              </TabsList>
-
-              {/* Security Scan Tab */}
-              <TabsContent value="security-scan" className="space-y-6">
-                <Card className="border-slate-200">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <ScanLine className="w-5 h-5 text-medical-blue-500" />
-                      <span>Security Vulnerability Scan</span>
-                    </CardTitle>
-                    <p className="text-slate-600">
-                      Scan your application for potential security vulnerabilities and HIPAA compliance issues.
-                    </p>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {isScanning && (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-600">Scanning in progress...</span>
-                          <span className="text-sm font-semibold text-medical-blue-600">{scanProgress}%</span>
-                        </div>
-                        <Progress value={scanProgress} className="w-full h-2" />
-                      </div>
-                    )}
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="p-4 bg-slate-50 rounded-lg">
-                        <h4 className="font-semibold text-slate-900 mb-2">Last Scan Results</h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-slate-600">High Risk Issues</span>
-                            <Badge variant="outline" className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 border-red-200 dark:border-red-700">0</Badge>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-slate-600">Medium Risk Issues</span>
-                            <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-200">1</Badge>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-slate-600">Low Risk Issues</span>
-                            <Badge variant="outline" className="bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-200 border-yellow-200 dark:border-yellow-700">2</Badge>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="p-4 bg-slate-50 rounded-lg">
-                        <h4 className="font-semibold text-slate-900 mb-2">Scan Coverage</h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-slate-600">API Endpoints</span>
-                            <CheckCircle className="w-4 h-4 text-trust-green-500" />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-slate-600">Database Queries</span>
-                            <CheckCircle className="w-4 h-4 text-trust-green-500" />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-slate-600">Authentication</span>
-                            <CheckCircle className="w-4 h-4 text-trust-green-500" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <Button 
-                      onClick={handleSecurityScan}
-                      disabled={isScanning}
-                      className="w-full bg-medical-blue-500 hover:bg-medical-blue-600"
-                    >
-                      {isScanning ? (
-                        <>
-                          <ScanLine className="w-4 h-4 mr-2 animate-pulse" />
-                          Scanning...
-                        </>
-                      ) : (
-                        <>
-                          <ScanLine className="w-4 h-4 mr-2" />
-                          Start Security Scan
-                        </>
-                      )}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              {/* Compliance Check Tab */}
-              <TabsContent value="compliance" className="space-y-6">
-                <Card className="border-slate-200">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <ClipboardCheck className="w-5 h-5 text-trust-green-500" />
-                      <span>HIPAA Compliance Checklist</span>
-                    </CardTitle>
-                    <p className="text-slate-600">
-                      Review your application's compliance with HIPAA requirements.
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {complianceItems.map((item) => (
-                        <div key={item.name} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                            item.status === 'passed' ? 'bg-trust-green-100' : 'bg-orange-100'
-                          }`}>
-                            <item.icon className={`w-4 h-4 ${
-                              item.status === 'passed' ? 'text-trust-green-500' : 'text-orange-500'
-                            }`} />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                              <span className="font-medium text-slate-900">{item.name}</span>
-                              {item.status === 'passed' ? (
-                                <CheckCircle className="w-4 h-4 text-trust-green-500" />
-                              ) : (
-                                <AlertTriangle className="w-4 h-4 text-orange-500" />
-                              )}
-                            </div>
-                            <p className="text-sm text-slate-600">
-                              {item.status === 'passed' ? 'Compliant' : 'Needs attention'}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              {/* Audit Trail Tab */}
-              <TabsContent value="audit-trail" className="space-y-6">
-                <Card className="border-slate-200">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <Activity className="w-5 h-5 text-healthcare-teal-500" />
-                      <span>Audit Trail</span>
-                    </CardTitle>
-                    <p className="text-slate-600">
-                      Monitor all data access and modifications for compliance tracking.
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {auditLogs.map((log) => (
-                        <div key={log.id} className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg">
-                          <div className="w-10 h-10 bg-healthcare-teal-100 rounded-full flex items-center justify-center">
-                            <Activity className="w-5 h-5 text-healthcare-teal-500" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                              <span className="font-medium text-slate-900">{log.action}</span>
-                              <span className="text-sm text-slate-500">{log.timestamp}</span>
-                            </div>
-                            <p className="text-sm text-slate-600">
-                              User: {log.user} • Resource: {log.resource}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-6 flex justify-center">
-                      <Button variant="outline">
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Full Audit Log
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              {/* BAA Generator Tab */}
-              <TabsContent value="baa-generator" className="space-y-6">
-                <Card className="border-slate-200">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <FileText className="w-5 h-5 text-medical-blue-500" />
-                      <span>Business Associate Agreement Generator</span>
-                    </CardTitle>
-                    <p className="text-slate-600">
-                      Generate compliant Business Associate Agreements for your healthcare partners.
-                    </p>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="p-4 bg-slate-50 rounded-lg">
-                        <h4 className="font-semibold text-slate-900 mb-3">Standard BAA Template</h4>
-                        <p className="text-sm text-slate-600 mb-4">
-                          Pre-configured template compliant with HIPAA requirements for standard business associate relationships.
-                        </p>
-                        <Button variant="outline" className="w-full">
-                          <Download className="w-4 h-4 mr-2" />
-                          Download Template
-                        </Button>
-                      </div>
-
-                      <div className="p-4 bg-slate-50 rounded-lg">
-                        <h4 className="font-semibold text-slate-900 mb-3">Custom BAA Generator</h4>
-                        <p className="text-sm text-slate-600 mb-4">
-                          Create a customized Business Associate Agreement based on your specific requirements.
-                        </p>
-                        <Button variant="outline" className="w-full">
-                          <FileText className="w-4 h-4 mr-2" />
-                          Create Custom BAA
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="p-4 bg-trust-green-50 border border-trust-green-200 rounded-lg">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <CheckCircle className="w-5 h-5 text-trust-green-500" />
-                        <span className="font-semibold text-trust-green-700">BAA Compliance Features</span>
-                      </div>
-                      <ul className="text-sm text-trust-green-600 space-y-1">
-                        <li>• Automated compliance clause generation</li>
-                        <li>• Regular template updates for regulatory changes</li>
-                        <li>• Legal review and validation</li>
-                        <li>• Electronic signature integration</li>
-                      </ul>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </main>
+        <Card className="bg-gray-900 border-gray-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center space-x-2 text-white">
+              <Activity className="w-5 h-5 text-emerald-400" />
+              <span>Audit Events</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-emerald-400 mb-2">247</div>
+              <p className="text-sm text-gray-400 mb-2">Events logged today</p>
+              <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                All Secure
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+
+      {/* Tools Tabs */}
+      <Tabs defaultValue="security-scan" className="space-y-6">
+        <TabsList className="bg-gray-900 border border-gray-800">
+          <TabsTrigger value="security-scan" className="data-[state=active]:bg-gray-800 text-gray-300 data-[state=active]:text-white">Security Scan</TabsTrigger>
+          <TabsTrigger value="compliance" className="data-[state=active]:bg-gray-800 text-gray-300 data-[state=active]:text-white">Compliance Check</TabsTrigger>
+          <TabsTrigger value="audit-trail" className="data-[state=active]:bg-gray-800 text-gray-300 data-[state=active]:text-white">Audit Trail</TabsTrigger>
+          <TabsTrigger value="baa-generator" className="data-[state=active]:bg-gray-800 text-gray-300 data-[state=active]:text-white">BAA Generator</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="security-scan" className="space-y-6">
+          <Card className="bg-gray-900 border-gray-800">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-white">
+                <ScanLine className="w-5 h-5 text-emerald-400" />
+                <span>Security Vulnerability Scan</span>
+              </CardTitle>
+              <p className="text-gray-400">
+                Scan your application for potential security vulnerabilities and HIPAA compliance issues.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isScanning && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-400">Scanning in progress...</span>
+                    <span className="text-sm font-semibold text-emerald-400">{scanProgress}%</span>
+                  </div>
+                  <Progress value={scanProgress} className="w-full h-2" />
+                </div>
+              )}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 bg-gray-800 rounded-lg">
+                  <h4 className="font-semibold text-white mb-2">Last Scan Results</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-400">High Risk Issues</span>
+                      <Badge className="bg-red-900/50 text-red-300 border-red-700">0</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-400">Medium Risk Issues</span>
+                      <Badge className="bg-yellow-900/50 text-yellow-300 border-yellow-700">1</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-400">Low Risk Issues</span>
+                      <Badge className="bg-gray-700 text-gray-300 border-gray-600">2</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-gray-800 rounded-lg">
+                  <h4 className="font-semibold text-white mb-2">Scan Coverage</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-400">API Endpoints</span>
+                      <CheckCircle className="w-4 h-4 text-emerald-400" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-400">Database Queries</span>
+                      <CheckCircle className="w-4 h-4 text-emerald-400" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-400">Authentication</span>
+                      <CheckCircle className="w-4 h-4 text-emerald-400" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Button 
+                onClick={handleSecurityScan}
+                disabled={isScanning}
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+              >
+                {isScanning ? (
+                  <>
+                    <ScanLine className="w-4 h-4 mr-2 animate-pulse" />
+                    Scanning...
+                  </>
+                ) : (
+                  <>
+                    <ScanLine className="w-4 h-4 mr-2" />
+                    Start Security Scan
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="compliance" className="space-y-6">
+          <Card className="bg-gray-900 border-gray-800">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-white">
+                <ClipboardCheck className="w-5 h-5 text-emerald-400" />
+                <span>HIPAA Compliance Checklist</span>
+              </CardTitle>
+              <p className="text-gray-400">
+                Review your application's compliance with HIPAA requirements.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {complianceItems.map((item) => (
+                  <div key={item.name} className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      item.status === 'passed' ? 'bg-emerald-900/50' : 'bg-yellow-900/50'
+                    }`}>
+                      <item.icon className={`w-4 h-4 ${
+                        item.status === 'passed' ? 'text-emerald-400' : 'text-yellow-400'
+                      }`} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-white">{item.name}</span>
+                        {item.status === 'passed' ? (
+                          <CheckCircle className="w-4 h-4 text-emerald-400" />
+                        ) : (
+                          <AlertTriangle className="w-4 h-4 text-yellow-400" />
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-400">
+                        {item.status === 'passed' ? 'Compliant' : 'Needs attention'}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="audit-trail" className="space-y-6">
+          <Card className="bg-gray-900 border-gray-800">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-white">
+                <Activity className="w-5 h-5 text-emerald-400" />
+                <span>Audit Trail</span>
+              </CardTitle>
+              <p className="text-gray-400">
+                Monitor all data access and modifications for compliance tracking.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {auditLogs.map((log) => (
+                  <div key={log.id} className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg">
+                    <div className="w-10 h-10 bg-emerald-900/50 rounded-full flex items-center justify-center">
+                      <Activity className="w-5 h-5 text-emerald-400" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-white">{log.action}</span>
+                        <span className="text-sm text-gray-500">{log.timestamp}</span>
+                      </div>
+                      <p className="text-sm text-gray-400">
+                        User: {log.user} • Resource: {log.resource}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 flex justify-center">
+                <Button variant="outline" className="bg-gray-900 border-gray-700 text-gray-200 hover:bg-gray-800">
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Full Audit Log
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="baa-generator" className="space-y-6">
+          <Card className="bg-gray-900 border-gray-800">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-white">
+                <FileText className="w-5 h-5 text-emerald-400" />
+                <span>Business Associate Agreement Generator</span>
+              </CardTitle>
+              <p className="text-gray-400">
+                Generate compliant Business Associate Agreements for your healthcare partners.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-4 bg-gray-800 rounded-lg">
+                  <h4 className="font-semibold text-white mb-3">Standard BAA Template</h4>
+                  <p className="text-sm text-gray-400 mb-4">
+                    Pre-configured template compliant with HIPAA requirements for standard business associate relationships.
+                  </p>
+                  <Button variant="outline" className="w-full bg-gray-900 border-gray-700 text-gray-200 hover:bg-gray-800">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Template
+                  </Button>
+                </div>
+
+                <div className="p-4 bg-gray-800 rounded-lg">
+                  <h4 className="font-semibold text-white mb-3">Custom BAA Generator</h4>
+                  <p className="text-sm text-gray-400 mb-4">
+                    Create a customized Business Associate Agreement based on your specific requirements.
+                  </p>
+                  <Button variant="outline" className="w-full bg-gray-900 border-gray-700 text-gray-200 hover:bg-gray-800">
+                    <FileText className="w-4 h-4 mr-2" />
+                    Create Custom BAA
+                  </Button>
+                </div>
+              </div>
+
+              <div className="p-4 bg-emerald-900/30 border border-emerald-700 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <CheckCircle className="w-5 h-5 text-emerald-400" />
+                  <span className="font-semibold text-emerald-300">BAA Compliance Features</span>
+                </div>
+                <ul className="text-sm text-emerald-200 space-y-1">
+                  <li>• Automated compliance clause generation</li>
+                  <li>• Regular template updates for regulatory changes</li>
+                  <li>• Legal review and validation</li>
+                  <li>• Electronic signature integration</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </PageLayout>
   );
 }

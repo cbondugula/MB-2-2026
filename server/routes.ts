@@ -817,15 +817,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const templates = await storage.getTemplates();
       const usageStats = await storage.getRealTimeUsageStats();
+      const safeProjects = Number(usageStats.totalProjects) || 0;
+      const safeActive = Number(usageStats.activeProjects) || 0;
       
       const enhancedTemplates = templates.map(template => ({
         ...template,
         lastUpdated: new Date().toISOString(),
         dynamicContent: true,
         usage: {
-          installations: Math.max(500, usageStats.totalProjects * 50 + template.id * 100),
+          installations: Math.max(500, safeProjects * 50 + template.id * 100),
           rating: (4.2 + (template.id % 10) * 0.08).toFixed(1),
-          reviews: Math.max(25, usageStats.activeProjects * 10 + template.id * 5)
+          reviews: Math.max(25, safeActive * 10 + template.id * 5)
         }
       }));
       
@@ -882,9 +884,127 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Healthcare components route - must come BEFORE :id route
+  app.get('/api/components/healthcare', async (req, res) => {
+    try {
+      const usageStats = await storage.getRealTimeUsageStats();
+      const safeProjects = Number(usageStats.totalProjects) || 0;
+      const baseUsage = Math.max(1000, safeProjects * 25);
+      const components = {
+        lastUpdated: new Date().toISOString(),
+        dynamicContent: true,
+        categories: [
+          {
+            name: 'Patient Interface',
+            description: 'HIPAA-compliant patient-facing components',
+            components: [
+              {
+                id: 'patient-registration',
+                name: 'Patient Registration Form',
+                description: 'Comprehensive patient intake with HIPAA compliance',
+                usage: baseUsage,
+                complexity: 'Medium',
+                features: ['HIPAA Compliant', 'Multi-language', 'Validation']
+              },
+              {
+                id: 'appointment-scheduler',
+                name: 'Appointment Scheduler',
+                description: 'Smart appointment booking with availability detection',
+                usage: baseUsage,
+                complexity: 'High',
+                features: ['Real-time Availability', 'Calendar Integration', 'Notifications']
+              },
+              {
+                id: 'patient-portal',
+                name: 'Patient Portal Dashboard',
+                description: 'Secure patient information and communication hub',
+                usage: baseUsage,
+                complexity: 'High',
+                features: ['Secure Messaging', 'Medical Records', 'Bill Pay']
+              }
+            ]
+          },
+          {
+            name: 'Clinical Tools',
+            description: 'Healthcare provider clinical components',
+            components: [
+              {
+                id: 'ehr-interface',
+                name: 'EHR Integration Interface',
+                description: 'Standard EHR system integration component',
+                usage: baseUsage,
+                complexity: 'High',
+                features: ['HL7 FHIR', 'Multi-EHR Support', 'Real-time Sync']
+              },
+              {
+                id: 'clinical-notes',
+                name: 'Clinical Notes Editor',
+                description: 'AI-powered clinical documentation',
+                usage: baseUsage,
+                complexity: 'Medium',
+                features: ['Voice Input', 'AI Suggestions', 'Template Library']
+              },
+              {
+                id: 'drug-interaction',
+                name: 'Drug Interaction Checker',
+                description: 'Real-time medication safety verification',
+                usage: baseUsage,
+                complexity: 'High',
+                features: ['Real-time Checking', 'Allergy Alerts', 'FDA Database']
+              }
+            ]
+          },
+          {
+            name: 'Analytics & Reporting',
+            description: 'Healthcare data visualization and reporting',
+            components: [
+              {
+                id: 'health-dashboard',
+                name: 'Healthcare Analytics Dashboard',
+                description: 'Real-time healthcare metrics and KPIs',
+                usage: baseUsage,
+                complexity: 'High',
+                features: ['Real-time Data', 'Custom Charts', 'Export Tools']
+              },
+              {
+                id: 'compliance-monitor',
+                name: 'Compliance Monitoring',
+                description: 'Automated compliance tracking and reporting',
+                usage: baseUsage,
+                complexity: 'Medium',
+                features: ['HIPAA Tracking', 'Audit Trails', 'Alert System']
+              }
+            ]
+          }
+        ],
+        totalComponents: 8,
+        featuredComponents: ['patient-portal', 'ehr-interface', 'health-dashboard']
+      };
+      
+      res.json(components);
+    } catch (error: any) {
+      console.error('Failed to fetch healthcare components:', error);
+      res.status(500).json({ message: 'Failed to fetch healthcare components', error: error instanceof Error ? error.message : 'Unknown error' });
+    }
+  });
+
+  app.get('/api/components/category/:category', async (req, res) => {
+    try {
+      const category = req.params.category;
+      const components = await storage.getComponentsByCategory(category);
+      res.json(components);
+    } catch (error: any) {
+      console.error("Error fetching components by category:", error);
+      res.status(500).json({ message: "Failed to fetch components" });
+    }
+  });
+
   app.get('/api/components/:id', async (req, res) => {
     try {
       const componentId = parseInt(req.params.id);
+      if (isNaN(componentId)) {
+        return res.status(400).json({ message: "Invalid component ID" });
+      }
       const component = await storage.getComponent(componentId);
       
       if (!component) {
@@ -898,7 +1018,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/components/category/:category', async (req, res) => {
+  // API Integration routes
+  app.get('/api/integrations', async (req, res) => {
     try {
       const category = req.params.category;
       const components = await storage.getComponentsByCategory(category);
@@ -2925,112 +3046,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-
-  // Components API - Dynamic healthcare UI components
-  app.get('/api/components/healthcare', async (req, res) => {
-    try {
-      const usageStats = await storage.getRealTimeUsageStats();
-      const components = {
-        lastUpdated: new Date().toISOString(),
-        dynamicContent: true,
-        categories: [
-          {
-            name: 'Patient Interface',
-            description: 'HIPAA-compliant patient-facing components',
-            components: [
-              {
-                id: 'patient-registration',
-                name: 'Patient Registration Form',
-                description: 'Comprehensive patient intake with HIPAA compliance',
-                usage: Math.max(1000, usageStats.totalProjects * 25),
-                complexity: 'Medium',
-                features: ['HIPAA Compliant', 'Multi-language', 'Validation']
-              },
-              {
-                id: 'appointment-scheduler',
-                name: 'Appointment Scheduler',
-                description: 'Smart appointment booking with availability detection',
-                usage: Math.max(1000, usageStats.totalProjects * 25),
-                complexity: 'High',
-                features: ['Real-time Availability', 'Calendar Integration', 'Notifications']
-              },
-              {
-                id: 'patient-portal',
-                name: 'Patient Portal Dashboard',
-                description: 'Secure patient information and communication hub',
-                usage: Math.max(1000, usageStats.totalProjects * 25),
-                complexity: 'High',
-                features: ['Secure Messaging', 'Medical Records', 'Bill Pay']
-              }
-            ]
-          },
-          {
-            name: 'Clinical Tools',
-            description: 'Healthcare provider clinical components',
-            components: [
-              {
-                id: 'ehr-interface',
-                name: 'EHR Integration Interface',
-                description: 'Standard EHR system integration component',
-                usage: Math.max(1000, usageStats.totalProjects * 25),
-                complexity: 'High',
-                features: ['HL7 FHIR', 'Multi-EHR Support', 'Real-time Sync']
-              },
-              {
-                id: 'clinical-notes',
-                name: 'Clinical Notes Editor',
-                description: 'AI-powered clinical documentation',
-                usage: Math.max(1000, usageStats.totalProjects * 25),
-                complexity: 'Medium',
-                features: ['Voice Input', 'AI Suggestions', 'Template Library']
-              },
-              {
-                id: 'drug-interaction',
-                name: 'Drug Interaction Checker',
-                description: 'Real-time medication safety verification',
-                usage: Math.max(1000, usageStats.totalProjects * 25),
-                complexity: 'High',
-                features: ['Real-time Checking', 'Allergy Alerts', 'FDA Database']
-              }
-            ]
-          },
-          {
-            name: 'Analytics & Reporting',
-            description: 'Healthcare data visualization and reporting',
-            components: [
-              {
-                id: 'health-dashboard',
-                name: 'Healthcare Analytics Dashboard',
-                description: 'Real-time healthcare metrics and KPIs',
-                usage: Math.max(1000, usageStats.totalProjects * 25),
-                complexity: 'High',
-                features: ['Real-time Data', 'Custom Charts', 'Export Tools']
-              },
-              {
-                id: 'compliance-monitor',
-                name: 'Compliance Monitoring',
-                description: 'Automated compliance tracking and reporting',
-                usage: Math.max(1000, usageStats.totalProjects * 25),
-                complexity: 'Medium',
-                features: ['HIPAA Tracking', 'Audit Trails', 'Alert System']
-              }
-            ]
-          }
-        ],
-        totalComponents: 8,
-        featuredComponents: ['patient-portal', 'ehr-interface', 'health-dashboard']
-      };
-      
-      res.json(components);
-    } catch (error: any) {
-      console.error('Failed to fetch healthcare components:', error);
-      res.status(500).json({ message: 'Failed to fetch healthcare components', error: error instanceof Error ? error.message : 'Unknown error' });
-    }
-  });
-
   // Global Healthcare Data API - Dynamic international healthcare information
   app.get('/api/healthcare/global-data', async (req, res) => {
     try {
+      const usageStats = await storage.getRealTimeUsageStats();
+      const safeProjects = Number(usageStats.totalProjects) || 0;
       const globalData = {
         lastUpdated: new Date().toISOString(),
         dynamicContent: true,
@@ -3045,7 +3065,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             countries: ['United States', 'Canada', 'Mexico'],
             keyRegulations: ['HIPAA', 'PIPEDA', 'Mexican Health Privacy Law'],
             compliance: '100%',
-            implementations: Math.max(5000, usageStats.totalProjects * 200)
+            implementations: Math.max(5000, safeProjects * 200)
           },
           {
             region: 'Europe',
@@ -3075,7 +3095,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           coverage: '100%'
         },
         marketStats: {
-          totalHealthcareApps: Math.max(50000, usageStats.totalProjects * 5000),
+          totalHealthcareApps: Math.max(50000, safeProjects * 5000),
           monthlyGrowth: '12.5%',
           averageComplianceScore: '97.8%',
           customerSatisfaction: '4.8/5.0'

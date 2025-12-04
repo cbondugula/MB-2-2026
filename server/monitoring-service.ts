@@ -120,18 +120,25 @@ export class MonitoringService {
     try {
       const result = await db.execute(sql`
         SELECT 
-          COUNT(*) as total_projects,
-          COUNT(CASE WHEN created_at > NOW() - INTERVAL '24 hours' THEN 1 END) as recent_projects,
-          COUNT(CASE WHEN updated_at > NOW() - INTERVAL '1 hour' THEN 1 END) as active_projects
+          COUNT(*)::integer as total_projects,
+          COUNT(CASE WHEN created_at > NOW() - INTERVAL '24 hours' THEN 1 END)::integer as recent_projects,
+          COUNT(CASE WHEN updated_at > NOW() - INTERVAL '1 hour' THEN 1 END)::integer as active_projects
         FROM projects
       `);
       
       const row = result.rows[0] as any;
       
+      const parseValue = (val: unknown): number => {
+        if (typeof val === 'number') return val;
+        if (typeof val === 'bigint') return Number(val);
+        if (typeof val === 'string') return parseInt(val, 10) || 0;
+        return 0;
+      };
+      
       return {
-        totalProjects: parseInt(row.total_projects) || 0,
-        recentProjects: parseInt(row.recent_projects) || 0,
-        activeProjects: parseInt(row.active_projects) || 0,
+        totalProjects: parseValue(row?.total_projects),
+        recentProjects: parseValue(row?.recent_projects),
+        activeProjects: parseValue(row?.active_projects),
         systemLoad: Math.min(100, this.requestCount),
         timestamp: Date.now()
       };
