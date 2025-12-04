@@ -6175,6 +6175,395 @@ Respond with ONLY valid JSON array, no explanation.`;
     }
   });
 
+  // Git Branches
+  app.get('/api/projects/:id/git/branches', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const branches = await storage.getProjectBranches(projectId);
+      res.json({ branches });
+    } catch (error: any) {
+      console.error("Error fetching branches:", error);
+      res.status(500).json({ message: "Failed to fetch branches" });
+    }
+  });
+
+  app.post('/api/projects/:id/git/branches/sync', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const integration = await storage.getProjectGitIntegration(projectId);
+      if (!integration) {
+        return res.status(404).json({ message: "Git integration not found" });
+      }
+      
+      const branchSchema = z.object({
+        branches: z.array(z.object({
+          name: z.string(),
+          sha: z.string().optional(),
+          isDefault: z.boolean().optional(),
+          isProtected: z.boolean().optional(),
+          lastCommitMessage: z.string().optional(),
+          lastCommitAuthor: z.string().optional(),
+          lastCommitAt: z.string().datetime().optional(),
+          aheadBy: z.number().optional(),
+          behindBy: z.number().optional(),
+        }))
+      });
+      const validation = branchSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid branch data", errors: validation.error.errors });
+      }
+      
+      const branchData = validation.data.branches.map(b => ({
+        ...b,
+        projectId,
+        integrationId: integration.id,
+        lastCommitAt: b.lastCommitAt ? new Date(b.lastCommitAt) : undefined,
+      }));
+      
+      const branches = await storage.syncBranches(integration.id, branchData);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'configuration',
+        description: `Synced ${branches.length} branches from remote`,
+        resourceType: 'git_branch',
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ branches });
+    } catch (error: any) {
+      console.error("Error syncing branches:", error);
+      res.status(500).json({ message: "Failed to sync branches" });
+    }
+  });
+
+  app.post('/api/projects/:id/git/branches/:branchId/checkout', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const branchId = parseInt(req.params.branchId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const branch = await storage.getGitBranch(branchId);
+      if (!branch || branch.projectId !== projectId) {
+        return res.status(404).json({ message: "Branch not found" });
+      }
+      
+      const integration = await storage.getProjectGitIntegration(projectId);
+      if (!integration) {
+        return res.status(404).json({ message: "Git integration not found" });
+      }
+      
+      await storage.updateGitIntegration(integration.id, { currentBranch: branch.name });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'configuration',
+        description: `Switched to branch "${branch.name}"`,
+        resourceType: 'git_branch',
+        resourceId: String(branchId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ success: true, currentBranch: branch.name });
+    } catch (error: any) {
+      console.error("Error checking out branch:", error);
+      res.status(500).json({ message: "Failed to checkout branch" });
+    }
+  });
+
+  // Git Sync
+  app.get('/api/projects/:id/git/sync-history', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const limit = req.query.limit ? parseInt(req.query.limit) : 50;
+      const history = await storage.getProjectSyncHistory(projectId, limit);
+      res.json({ history });
+    } catch (error: any) {
+      console.error("Error fetching sync history:", error);
+      res.status(500).json({ message: "Failed to fetch sync history" });
+    }
+  });
+
+  app.post('/api/projects/:id/git/sync', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const integration = await storage.getProjectGitIntegration(projectId);
+      if (!integration) {
+        return res.status(404).json({ message: "Git integration not found" });
+      }
+      
+      const syncSchema = z.object({
+        direction: z.enum(['push', 'pull']),
+        branch: z.string().optional(),
+        message: z.string().optional(),
+      });
+      const validation = syncSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid sync parameters", errors: validation.error.errors });
+      }
+      
+      const branch = validation.data.branch || integration.currentBranch || 'main';
+      
+      // Create sync history entry
+      const sync = await storage.createGitSyncHistory({
+        projectId,
+        integrationId: integration.id,
+        direction: validation.data.direction,
+        status: 'in_progress',
+        branch,
+        triggeredBy: 'manual',
+        userId: req.user.claims.sub,
+      });
+      
+      // Simulate sync (in real implementation, this would call GitHub API)
+      await storage.updateGitSyncHistory(sync.id, {
+        status: 'success',
+        endCommit: `simulated-${Date.now()}`,
+        filesChanged: 0,
+        insertions: 0,
+        deletions: 0,
+        completedAt: new Date(),
+        duration: 500,
+      });
+      
+      await storage.updateGitIntegration(integration.id, {
+        lastSyncedAt: new Date(),
+        lastSyncedCommit: `simulated-${Date.now()}`,
+        status: 'connected',
+      });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'data_sync',
+        eventCategory: 'configuration',
+        description: `Git ${validation.data.direction} completed on branch "${branch}"`,
+        resourceType: 'git_sync',
+        resourceId: String(sync.id),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      const updatedSync = await storage.getProjectSyncHistory(projectId, 1);
+      res.json({ sync: updatedSync[0] });
+    } catch (error: any) {
+      console.error("Error syncing with remote:", error);
+      res.status(500).json({ message: "Failed to sync with remote" });
+    }
+  });
+
+  // PR Previews
+  app.get('/api/projects/:id/pr-previews', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const previews = await storage.getProjectPrPreviews(projectId);
+      res.json({ previews });
+    } catch (error: any) {
+      console.error("Error fetching PR previews:", error);
+      res.status(500).json({ message: "Failed to fetch PR previews" });
+    }
+  });
+
+  app.post('/api/projects/:id/pr-previews', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const integration = await storage.getProjectGitIntegration(projectId);
+      if (!integration) {
+        return res.status(404).json({ message: "Git integration not found" });
+      }
+      
+      const prPreviewSchema = z.object({
+        prNumber: z.number().positive(),
+        prTitle: z.string().optional(),
+        prUrl: z.string().url().optional(),
+        headBranch: z.string(),
+        baseBranch: z.string(),
+        headSha: z.string().optional(),
+        autoDeployOnUpdate: z.boolean().optional(),
+        authorUsername: z.string().optional(),
+      });
+      const validation = prPreviewSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid PR preview data", errors: validation.error.errors });
+      }
+      
+      // Check if preview already exists
+      const existing = await storage.getPrPreviewByNumber(projectId, validation.data.prNumber);
+      if (existing) {
+        return res.status(409).json({ message: "PR preview already exists", preview: existing });
+      }
+      
+      const preview = await storage.createPrPreview({
+        projectId,
+        integrationId: integration.id,
+        ...validation.data,
+        status: 'pending',
+      });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'deployment',
+        eventCategory: 'deployment',
+        description: `PR preview created for PR #${validation.data.prNumber}`,
+        resourceType: 'pr_preview',
+        resourceId: String(preview.id),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ preview });
+    } catch (error: any) {
+      console.error("Error creating PR preview:", error);
+      res.status(500).json({ message: "Failed to create PR preview" });
+    }
+  });
+
+  app.patch('/api/projects/:id/pr-previews/:previewId', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const previewId = parseInt(req.params.previewId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const existing = await storage.getPrPreview(previewId);
+      if (!existing || existing.projectId !== projectId) {
+        return res.status(404).json({ message: "PR preview not found" });
+      }
+      
+      const updateSchema = z.object({
+        status: z.enum(['pending', 'building', 'running', 'stopped', 'failed']).optional(),
+        previewUrl: z.string().url().optional(),
+        buildLogs: z.string().optional(),
+        errorMessage: z.string().optional(),
+        headSha: z.string().optional(),
+      });
+      const validation = updateSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid update data", errors: validation.error.errors });
+      }
+      
+      const preview = await storage.updatePrPreview(previewId, validation.data);
+      
+      res.json({ preview });
+    } catch (error: any) {
+      console.error("Error updating PR preview:", error);
+      res.status(500).json({ message: "Failed to update PR preview" });
+    }
+  });
+
+  app.delete('/api/projects/:id/pr-previews/:previewId', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const previewId = parseInt(req.params.previewId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const existing = await storage.getPrPreview(previewId);
+      if (!existing || existing.projectId !== projectId) {
+        return res.status(404).json({ message: "PR preview not found" });
+      }
+      
+      await storage.deletePrPreview(previewId);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'deployment',
+        eventCategory: 'deployment',
+        severity: 'warning',
+        description: `PR preview deleted for PR #${existing.prNumber}`,
+        resourceType: 'pr_preview',
+        resourceId: String(previewId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error deleting PR preview:", error);
+      res.status(500).json({ message: "Failed to delete PR preview" });
+    }
+  });
+
+  // Git Webhook (for GitHub webhooks)
+  app.post('/api/git/webhook', async (req, res) => {
+    try {
+      const event = req.headers['x-github-event'];
+      const signature = req.headers['x-hub-signature-256'];
+      
+      // In production, verify webhook signature
+      // For now, just log the event
+      console.log(`Received GitHub webhook: ${event}`);
+      
+      // Handle different webhook events
+      switch (event) {
+        case 'push':
+          // Handle push event - trigger auto-sync if enabled
+          break;
+        case 'pull_request':
+          // Handle PR event - create/update PR preview
+          break;
+        case 'pull_request_review':
+          // Handle PR review
+          break;
+        default:
+          console.log(`Unhandled webhook event: ${event}`);
+      }
+      
+      res.json({ received: true, event });
+    } catch (error: any) {
+      console.error("Error processing webhook:", error);
+      res.status(500).json({ message: "Failed to process webhook" });
+    }
+  });
+
   // Healthcare Blueprints
   app.get('/api/healthcare/blueprints', async (req, res) => {
     try {

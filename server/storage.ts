@@ -42,6 +42,9 @@ import {
   hipaaDeployments,
   complianceAuditEvents,
   gitIntegrations,
+  gitBranches,
+  gitSyncHistory,
+  prPreviews,
   healthcareBlueprints,
   phiScanResults,
   packageHealth,
@@ -102,6 +105,12 @@ import {
   type InsertComplianceAuditEvent,
   type GitIntegration,
   type InsertGitIntegration,
+  type GitBranch,
+  type InsertGitBranch,
+  type GitSyncHistory,
+  type InsertGitSyncHistory,
+  type PrPreview,
+  type InsertPrPreview,
   type HealthcareBlueprint,
   type InsertHealthcareBlueprint,
   type PhiScanResult,
@@ -358,6 +367,29 @@ export interface IStorage {
   getProjectGitIntegration(projectId: number): Promise<GitIntegration | undefined>;
   updateGitIntegration(id: number, integration: Partial<InsertGitIntegration>): Promise<GitIntegration>;
   deleteGitIntegration(id: number): Promise<void>;
+  
+  // Git Branch operations
+  createGitBranch(branch: InsertGitBranch): Promise<GitBranch>;
+  getProjectBranches(projectId: number): Promise<GitBranch[]>;
+  getIntegrationBranches(integrationId: number): Promise<GitBranch[]>;
+  getGitBranch(id: number): Promise<GitBranch | undefined>;
+  updateGitBranch(id: number, branch: Partial<InsertGitBranch>): Promise<GitBranch>;
+  deleteGitBranch(id: number): Promise<void>;
+  syncBranches(integrationId: number, branches: InsertGitBranch[]): Promise<GitBranch[]>;
+  
+  // Git Sync History operations
+  createGitSyncHistory(sync: InsertGitSyncHistory): Promise<GitSyncHistory>;
+  getProjectSyncHistory(projectId: number, limit?: number): Promise<GitSyncHistory[]>;
+  getIntegrationSyncHistory(integrationId: number, limit?: number): Promise<GitSyncHistory[]>;
+  updateGitSyncHistory(id: number, sync: Partial<InsertGitSyncHistory>): Promise<GitSyncHistory>;
+  
+  // PR Preview operations
+  createPrPreview(preview: InsertPrPreview): Promise<PrPreview>;
+  getProjectPrPreviews(projectId: number): Promise<PrPreview[]>;
+  getPrPreview(id: number): Promise<PrPreview | undefined>;
+  getPrPreviewByNumber(projectId: number, prNumber: number): Promise<PrPreview | undefined>;
+  updatePrPreview(id: number, preview: Partial<InsertPrPreview>): Promise<PrPreview>;
+  deletePrPreview(id: number): Promise<void>;
   
   // Healthcare Blueprint operations
   getHealthcareBlueprints(filters?: { category?: string; complianceLevel?: string }): Promise<HealthcareBlueprint[]>;
@@ -2186,6 +2218,117 @@ This agreement incorporates organization-specific requirements and automatically
 
   async deleteGitIntegration(id: number): Promise<void> {
     await db.delete(gitIntegrations).where(eq(gitIntegrations.id, id));
+  }
+
+  // Git Branch operations
+  async createGitBranch(branch: InsertGitBranch): Promise<GitBranch> {
+    const [newBranch] = await db.insert(gitBranches).values(branch).returning();
+    return newBranch;
+  }
+
+  async getProjectBranches(projectId: number): Promise<GitBranch[]> {
+    return await db.select().from(gitBranches)
+      .where(eq(gitBranches.projectId, projectId))
+      .orderBy(desc(gitBranches.isDefault), desc(gitBranches.updatedAt));
+  }
+
+  async getIntegrationBranches(integrationId: number): Promise<GitBranch[]> {
+    return await db.select().from(gitBranches)
+      .where(eq(gitBranches.integrationId, integrationId))
+      .orderBy(desc(gitBranches.isDefault), desc(gitBranches.updatedAt));
+  }
+
+  async getGitBranch(id: number): Promise<GitBranch | undefined> {
+    const [branch] = await db.select().from(gitBranches).where(eq(gitBranches.id, id));
+    return branch;
+  }
+
+  async updateGitBranch(id: number, branch: Partial<InsertGitBranch>): Promise<GitBranch> {
+    const [updated] = await db.update(gitBranches)
+      .set({ ...branch, updatedAt: new Date() })
+      .where(eq(gitBranches.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteGitBranch(id: number): Promise<void> {
+    await db.delete(gitBranches).where(eq(gitBranches.id, id));
+  }
+
+  async syncBranches(integrationId: number, branches: InsertGitBranch[]): Promise<GitBranch[]> {
+    // Delete existing branches for this integration
+    await db.delete(gitBranches).where(eq(gitBranches.integrationId, integrationId));
+    
+    // Insert new branches
+    if (branches.length === 0) return [];
+    const newBranches = await db.insert(gitBranches).values(branches).returning();
+    return newBranches;
+  }
+
+  // Git Sync History operations
+  async createGitSyncHistory(sync: InsertGitSyncHistory): Promise<GitSyncHistory> {
+    const [newSync] = await db.insert(gitSyncHistory).values(sync).returning();
+    return newSync;
+  }
+
+  async getProjectSyncHistory(projectId: number, limit = 50): Promise<GitSyncHistory[]> {
+    return await db.select().from(gitSyncHistory)
+      .where(eq(gitSyncHistory.projectId, projectId))
+      .orderBy(desc(gitSyncHistory.createdAt))
+      .limit(limit);
+  }
+
+  async getIntegrationSyncHistory(integrationId: number, limit = 50): Promise<GitSyncHistory[]> {
+    return await db.select().from(gitSyncHistory)
+      .where(eq(gitSyncHistory.integrationId, integrationId))
+      .orderBy(desc(gitSyncHistory.createdAt))
+      .limit(limit);
+  }
+
+  async updateGitSyncHistory(id: number, sync: Partial<InsertGitSyncHistory>): Promise<GitSyncHistory> {
+    const [updated] = await db.update(gitSyncHistory)
+      .set(sync)
+      .where(eq(gitSyncHistory.id, id))
+      .returning();
+    return updated;
+  }
+
+  // PR Preview operations
+  async createPrPreview(preview: InsertPrPreview): Promise<PrPreview> {
+    const [newPreview] = await db.insert(prPreviews).values(preview).returning();
+    return newPreview;
+  }
+
+  async getProjectPrPreviews(projectId: number): Promise<PrPreview[]> {
+    return await db.select().from(prPreviews)
+      .where(eq(prPreviews.projectId, projectId))
+      .orderBy(desc(prPreviews.createdAt));
+  }
+
+  async getPrPreview(id: number): Promise<PrPreview | undefined> {
+    const [preview] = await db.select().from(prPreviews).where(eq(prPreviews.id, id));
+    return preview;
+  }
+
+  async getPrPreviewByNumber(projectId: number, prNumber: number): Promise<PrPreview | undefined> {
+    const [preview] = await db.select().from(prPreviews)
+      .where(and(
+        eq(prPreviews.projectId, projectId),
+        eq(prPreviews.prNumber, prNumber)
+      ));
+    return preview;
+  }
+
+  async updatePrPreview(id: number, preview: Partial<InsertPrPreview>): Promise<PrPreview> {
+    const [updated] = await db.update(prPreviews)
+      .set({ ...preview, updatedAt: new Date() })
+      .where(eq(prPreviews.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deletePrPreview(id: number): Promise<void> {
+    await db.delete(prPreviews).where(eq(prPreviews.id, id));
   }
 
   // Healthcare Blueprint operations

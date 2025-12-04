@@ -547,6 +547,83 @@ export const gitIntegrations = pgTable("git_integrations", {
   index("idx_git_integrations_project").on(table.projectId),
 ]);
 
+// Git Branches - Track all branches for a project
+export const gitBranches = pgTable("git_branches", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  integrationId: integer("integration_id").notNull(),
+  name: varchar("name").notNull(),
+  sha: varchar("sha"),
+  isDefault: boolean("is_default").default(false),
+  isProtected: boolean("is_protected").default(false),
+  lastCommitMessage: text("last_commit_message"),
+  lastCommitAuthor: varchar("last_commit_author"),
+  lastCommitAt: timestamp("last_commit_at"),
+  aheadBy: integer("ahead_by").default(0),
+  behindBy: integer("behind_by").default(0),
+  hasConflicts: boolean("has_conflicts").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_git_branches_project").on(table.projectId),
+  index("idx_git_branches_integration").on(table.integrationId),
+]);
+
+// Git Sync History - Log all sync operations
+export const gitSyncHistory = pgTable("git_sync_history", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  integrationId: integer("integration_id").notNull(),
+  direction: varchar("direction").notNull(), // "push", "pull"
+  status: varchar("status").notNull(), // "pending", "in_progress", "success", "failed", "conflict"
+  branch: varchar("branch").notNull(),
+  startCommit: varchar("start_commit"),
+  endCommit: varchar("end_commit"),
+  filesChanged: integer("files_changed").default(0),
+  insertions: integer("insertions").default(0),
+  deletions: integer("deletions").default(0),
+  conflictFiles: jsonb("conflict_files"), // Array of conflicting file paths
+  errorMessage: text("error_message"),
+  triggeredBy: varchar("triggered_by").notNull(), // "manual", "auto", "webhook"
+  userId: varchar("user_id").notNull(),
+  duration: integer("duration"), // Duration in milliseconds
+  createdAt: timestamp("created_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+}, (table) => [
+  index("idx_git_sync_project").on(table.projectId),
+  index("idx_git_sync_integration").on(table.integrationId),
+  index("idx_git_sync_status").on(table.status),
+]);
+
+// PR Previews - Preview environments for pull requests
+export const prPreviews = pgTable("pr_previews", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  integrationId: integer("integration_id").notNull(),
+  prNumber: integer("pr_number").notNull(),
+  prTitle: varchar("pr_title"),
+  prUrl: varchar("pr_url"),
+  headBranch: varchar("head_branch").notNull(),
+  baseBranch: varchar("base_branch").notNull(),
+  headSha: varchar("head_sha"),
+  status: varchar("status").notNull().default("pending"), // "pending", "building", "running", "stopped", "failed"
+  previewUrl: varchar("preview_url"),
+  buildLogs: text("build_logs"),
+  errorMessage: text("error_message"),
+  environmentId: integer("environment_id"), // Link to project environment
+  deploymentId: integer("deployment_id"), // Link to HIPAA deployment
+  autoDeployOnUpdate: boolean("auto_deploy_on_update").default(true),
+  isHipaaCompliant: boolean("is_hipaa_compliant").default(false),
+  expiresAt: timestamp("expires_at"),
+  authorUsername: varchar("author_username"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_pr_previews_project").on(table.projectId),
+  index("idx_pr_previews_integration").on(table.integrationId),
+  index("idx_pr_previews_pr_number").on(table.prNumber),
+]);
+
 // Healthcare Blueprints - Ready-made FHIR/telehealth/eRx flows
 export const healthcareBlueprints = pgTable("healthcare_blueprints", {
   id: serial("id").primaryKey(),
@@ -756,6 +833,9 @@ export const insertProjectSecretSchema = createInsertSchema(projectSecrets).omit
 export const insertHipaaDeploymentSchema = createInsertSchema(hipaaDeployments).omit({ id: true, startedAt: true });
 export const insertComplianceAuditEventSchema = createInsertSchema(complianceAuditEvents).omit({ id: true, createdAt: true });
 export const insertGitIntegrationSchema = createInsertSchema(gitIntegrations).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertGitBranchSchema = createInsertSchema(gitBranches).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertGitSyncHistorySchema = createInsertSchema(gitSyncHistory).omit({ id: true, createdAt: true, completedAt: true });
+export const insertPrPreviewSchema = createInsertSchema(prPreviews).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertHealthcareBlueprintSchema = createInsertSchema(healthcareBlueprints).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertPhiScanResultSchema = createInsertSchema(phiScanResults).omit({ id: true, createdAt: true });
 export const insertPackageHealthSchema = createInsertSchema(packageHealth).omit({ id: true, createdAt: true });
@@ -936,6 +1016,12 @@ export type InsertComplianceAuditEvent = z.infer<typeof insertComplianceAuditEve
 export type ComplianceAuditEvent = typeof complianceAuditEvents.$inferSelect;
 export type InsertGitIntegration = z.infer<typeof insertGitIntegrationSchema>;
 export type GitIntegration = typeof gitIntegrations.$inferSelect;
+export type InsertGitBranch = z.infer<typeof insertGitBranchSchema>;
+export type GitBranch = typeof gitBranches.$inferSelect;
+export type InsertGitSyncHistory = z.infer<typeof insertGitSyncHistorySchema>;
+export type GitSyncHistory = typeof gitSyncHistory.$inferSelect;
+export type InsertPrPreview = z.infer<typeof insertPrPreviewSchema>;
+export type PrPreview = typeof prPreviews.$inferSelect;
 export type InsertHealthcareBlueprint = z.infer<typeof insertHealthcareBlueprintSchema>;
 export type HealthcareBlueprint = typeof healthcareBlueprints.$inferSelect;
 export type InsertPhiScanResult = z.infer<typeof insertPhiScanResultSchema>;
