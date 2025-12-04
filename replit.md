@@ -100,6 +100,19 @@ MedBuilder utilizes a dual-platform strategy, separating healthcare-specific dev
 
 ## Recent Updates (December 2024)
 
+### HIPAA Deploy & Secrets Manager (December 4)
+- **8 New Database Tables**: projectEnvironments, projectSecrets, hipaaDeployments, complianceAuditEvents, gitIntegrations, healthcareBlueprints, phiScanResults, packageHealth
+- **Environment Management**: Support for development, staging, production environments with HIPAA compliance settings
+- **Secrets Manager**: Environment-scoped secrets with rotation tracking, masked values, and audit logging
+- **HIPAA Deployments**: Full deployment lifecycle with SSL/WAF/encryption verification and rollback capability
+- **Compliance Audit Trail**: All sensitive operations logged with BAA evidence export functionality
+- **Git Integration**: Repository linking with branch management and sync status
+- **Healthcare Blueprints**: FHIR/HL7 compliant template library with compliance level ratings
+- **PHI Scanning**: Static and dynamic code analysis for PHI exposure detection
+- **Package Health**: Dependency vulnerability tracking and HIPAA-safe upgrade recommendations
+- **30+ New API Endpoints**: Full CRUD for environments, secrets, deployments, audit events, git sync, blueprints, PHI scans, and package health
+- **Security Features**: Authentication checks, ownership verification, secret value masking, compliance audit logging for all sensitive operations
+
 ### Replit-Parity Features (December 4)
 - **Real-time Collaboration**: Socket.io-based multiplayer coding with live cursors, user presence indicators, and invite link generation
 - **AI Plan Mode**: Step-by-step execution plans with approval workflow before AI makes changes

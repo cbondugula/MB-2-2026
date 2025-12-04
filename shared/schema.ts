@@ -421,6 +421,211 @@ export const terminalSessions = pgTable("terminal_sessions", {
   executedAt: timestamp("executed_at").defaultNow(),
 });
 
+// Project Environments (dev, staging, production)
+export const projectEnvironments = pgTable("project_environments", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  name: varchar("name").notNull(), // "development", "staging", "production"
+  displayName: varchar("display_name").notNull(),
+  url: varchar("url"), // Deployed URL if applicable
+  status: varchar("status").notNull().default("inactive"), // "inactive", "deploying", "active", "failed"
+  isHipaaCompliant: boolean("is_hipaa_compliant").default(false),
+  region: varchar("region"), // AWS/GCP region
+  autoScaling: boolean("auto_scaling").default(false),
+  healthCheckUrl: varchar("health_check_url"),
+  lastHealthCheck: timestamp("last_health_check"),
+  healthStatus: varchar("health_status"), // "healthy", "degraded", "unhealthy"
+  configuration: jsonb("configuration"), // Environment-specific config
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_project_environments_project").on(table.projectId),
+  index("idx_project_environments_name").on(table.name),
+]);
+
+// Project Secrets (scoped by environment)
+export const projectSecrets = pgTable("project_secrets", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  environmentId: integer("environment_id"), // null = all environments
+  key: varchar("key").notNull(),
+  encryptedValue: text("encrypted_value").notNull(), // Encrypted secret value
+  description: text("description"),
+  isRequired: boolean("is_required").default(false),
+  lastRotated: timestamp("last_rotated"),
+  expiresAt: timestamp("expires_at"),
+  createdBy: varchar("created_by").notNull(),
+  updatedBy: varchar("updated_by"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_project_secrets_project").on(table.projectId),
+  index("idx_project_secrets_env").on(table.environmentId),
+]);
+
+// HIPAA Deployments - HIPAA-compliant deployment records with full audit trail
+export const hipaaDeployments = pgTable("hipaa_deployments", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  environmentId: integer("environment_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  version: varchar("version").notNull(),
+  commitHash: varchar("commit_hash"),
+  status: varchar("status").notNull().default("pending"), // "pending", "building", "deploying", "active", "failed", "rolled_back"
+  deploymentUrl: varchar("deployment_url"),
+  buildLogs: text("build_logs"),
+  deployLogs: text("deploy_logs"),
+  errorMessage: text("error_message"),
+  isHipaaCompliant: boolean("is_hipaa_compliant").default(false),
+  hipaaAuditId: varchar("hipaa_audit_id"), // Reference to compliance audit
+  sslEnabled: boolean("ssl_enabled").default(true),
+  wafEnabled: boolean("waf_enabled").default(false),
+  encryptionAtRest: boolean("encryption_at_rest").default(true),
+  backupEnabled: boolean("backup_enabled").default(false),
+  rollbackTarget: integer("rollback_target"), // Previous deployment ID if rolled back
+  startedAt: timestamp("started_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+  metadata: jsonb("metadata"), // Build config, resource usage, etc.
+}, (table) => [
+  index("idx_hipaa_deployments_project").on(table.projectId),
+  index("idx_hipaa_deployments_env").on(table.environmentId),
+  index("idx_hipaa_deployments_status").on(table.status),
+]);
+
+// Compliance Audit Events - BAA evidence and audit trail
+export const complianceAuditEvents = pgTable("compliance_audit_events", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  eventType: varchar("event_type").notNull(), // "deployment", "secret_access", "phi_access", "config_change", "user_access", "export"
+  eventCategory: varchar("event_category").notNull(), // "security", "access", "configuration", "deployment", "data"
+  severity: varchar("severity").notNull().default("info"), // "info", "warning", "critical"
+  description: text("description").notNull(),
+  resourceType: varchar("resource_type"), // "secret", "environment", "deployment", "user", "file"
+  resourceId: varchar("resource_id"),
+  ipAddress: varchar("ip_address"),
+  userAgent: text("user_agent"),
+  location: varchar("location"), // Geo location if available
+  previousState: jsonb("previous_state"),
+  newState: jsonb("new_state"),
+  isPhiRelated: boolean("is_phi_related").default(false),
+  baaReference: varchar("baa_reference"), // BAA document reference
+  retentionPeriod: integer("retention_period").default(2190), // 6 years in days for HIPAA
+  exportedAt: timestamp("exported_at"),
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_compliance_audit_project").on(table.projectId),
+  index("idx_compliance_audit_type").on(table.eventType),
+  index("idx_compliance_audit_category").on(table.eventCategory),
+  index("idx_compliance_audit_timestamp").on(table.createdAt),
+]);
+
+// GitHub/Git Integration
+export const gitIntegrations = pgTable("git_integrations", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  provider: varchar("provider").notNull().default("github"), // "github", "gitlab", "bitbucket"
+  repoOwner: varchar("repo_owner"),
+  repoName: varchar("repo_name"),
+  repoUrl: varchar("repo_url"),
+  defaultBranch: varchar("default_branch").default("main"),
+  currentBranch: varchar("current_branch").default("main"),
+  lastSyncedCommit: varchar("last_synced_commit"),
+  syncDirection: varchar("sync_direction").default("bidirectional"), // "push", "pull", "bidirectional"
+  autoSync: boolean("auto_sync").default(false),
+  protectedBranches: jsonb("protected_branches"), // Array of protected branch names
+  webhookSecret: varchar("webhook_secret"),
+  accessToken: text("access_token"), // Encrypted GitHub token
+  status: varchar("status").notNull().default("disconnected"), // "disconnected", "connected", "syncing", "error"
+  lastError: text("last_error"),
+  lastSyncedAt: timestamp("last_synced_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_git_integrations_project").on(table.projectId),
+]);
+
+// Healthcare Blueprints - Ready-made FHIR/telehealth/eRx flows
+export const healthcareBlueprints = pgTable("healthcare_blueprints", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  category: varchar("category").notNull(), // "fhir", "telehealth", "erx", "labs", "patient-intake", "scheduling"
+  subcategory: varchar("subcategory"),
+  complianceLevel: varchar("compliance_level").notNull(), // "hipaa", "fda", "gdpr", "soc2"
+  fhirResources: jsonb("fhir_resources"), // Array of FHIR resource types used
+  apiEndpoints: jsonb("api_endpoints"), // Pre-configured API endpoints
+  dataModels: jsonb("data_models"), // Data schema definitions
+  uiComponents: jsonb("ui_components"), // Component configurations
+  workflows: jsonb("workflows"), // Step-by-step workflow definitions
+  integrations: jsonb("integrations"), // Epic, Cerner, etc. integrations
+  validationRules: jsonb("validation_rules"), // Data validation rules
+  complianceChecks: jsonb("compliance_checks"), // Built-in compliance checks
+  code: jsonb("code").notNull(), // Blueprint implementation code
+  documentation: text("documentation"),
+  version: varchar("version").default("1.0.0"),
+  isVerified: boolean("is_verified").default(false),
+  downloadCount: integer("download_count").default(0),
+  tags: jsonb("tags"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_healthcare_blueprints_category").on(table.category),
+]);
+
+// PHI Scan Results - Compliance scanner results
+export const phiScanResults = pgTable("phi_scan_results", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  scanType: varchar("scan_type").notNull(), // "static", "dynamic", "egress"
+  status: varchar("status").notNull().default("pending"), // "pending", "running", "completed", "failed"
+  totalFiles: integer("total_files").default(0),
+  filesScanned: integer("files_scanned").default(0),
+  issuesFound: integer("issues_found").default(0),
+  criticalIssues: integer("critical_issues").default(0),
+  warningIssues: integer("warning_issues").default(0),
+  infoIssues: integer("info_issues").default(0),
+  findings: jsonb("findings"), // Array of { file, line, type, severity, description, suggestion }
+  phiPatterns: jsonb("phi_patterns"), // Detected PHI patterns (SSN, MRN, etc.)
+  egressRisks: jsonb("egress_risks"), // Outbound data risks
+  modelSafetyScore: integer("model_safety_score"), // AI model safety grade 0-100
+  recommendations: jsonb("recommendations"), // Remediation suggestions
+  scanDuration: integer("scan_duration"), // Duration in seconds
+  triggeredBy: varchar("triggered_by").notNull(), // "manual", "commit", "deploy", "scheduled"
+  userId: varchar("user_id").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+}, (table) => [
+  index("idx_phi_scan_project").on(table.projectId),
+  index("idx_phi_scan_status").on(table.status),
+]);
+
+// Package/Dependency Health
+export const packageHealth = pgTable("package_health", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  packageManager: varchar("package_manager").notNull(), // "npm", "pip", "maven", etc.
+  packageName: varchar("package_name").notNull(),
+  currentVersion: varchar("current_version"),
+  latestVersion: varchar("latest_version"),
+  wantedVersion: varchar("wanted_version"),
+  hasVulnerability: boolean("has_vulnerability").default(false),
+  vulnerabilitySeverity: varchar("vulnerability_severity"), // "low", "moderate", "high", "critical"
+  vulnerabilityCount: integer("vulnerability_count").default(0),
+  vulnerabilityDetails: jsonb("vulnerability_details"),
+  isOutdated: boolean("is_outdated").default(false),
+  isDeprecated: boolean("is_deprecated").default(false),
+  license: varchar("license"),
+  isLicenseCompliant: boolean("is_license_compliant").default(true),
+  lastCheckedAt: timestamp("last_checked_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_package_health_project").on(table.projectId),
+  index("idx_package_health_vuln").on(table.hasVulnerability),
+]);
+
 // Smart Components with AI Context
 export const smartComponents = pgTable("smart_components", {
   id: serial("id").primaryKey(),
@@ -546,6 +751,14 @@ export const insertCollaborationSessionSchema = createInsertSchema(collaboration
 export const insertFileVersionSchema = createInsertSchema(fileVersions).omit({ id: true, createdAt: true });
 export const insertAiPlanSchema = createInsertSchema(aiPlans).omit({ id: true, createdAt: true });
 export const insertTerminalSessionSchema = createInsertSchema(terminalSessions).omit({ id: true, executedAt: true });
+export const insertProjectEnvironmentSchema = createInsertSchema(projectEnvironments).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertProjectSecretSchema = createInsertSchema(projectSecrets).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertHipaaDeploymentSchema = createInsertSchema(hipaaDeployments).omit({ id: true, startedAt: true });
+export const insertComplianceAuditEventSchema = createInsertSchema(complianceAuditEvents).omit({ id: true, createdAt: true });
+export const insertGitIntegrationSchema = createInsertSchema(gitIntegrations).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertHealthcareBlueprintSchema = createInsertSchema(healthcareBlueprints).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertPhiScanResultSchema = createInsertSchema(phiScanResults).omit({ id: true, createdAt: true });
+export const insertPackageHealthSchema = createInsertSchema(packageHealth).omit({ id: true, createdAt: true });
 export const insertAdvancedTemplateSchema = createInsertSchema(advancedTemplates);
 export const insertSmartComponentSchema = createInsertSchema(smartComponents);
 export const insertHealthcareDomainSchema = createInsertSchema(healthcareDomains);
@@ -713,6 +926,22 @@ export type InsertAiPlan = z.infer<typeof insertAiPlanSchema>;
 export type AiPlan = typeof aiPlans.$inferSelect;
 export type InsertTerminalSession = z.infer<typeof insertTerminalSessionSchema>;
 export type TerminalSession = typeof terminalSessions.$inferSelect;
+export type InsertProjectEnvironment = z.infer<typeof insertProjectEnvironmentSchema>;
+export type ProjectEnvironment = typeof projectEnvironments.$inferSelect;
+export type InsertProjectSecret = z.infer<typeof insertProjectSecretSchema>;
+export type ProjectSecret = typeof projectSecrets.$inferSelect;
+export type InsertHipaaDeployment = z.infer<typeof insertHipaaDeploymentSchema>;
+export type HipaaDeployment = typeof hipaaDeployments.$inferSelect;
+export type InsertComplianceAuditEvent = z.infer<typeof insertComplianceAuditEventSchema>;
+export type ComplianceAuditEvent = typeof complianceAuditEvents.$inferSelect;
+export type InsertGitIntegration = z.infer<typeof insertGitIntegrationSchema>;
+export type GitIntegration = typeof gitIntegrations.$inferSelect;
+export type InsertHealthcareBlueprint = z.infer<typeof insertHealthcareBlueprintSchema>;
+export type HealthcareBlueprint = typeof healthcareBlueprints.$inferSelect;
+export type InsertPhiScanResult = z.infer<typeof insertPhiScanResultSchema>;
+export type PhiScanResult = typeof phiScanResults.$inferSelect;
+export type InsertPackageHealth = z.infer<typeof insertPackageHealthSchema>;
+export type PackageHealth = typeof packageHealth.$inferSelect;
 export type InsertAdvancedTemplate = z.infer<typeof insertAdvancedTemplateSchema>;
 export type AdvancedTemplate = typeof advancedTemplates.$inferSelect;
 export type InsertSmartComponent = z.infer<typeof insertSmartComponentSchema>;

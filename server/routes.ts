@@ -5441,5 +5441,883 @@ Respond with ONLY valid JSON array, no explanation.`;
     }
   });
 
+  // ===== HIPAA DEPLOY & SECRETS MANAGER API ENDPOINTS =====
+  
+  // Zod validation schemas for HIPAA Deploy
+  const environmentSchema = z.object({
+    name: z.string().min(1).max(100),
+    type: z.enum(['development', 'staging', 'production']),
+    isHipaaCompliant: z.boolean().optional(),
+    settings: z.any().optional()
+  });
+  
+  const secretSchema = z.object({
+    key: z.string().min(1).max(255),
+    encryptedValue: z.string().min(1),
+    environmentId: z.number().int().positive(),
+    description: z.string().optional()
+  });
+  
+  const deploymentSchema = z.object({
+    environmentId: z.number().int().positive(),
+    version: z.string().min(1),
+    commitHash: z.string().optional(),
+    sslEnabled: z.boolean().default(true),
+    wafEnabled: z.boolean().default(true),
+    encryptionAtRest: z.boolean().default(true),
+    backupEnabled: z.boolean().default(true)
+  });
+  
+  const gitIntegrationSchema = z.object({
+    provider: z.enum(['github', 'gitlab', 'bitbucket']),
+    repositoryUrl: z.string().url(),
+    branch: z.string().min(1).default('main'),
+    autoSync: z.boolean().default(false)
+  });
+  
+  // Helper to mask secret values
+  const maskSecret = (secret: any) => ({
+    id: secret.id,
+    projectId: secret.projectId,
+    environmentId: secret.environmentId,
+    key: secret.key,
+    description: secret.description,
+    createdAt: secret.createdAt,
+    updatedAt: secret.updatedAt,
+    lastRotated: secret.lastRotated,
+    hasValue: true
+  });
+  
+  // Project Environments
+  app.get('/api/projects/:id/environments', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      const environments = await storage.getProjectEnvironments(projectId);
+      res.json({ environments });
+    } catch (error: any) {
+      console.error("Error fetching environments:", error);
+      res.status(500).json({ message: "Failed to fetch environments" });
+    }
+  });
+
+  app.post('/api/projects/:id/environments', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const validation = environmentSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid environment data", errors: validation.error.errors });
+      }
+      
+      const environment = await storage.createProjectEnvironment({
+        projectId,
+        ...validation.data
+      });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'configuration',
+        description: `Environment "${validation.data.name}" created`,
+        resourceType: 'environment',
+        resourceId: String(environment.id),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ environment });
+    } catch (error: any) {
+      console.error("Error creating environment:", error);
+      res.status(500).json({ message: "Failed to create environment" });
+    }
+  });
+
+  app.patch('/api/projects/:id/environments/:envId', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const envId = parseInt(req.params.envId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Verify environment belongs to project
+      const existingEnv = await storage.getProjectEnvironment(envId);
+      if (!existingEnv || existingEnv.projectId !== projectId) {
+        return res.status(404).json({ message: "Environment not found" });
+      }
+      
+      const validation = environmentSchema.partial().safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid environment data", errors: validation.error.errors });
+      }
+      
+      const environment = await storage.updateProjectEnvironment(envId, validation.data);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'configuration',
+        description: `Environment "${existingEnv.name}" updated`,
+        resourceType: 'environment',
+        resourceId: String(envId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ environment });
+    } catch (error: any) {
+      console.error("Error updating environment:", error);
+      res.status(500).json({ message: "Failed to update environment" });
+    }
+  });
+
+  app.delete('/api/projects/:id/environments/:envId', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const envId = parseInt(req.params.envId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Verify environment belongs to project
+      const existingEnv = await storage.getProjectEnvironment(envId);
+      if (!existingEnv || existingEnv.projectId !== projectId) {
+        return res.status(404).json({ message: "Environment not found" });
+      }
+      
+      await storage.deleteProjectEnvironment(envId);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'configuration',
+        severity: 'warning',
+        description: `Environment "${existingEnv.name}" deleted`,
+        resourceType: 'environment',
+        resourceId: String(envId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error deleting environment:", error);
+      res.status(500).json({ message: "Failed to delete environment" });
+    }
+  });
+
+  // Project Secrets
+  app.get('/api/projects/:id/secrets', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const envId = req.query.environmentId ? parseInt(req.query.environmentId) : undefined;
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const secrets = await storage.getProjectSecrets(projectId, envId);
+      const maskedSecrets = secrets.map(maskSecret);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'secret_access',
+        eventCategory: 'access',
+        description: 'Secrets list accessed',
+        resourceType: 'secret',
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ secrets: maskedSecrets });
+    } catch (error: any) {
+      console.error("Error fetching secrets:", error);
+      res.status(500).json({ message: "Failed to fetch secrets" });
+    }
+  });
+
+  app.post('/api/projects/:id/secrets', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const validation = secretSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid secret data", errors: validation.error.errors });
+      }
+      
+      // Verify environment belongs to project
+      const env = await storage.getProjectEnvironment(validation.data.environmentId);
+      if (!env || env.projectId !== projectId) {
+        return res.status(404).json({ message: "Environment not found" });
+      }
+      
+      const secret = await storage.createProjectSecret({
+        projectId,
+        createdBy: req.user.claims.sub,
+        ...validation.data
+      });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'security',
+        severity: 'warning',
+        description: `Secret "${validation.data.key}" created`,
+        resourceType: 'secret',
+        resourceId: String(secret.id),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ secret: maskSecret(secret) });
+    } catch (error: any) {
+      console.error("Error creating secret:", error);
+      res.status(500).json({ message: "Failed to create secret" });
+    }
+  });
+
+  app.patch('/api/projects/:id/secrets/:secretId', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const secretId = parseInt(req.params.secretId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Verify secret belongs to project
+      const existingSecret = await storage.getProjectSecret(secretId);
+      if (!existingSecret || existingSecret.projectId !== projectId) {
+        return res.status(404).json({ message: "Secret not found" });
+      }
+      
+      const validation = secretSchema.partial().safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid secret data", errors: validation.error.errors });
+      }
+      
+      const secret = await storage.updateProjectSecret(secretId, {
+        ...validation.data,
+        updatedBy: req.user.claims.sub
+      });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'security',
+        description: `Secret "${existingSecret.key}" updated`,
+        resourceType: 'secret',
+        resourceId: String(secretId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ secret: maskSecret(secret) });
+    } catch (error: any) {
+      console.error("Error updating secret:", error);
+      res.status(500).json({ message: "Failed to update secret" });
+    }
+  });
+
+  app.post('/api/projects/:id/secrets/:secretId/rotate', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const secretId = parseInt(req.params.secretId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Verify secret belongs to project
+      const existingSecret = await storage.getProjectSecret(secretId);
+      if (!existingSecret || existingSecret.projectId !== projectId) {
+        return res.status(404).json({ message: "Secret not found" });
+      }
+      
+      const rotateSchema = z.object({ newValue: z.string().min(1) });
+      const validation = rotateSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid rotation data", errors: validation.error.errors });
+      }
+      
+      const secret = await storage.rotateProjectSecret(secretId, validation.data.newValue, req.user.claims.sub);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'security',
+        severity: 'warning',
+        description: `Secret "${existingSecret.key}" rotated`,
+        resourceType: 'secret',
+        resourceId: String(secretId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ secret: maskSecret(secret), rotatedAt: secret.lastRotated });
+    } catch (error: any) {
+      console.error("Error rotating secret:", error);
+      res.status(500).json({ message: "Failed to rotate secret" });
+    }
+  });
+
+  app.delete('/api/projects/:id/secrets/:secretId', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const secretId = parseInt(req.params.secretId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Verify secret belongs to project
+      const existingSecret = await storage.getProjectSecret(secretId);
+      if (!existingSecret || existingSecret.projectId !== projectId) {
+        return res.status(404).json({ message: "Secret not found" });
+      }
+      
+      await storage.deleteProjectSecret(secretId);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'security',
+        severity: 'critical',
+        description: `Secret "${existingSecret.key}" deleted`,
+        resourceType: 'secret',
+        resourceId: String(secretId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error deleting secret:", error);
+      res.status(500).json({ message: "Failed to delete secret" });
+    }
+  });
+
+  // HIPAA Deployments
+  app.get('/api/projects/:id/deployments', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const deployments = await storage.getProjectDeployments(projectId);
+      res.json({ deployments });
+    } catch (error: any) {
+      console.error("Error fetching deployments:", error);
+      res.status(500).json({ message: "Failed to fetch deployments" });
+    }
+  });
+
+  app.post('/api/projects/:id/deployments', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const validation = deploymentSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid deployment data", errors: validation.error.errors });
+      }
+      
+      // Verify environment belongs to project
+      const env = await storage.getProjectEnvironment(validation.data.environmentId);
+      if (!env || env.projectId !== projectId) {
+        return res.status(404).json({ message: "Environment not found" });
+      }
+      
+      const deployment = await storage.createHipaaDeployment({
+        projectId,
+        userId: req.user.claims.sub,
+        status: 'pending',
+        isHipaaCompliant: env.isHipaaCompliant || false,
+        ...validation.data
+      });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'deployment',
+        eventCategory: 'deployment',
+        severity: 'info',
+        description: `Deployment v${validation.data.version} initiated to ${env.name}`,
+        resourceType: 'deployment',
+        resourceId: String(deployment.id),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ deployment });
+    } catch (error: any) {
+      console.error("Error creating deployment:", error);
+      res.status(500).json({ message: "Failed to create deployment" });
+    }
+  });
+
+  app.patch('/api/projects/:id/deployments/:deploymentId', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const deploymentId = parseInt(req.params.deploymentId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Verify deployment belongs to project
+      const existingDeployment = await storage.getHipaaDeployment(deploymentId);
+      if (!existingDeployment || existingDeployment.projectId !== projectId) {
+        return res.status(404).json({ message: "Deployment not found" });
+      }
+      
+      const updateSchema = z.object({
+        status: z.enum(['pending', 'building', 'deploying', 'active', 'failed', 'rolled_back']).optional(),
+        deploymentUrl: z.string().url().optional(),
+        completedAt: z.string().datetime().optional(),
+      });
+      const validation = updateSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid deployment update", errors: validation.error.errors });
+      }
+      
+      const deployment = await storage.updateHipaaDeployment(deploymentId, validation.data);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'deployment',
+        eventCategory: 'deployment',
+        description: `Deployment v${existingDeployment.version} status updated to ${validation.data.status || 'unchanged'}`,
+        resourceType: 'deployment',
+        resourceId: String(deploymentId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ deployment });
+    } catch (error: any) {
+      console.error("Error updating deployment:", error);
+      res.status(500).json({ message: "Failed to update deployment" });
+    }
+  });
+
+  app.post('/api/projects/:id/deployments/:deploymentId/rollback', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const deploymentId = parseInt(req.params.deploymentId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Verify deployment belongs to project
+      const targetDeployment = await storage.getHipaaDeployment(deploymentId);
+      if (!targetDeployment || targetDeployment.projectId !== projectId) {
+        return res.status(404).json({ message: "Deployment not found" });
+      }
+      
+      const newDeployment = await storage.rollbackDeployment(deploymentId, req.user.claims.sub);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'deployment',
+        eventCategory: 'deployment',
+        severity: 'warning',
+        description: `Rollback to deployment v${targetDeployment.version} executed`,
+        resourceType: 'deployment',
+        resourceId: String(newDeployment.id),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ deployment: newDeployment });
+    } catch (error: any) {
+      console.error("Error rolling back deployment:", error);
+      res.status(500).json({ message: "Failed to rollback deployment" });
+    }
+  });
+
+  // Compliance Audit Trail
+  app.get('/api/projects/:id/audit-events', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const events = await storage.getProjectAuditEvents(projectId, {
+        limit: req.query.limit ? parseInt(req.query.limit) : 100
+      });
+      res.json({ events });
+    } catch (error: any) {
+      console.error("Error fetching audit events:", error);
+      res.status(500).json({ message: "Failed to fetch audit events" });
+    }
+  });
+
+  app.post('/api/projects/:id/audit-events/export', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const exportSchema = z.object({
+        startDate: z.string().datetime(),
+        endDate: z.string().datetime()
+      });
+      const validation = exportSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid date range", errors: validation.error.errors });
+      }
+      
+      const events = await storage.exportAuditEventsForBAA(
+        projectId, 
+        new Date(validation.data.startDate), 
+        new Date(validation.data.endDate)
+      );
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'data_export',
+        eventCategory: 'access',
+        severity: 'warning',
+        description: `BAA audit events exported (${events.length} events)`,
+        resourceType: 'audit_export',
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ 
+        events, 
+        exportedAt: new Date().toISOString(),
+        count: events.length,
+        baaReference: `BAA-${projectId}-${Date.now()}`
+      });
+    } catch (error: any) {
+      console.error("Error exporting audit events:", error);
+      res.status(500).json({ message: "Failed to export audit events" });
+    }
+  });
+
+  // Git Integration
+  app.get('/api/projects/:id/git', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const integration = await storage.getProjectGitIntegration(projectId);
+      res.json({ integration: integration || null });
+    } catch (error: any) {
+      console.error("Error fetching git integration:", error);
+      res.status(500).json({ message: "Failed to fetch git integration" });
+    }
+  });
+
+  app.post('/api/projects/:id/git', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const validation = gitIntegrationSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid git integration data", errors: validation.error.errors });
+      }
+      
+      const integration = await storage.createGitIntegration({
+        projectId,
+        userId: req.user.claims.sub,
+        ...validation.data
+      });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'configuration',
+        description: `Git integration created for ${validation.data.repositoryUrl}`,
+        resourceType: 'git_integration',
+        resourceId: String(integration.id),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ integration });
+    } catch (error: any) {
+      console.error("Error creating git integration:", error);
+      res.status(500).json({ message: "Failed to create git integration" });
+    }
+  });
+
+  app.patch('/api/projects/:id/git/:integrationId', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const integrationId = parseInt(req.params.integrationId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Verify integration belongs to project
+      const existingIntegration = await storage.getProjectGitIntegration(projectId);
+      if (!existingIntegration || existingIntegration.id !== integrationId) {
+        return res.status(404).json({ message: "Git integration not found" });
+      }
+      
+      const validation = gitIntegrationSchema.partial().safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid git integration data", errors: validation.error.errors });
+      }
+      
+      const integration = await storage.updateGitIntegration(integrationId, validation.data);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'configuration',
+        description: `Git integration updated`,
+        resourceType: 'git_integration',
+        resourceId: String(integrationId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ integration });
+    } catch (error: any) {
+      console.error("Error updating git integration:", error);
+      res.status(500).json({ message: "Failed to update git integration" });
+    }
+  });
+
+  app.delete('/api/projects/:id/git/:integrationId', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const integrationId = parseInt(req.params.integrationId);
+      
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Verify integration belongs to project
+      const existingIntegration = await storage.getProjectGitIntegration(projectId);
+      if (!existingIntegration || existingIntegration.id !== integrationId) {
+        return res.status(404).json({ message: "Git integration not found" });
+      }
+      
+      await storage.deleteGitIntegration(integrationId);
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'config_change',
+        eventCategory: 'configuration',
+        severity: 'warning',
+        description: `Git integration deleted`,
+        resourceType: 'git_integration',
+        resourceId: String(integrationId),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error deleting git integration:", error);
+      res.status(500).json({ message: "Failed to delete git integration" });
+    }
+  });
+
+  // Healthcare Blueprints
+  app.get('/api/healthcare/blueprints', async (req, res) => {
+    try {
+      const filterSchema = z.object({
+        category: z.string().optional(),
+        complianceLevel: z.string().optional()
+      });
+      const validation = filterSchema.safeParse(req.query);
+      
+      const blueprints = await storage.getHealthcareBlueprints(validation.success ? validation.data : {});
+      res.json({ blueprints });
+    } catch (error: any) {
+      console.error("Error fetching healthcare blueprints:", error);
+      res.status(500).json({ message: "Failed to fetch healthcare blueprints" });
+    }
+  });
+
+  app.get('/api/healthcare/blueprints/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid blueprint ID" });
+      }
+      const blueprint = await storage.getHealthcareBlueprint(id);
+      if (!blueprint) {
+        return res.status(404).json({ message: "Blueprint not found" });
+      }
+      res.json({ blueprint });
+    } catch (error: any) {
+      console.error("Error fetching blueprint:", error);
+      res.status(500).json({ message: "Failed to fetch blueprint" });
+    }
+  });
+
+  // PHI Scans
+  app.get('/api/projects/:id/phi-scans', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const scans = await storage.getProjectPhiScans(projectId);
+      res.json({ scans });
+    } catch (error: any) {
+      console.error("Error fetching PHI scans:", error);
+      res.status(500).json({ message: "Failed to fetch PHI scans" });
+    }
+  });
+
+  app.post('/api/projects/:id/phi-scans', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const phiScanSchema = z.object({
+        scanType: z.enum(['static', 'dynamic', 'full']).default('static'),
+        triggeredBy: z.enum(['manual', 'auto', 'commit']).default('manual')
+      });
+      const validation = phiScanSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: "Invalid scan parameters", errors: validation.error.errors });
+      }
+      
+      const scan = await storage.createPhiScanResult({
+        projectId,
+        userId: req.user.claims.sub,
+        scanType: validation.data.scanType,
+        triggeredBy: validation.data.triggeredBy,
+        status: 'pending',
+      });
+      
+      await storage.createComplianceAuditEvent({
+        projectId,
+        userId: req.user.claims.sub,
+        eventType: 'phi_scan',
+        eventCategory: 'security',
+        description: `PHI scan (${validation.data.scanType}) initiated`,
+        resourceType: 'phi_scan',
+        resourceId: String(scan.id),
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+      
+      res.json({ scan });
+    } catch (error: any) {
+      console.error("Error creating PHI scan:", error);
+      res.status(500).json({ message: "Failed to create PHI scan" });
+    }
+  });
+
+  app.get('/api/projects/:id/phi-scans/latest', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const scan = await storage.getLatestPhiScan(projectId);
+      res.json({ scan: scan || null });
+    } catch (error: any) {
+      console.error("Error fetching latest PHI scan:", error);
+      res.status(500).json({ message: "Failed to fetch latest PHI scan" });
+    }
+  });
+
+  // Package Health
+  app.get('/api/projects/:id/packages', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const packages = await storage.getProjectPackageHealth(projectId);
+      res.json({ packages });
+    } catch (error: any) {
+      console.error("Error fetching package health:", error);
+      res.status(500).json({ message: "Failed to fetch package health" });
+    }
+  });
+
+  app.get('/api/projects/:id/packages/vulnerabilities', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const project = await storage.getProject(projectId);
+      if (!project || project.userId !== req.user.claims.sub) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const vulnerablePackages = await storage.getVulnerablePackages(projectId);
+      res.json({ vulnerablePackages, count: vulnerablePackages.length });
+    } catch (error: any) {
+      console.error("Error fetching vulnerable packages:", error);
+      res.status(500).json({ message: "Failed to fetch vulnerable packages" });
+    }
+  });
+
   return httpServer;
 }

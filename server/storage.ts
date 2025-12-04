@@ -37,6 +37,14 @@ import {
   executiveROI,
   executiveCompetitive,
   executiveRevenue,
+  projectEnvironments,
+  projectSecrets,
+  hipaaDeployments,
+  complianceAuditEvents,
+  gitIntegrations,
+  healthcareBlueprints,
+  phiScanResults,
+  packageHealth,
   type User,
   type UpsertUser,
   type Project,
@@ -84,6 +92,22 @@ import {
   type ExecutiveROI,
   type ExecutiveCompetitive,
   type ExecutiveRevenue,
+  type ProjectEnvironment,
+  type InsertProjectEnvironment,
+  type ProjectSecret,
+  type InsertProjectSecret,
+  type HipaaDeployment,
+  type InsertHipaaDeployment,
+  type ComplianceAuditEvent,
+  type InsertComplianceAuditEvent,
+  type GitIntegration,
+  type InsertGitIntegration,
+  type HealthcareBlueprint,
+  type InsertHealthcareBlueprint,
+  type PhiScanResult,
+  type InsertPhiScanResult,
+  type PackageHealth,
+  type InsertPackageHealth,
   insertHealthcareDomainSchema,
   insertHealthcareAgentSchema,
   insertHealthcareStandardSchema,
@@ -293,6 +317,63 @@ export interface IStorage {
   getExecutiveROI(): Promise<ExecutiveROI | undefined>;
   getExecutiveCompetitive(): Promise<ExecutiveCompetitive | undefined>;
   getExecutiveRevenue(): Promise<ExecutiveRevenue | undefined>;
+  
+  // Project Environment operations
+  createProjectEnvironment(env: InsertProjectEnvironment): Promise<ProjectEnvironment>;
+  getProjectEnvironments(projectId: number): Promise<ProjectEnvironment[]>;
+  getProjectEnvironment(id: number): Promise<ProjectEnvironment | undefined>;
+  updateProjectEnvironment(id: number, env: Partial<InsertProjectEnvironment>): Promise<ProjectEnvironment>;
+  deleteProjectEnvironment(id: number): Promise<void>;
+  
+  // Project Secrets operations
+  createProjectSecret(secret: InsertProjectSecret): Promise<ProjectSecret>;
+  getProjectSecrets(projectId: number, environmentId?: number): Promise<ProjectSecret[]>;
+  getProjectSecret(id: number): Promise<ProjectSecret | undefined>;
+  updateProjectSecret(id: number, secret: Partial<InsertProjectSecret>): Promise<ProjectSecret>;
+  deleteProjectSecret(id: number): Promise<void>;
+  rotateProjectSecret(id: number, newEncryptedValue: string, userId: string): Promise<ProjectSecret>;
+  
+  // HIPAA Deployment operations
+  createHipaaDeployment(deployment: InsertHipaaDeployment): Promise<HipaaDeployment>;
+  getProjectDeployments(projectId: number): Promise<HipaaDeployment[]>;
+  getEnvironmentDeployments(environmentId: number): Promise<HipaaDeployment[]>;
+  getHipaaDeployment(id: number): Promise<HipaaDeployment | undefined>;
+  updateHipaaDeployment(id: number, deployment: Partial<InsertHipaaDeployment>): Promise<HipaaDeployment>;
+  getActiveDeployment(environmentId: number): Promise<HipaaDeployment | undefined>;
+  rollbackDeployment(deploymentId: number, userId: string): Promise<HipaaDeployment>;
+  
+  // Compliance Audit operations
+  createComplianceAuditEvent(event: InsertComplianceAuditEvent): Promise<ComplianceAuditEvent>;
+  getProjectAuditEvents(projectId: number, filters?: {
+    eventType?: string;
+    eventCategory?: string;
+    startDate?: Date;
+    endDate?: Date;
+    limit?: number;
+  }): Promise<ComplianceAuditEvent[]>;
+  exportAuditEventsForBAA(projectId: number, startDate: Date, endDate: Date): Promise<ComplianceAuditEvent[]>;
+  
+  // Git Integration operations
+  createGitIntegration(integration: InsertGitIntegration): Promise<GitIntegration>;
+  getProjectGitIntegration(projectId: number): Promise<GitIntegration | undefined>;
+  updateGitIntegration(id: number, integration: Partial<InsertGitIntegration>): Promise<GitIntegration>;
+  deleteGitIntegration(id: number): Promise<void>;
+  
+  // Healthcare Blueprint operations
+  getHealthcareBlueprints(filters?: { category?: string; complianceLevel?: string }): Promise<HealthcareBlueprint[]>;
+  getHealthcareBlueprint(id: number): Promise<HealthcareBlueprint | undefined>;
+  createHealthcareBlueprint(blueprint: InsertHealthcareBlueprint): Promise<HealthcareBlueprint>;
+  
+  // PHI Scan operations
+  createPhiScanResult(scan: InsertPhiScanResult): Promise<PhiScanResult>;
+  getProjectPhiScans(projectId: number): Promise<PhiScanResult[]>;
+  getLatestPhiScan(projectId: number): Promise<PhiScanResult | undefined>;
+  updatePhiScanResult(id: number, scan: Partial<InsertPhiScanResult>): Promise<PhiScanResult>;
+  
+  // Package Health operations
+  updateProjectPackageHealth(projectId: number, packages: InsertPackageHealth[]): Promise<PackageHealth[]>;
+  getProjectPackageHealth(projectId: number): Promise<PackageHealth[]>;
+  getVulnerablePackages(projectId: number): Promise<PackageHealth[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1897,6 +1978,293 @@ This agreement incorporates organization-specific requirements and automatically
       console.error('Failed to fetch executive revenue:', error);
       return undefined;
     }
+  }
+
+  // Project Environment operations
+  async createProjectEnvironment(env: InsertProjectEnvironment): Promise<ProjectEnvironment> {
+    const [newEnv] = await db.insert(projectEnvironments).values(env).returning();
+    return newEnv;
+  }
+
+  async getProjectEnvironments(projectId: number): Promise<ProjectEnvironment[]> {
+    return await db.select().from(projectEnvironments).where(eq(projectEnvironments.projectId, projectId));
+  }
+
+  async getProjectEnvironment(id: number): Promise<ProjectEnvironment | undefined> {
+    const [env] = await db.select().from(projectEnvironments).where(eq(projectEnvironments.id, id));
+    return env;
+  }
+
+  async updateProjectEnvironment(id: number, env: Partial<InsertProjectEnvironment>): Promise<ProjectEnvironment> {
+    const [updated] = await db.update(projectEnvironments)
+      .set({ ...env, updatedAt: new Date() })
+      .where(eq(projectEnvironments.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteProjectEnvironment(id: number): Promise<void> {
+    await db.delete(projectEnvironments).where(eq(projectEnvironments.id, id));
+  }
+
+  // Project Secrets operations
+  async createProjectSecret(secret: InsertProjectSecret): Promise<ProjectSecret> {
+    const [newSecret] = await db.insert(projectSecrets).values(secret).returning();
+    return newSecret;
+  }
+
+  async getProjectSecrets(projectId: number, environmentId?: number): Promise<ProjectSecret[]> {
+    if (environmentId) {
+      return await db.select().from(projectSecrets)
+        .where(and(eq(projectSecrets.projectId, projectId), eq(projectSecrets.environmentId, environmentId)));
+    }
+    return await db.select().from(projectSecrets).where(eq(projectSecrets.projectId, projectId));
+  }
+
+  async getProjectSecret(id: number): Promise<ProjectSecret | undefined> {
+    const [secret] = await db.select().from(projectSecrets).where(eq(projectSecrets.id, id));
+    return secret;
+  }
+
+  async updateProjectSecret(id: number, secret: Partial<InsertProjectSecret>): Promise<ProjectSecret> {
+    const [updated] = await db.update(projectSecrets)
+      .set({ ...secret, updatedAt: new Date() })
+      .where(eq(projectSecrets.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteProjectSecret(id: number): Promise<void> {
+    await db.delete(projectSecrets).where(eq(projectSecrets.id, id));
+  }
+
+  async rotateProjectSecret(id: number, newEncryptedValue: string, userId: string): Promise<ProjectSecret> {
+    const [rotated] = await db.update(projectSecrets)
+      .set({ 
+        encryptedValue: newEncryptedValue, 
+        lastRotated: new Date(), 
+        updatedBy: userId,
+        updatedAt: new Date() 
+      })
+      .where(eq(projectSecrets.id, id))
+      .returning();
+    return rotated;
+  }
+
+  // HIPAA Deployment operations
+  async createHipaaDeployment(deployment: InsertHipaaDeployment): Promise<HipaaDeployment> {
+    const [newDeployment] = await db.insert(hipaaDeployments).values(deployment).returning();
+    return newDeployment;
+  }
+
+  async getProjectDeployments(projectId: number): Promise<HipaaDeployment[]> {
+    return await db.select().from(hipaaDeployments)
+      .where(eq(hipaaDeployments.projectId, projectId))
+      .orderBy(desc(hipaaDeployments.startedAt));
+  }
+
+  async getEnvironmentDeployments(environmentId: number): Promise<HipaaDeployment[]> {
+    return await db.select().from(hipaaDeployments)
+      .where(eq(hipaaDeployments.environmentId, environmentId))
+      .orderBy(desc(hipaaDeployments.startedAt));
+  }
+
+  async getHipaaDeployment(id: number): Promise<HipaaDeployment | undefined> {
+    const [deployment] = await db.select().from(hipaaDeployments).where(eq(hipaaDeployments.id, id));
+    return deployment;
+  }
+
+  async updateHipaaDeployment(id: number, deployment: Partial<InsertHipaaDeployment>): Promise<HipaaDeployment> {
+    const [updated] = await db.update(hipaaDeployments)
+      .set(deployment)
+      .where(eq(hipaaDeployments.id, id))
+      .returning();
+    return updated;
+  }
+
+  async getActiveDeployment(environmentId: number): Promise<HipaaDeployment | undefined> {
+    const [deployment] = await db.select().from(hipaaDeployments)
+      .where(and(
+        eq(hipaaDeployments.environmentId, environmentId),
+        eq(hipaaDeployments.status, 'active')
+      ));
+    return deployment;
+  }
+
+  async rollbackDeployment(deploymentId: number, userId: string): Promise<HipaaDeployment> {
+    const targetDeployment = await this.getHipaaDeployment(deploymentId);
+    if (!targetDeployment) {
+      throw new Error('Deployment not found');
+    }
+    
+    const currentActive = await this.getActiveDeployment(targetDeployment.environmentId);
+    if (currentActive) {
+      await this.updateHipaaDeployment(currentActive.id, { status: 'rolled_back', rollbackTarget: deploymentId });
+    }
+    
+    const [newDeployment] = await db.insert(hipaaDeployments).values({
+      projectId: targetDeployment.projectId,
+      environmentId: targetDeployment.environmentId,
+      userId,
+      version: `${targetDeployment.version}-rollback`,
+      commitHash: targetDeployment.commitHash,
+      status: 'active',
+      deploymentUrl: targetDeployment.deploymentUrl,
+      isHipaaCompliant: targetDeployment.isHipaaCompliant,
+      sslEnabled: targetDeployment.sslEnabled,
+      wafEnabled: targetDeployment.wafEnabled,
+      encryptionAtRest: targetDeployment.encryptionAtRest,
+      backupEnabled: targetDeployment.backupEnabled,
+      rollbackTarget: deploymentId,
+    }).returning();
+    
+    return newDeployment;
+  }
+
+  // Compliance Audit operations
+  async createComplianceAuditEvent(event: InsertComplianceAuditEvent): Promise<ComplianceAuditEvent> {
+    const [newEvent] = await db.insert(complianceAuditEvents).values(event).returning();
+    return newEvent;
+  }
+
+  async getProjectAuditEvents(projectId: number, filters?: {
+    eventType?: string;
+    eventCategory?: string;
+    startDate?: Date;
+    endDate?: Date;
+    limit?: number;
+  }): Promise<ComplianceAuditEvent[]> {
+    let query = db.select().from(complianceAuditEvents)
+      .where(eq(complianceAuditEvents.projectId, projectId))
+      .orderBy(desc(complianceAuditEvents.createdAt));
+
+    if (filters?.limit) {
+      query = query.limit(filters.limit) as typeof query;
+    }
+    
+    return await query;
+  }
+
+  async exportAuditEventsForBAA(projectId: number, startDate: Date, endDate: Date): Promise<ComplianceAuditEvent[]> {
+    const events = await db.select().from(complianceAuditEvents)
+      .where(and(
+        eq(complianceAuditEvents.projectId, projectId),
+        gte(complianceAuditEvents.createdAt, startDate),
+        lte(complianceAuditEvents.createdAt, endDate)
+      ))
+      .orderBy(desc(complianceAuditEvents.createdAt));
+    
+    await db.update(complianceAuditEvents)
+      .set({ exportedAt: new Date() })
+      .where(and(
+        eq(complianceAuditEvents.projectId, projectId),
+        gte(complianceAuditEvents.createdAt, startDate),
+        lte(complianceAuditEvents.createdAt, endDate)
+      ));
+    
+    return events;
+  }
+
+  // Git Integration operations
+  async createGitIntegration(integration: InsertGitIntegration): Promise<GitIntegration> {
+    const [newIntegration] = await db.insert(gitIntegrations).values(integration).returning();
+    return newIntegration;
+  }
+
+  async getProjectGitIntegration(projectId: number): Promise<GitIntegration | undefined> {
+    const [integration] = await db.select().from(gitIntegrations).where(eq(gitIntegrations.projectId, projectId));
+    return integration;
+  }
+
+  async updateGitIntegration(id: number, integration: Partial<InsertGitIntegration>): Promise<GitIntegration> {
+    const [updated] = await db.update(gitIntegrations)
+      .set({ ...integration, updatedAt: new Date() })
+      .where(eq(gitIntegrations.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteGitIntegration(id: number): Promise<void> {
+    await db.delete(gitIntegrations).where(eq(gitIntegrations.id, id));
+  }
+
+  // Healthcare Blueprint operations
+  async getHealthcareBlueprints(filters?: { category?: string; complianceLevel?: string }): Promise<HealthcareBlueprint[]> {
+    if (filters?.category && filters?.complianceLevel) {
+      return await db.select().from(healthcareBlueprints)
+        .where(and(
+          eq(healthcareBlueprints.category, filters.category),
+          eq(healthcareBlueprints.complianceLevel, filters.complianceLevel)
+        ));
+    }
+    if (filters?.category) {
+      return await db.select().from(healthcareBlueprints).where(eq(healthcareBlueprints.category, filters.category));
+    }
+    if (filters?.complianceLevel) {
+      return await db.select().from(healthcareBlueprints).where(eq(healthcareBlueprints.complianceLevel, filters.complianceLevel));
+    }
+    return await db.select().from(healthcareBlueprints);
+  }
+
+  async getHealthcareBlueprint(id: number): Promise<HealthcareBlueprint | undefined> {
+    const [blueprint] = await db.select().from(healthcareBlueprints).where(eq(healthcareBlueprints.id, id));
+    return blueprint;
+  }
+
+  async createHealthcareBlueprint(blueprint: InsertHealthcareBlueprint): Promise<HealthcareBlueprint> {
+    const [newBlueprint] = await db.insert(healthcareBlueprints).values(blueprint).returning();
+    return newBlueprint;
+  }
+
+  // PHI Scan operations
+  async createPhiScanResult(scan: InsertPhiScanResult): Promise<PhiScanResult> {
+    const [newScan] = await db.insert(phiScanResults).values(scan).returning();
+    return newScan;
+  }
+
+  async getProjectPhiScans(projectId: number): Promise<PhiScanResult[]> {
+    return await db.select().from(phiScanResults)
+      .where(eq(phiScanResults.projectId, projectId))
+      .orderBy(desc(phiScanResults.createdAt));
+  }
+
+  async getLatestPhiScan(projectId: number): Promise<PhiScanResult | undefined> {
+    const [scan] = await db.select().from(phiScanResults)
+      .where(eq(phiScanResults.projectId, projectId))
+      .orderBy(desc(phiScanResults.createdAt))
+      .limit(1);
+    return scan;
+  }
+
+  async updatePhiScanResult(id: number, scan: Partial<InsertPhiScanResult>): Promise<PhiScanResult> {
+    const [updated] = await db.update(phiScanResults)
+      .set(scan)
+      .where(eq(phiScanResults.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Package Health operations
+  async updateProjectPackageHealth(projectId: number, packages: InsertPackageHealth[]): Promise<PackageHealth[]> {
+    await db.delete(packageHealth).where(eq(packageHealth.projectId, projectId));
+    if (packages.length === 0) return [];
+    
+    const results = await db.insert(packageHealth)
+      .values(packages.map(p => ({ ...p, projectId })))
+      .returning();
+    return results;
+  }
+
+  async getProjectPackageHealth(projectId: number): Promise<PackageHealth[]> {
+    return await db.select().from(packageHealth).where(eq(packageHealth.projectId, projectId));
+  }
+
+  async getVulnerablePackages(projectId: number): Promise<PackageHealth[]> {
+    return await db.select().from(packageHealth)
+      .where(and(
+        eq(packageHealth.projectId, projectId),
+        eq(packageHealth.hasVulnerability, true)
+      ));
   }
 }
 
