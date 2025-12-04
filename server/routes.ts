@@ -3564,6 +3564,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ error: 'Payment system not configured' });
       }
       
+      // Check if key starts with sk_ (secret key) vs pk_ (publishable key)
+      const keyPrefix = stripeSecretKey.substring(0, 3);
+      console.log('Stripe key prefix:', keyPrefix);
+      
+      if (keyPrefix === 'pk_') {
+        console.error('ERROR: STRIPE_SECRET_KEY contains a publishable key (pk_), not a secret key (sk_)');
+        return res.status(500).json({ 
+          error: 'Invalid Stripe configuration. The secret key must start with sk_, not pk_. Please update STRIPE_SECRET_KEY in Secrets.' 
+        });
+      }
+      
       const stripe = new Stripe(stripeSecretKey);
 
       const { planName, billing, amount } = req.body;
