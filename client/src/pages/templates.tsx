@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import PageLayout from "@/components/PageLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,13 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { 
   Search, 
   Shield, 
   FileText, 
   Database,
-  Plus
+  Plus,
+  Loader2
 } from "lucide-react";
 
 interface HealthcareTemplate {
@@ -38,9 +41,11 @@ interface TemplatesApiResponse {
 
 export default function Templates() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const { isAuthenticated, isLoading } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [creatingFromTemplate, setCreatingFromTemplate] = useState<number | null>(null);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -61,6 +66,37 @@ export default function Templates() {
     enabled: isAuthenticated,
     refetchInterval: 60000,
   });
+
+  const createProjectMutation = useMutation({
+    mutationFn: async (templateId: number) => {
+      const template = templatesData?.templates.find(t => t.id === templateId);
+      const response = await apiRequest('POST', `/api/projects/from-template/${templateId}`, {
+        name: template?.name ? `${template.name} Project` : 'New Project',
+        description: template?.description || ''
+      });
+      return await response.json();
+    },
+    onSuccess: (project) => {
+      toast({
+        title: "Project Created",
+        description: `Your new project is ready! Opening workspace...`,
+      });
+      setLocation(`/workspace/${project.id}`);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create project from template",
+        variant: "destructive",
+      });
+      setCreatingFromTemplate(null);
+    }
+  });
+
+  const handleUseTemplate = (templateId: number) => {
+    setCreatingFromTemplate(templateId);
+    createProjectMutation.mutate(templateId);
+  };
 
   const categories = templatesData?.categories?.map((cat: string) => ({ value: cat, label: cat })) || [
     { value: "all", label: "All Categories" }
@@ -143,17 +179,22 @@ export default function Templates() {
                 ))}
               </div>
               <Button 
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white" 
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-70" 
                 data-testid={`button-use-template-${template.id}`}
-                onClick={() => {
-                  toast({
-                    title: "Template Selected",
-                    description: `Using ${template.name} template for your new project.`,
-                  });
-                }}
+                onClick={() => handleUseTemplate(template.id)}
+                disabled={creatingFromTemplate === template.id}
               >
-                <Plus className="w-4 h-4 mr-2" />
-                Use Template
+                {creatingFromTemplate === template.id ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Use Template
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>

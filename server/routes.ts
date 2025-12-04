@@ -801,6 +801,212 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================================================
+  // PROJECT FILE OPERATIONS - Core Platform Feature (Like Replit)
+  // ============================================================================
+
+  // Get all files from a project
+  app.get('/api/projects/:id/files', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const userId = req.user.claims.sub;
+      
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      if (project.userId !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Code is stored as JSONB: { "filename": "content", ... }
+      const files = project.code || {};
+      res.json({ files, projectId, projectName: project.name });
+    } catch (error: any) {
+      console.error("Error fetching project files:", error);
+      res.status(500).json({ message: "Failed to fetch project files" });
+    }
+  });
+
+  // Update a specific file in a project
+  app.put('/api/projects/:id/files', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const userId = req.user.claims.sub;
+      const { filePath, content } = req.body;
+      
+      if (!filePath || content === undefined) {
+        return res.status(400).json({ message: "filePath and content are required" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      if (project.userId !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Update the file in the code JSONB
+      const currentCode = (project.code as Record<string, string>) || {};
+      currentCode[filePath] = content;
+      
+      const updatedProject = await storage.updateProject(projectId, { code: currentCode });
+      
+      // Add activity log
+      await storage.addProjectActivity({
+        projectId,
+        userId,
+        action: "file_updated",
+        description: `Updated file "${filePath}"`,
+        metadata: { filePath },
+      });
+      
+      res.json({ success: true, filePath, files: updatedProject.code });
+    } catch (error: any) {
+      console.error("Error updating file:", error);
+      res.status(500).json({ message: "Failed to update file" });
+    }
+  });
+
+  // Add a new file to a project
+  app.post('/api/projects/:id/files', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const userId = req.user.claims.sub;
+      const { filePath, content } = req.body;
+      
+      if (!filePath) {
+        return res.status(400).json({ message: "filePath is required" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      if (project.userId !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Add the new file
+      const currentCode = (project.code as Record<string, string>) || {};
+      if (currentCode[filePath]) {
+        return res.status(409).json({ message: "File already exists" });
+      }
+      currentCode[filePath] = content || "";
+      
+      const updatedProject = await storage.updateProject(projectId, { code: currentCode });
+      
+      // Add activity log
+      await storage.addProjectActivity({
+        projectId,
+        userId,
+        action: "file_created",
+        description: `Created file "${filePath}"`,
+        metadata: { filePath },
+      });
+      
+      res.json({ success: true, filePath, files: updatedProject.code });
+    } catch (error: any) {
+      console.error("Error creating file:", error);
+      res.status(500).json({ message: "Failed to create file" });
+    }
+  });
+
+  // Delete a file from a project
+  app.delete('/api/projects/:id/files', isAuthenticated, async (req: any, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      const userId = req.user.claims.sub;
+      const { filePath } = req.body;
+      
+      if (!filePath) {
+        return res.status(400).json({ message: "filePath is required" });
+      }
+      
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      if (project.userId !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Delete the file
+      const currentCode = (project.code as Record<string, string>) || {};
+      if (!currentCode[filePath]) {
+        return res.status(404).json({ message: "File not found" });
+      }
+      delete currentCode[filePath];
+      
+      const updatedProject = await storage.updateProject(projectId, { code: currentCode });
+      
+      // Add activity log
+      await storage.addProjectActivity({
+        projectId,
+        userId,
+        action: "file_deleted",
+        description: `Deleted file "${filePath}"`,
+        metadata: { filePath },
+      });
+      
+      res.json({ success: true, filePath, files: updatedProject.code });
+    } catch (error: any) {
+      console.error("Error deleting file:", error);
+      res.status(500).json({ message: "Failed to delete file" });
+    }
+  });
+
+  // Create a project from a template
+  app.post('/api/projects/from-template/:templateId', isAuthenticated, async (req: any, res) => {
+    try {
+      const templateId = parseInt(req.params.templateId);
+      const userId = req.user.claims.sub;
+      const { name, description } = req.body;
+      
+      // Get the template
+      const template = await storage.getTemplate(templateId);
+      if (!template) {
+        return res.status(404).json({ message: "Template not found" });
+      }
+      
+      // Create a new project based on the template
+      const newProject = await storage.createProject({
+        name: name || `${template.name} Project`,
+        description: description || template.description || "",
+        userId,
+        templateId,
+        framework: template.framework,
+        backend: template.backend,
+        projectType: template.projectType,
+        isHipaaCompliant: template.isHipaaCompliant,
+        code: template.code, // Copy template code to project
+        techStack: null,
+        buildConfig: template.buildConfig,
+        environmentVars: null,
+        dependencies: template.dependencies,
+        database: null,
+        cloudProvider: null,
+        isResponsive: true,
+        settings: null,
+      });
+      
+      // Add activity log
+      await storage.addProjectActivity({
+        projectId: newProject.id,
+        userId,
+        action: "created_from_template",
+        description: `Created project "${newProject.name}" from template "${template.name}"`,
+        metadata: { templateId, templateName: template.name },
+      });
+      
+      res.status(201).json(newProject);
+    } catch (error: any) {
+      console.error("Error creating project from template:", error);
+      res.status(500).json({ message: "Failed to create project from template" });
+    }
+  });
+
   // Template routes
   app.get('/api/templates', async (req, res) => {
     try {

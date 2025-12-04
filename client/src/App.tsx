@@ -22,6 +22,7 @@ import ProjectEditor from "@/pages/project-editor";
 import MyApps from "@/pages/my-apps";
 import Checkout from "@/pages/checkout";
 import CustomPricing from "@/pages/custom-pricing";
+import Workspace from "@/pages/workspace";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -58,6 +59,7 @@ function Router() {
           <Route path="/documentation" component={Documentation} />
           <Route path="/apps/:appId" component={AppPreview} />
           <Route path="/editor/:projectId" component={ProjectEditor} />
+          <Route path="/workspace/:projectId" component={Workspace} />
           <Route path="/my-apps" component={MyApps} />
         </>
       )}
