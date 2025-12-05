@@ -127,7 +127,7 @@ export default function GalleryPage() {
             <Button
               variant={sortBy === "popular" ? "default" : "outline"}
               onClick={() => setSortBy("popular")}
-              className={sortBy === "popular" ? "bg-emerald-600 hover:bg-emerald-700" : "border-gray-700"}
+              className={sortBy === "popular" ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700 hover:text-white"}
               data-testid="btn-sort-popular"
             >
               <TrendingUp className="h-4 w-4 mr-2" />
@@ -136,7 +136,7 @@ export default function GalleryPage() {
             <Button
               variant={sortBy === "recent" ? "default" : "outline"}
               onClick={() => setSortBy("recent")}
-              className={sortBy === "recent" ? "bg-emerald-600 hover:bg-emerald-700" : "border-gray-700"}
+              className={sortBy === "recent" ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700 hover:text-white"}
               data-testid="btn-sort-recent"
             >
               <Clock className="h-4 w-4 mr-2" />
@@ -145,7 +145,7 @@ export default function GalleryPage() {
             <Button
               variant={sortBy === "views" ? "default" : "outline"}
               onClick={() => setSortBy("views")}
-              className={sortBy === "views" ? "bg-emerald-600 hover:bg-emerald-700" : "border-gray-700"}
+              className={sortBy === "views" ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700 hover:text-white"}
               data-testid="btn-sort-views"
             >
               <Eye className="h-4 w-4 mr-2" />
@@ -161,8 +161,8 @@ export default function GalleryPage() {
               variant={selectedCategory === cat.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(cat.id)}
               className={selectedCategory === cat.id 
-                ? "bg-emerald-600 hover:bg-emerald-700" 
-                : "border-gray-700 hover:bg-gray-800"}
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
+                : "border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700 hover:text-white"}
               data-testid={`btn-category-${cat.id}`}
             >
               <cat.icon className="h-4 w-4 mr-2" />

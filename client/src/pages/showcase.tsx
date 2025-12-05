@@ -179,8 +179,8 @@ export default function ShowcasePage() {
                   size="sm"
                   onClick={() => setSelectedCategory(cat.id)}
                   className={selectedCategory === cat.id
-                    ? "bg-emerald-600 hover:bg-emerald-700"
-                    : "border-gray-700 hover:bg-gray-800"}
+                    ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                    : "border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700 hover:text-white"}
                   data-testid={`btn-category-${cat.id}`}
                 >
                   {cat.label}

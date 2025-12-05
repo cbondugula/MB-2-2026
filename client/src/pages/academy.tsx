@@ -161,8 +161,8 @@ export default function AcademyPage() {
                 variant={selectedCategory === cat.id ? "default" : "outline"}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={selectedCategory === cat.id
-                  ? "bg-blue-600 hover:bg-blue-700"
-                  : "border-gray-700 hover:bg-gray-800"}
+                  ? "bg-blue-600 hover:bg-blue-700 text-white"
+                  : "border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700 hover:text-white"}
                 data-testid={`btn-category-${cat.id}`}
               >
                 <cat.icon className="h-4 w-4 mr-2" />
