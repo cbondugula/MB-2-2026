@@ -92,11 +92,11 @@ export default function ShowcasePage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2" data-testid="text-page-title">
+            <h1 className="text-3xl font-bold flex items-center gap-2 text-white" data-testid="text-page-title">
               <Trophy className="h-8 w-8 text-yellow-500" />
               Community Showcase
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-300">
               Discover amazing healthcare applications built by the MedBuilder community
             </p>
           </div>
@@ -206,9 +206,9 @@ export default function ShowcasePage() {
           </div>
         ) : showcases.length === 0 ? (
           <div className="text-center py-20">
-            <Users className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-400 mb-2">No showcases yet</h3>
-            <p className="text-gray-500 mb-6">
+            <Users className="h-16 w-16 mx-auto text-gray-500 mb-4" />
+            <h3 className="text-xl font-semibold text-gray-200 mb-2">No showcases yet</h3>
+            <p className="text-gray-400 mb-6">
               Be the first to share your healthcare application with the community!
             </p>
             <Button 

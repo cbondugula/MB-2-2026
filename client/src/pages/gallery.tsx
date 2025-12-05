@@ -102,8 +102,8 @@ export default function GalleryPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold" data-testid="text-page-title">Template Gallery</h1>
-            <p className="text-gray-400">
+            <h1 className="text-3xl font-bold text-white" data-testid="text-page-title">Template Gallery</h1>
+            <p className="text-gray-300">
               Discover and fork HIPAA-compliant healthcare templates from the community
             </p>
           </div>
@@ -187,9 +187,9 @@ export default function GalleryPage() {
           </div>
         ) : templates.length === 0 ? (
           <div className="text-center py-20">
-            <Sparkles className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-400 mb-2">No templates found</h3>
-            <p className="text-gray-500">
+            <Sparkles className="h-16 w-16 mx-auto text-gray-500 mb-4" />
+            <h3 className="text-xl font-semibold text-gray-200 mb-2">No templates found</h3>
+            <p className="text-gray-400">
               Try adjusting your search or check back later for new templates
             </p>
           </div>

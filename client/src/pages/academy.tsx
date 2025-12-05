@@ -96,11 +96,11 @@ export default function AcademyPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2" data-testid="text-page-title">
+            <h1 className="text-3xl font-bold flex items-center gap-2 text-white" data-testid="text-page-title">
               <GraduationCap className="h-8 w-8 text-blue-500" />
               MedBuilder Academy
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-300">
               Master healthcare development with HIPAA certification and hands-on courses
             </p>
           </div>
@@ -239,9 +239,9 @@ export default function AcademyPage() {
           </div>
         ) : courses.length === 0 ? (
           <div className="text-center py-20">
-            <GraduationCap className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-400 mb-2">No courses found</h3>
-            <p className="text-gray-500">
+            <GraduationCap className="h-16 w-16 mx-auto text-gray-500 mb-4" />
+            <h3 className="text-xl font-semibold text-gray-200 mb-2">No courses found</h3>
+            <p className="text-gray-400">
               Check back soon for new learning content
             </p>
           </div>

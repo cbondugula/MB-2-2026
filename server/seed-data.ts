@@ -36,6 +36,7 @@ import {
 } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import { seedPlatformAnalytics } from "./platform-analytics-seed";
+import { seedViralGrowthData } from "./seed-viral-growth";
 
 export async function seedDatabase() {
   try {
@@ -2661,6 +2662,9 @@ export default function FHIRPatientSearch() {
 
     // Seed platform analytics data (dynamic database-driven metrics)
     await seedPlatformAnalytics();
+
+    // Seed viral growth features (gallery, showcase, marketplace, academy)
+    await seedViralGrowthData();
 
     console.log('✅ Database seeded successfully!');
     console.log(`📊 Created: ${domains.length} healthcare domains, ${agents.length} healthcare agents, ${standards.length} healthcare standards`);

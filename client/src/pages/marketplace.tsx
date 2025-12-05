@@ -125,11 +125,11 @@ export default function MarketplacePage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2" data-testid="text-page-title">
+            <h1 className="text-3xl font-bold flex items-center gap-2 text-white" data-testid="text-page-title">
               <Store className="h-8 w-8 text-purple-500" />
               Template Marketplace
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-300">
               Premium healthcare templates and components from verified creators
             </p>
           </div>
@@ -253,9 +253,9 @@ export default function MarketplacePage() {
               </div>
             ) : templates.length === 0 ? (
               <div className="text-center py-20">
-                <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-400 mb-2">No templates found</h3>
-                <p className="text-gray-500">
+                <Package className="h-16 w-16 mx-auto text-gray-500 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-200 mb-2">No templates found</h3>
+                <p className="text-gray-400">
                   Try adjusting your filters or search query
                 </p>
               </div>
