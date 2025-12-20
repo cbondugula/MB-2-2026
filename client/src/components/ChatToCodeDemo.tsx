@@ -287,20 +287,19 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
     if (prompt.includes("intake") || prompt.includes("form")) demoKey = "intake";
     else if (prompt.includes("telehealth") || prompt.includes("video") || prompt.includes("waiting")) demoKey = "telehealth";
 
-    // Fast build simulation
-    const stepDuration = 300; // 300ms per step = 1.5s total
+    // Ultra-fast build simulation
+    const stepDuration = 120; // 120ms per step = 0.6s total
     
     const interval = setInterval(() => {
       setBuildStep(prev => {
         if (prev >= buildSteps.length - 1) {
           clearInterval(interval);
-          setTimeout(() => {
-            const demo = demoApps[demoKey];
-            setGeneratedCode(demo);
-            setSelectedFile(Object.keys(demo.code)[0]);
-            setPhase("complete");
-            onComplete?.(demo);
-          }, 200);
+          // Instant transition to complete
+          const demo = demoApps[demoKey];
+          setGeneratedCode(demo);
+          setSelectedFile(Object.keys(demo.code)[0]);
+          setPhase("complete");
+          onComplete?.(demo);
           return prev;
         }
         return prev + 1;
