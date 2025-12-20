@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SandpackProvider, SandpackPreview } from "@codesandbox/sandpack-react";
 import { 
   Send, 
   Loader2, 
@@ -343,17 +344,34 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
                     </ScrollArea>
                   </TabsContent>
                   
-                  <TabsContent value="preview" className="flex-1 m-0 bg-white">
-                    <div className="h-full flex items-center justify-center text-gray-500">
-                      <div className="text-center">
-                        <Play className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                        <p className="text-lg font-medium">Live Preview</p>
-                        <p className="text-sm">Sign up to enable live preview and deployment</p>
-                        <Button className="mt-4 bg-green-600 hover:bg-green-700" data-testid="button-signup-preview">
-                          Create Free Account
-                        </Button>
-                      </div>
-                    </div>
+                  <TabsContent value="preview" className="flex-1 m-0 overflow-hidden">
+                    <SandpackProvider
+                      template="react"
+                      theme="dark"
+                      files={{
+                        "/App.js": generatedCode.code["App.tsx"] || generatedCode.code["App.js"] || Object.values(generatedCode.code)[0] || "export default function App() { return <div>Loading...</div> }",
+                        "/styles.css": generatedCode.code["styles.css"] || generatedCode.code["index.css"] || `
+                          * { margin: 0; padding: 0; box-sizing: border-box; }
+                          body { font-family: system-ui, sans-serif; background: #1a1a2e; color: white; min-height: 100vh; }
+                          .container { max-width: 400px; margin: 2rem auto; padding: 1.5rem; }
+                          .card { background: #16213e; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+                          .input { width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #334; background: #0f0f23; color: white; margin-bottom: 0.75rem; }
+                          .btn { width: 100%; padding: 0.75rem; border-radius: 8px; border: none; background: #22c55e; color: white; font-weight: 600; cursor: pointer; }
+                          .btn:hover { background: #16a34a; }
+                          h1, h2, h3 { margin-bottom: 1rem; }
+                          .badge { display: inline-block; padding: 0.25rem 0.75rem; background: #22c55e33; color: #22c55e; border-radius: 999px; font-size: 0.75rem; }
+                        `
+                      }}
+                      options={{
+                        externalResources: ["https://cdn.tailwindcss.com"]
+                      }}
+                    >
+                      <SandpackPreview 
+                        showNavigator={false}
+                        showOpenInCodeSandbox={false}
+                        style={{ height: "100%", border: "none" }}
+                      />
+                    </SandpackProvider>
                   </TabsContent>
                 </Tabs>
                 
