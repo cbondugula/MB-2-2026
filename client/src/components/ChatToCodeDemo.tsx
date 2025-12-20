@@ -499,6 +499,37 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
   const [booked, setBooked] = useState(false);
   const [stats, setStats] = useState({ total: 0, confirmed: 0, pending: 0 });
   
+  // Wellness state
+  const [mood, setMood] = useState(3);
+  const [water, setWater] = useState(4);
+  const [steps, setSteps] = useState(6847);
+  const [wellnessLogged, setWellnessLogged] = useState(false);
+  
+  // Pharmacy state
+  const [medications, setMedications] = useState([
+    { name: 'Lisinopril 10mg', refills: 2, status: 'ready', dueDate: '2024-12-28' },
+    { name: 'Metformin 500mg', refills: 3, status: 'pending', dueDate: '2025-01-05' },
+    { name: 'Atorvastatin 20mg', refills: 1, status: 'ready', dueDate: '2024-12-30' }
+  ]);
+  const [refillRequested, setRefillRequested] = useState('');
+  
+  // Lab results state
+  const [selectedTest, setSelectedTest] = useState(0);
+  const labResults = [
+    { name: 'Complete Blood Count', date: '2024-12-18', status: 'normal', values: [{name: 'WBC', value: '7.2', unit: 'K/uL', range: '4.5-11.0'}, {name: 'RBC', value: '4.8', unit: 'M/uL', range: '4.5-5.5'}] },
+    { name: 'Lipid Panel', date: '2024-12-15', status: 'attention', values: [{name: 'LDL', value: '142', unit: 'mg/dL', range: '<100'}, {name: 'HDL', value: '52', unit: 'mg/dL', range: '>40'}] },
+    { name: 'Glucose', date: '2024-12-10', status: 'normal', values: [{name: 'Fasting', value: '95', unit: 'mg/dL', range: '70-100'}] }
+  ];
+  
+  // Telehealth state
+  const [teleStatus, setTeleStatus] = useState<'waiting' | 'ready' | 'connected'>('waiting');
+  const [waitTime, setWaitTime] = useState(15);
+  
+  // Intake form state
+  const [intakeStep, setIntakeStep] = useState(1);
+  const [intakeData, setIntakeData] = useState({ name: '', dob: '', insurance: '', consent: false });
+  const [intakeSubmitted, setIntakeSubmitted] = useState(false);
+  
   const demoSessionId = sessionId || 'demo_default';
   
   useEffect(() => {
@@ -514,6 +545,18 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
       })
       .catch(() => setLoading(false));
   }, [demoSessionId]);
+  
+  // Telehealth countdown timer
+  useEffect(() => {
+    if (demoType !== 'telehealth' || teleStatus !== 'waiting') return;
+    const timer = setInterval(() => {
+      setWaitTime(t => {
+        if (t <= 1) { setTeleStatus('ready'); return 0; }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [demoType, teleStatus]);
   
   const handleBook = async () => {
     const res = await fetch(`/api/demo/${demoSessionId}/appointments`, {
@@ -537,6 +580,35 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
 
   const times = ['9:00 AM', '10:30 AM', '1:00 PM', '2:30 PM', '4:00 PM'];
 
+  const moods = ['😢', '😕', '😐', '🙂', '😊'];
+  
+  const handleLogWellness = () => {
+    setSteps(prev => prev + Math.floor(Math.random() * 500));
+    setWellnessLogged(true);
+    setTimeout(() => setWellnessLogged(false), 3000);
+  };
+  
+  const handleRefill = (medName: string) => {
+    setRefillRequested(medName);
+    setMedications(prev => prev.map(m => 
+      m.name === medName ? { ...m, status: 'pending' } : m
+    ));
+    setTimeout(() => setRefillRequested(''), 3000);
+  };
+  
+  const handleIntakeSubmit = () => {
+    if (intakeStep < 3) {
+      setIntakeStep(intakeStep + 1);
+    } else {
+      setIntakeSubmitted(true);
+      setTimeout(() => {
+        setIntakeSubmitted(false);
+        setIntakeStep(1);
+        setIntakeData({ name: '', dob: '', insurance: '', consent: false });
+      }, 3000);
+    }
+  };
+
   // Render different preview based on demo type
   if (demoType === "wellness") {
     return (
@@ -546,17 +618,24 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
           <h2 className="text-xl font-bold text-white">Wellness Tracker</h2>
           <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
         </div>
+        
+        {wellnessLogged && (
+          <div className="mb-4 p-3 bg-purple-900/50 border border-purple-600 rounded-lg text-purple-300 text-sm flex items-center gap-2">
+            <CheckCircle className="w-4 h-4" /> Daily wellness logged successfully!
+          </div>
+        )}
+        
         <div className="grid grid-cols-3 gap-3 mb-6">
           <div className="bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-2xl mb-1">🙂</div>
+            <div className="text-2xl mb-1">{moods[mood]}</div>
             <div className="text-xs text-gray-400">Mood</div>
           </div>
           <div className="bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-blue-400">4</div>
+            <div className="text-2xl font-bold text-blue-400">{water}</div>
             <div className="text-xs text-gray-400">Glasses 💧</div>
           </div>
           <div className="bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-green-400">6,847</div>
+            <div className="text-lg font-bold text-green-400">{steps.toLocaleString()}</div>
             <div className="text-xs text-gray-400">Steps 👟</div>
           </div>
         </div>
@@ -564,8 +643,15 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
           <div>
             <label className="text-sm text-gray-400 mb-2 block">How are you feeling today?</label>
             <div className="flex justify-between bg-gray-800 rounded-lg p-3">
-              {['😢', '😕', '😐', '🙂', '😊'].map((emoji, i) => (
-                <button key={i} className={`text-2xl p-2 rounded-lg ${i === 3 ? 'bg-purple-600' : 'hover:bg-gray-700'}`}>{emoji}</button>
+              {moods.map((emoji, i) => (
+                <button 
+                  key={i} 
+                  onClick={() => setMood(i)}
+                  className={`text-2xl p-2 rounded-lg transition-all ${mood === i ? 'bg-purple-600 scale-110' : 'hover:bg-gray-700'}`}
+                  data-testid={`button-mood-${i}`}
+                >
+                  {emoji}
+                </button>
               ))}
             </div>
           </div>
@@ -573,11 +659,20 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
             <label className="text-sm text-gray-400 mb-2 block">Water intake</label>
             <div className="flex gap-2">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className={`flex-1 h-8 rounded ${i < 4 ? 'bg-blue-500' : 'bg-gray-700'}`} />
+                <button 
+                  key={i} 
+                  onClick={() => setWater(i + 1)}
+                  className={`flex-1 h-8 rounded transition-all ${i < water ? 'bg-blue-500' : 'bg-gray-700 hover:bg-gray-600'}`}
+                  data-testid={`button-water-${i}`}
+                />
               ))}
             </div>
           </div>
-          <button className="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-semibold">
+          <button 
+            onClick={handleLogWellness}
+            className="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-semibold transition-all"
+            data-testid="button-log-wellness"
+          >
             Log Today's Wellness
           </button>
         </div>
@@ -599,12 +694,15 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
           <h2 className="text-xl font-bold text-white">My Medications</h2>
           <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
         </div>
+        
+        {refillRequested && (
+          <div className="mb-4 p-3 bg-orange-900/50 border border-orange-600 rounded-lg text-orange-300 text-sm flex items-center gap-2">
+            <CheckCircle className="w-4 h-4" /> Refill requested for {refillRequested}!
+          </div>
+        )}
+        
         <div className="space-y-3">
-          {[
-            { name: 'Lisinopril 10mg', refills: 2, status: 'ready' },
-            { name: 'Metformin 500mg', refills: 3, status: 'pending' },
-            { name: 'Atorvastatin 20mg', refills: 1, status: 'ready' }
-          ].map((med, i) => (
+          {medications.map((med, i) => (
             <div key={i} className="bg-gray-800 rounded-xl p-4">
               <div className="flex justify-between items-start mb-2">
                 <div>
@@ -615,9 +713,16 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
                   {med.status === 'ready' ? '✓ Ready' : '⏳ Pending'}
                 </span>
               </div>
-              <button className="mt-2 px-3 py-1 bg-orange-600 hover:bg-orange-500 rounded text-sm font-medium">
-                Request Refill
-              </button>
+              <div className="flex justify-between items-center mt-3">
+                <span className="text-xs text-gray-500">Due: {med.dueDate}</span>
+                <button 
+                  onClick={() => handleRefill(med.name)}
+                  className="px-3 py-1 bg-orange-600 hover:bg-orange-500 rounded text-sm font-medium transition-all"
+                  data-testid={`button-refill-${i}`}
+                >
+                  Request Refill
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -639,24 +744,30 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
           <h2 className="text-xl font-bold text-white">Lab Results</h2>
           <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
         </div>
-        <div className="flex gap-2 mb-4">
-          {['CBC', 'Lipid Panel', 'Glucose'].map((test, i) => (
-            <button key={i} className={`px-3 py-2 rounded-lg text-sm ${i === 0 ? 'bg-cyan-600' : 'bg-gray-800 hover:bg-gray-700'}`}>{test}</button>
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+          {labResults.map((r, i) => (
+            <button 
+              key={i} 
+              onClick={() => setSelectedTest(i)}
+              className={`px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-all ${selectedTest === i ? 'bg-cyan-600' : 'bg-gray-800 hover:bg-gray-700'}`}
+              data-testid={`button-test-${i}`}
+            >
+              {r.name.split(' ')[0]}
+            </button>
           ))}
         </div>
         <div className="bg-gray-800 rounded-xl p-4">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <div className="font-semibold text-white">Complete Blood Count</div>
-              <div className="text-sm text-gray-400">Dec 18, 2024</div>
+              <div className="font-semibold text-white">{labResults[selectedTest].name}</div>
+              <div className="text-sm text-gray-400">{labResults[selectedTest].date}</div>
             </div>
-            <span className="px-2 py-1 text-xs rounded bg-green-900 text-green-400">✓ Normal</span>
+            <span className={`px-2 py-1 text-xs rounded ${labResults[selectedTest].status === 'normal' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}`}>
+              {labResults[selectedTest].status === 'normal' ? '✓ Normal' : '⚠ Review'}
+            </span>
           </div>
           <div className="space-y-3">
-            {[
-              { name: 'WBC', value: '7.2', unit: 'K/uL', range: '4.5-11.0' },
-              { name: 'RBC', value: '4.8', unit: 'M/uL', range: '4.5-5.5' }
-            ].map((v, i) => (
+            {labResults[selectedTest].values.map((v, i) => (
               <div key={i} className="flex justify-between items-center py-2 border-b border-gray-700">
                 <span className="text-gray-300">{v.name}</span>
                 <div className="text-right">
@@ -687,13 +798,48 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
           <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
         </div>
         <div className="bg-gray-800 rounded-xl p-8">
-          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-green-900 flex items-center justify-center">
-            <span className="text-3xl">✓</span>
-          </div>
-          <p className="text-xl font-semibold text-green-400 mb-4">Doctor is ready!</p>
-          <button className="px-8 py-3 bg-green-600 hover:bg-green-500 rounded-lg font-semibold">
-            Join Video Call
-          </button>
+          {teleStatus === 'waiting' && (
+            <>
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-purple-900 flex items-center justify-center animate-pulse">
+                <span className="text-3xl">⏳</span>
+              </div>
+              <p className="text-gray-400 mb-2">Your doctor will be with you in</p>
+              <p className="text-4xl font-bold text-purple-400">{waitTime}s</p>
+            </>
+          )}
+          {teleStatus === 'ready' && (
+            <>
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-green-900 flex items-center justify-center">
+                <span className="text-3xl">✓</span>
+              </div>
+              <p className="text-xl font-semibold text-green-400 mb-4">Doctor is ready!</p>
+              <button 
+                onClick={() => setTeleStatus('connected')} 
+                className="px-8 py-3 bg-green-600 hover:bg-green-500 rounded-lg font-semibold transition-all"
+                data-testid="button-join-call"
+              >
+                Join Video Call
+              </button>
+            </>
+          )}
+          {teleStatus === 'connected' && (
+            <>
+              <div className="aspect-video bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-4xl">📹</span>
+              </div>
+              <p className="text-green-400 flex items-center justify-center gap-2">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                Connected with Dr. Smith
+              </p>
+              <button 
+                onClick={() => { setTeleStatus('waiting'); setWaitTime(15); }} 
+                className="mt-4 px-6 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-sm font-medium transition-all"
+                data-testid="button-end-call"
+              >
+                End Call
+              </button>
+            </>
+          )}
         </div>
         <span className="mt-4 inline-block px-3 py-1 bg-green-900 text-green-400 text-xs rounded">🔒 End-to-End Encrypted</span>
         <div className="mt-4 text-center">
@@ -714,27 +860,94 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
           <h2 className="text-xl font-bold text-white">Patient Registration</h2>
           <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
         </div>
+        
+        {intakeSubmitted && (
+          <div className="mb-4 p-3 bg-indigo-900/50 border border-indigo-600 rounded-lg text-indigo-300 text-sm flex items-center gap-2">
+            <CheckCircle className="w-4 h-4" /> Registration submitted securely!
+          </div>
+        )}
+        
+        <div className="flex gap-2 mb-6">
+          {[1, 2, 3].map(s => (
+            <div key={s} className={`flex-1 h-2 rounded transition-all ${intakeStep >= s ? 'bg-indigo-600' : 'bg-gray-700'}`} />
+          ))}
+        </div>
+        
         <div className="space-y-4">
-          <div>
-            <label className="text-sm text-gray-400 mb-1 block">Full Name</label>
-            <input type="text" placeholder="Enter your name" className="w-full p-3 bg-gray-800 rounded-lg text-white border border-gray-700" />
-          </div>
-          <div>
-            <label className="text-sm text-gray-400 mb-1 block">Date of Birth</label>
-            <input type="date" className="w-full p-3 bg-gray-800 rounded-lg text-white border border-gray-700" />
-          </div>
-          <div>
-            <label className="text-sm text-gray-400 mb-1 block">Insurance Provider</label>
-            <select className="w-full p-3 bg-gray-800 rounded-lg text-white border border-gray-700">
-              <option>Select provider...</option>
-              <option>Blue Cross</option>
-              <option>Aetna</option>
-              <option>UnitedHealth</option>
-            </select>
-          </div>
-          <button className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold">
-            Complete Registration
+          {intakeStep === 1 && (
+            <>
+              <div>
+                <label className="text-sm text-gray-400 mb-1 block">Full Name</label>
+                <input 
+                  type="text" 
+                  placeholder="Enter your name" 
+                  value={intakeData.name}
+                  onChange={(e) => setIntakeData({...intakeData, name: e.target.value})}
+                  className="w-full p-3 bg-gray-800 rounded-lg text-white border border-gray-700 focus:border-indigo-500 outline-none"
+                  data-testid="input-name"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-gray-400 mb-1 block">Date of Birth</label>
+                <input 
+                  type="date" 
+                  value={intakeData.dob}
+                  onChange={(e) => setIntakeData({...intakeData, dob: e.target.value})}
+                  className="w-full p-3 bg-gray-800 rounded-lg text-white border border-gray-700 focus:border-indigo-500 outline-none"
+                  data-testid="input-dob"
+                />
+              </div>
+            </>
+          )}
+          
+          {intakeStep === 2 && (
+            <div>
+              <label className="text-sm text-gray-400 mb-1 block">Insurance Provider</label>
+              <select 
+                value={intakeData.insurance}
+                onChange={(e) => setIntakeData({...intakeData, insurance: e.target.value})}
+                className="w-full p-3 bg-gray-800 rounded-lg text-white border border-gray-700 focus:border-indigo-500 outline-none"
+                data-testid="select-insurance"
+              >
+                <option value="">Select provider...</option>
+                <option value="bluecross">Blue Cross</option>
+                <option value="aetna">Aetna</option>
+                <option value="united">UnitedHealth</option>
+                <option value="cigna">Cigna</option>
+              </select>
+            </div>
+          )}
+          
+          {intakeStep === 3 && (
+            <label className="flex items-center gap-3 p-4 bg-gray-800 rounded-lg cursor-pointer">
+              <input 
+                type="checkbox" 
+                checked={intakeData.consent}
+                onChange={(e) => setIntakeData({...intakeData, consent: e.target.checked})}
+                className="w-5 h-5 rounded"
+                data-testid="checkbox-consent"
+              />
+              <span className="text-sm text-gray-300">I consent to treatment and data processing per HIPAA guidelines</span>
+            </label>
+          )}
+          
+          <button 
+            onClick={handleIntakeSubmit}
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold transition-all"
+            data-testid="button-intake-submit"
+          >
+            {intakeStep < 3 ? 'Continue' : 'Submit Securely'}
           </button>
+          
+          {intakeStep > 1 && (
+            <button 
+              onClick={() => setIntakeStep(intakeStep - 1)}
+              className="w-full py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm text-gray-300 transition-all"
+              data-testid="button-intake-back"
+            >
+              Back
+            </button>
+          )}
         </div>
         <div className="mt-4 text-center">
           <span className="inline-flex items-center gap-2 text-xs text-gray-500">
