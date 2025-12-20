@@ -1,19 +1,16 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Code, Sparkles, Cpu, Shield, Zap, CheckCircle } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Code, Sparkles, Cpu, Send, Calendar, Users, FileText, Clock, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { ChatToCodeDemo } from "@/components/ChatToCodeDemo";
-import { CreditMeter } from "@/components/CreditMeter";
-import { TrustBadges } from "@/components/SuccessToast";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function Landing() {
   const [prompt, setPrompt] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [guestSessionId, setGuestSessionId] = useState<string | null>(null);
 
@@ -26,8 +23,7 @@ export default function Landing() {
       setGuestSessionId(data.sessionId);
       localStorage.setItem('medbuilder_guest_session', data.sessionId);
     },
-    onError: (error) => {
-      console.warn("Guest session creation failed, using fallback:", error);
+    onError: () => {
       const fallbackSession = `guest_${Date.now()}`;
       setGuestSessionId(fallbackSession);
     },
@@ -43,164 +39,219 @@ export default function Landing() {
     }
   }, []);
 
-  const handleGenerateApp = () => {
+  const handleGenerate = () => {
     if (!prompt.trim()) return;
     setShowChat(true);
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-mono flex flex-col">
+    <div className="h-screen bg-gray-900 text-white font-mono flex flex-col overflow-hidden">
       {/* Minimal Header */}
-      <header className="bg-gray-800/50 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                <Code className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-semibold text-white">MedBuilder</span>
-            </div>
-            
-            <div className="flex items-center space-x-3">
-              {guestSessionId && (
-                <CreditMeter sessionId={guestSessionId} compact />
-              )}
-              <Button 
-                asChild
-                variant="outline"
-                className="bg-green-700/20 border-green-500 text-green-200 hover:bg-green-600 hover:text-white"
-                size="sm"
-              >
-                <Link href="/pricing">Pricing</Link>
-              </Button>
-            </div>
+      <header className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex items-center justify-between shrink-0">
+        <div className="flex items-center space-x-3">
+          <div className="w-7 h-7 bg-green-500 rounded flex items-center justify-center">
+            <Code className="w-4 h-4 text-white" />
           </div>
+          <span className="text-lg font-semibold">MedBuilder</span>
+          <Badge className="bg-green-900/50 text-green-400 text-xs">AI</Badge>
         </div>
+        <Button 
+          asChild
+          variant="ghost"
+          size="sm"
+          className="text-gray-400 hover:text-white"
+        >
+          <Link href="/pricing">Pricing</Link>
+        </Button>
       </header>
 
-      {/* Main Content - Chat Input Front and Center */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
-        <div className="max-w-4xl w-full mx-auto space-y-8">
-          
-          {/* Hero Text - Compact */}
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl md:text-5xl font-bold">
-              Build Healthcare Apps with AI
-            </h1>
-            <p className="text-lg text-gray-400">
-              Describe what you need. Get a working app in seconds.
-            </p>
+      {/* Main Split View */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Panel - Chat Input */}
+        <div className="w-1/2 border-r border-gray-700 flex flex-col bg-gray-900">
+          {/* Chat Header */}
+          <div className="px-4 py-3 border-b border-gray-800">
+            <h2 className="text-sm font-medium text-gray-300">Describe your healthcare app</h2>
           </div>
+          
+          {/* Chat Area */}
+          <ScrollArea className="flex-1 p-4">
+            <div className="space-y-4">
+              {/* Welcome Message */}
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+                <div className="flex-1 bg-gray-800 rounded-lg p-4 text-sm text-gray-300">
+                  <p className="mb-3">Hi! I can build healthcare apps for you. Just describe what you need:</p>
+                  <ul className="space-y-2 text-gray-400">
+                    <li className="flex items-center gap-2">
+                      <ChevronRight className="w-3 h-3 text-green-500" />
+                      Patient scheduling systems
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <ChevronRight className="w-3 h-3 text-green-500" />
+                      Intake forms & questionnaires
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <ChevronRight className="w-3 h-3 text-green-500" />
+                      Telehealth & video chat
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <ChevronRight className="w-3 h-3 text-green-500" />
+                      Patient portals & dashboards
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
-          {/* Central Chat Input - Highlighted */}
-          <div className="relative">
-            <div className="absolute -inset-1 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 rounded-2xl blur-sm opacity-30"></div>
-            <div className="relative bg-gray-800 rounded-2xl border border-gray-600 p-6 shadow-2xl">
+              {/* Example Prompts */}
+              <div className="space-y-2">
+                <p className="text-xs text-gray-500 px-2">Try an example:</p>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setPrompt("I need a patient appointment system where patients can book visits, see available times, and get reminders")}
+                    className="w-full text-left p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-white transition-colors"
+                    data-testid="example-prompt-0"
+                  >
+                    "I need a patient appointment system..."
+                  </button>
+                  <button
+                    onClick={() => setPrompt("Build me a patient intake form that collects medical history, insurance info, and consent signatures")}
+                    className="w-full text-left p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-white transition-colors"
+                    data-testid="example-prompt-1"
+                  >
+                    "Build me a patient intake form..."
+                  </button>
+                  <button
+                    onClick={() => setPrompt("Create a telehealth waiting room where patients check in and wait for their video appointment")}
+                    className="w-full text-left p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-white transition-colors"
+                    data-testid="example-prompt-2"
+                  >
+                    "Create a telehealth waiting room..."
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ScrollArea>
+
+          {/* Input Area */}
+          <div className="p-4 border-t border-gray-800">
+            <div className="relative">
               <Textarea
-                placeholder="Tell me what you need for your practice...
-
-Example: I'm a family doctor and need an app where patients can book appointments, fill out forms before visits, and I can track their health progress over time."
+                placeholder="Describe the healthcare app you want to build..."
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="w-full h-32 bg-transparent border-none text-white placeholder-gray-400 text-lg resize-none focus:outline-none focus:ring-0"
+                className="w-full h-24 bg-gray-800 border-gray-700 text-white placeholder-gray-500 resize-none pr-12 rounded-lg"
                 data-testid="input-prompt"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-                    handleGenerateApp();
+                    handleGenerate();
                   }
                 }}
               />
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-700">
-                <span className="text-sm text-gray-500">Ctrl+Enter to generate</span>
-                <Button
-                  onClick={handleGenerateApp}
-                  disabled={!prompt.trim() || isGenerating}
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg rounded-xl"
-                  data-testid="button-generate-app"
-                >
-                  {isGenerating ? (
-                    <>
-                      <Cpu className="w-5 h-5 mr-2 animate-spin" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-5 h-5 mr-2" />
-                      Generate App
-                    </>
-                  )}
-                </Button>
+              <Button
+                onClick={handleGenerate}
+                disabled={!prompt.trim()}
+                size="icon"
+                className="absolute bottom-3 right-3 bg-green-600 hover:bg-green-700 h-8 w-8"
+                data-testid="button-generate"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">Press Ctrl+Enter to generate</p>
+          </div>
+        </div>
+
+        {/* Right Panel - Preview */}
+        <div className="w-1/2 bg-gray-950 flex flex-col">
+          {/* Preview Header */}
+          <div className="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <span className="text-xs text-gray-500">Preview</span>
+          </div>
+
+          {/* Preview Content - Sample Healthcare App */}
+          <div className="flex-1 p-6 overflow-auto">
+            <div className="max-w-md mx-auto space-y-6">
+              {/* Sample App Header */}
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 bg-blue-600 rounded-xl mx-auto flex items-center justify-center">
+                  <Calendar className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Patient Scheduler</h3>
+                <p className="text-sm text-gray-400">Book your appointment</p>
               </div>
-            </div>
-          </div>
 
-          {/* Trust Badges - Compact */}
-          <div className="flex justify-center">
-            <TrustBadges />
-          </div>
+              {/* Sample Form */}
+              <div className="space-y-4 bg-gray-800/50 rounded-xl p-5 border border-gray-700">
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Select Service</label>
+                  <div className="bg-gray-800 border border-gray-600 rounded-lg p-3 text-sm text-white">
+                    General Checkup
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Choose Date</label>
+                  <div className="bg-gray-800 border border-gray-600 rounded-lg p-3 text-sm text-white flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-gray-400" />
+                    December 23, 2024
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs text-gray-400 mb-1 block">Available Times</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {['9:00 AM', '10:30 AM', '2:00 PM'].map((time) => (
+                      <button
+                        key={time}
+                        className="bg-gray-800 border border-gray-600 hover:border-green-500 rounded-lg p-2 text-xs text-gray-300 hover:text-white transition-colors"
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <button className="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg py-3 text-sm font-medium transition-colors">
+                  Book Appointment
+                </button>
+              </div>
 
-          {/* Quick Example Prompts */}
-          <div className="space-y-4">
-            <p className="text-center text-sm text-gray-500">Try these examples:</p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <button
-                onClick={() => setPrompt("Create a patient appointment scheduler with reminders")}
-                className="p-4 bg-gray-800/50 hover:bg-gray-700 border border-gray-700 rounded-xl text-sm text-gray-300 hover:text-white transition-all hover:border-green-500 text-left"
-                data-testid="example-prompt-0"
-              >
-                Patient appointment scheduler with reminders
-              </button>
-              <button
-                onClick={() => setPrompt("Build a secure patient intake form with HIPAA compliance")}
-                className="p-4 bg-gray-800/50 hover:bg-gray-700 border border-gray-700 rounded-xl text-sm text-gray-300 hover:text-white transition-all hover:border-green-500 text-left"
-                data-testid="example-prompt-1"
-              >
-                Secure patient intake form
-              </button>
-              <button
-                onClick={() => setPrompt("Create a telehealth waiting room with video chat")}
-                className="p-4 bg-gray-800/50 hover:bg-gray-700 border border-gray-700 rounded-xl text-sm text-gray-300 hover:text-white transition-all hover:border-green-500 text-left"
-                data-testid="example-prompt-2"
-              >
-                Telehealth waiting room
-              </button>
-            </div>
-          </div>
+              {/* Sample Stats */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-gray-800/50 rounded-lg p-3 text-center border border-gray-700">
+                  <Users className="w-5 h-5 text-blue-400 mx-auto mb-1" />
+                  <p className="text-lg font-bold text-white">247</p>
+                  <p className="text-xs text-gray-500">Patients</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-3 text-center border border-gray-700">
+                  <FileText className="w-5 h-5 text-green-400 mx-auto mb-1" />
+                  <p className="text-lg font-bold text-white">89</p>
+                  <p className="text-xs text-gray-500">Today</p>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-3 text-center border border-gray-700">
+                  <Clock className="w-5 h-5 text-purple-400 mx-auto mb-1" />
+                  <p className="text-lg font-bold text-white">12m</p>
+                  <p className="text-xs text-gray-500">Avg Wait</p>
+                </div>
+              </div>
 
-          {/* Features - Minimal */}
-          <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-800">
-            <div className="text-center">
-              <Shield className="w-6 h-6 text-green-500 mx-auto mb-2" />
-              <p className="text-sm text-gray-400">HIPAA Compliant</p>
-            </div>
-            <div className="text-center">
-              <Zap className="w-6 h-6 text-blue-500 mx-auto mb-2" />
-              <p className="text-sm text-gray-400">Ready in Seconds</p>
-            </div>
-            <div className="text-center">
-              <CheckCircle className="w-6 h-6 text-purple-500 mx-auto mb-2" />
-              <p className="text-sm text-gray-400">No Coding Required</p>
+              {/* HIPAA Badge */}
+              <div className="flex justify-center">
+                <Badge className="bg-green-900/30 text-green-400 border border-green-800">
+                  HIPAA Compliant
+                </Badge>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Minimal Footer */}
-      <footer className="bg-gray-800/50 border-t border-gray-700 py-4">
-        <div className="container mx-auto px-6">
-          <div className="flex justify-between items-center text-sm text-gray-500">
-            <div className="flex items-center space-x-2">
-              <div className="w-5 h-5 bg-green-500 rounded flex items-center justify-center">
-                <Code className="w-3 h-3 text-white" />
-              </div>
-              <span>MedBuilder</span>
-            </div>
-            <span>Built for Healthcare</span>
-          </div>
-        </div>
-      </footer>
-
-      {/* Chat-to-Code Demo */}
+      {/* Chat-to-Code Demo Modal */}
       {showChat && (
         <ChatToCodeDemo 
           initialPrompt={prompt}
