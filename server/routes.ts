@@ -4836,6 +4836,69 @@ Respond with ONLY valid JSON array, no explanation.`;
     }
   });
 
+  // Compliance Automation Hub - Enterprise Endpoints
+  app.get('/api/compliance-hub/frameworks', isAuthenticated, async (req, res) => {
+    try {
+      const frameworks = await storage.getComplianceFrameworks();
+      res.json(frameworks);
+    } catch (error: any) {
+      console.error("Error fetching compliance frameworks:", error);
+      res.status(500).json({ message: "Failed to fetch compliance frameworks" });
+    }
+  });
+
+  app.get('/api/compliance-hub/attestations', isAuthenticated, async (req, res) => {
+    try {
+      const attestations = await storage.getComplianceAttestations();
+      res.json(attestations);
+    } catch (error: any) {
+      console.error("Error fetching attestations:", error);
+      res.status(500).json({ message: "Failed to fetch attestations" });
+    }
+  });
+
+  app.get('/api/compliance-hub/audit-events', isAuthenticated, async (req, res) => {
+    try {
+      const events = await storage.getComplianceAuditEvents();
+      res.json(events);
+    } catch (error: any) {
+      console.error("Error fetching audit events:", error);
+      res.status(500).json({ message: "Failed to fetch audit events" });
+    }
+  });
+
+  app.get('/api/compliance-hub/remediations', isAuthenticated, async (req, res) => {
+    try {
+      const remediations = await storage.getComplianceRemediations();
+      res.json(remediations);
+    } catch (error: any) {
+      console.error("Error fetching remediations:", error);
+      res.status(500).json({ message: "Failed to fetch remediations" });
+    }
+  });
+
+  app.post('/api/compliance-hub/attestations/:id/complete', isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const result = await storage.completeAttestation(Number(id));
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error completing attestation:", error);
+      res.status(500).json({ message: "Failed to complete attestation" });
+    }
+  });
+
+  app.post('/api/compliance-hub/run-audit', isAuthenticated, async (req: any, res) => {
+    try {
+      const { frameworkId } = req.body;
+      const result = await storage.runComplianceAudit(frameworkId);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error running audit:", error);
+      res.status(500).json({ message: "Failed to run compliance audit" });
+    }
+  });
+
   app.get('/api/example-prompts', async (req, res) => {
     try {
       const { userMode } = req.query;

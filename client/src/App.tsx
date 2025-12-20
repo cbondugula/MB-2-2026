@@ -27,6 +27,7 @@ import Gallery from "@/pages/gallery";
 import Showcase from "@/pages/showcase";
 import Marketplace from "@/pages/marketplace";
 import Academy from "@/pages/academy";
+import ComplianceHub from "@/pages/compliance-hub";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -73,6 +74,7 @@ function Router() {
           <Route path="/showcase" component={Showcase} />
           <Route path="/marketplace" component={Marketplace} />
           <Route path="/academy" component={Academy} />
+          <Route path="/compliance-hub" component={ComplianceHub} />
         </>
       )}
       <Route component={NotFound} />
