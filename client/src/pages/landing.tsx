@@ -5,11 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Shield, Code, Zap, Sparkles, Cpu, Terminal, Activity, Brain, Network, TrendingUp, CheckCircle, MessageSquare } from "lucide-react";
+import { Shield, Code, Zap, Sparkles, Cpu, Terminal, Activity, Brain, Network, TrendingUp, CheckCircle, MessageSquare, Gift, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { ChatToCode } from "@/components/ChatToCode";
+import { CreditMeter } from "@/components/CreditMeter";
+import { TrustBadges } from "@/components/SuccessToast";
+import { apiRequest } from "@/lib/queryClient";
 
 type ExamplePrompt = {
   id: number;
@@ -34,6 +37,33 @@ export default function Landing() {
   const [showDemo, setShowDemo] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [userMode, setUserMode] = useState<'healthcare' | 'developer'>('healthcare');
+  const [guestSessionId, setGuestSessionId] = useState<string | null>(null);
+
+  const createGuestSession = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/monetization/guest-session", {});
+      return response.json();
+    },
+    onSuccess: (data) => {
+      setGuestSessionId(data.sessionId);
+      localStorage.setItem('medbuilder_guest_session', data.sessionId);
+    },
+    onError: (error) => {
+      console.warn("Guest session creation failed, using fallback:", error);
+      const fallbackSession = `guest_${Date.now()}`;
+      setGuestSessionId(fallbackSession);
+    },
+    retry: 2,
+  });
+
+  useEffect(() => {
+    const existingSession = localStorage.getItem('medbuilder_guest_session');
+    if (existingSession) {
+      setGuestSessionId(existingSession);
+    } else {
+      createGuestSession.mutate();
+    }
+  }, []);
 
   // Fetch dynamic ML data when demo is shown
   const { data: mlMetrics, isLoading: mlLoading, error: mlError } = useQuery({
@@ -138,6 +168,9 @@ export default function Landing() {
               >
                 <Link href="/pricing">Pricing</Link>
               </Button>
+              {guestSessionId && (
+                <CreditMeter sessionId={guestSessionId} compact />
+              )}
               <Button 
                 onClick={() => setShowChat(true)}
                 className="bg-green-600 hover:bg-green-700 text-white"
@@ -175,15 +208,20 @@ export default function Landing() {
             </div>
             
             <div className="flex flex-col items-center space-y-6">
+              <TrustBadges />
+              
               <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
                 <div className="flex items-center space-x-2">
                   <Shield className="w-4 h-4 text-blue-400" />
                   <span>2,500+ healthcare professionals</span>
                 </div>
                 <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                <span>HIPAA compliant</span>
-                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
                 <span>Ready in minutes</span>
+                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
+                <div className="flex items-center space-x-2">
+                  <Gift className="w-4 h-4 text-emerald-400" />
+                  <span>3 free generations</span>
+                </div>
               </div>
               
               {/* User Mode Toggle */}
