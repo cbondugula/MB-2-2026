@@ -38,23 +38,23 @@ export default function AppBuilder() {
   const [isBuilding, setIsBuilding] = useState(false);
   const { toast } = useToast();
 
-  const { data: techStacks, isLoading: stacksLoading } = useQuery({
+  const { data: techStacks = [], isLoading: stacksLoading } = useQuery<Array<{ id: string; name: string; description: string; category: string; healthcareDomain: string; frontend: { name: string; features?: string[] }; backend: { framework: string } }>>({
     queryKey: ['/api/tech-stacks'],
   });
 
-  const { data: healthcareDomains, isLoading: domainsLoading } = useQuery({
+  const { data: healthcareDomains = [], isLoading: domainsLoading } = useQuery<Array<{ id: string; name: string; description: string; category: string; subdomains?: string[] }>>({
     queryKey: ['/api/healthcare-domains'],
   });
 
-  const { data: buildCapabilities, isLoading: capabilitiesLoading } = useQuery({
+  const { data: buildCapabilities = [], isLoading: capabilitiesLoading } = useQuery<Array<{ id: string; name: string; description: string; icon: string; complexity: string; buildTime: string }>>({
     queryKey: ['/api/build-capabilities'],
   });
 
-  const { data: complianceFrameworks, isLoading: complianceLoading } = useQuery({
+  const { data: complianceFrameworks = [], isLoading: complianceLoading } = useQuery<Array<{ id: string; name: string; description: string; required: boolean; region: string }>>({
     queryKey: ['/api/compliance-frameworks'],
   });
 
-  const { data: deploymentOptions, isLoading: deploymentLoading } = useQuery({
+  const { data: deploymentOptions = [], isLoading: deploymentLoading } = useQuery<Array<{ id: string; name: string; description: string; recommended?: boolean; type: string; setupTime: string; cost: string; compliance: boolean }>>({
     queryKey: ['/api/deployment-options'],
   });
 
