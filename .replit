@@ -45,5 +45,3 @@ integrations = ["perplexity_v0:1.0.0", "javascript_anthropic:1.0.0", "javascript
 [userenv]
 
 [userenv.shared]
-TESTING_VITE_STRIPE_PUBLIC_KEY = "\t sk_live_...7tRn"
-TESTING_STRIPE_SECRET_KEY = "pk_live_51Jn65hCo1D4x5h8yuS4c4nZHJuQ3cR5rnkJDLx3wuTVWqbkTNFm8hXKumbov4nMSO2EpntyX5G6V8uwV0cZa5Mpv00KWLIp7y1"
