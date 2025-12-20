@@ -492,7 +492,7 @@ body { font-family: system-ui, sans-serif; }`
 };
 
 // Live Demo Preview - fetches real data from backend API
-function LiveDemoPreview({ sessionId }: { sessionId?: string }) {
+function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: string; demoType?: string }) {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTime, setSelectedTime] = useState('9:00 AM');
@@ -537,6 +537,216 @@ function LiveDemoPreview({ sessionId }: { sessionId?: string }) {
 
   const times = ['9:00 AM', '10:30 AM', '1:00 PM', '2:30 PM', '4:00 PM'];
 
+  // Render different preview based on demo type
+  if (demoType === "wellness") {
+    return (
+      <div className="max-w-md mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center text-xl">💜</div>
+          <h2 className="text-xl font-bold text-white">Wellness Tracker</h2>
+          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+        </div>
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="bg-gray-800 rounded-xl p-4 text-center">
+            <div className="text-2xl mb-1">🙂</div>
+            <div className="text-xs text-gray-400">Mood</div>
+          </div>
+          <div className="bg-gray-800 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-blue-400">4</div>
+            <div className="text-xs text-gray-400">Glasses 💧</div>
+          </div>
+          <div className="bg-gray-800 rounded-xl p-4 text-center">
+            <div className="text-lg font-bold text-green-400">6,847</div>
+            <div className="text-xs text-gray-400">Steps 👟</div>
+          </div>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm text-gray-400 mb-2 block">How are you feeling today?</label>
+            <div className="flex justify-between bg-gray-800 rounded-lg p-3">
+              {['😢', '😕', '😐', '🙂', '😊'].map((emoji, i) => (
+                <button key={i} className={`text-2xl p-2 rounded-lg ${i === 3 ? 'bg-purple-600' : 'hover:bg-gray-700'}`}>{emoji}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="text-sm text-gray-400 mb-2 block">Water intake</label>
+            <div className="flex gap-2">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className={`flex-1 h-8 rounded ${i < 4 ? 'bg-blue-500' : 'bg-gray-700'}`} />
+              ))}
+            </div>
+          </div>
+          <button className="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-semibold">
+            Log Today's Wellness
+          </button>
+        </div>
+        <div className="mt-4 text-center">
+          <span className="inline-flex items-center gap-2 text-xs text-gray-500">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            Connected to PostgreSQL Database
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (demoType === "pharmacy") {
+    return (
+      <div className="max-w-md mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center text-xl">💊</div>
+          <h2 className="text-xl font-bold text-white">My Medications</h2>
+          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+        </div>
+        <div className="space-y-3">
+          {[
+            { name: 'Lisinopril 10mg', refills: 2, status: 'ready' },
+            { name: 'Metformin 500mg', refills: 3, status: 'pending' },
+            { name: 'Atorvastatin 20mg', refills: 1, status: 'ready' }
+          ].map((med, i) => (
+            <div key={i} className="bg-gray-800 rounded-xl p-4">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <div className="font-semibold text-white">{med.name}</div>
+                  <div className="text-sm text-gray-400">{med.refills} refills remaining</div>
+                </div>
+                <span className={`px-2 py-1 text-xs rounded ${med.status === 'ready' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}`}>
+                  {med.status === 'ready' ? '✓ Ready' : '⏳ Pending'}
+                </span>
+              </div>
+              <button className="mt-2 px-3 py-1 bg-orange-600 hover:bg-orange-500 rounded text-sm font-medium">
+                Request Refill
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 text-center">
+          <span className="inline-flex items-center gap-2 text-xs text-gray-500">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            Connected to PostgreSQL Database
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (demoType === "lab") {
+    return (
+      <div className="max-w-md mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-cyan-600 rounded-lg flex items-center justify-center text-xl">🔬</div>
+          <h2 className="text-xl font-bold text-white">Lab Results</h2>
+          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+        </div>
+        <div className="flex gap-2 mb-4">
+          {['CBC', 'Lipid Panel', 'Glucose'].map((test, i) => (
+            <button key={i} className={`px-3 py-2 rounded-lg text-sm ${i === 0 ? 'bg-cyan-600' : 'bg-gray-800 hover:bg-gray-700'}`}>{test}</button>
+          ))}
+        </div>
+        <div className="bg-gray-800 rounded-xl p-4">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <div className="font-semibold text-white">Complete Blood Count</div>
+              <div className="text-sm text-gray-400">Dec 18, 2024</div>
+            </div>
+            <span className="px-2 py-1 text-xs rounded bg-green-900 text-green-400">✓ Normal</span>
+          </div>
+          <div className="space-y-3">
+            {[
+              { name: 'WBC', value: '7.2', unit: 'K/uL', range: '4.5-11.0' },
+              { name: 'RBC', value: '4.8', unit: 'M/uL', range: '4.5-5.5' }
+            ].map((v, i) => (
+              <div key={i} className="flex justify-between items-center py-2 border-b border-gray-700">
+                <span className="text-gray-300">{v.name}</span>
+                <div className="text-right">
+                  <span className="font-mono font-semibold text-white">{v.value}</span>
+                  <span className="text-gray-500 text-sm ml-1">{v.unit}</span>
+                  <div className="text-xs text-gray-500">Range: {v.range}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mt-4 text-center">
+          <span className="inline-flex items-center gap-2 text-xs text-gray-500">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            Connected to PostgreSQL Database
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (demoType === "telehealth") {
+    return (
+      <div className="max-w-md mx-auto text-center">
+        <div className="flex items-center gap-3 mb-6 justify-center">
+          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-xl">📹</div>
+          <h2 className="text-xl font-bold text-white">Virtual Waiting Room</h2>
+          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+        </div>
+        <div className="bg-gray-800 rounded-xl p-8">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-green-900 flex items-center justify-center">
+            <span className="text-3xl">✓</span>
+          </div>
+          <p className="text-xl font-semibold text-green-400 mb-4">Doctor is ready!</p>
+          <button className="px-8 py-3 bg-green-600 hover:bg-green-500 rounded-lg font-semibold">
+            Join Video Call
+          </button>
+        </div>
+        <span className="mt-4 inline-block px-3 py-1 bg-green-900 text-green-400 text-xs rounded">🔒 End-to-End Encrypted</span>
+        <div className="mt-4 text-center">
+          <span className="inline-flex items-center gap-2 text-xs text-gray-500">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            Connected to PostgreSQL Database
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (demoType === "intake") {
+    return (
+      <div className="max-w-md mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-xl">📋</div>
+          <h2 className="text-xl font-bold text-white">Patient Registration</h2>
+          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm text-gray-400 mb-1 block">Full Name</label>
+            <input type="text" placeholder="Enter your name" className="w-full p-3 bg-gray-800 rounded-lg text-white border border-gray-700" />
+          </div>
+          <div>
+            <label className="text-sm text-gray-400 mb-1 block">Date of Birth</label>
+            <input type="date" className="w-full p-3 bg-gray-800 rounded-lg text-white border border-gray-700" />
+          </div>
+          <div>
+            <label className="text-sm text-gray-400 mb-1 block">Insurance Provider</label>
+            <select className="w-full p-3 bg-gray-800 rounded-lg text-white border border-gray-700">
+              <option>Select provider...</option>
+              <option>Blue Cross</option>
+              <option>Aetna</option>
+              <option>UnitedHealth</option>
+            </select>
+          </div>
+          <button className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold">
+            Complete Registration
+          </button>
+        </div>
+        <div className="mt-4 text-center">
+          <span className="inline-flex items-center gap-2 text-xs text-gray-500">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            Connected to PostgreSQL Database
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  // Default: Scheduler
   return (
     <div className="max-w-md mx-auto">
       <div className="flex items-center gap-3 mb-6">
@@ -628,6 +838,7 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
   const [selectedFile, setSelectedFile] = useState<string>("");
   const [phase, setPhase] = useState<"building" | "complete">("building");
   const [buildStep, setBuildStep] = useState(0);
+  const [demoType, setDemoType] = useState<string>("scheduler");
   
   const buildSteps = [
     { label: "Analyzing requirements", icon: "🔍" },
@@ -676,6 +887,7 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
     }
     
     demoKey = bestMatch;
+    setDemoType(bestMatch);
 
     // Ultra-fast build simulation
     const stepDuration = 120; // 120ms per step = 0.6s total
@@ -852,7 +1064,7 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
                   </div>
                   
                   <TabsContent value="preview" className="flex-1 m-0 overflow-hidden bg-[#111] p-6">
-                    <LiveDemoPreview sessionId={sessionId} />
+                    <LiveDemoPreview sessionId={sessionId} demoType={demoType} />
                   </TabsContent>
 
                   <TabsContent value="code" className="flex-1 m-0 overflow-hidden">
