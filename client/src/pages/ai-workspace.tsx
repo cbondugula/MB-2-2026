@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import { Brain, Code, Shield, Zap, FileCode, Users, BarChart3, Lightbulb } from 'lucide-react';
+import { Brain, Code, Shield, Zap, FileCode, Users, BarChart3, Lightbulb, ArrowLeft } from 'lucide-react';
+import { useLocation, Link } from 'wouter';
 
 interface AIAnalysisResult {
   score: number;
@@ -43,6 +44,7 @@ interface CodeSuggestion {
 }
 
 export default function AIWorkspace() {
+  const [, setLocation] = useLocation();
   const [selectedDomain, setSelectedDomain] = useState("clinical");
   const [codeInput, setCodeInput] = useState("");
   const [analysis, setAnalysis] = useState<AIAnalysisResult | null>(null);
@@ -229,11 +231,23 @@ export default function AIWorkspace() {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">AI Development Workspace</h1>
-          <p className="text-muted-foreground">
-            Highest-level AI assistance for healthcare and life sciences development
-          </p>
+        <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setLocation('/')}
+            className="bg-gray-900 border-gray-800 text-gray-200 hover:bg-gray-800 hover:text-white"
+            data-testid="button-back"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold">AI Development Workspace</h1>
+            <p className="text-muted-foreground">
+              Highest-level AI assistance for healthcare and life sciences development
+            </p>
+          </div>
         </div>
         <div className="flex items-center space-x-2">
           <Brain className="h-8 w-8 text-blue-500" />

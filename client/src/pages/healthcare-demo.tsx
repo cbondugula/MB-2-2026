@@ -19,10 +19,13 @@ import {
   Settings,
   Play,
   Code,
-  Sparkles
+  Sparkles,
+  ArrowLeft
 } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function HealthcareDemo() {
+  const [, setLocation] = useLocation();
   const [selectedTemplate, setSelectedTemplate] = useState("ehr-system");
   const [appName, setAppName] = useState("MediCare Portal");
   const [selectedStack, setSelectedStack] = useState("react-node");
@@ -98,6 +101,16 @@ export default function HealthcareDemo() {
           <div className="max-w-6xl mx-auto">
             <div className="mb-8">
               <div className="flex items-center space-x-3 mb-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setLocation('/')}
+                  className="bg-gray-900 border-gray-800 text-gray-200 hover:bg-gray-800 hover:text-white"
+                  data-testid="button-back"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
+                </Button>
                 <div className="p-3 bg-blue-100 rounded-lg">
                   <Stethoscope className="w-6 h-6 text-blue-600" />
                 </div>

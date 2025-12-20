@@ -18,6 +18,7 @@ import {
   Puzzle,
   Eye,
   ArrowRight,
+  ArrowLeft,
   CheckCircle,
   Clock,
   Plus,
@@ -124,13 +125,25 @@ export default function Dashboard() {
         <main className="flex-1 p-6 lg:p-8 overflow-auto">
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-white" data-testid="welcome-heading">
-                  Welcome back, {user?.firstName || 'Developer'}
-                </h1>
-                <p className="text-gray-400 mt-1">
-                  Build HIPAA-compliant healthcare applications with AI
-                </p>
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setLocation('/')}
+                  className="bg-gray-900 border-gray-800 text-gray-200 hover:bg-gray-800 hover:text-white"
+                  data-testid="button-back"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
+                </Button>
+                <div>
+                  <h1 className="text-2xl font-bold text-white" data-testid="welcome-heading">
+                    Welcome back, {user?.firstName || 'Developer'}
+                  </h1>
+                  <p className="text-gray-400 mt-1">
+                    Build HIPAA-compliant healthcare applications with AI
+                  </p>
+                </div>
               </div>
               <Badge className="bg-emerald-900/50 border border-emerald-700 text-emerald-300">
                 <Shield className="w-3 h-3 mr-1" />
