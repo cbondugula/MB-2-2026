@@ -2555,3 +2555,19 @@ export type ComplianceRecommendation = typeof complianceRecommendations.$inferSe
 export const insertComplianceEventSchema = createInsertSchema(complianceEvents).omit({ id: true, createdAt: true });
 export type InsertComplianceEvent = z.infer<typeof insertComplianceEventSchema>;
 export type ComplianceEvent = typeof complianceEvents.$inferSelect;
+
+// Demo Appointments (for live preview demonstrations)
+export const demoAppointments = pgTable("demo_appointments", {
+  id: serial("id").primaryKey(),
+  sessionId: varchar("session_id").notNull(),
+  patientName: varchar("patient_name").notNull(),
+  service: varchar("service").notNull(),
+  date: varchar("date").notNull(),
+  time: varchar("time").notNull(),
+  status: varchar("status").notNull().default("pending"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [index("idx_demo_appointments_session").on(table.sessionId)]);
+
+export const insertDemoAppointmentSchema = createInsertSchema(demoAppointments).omit({ id: true, createdAt: true });
+export type InsertDemoAppointment = z.infer<typeof insertDemoAppointmentSchema>;
+export type DemoAppointment = typeof demoAppointments.$inferSelect;

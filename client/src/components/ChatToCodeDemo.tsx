@@ -266,6 +266,138 @@ body { font-family: system-ui, sans-serif; }`
   }
 };
 
+// Live Demo Preview - fetches real data from backend API
+function LiveDemoPreview({ sessionId }: { sessionId?: string }) {
+  const [appointments, setAppointments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedTime, setSelectedTime] = useState('9:00 AM');
+  const [booked, setBooked] = useState(false);
+  const [stats, setStats] = useState({ total: 0, confirmed: 0, pending: 0 });
+  
+  const demoSessionId = sessionId || 'demo_default';
+  
+  useEffect(() => {
+    // Fetch real appointments from backend
+    fetch(`/api/demo/${demoSessionId}/appointments`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setAppointments(data.data);
+          setStats(data.stats);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [demoSessionId]);
+  
+  const handleBook = async () => {
+    const res = await fetch(`/api/demo/${demoSessionId}/appointments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        patientName: 'New Patient', 
+        service: 'General Checkup',
+        date: '2024-12-23',
+        time: selectedTime 
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      setAppointments(prev => [...prev, data.data]);
+      setStats(prev => ({ ...prev, total: prev.total + 1, confirmed: prev.confirmed + 1 }));
+      setBooked(true);
+      setTimeout(() => setBooked(false), 3000);
+    }
+  };
+
+  const times = ['9:00 AM', '10:30 AM', '1:00 PM', '2:30 PM', '4:00 PM'];
+
+  return (
+    <div className="max-w-md mx-auto">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center text-xl">📅</div>
+        <h2 className="text-xl font-bold text-white">Patient Scheduler</h2>
+        <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+      </div>
+      
+      {/* Real-time Stats from API */}
+      <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="bg-gray-800 rounded-lg p-3 text-center">
+          <div className="text-2xl font-bold text-white">{loading ? '...' : stats.total}</div>
+          <div className="text-xs text-gray-400">Total</div>
+        </div>
+        <div className="bg-gray-800 rounded-lg p-3 text-center">
+          <div className="text-2xl font-bold text-green-400">{loading ? '...' : stats.confirmed}</div>
+          <div className="text-xs text-gray-400">Confirmed</div>
+        </div>
+        <div className="bg-gray-800 rounded-lg p-3 text-center">
+          <div className="text-2xl font-bold text-yellow-400">{loading ? '...' : stats.pending}</div>
+          <div className="text-xs text-gray-400">Pending</div>
+        </div>
+      </div>
+      
+      {booked && (
+        <div className="mb-4 p-3 bg-green-900/50 border border-green-600 rounded-lg text-green-400 text-sm flex items-center gap-2">
+          <CheckCircle className="w-4 h-4" /> Appointment saved to database!
+        </div>
+      )}
+      
+      {/* Appointment List from Database */}
+      <div className="mb-6">
+        <label className="text-xs text-gray-500 uppercase tracking-wider mb-2 block">Upcoming Appointments (Live Data)</label>
+        <div className="space-y-2 max-h-40 overflow-auto">
+          {loading ? (
+            <div className="p-3 bg-gray-800 rounded-lg text-gray-400 text-sm animate-pulse">Loading from database...</div>
+          ) : appointments.slice(0, 3).map((apt: any) => (
+            <div key={apt.id} className="p-3 bg-gray-800 rounded-lg flex items-center justify-between">
+              <div>
+                <div className="text-white text-sm font-medium">{apt.patientName}</div>
+                <div className="text-gray-400 text-xs">{apt.service} - {apt.time}</div>
+              </div>
+              <span className={`px-2 py-0.5 rounded text-xs ${apt.status === 'confirmed' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}`}>
+                {apt.status}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Book New Appointment */}
+      <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+        <label className="text-xs text-gray-500 uppercase tracking-wider mb-2 block">Book New Appointment</label>
+        <div className="grid grid-cols-5 gap-2 mb-4">
+          {times.map(time => (
+            <button
+              key={time}
+              onClick={() => setSelectedTime(time)}
+              className={`p-2 rounded-lg text-xs font-medium transition-all ${
+                selectedTime === time 
+                  ? 'bg-green-600 text-white' 
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
+            >
+              {time}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={handleBook}
+          className="w-full py-3 bg-green-600 hover:bg-green-500 text-white rounded-lg font-semibold transition-all"
+        >
+          Book & Save to Database
+        </button>
+      </div>
+      
+      <div className="mt-4 text-center">
+        <span className="inline-flex items-center gap-2 text-xs text-gray-500">
+          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          Connected to PostgreSQL Database
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }: ChatToCodeDemoProps) {
   const [generatedCode, setGeneratedCode] = useState<GeneratedCode | null>(null);
   const [selectedFile, setSelectedFile] = useState<string>("");
@@ -281,11 +413,39 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
   ];
 
   useEffect(() => {
-    // Determine which demo to show based on prompt
+    // Smart prompt matching to select the right demo
     const prompt = (initialPrompt || "").toLowerCase();
-    let demoKey = "scheduler";
-    if (prompt.includes("intake") || prompt.includes("form")) demoKey = "intake";
-    else if (prompt.includes("telehealth") || prompt.includes("video") || prompt.includes("waiting")) demoKey = "telehealth";
+    let demoKey = "scheduler"; // default
+    
+    // Pattern matching for different healthcare app types
+    const patterns: Record<string, string[]> = {
+      intake: ["intake", "registration", "onboard", "new patient", "sign up", "enroll", "checkin", "check-in", "admission", "history", "medical record"],
+      telehealth: ["telehealth", "telemedicine", "video", "virtual", "waiting room", "remote", "call", "consult", "online visit", "virtual care"],
+      scheduler: ["schedule", "appointment", "booking", "book", "calendar", "slot", "time", "doctor", "visit", "reminder"]
+    };
+    
+    // Find best match based on keyword count
+    let bestMatch = "scheduler";
+    let bestScore = 0;
+    
+    for (const [key, keywords] of Object.entries(patterns)) {
+      const score = keywords.filter(kw => prompt.includes(kw)).length;
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = key;
+      }
+    }
+    
+    // If no specific match found, try to infer from context
+    if (bestScore === 0) {
+      if (prompt.includes("form") || prompt.includes("data") || prompt.includes("collect")) {
+        bestMatch = "intake";
+      } else if (prompt.includes("connect") || prompt.includes("meet") || prompt.includes("talk")) {
+        bestMatch = "telehealth";
+      }
+    }
+    
+    demoKey = bestMatch;
 
     // Ultra-fast build simulation
     const stepDuration = 120; // 120ms per step = 0.6s total
@@ -461,74 +621,8 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
                     </div>
                   </div>
                   
-                  <TabsContent value="preview" className="flex-1 m-0 overflow-hidden bg-gray-950">
-                    <SandpackProvider
-                      template="react"
-                      theme="dark"
-                      files={{
-                        "/App.js": `
-import { useState } from 'react';
-
-export default function App() {
-  const [selectedTime, setSelectedTime] = useState('9:00 AM');
-  const [booked, setBooked] = useState(false);
-  const times = ['9:00 AM', '10:30 AM', '1:00 PM', '2:30 PM'];
-
-  return (
-    <div style={{minHeight:'100vh',background:'#111',color:'#fff',padding:'24px',fontFamily:'system-ui'}}>
-      <div style={{maxWidth:'400px',margin:'0 auto'}}>
-        <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'24px'}}>
-          <div style={{width:'40px',height:'40px',background:'#22c55e',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'20px'}}>📅</div>
-          <h1 style={{fontSize:'20px',fontWeight:'bold',margin:0}}>Patient Scheduler</h1>
-          <span style={{marginLeft:'auto',padding:'4px 8px',background:'#14532d',color:'#4ade80',fontSize:'11px',borderRadius:'4px'}}>HIPAA</span>
-        </div>
-        
-        {booked && (
-          <div style={{marginBottom:'16px',padding:'12px',background:'#14532d',border:'1px solid #22c55e',borderRadius:'8px',color:'#4ade80',fontSize:'14px'}}>
-            ✓ Appointment booked successfully!
-          </div>
-        )}
-
-        <div style={{marginBottom:'16px'}}>
-          <label style={{fontSize:'12px',color:'#888',display:'block',marginBottom:'8px'}}>SELECT DATE</label>
-          <div style={{padding:'12px',background:'#1f1f1f',border:'1px solid #333',borderRadius:'8px'}}>December 23, 2024</div>
-        </div>
-
-        <div style={{marginBottom:'16px'}}>
-          <label style={{fontSize:'12px',color:'#888',display:'block',marginBottom:'8px'}}>AVAILABLE TIMES</label>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'8px'}}>
-            {times.map(time => (
-              <button key={time} onClick={() => setSelectedTime(time)}
-                style={{padding:'10px',border:selectedTime===time?'none':'1px solid #333',borderRadius:'8px',
-                  background:selectedTime===time?'#22c55e':'#1f1f1f',color:selectedTime===time?'#fff':'#ccc',
-                  cursor:'pointer',fontSize:'12px',fontWeight:'500'}}>
-                {time}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <button onClick={() => setBooked(true)}
-          style={{width:'100%',padding:'14px',background:'#22c55e',color:'#fff',border:'none',borderRadius:'8px',
-            fontSize:'14px',fontWeight:'600',cursor:'pointer'}}>
-          Book Appointment
-        </button>
-      </div>
-    </div>
-  );
-}
-`
-                      }}
-                      options={{
-                        externalResources: []
-                      }}
-                    >
-                      <SandpackPreview 
-                        showNavigator={false}
-                        showOpenInCodeSandbox={false}
-                        style={{ height: "100%", border: "none" }}
-                      />
-                    </SandpackProvider>
+                  <TabsContent value="preview" className="flex-1 m-0 overflow-hidden bg-[#111] p-6">
+                    <LiveDemoPreview sessionId={sessionId} />
                   </TabsContent>
 
                   <TabsContent value="code" className="flex-1 m-0 overflow-hidden">

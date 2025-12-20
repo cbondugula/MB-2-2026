@@ -3,6 +3,9 @@ import { isAuthenticated } from "../replitAuth";
 import { chatToCodeService } from "../chat-to-code-service";
 import { createAuditLogger } from "../audit-logger";
 import { chatRateLimiter, aiGenerationRateLimiter } from "../rate-limiter";
+import { db } from "../db";
+import { demoAppointments } from "@shared/schema";
+import { eq, sql } from "drizzle-orm";
 
 // Helper to get authenticated user ID
 function getUserId(req: any): string {
@@ -13,7 +16,89 @@ function getUserId(req: any): string {
   return userId;
 }
 
+// Seed demo data for a session if none exists
+async function ensureDemoData(sessionId: string) {
+  const existing = await db.select().from(demoAppointments).where(eq(demoAppointments.sessionId, sessionId)).limit(1);
+  
+  if (existing.length === 0) {
+    // Seed initial demo appointments for this session
+    await db.insert(demoAppointments).values([
+      { sessionId, patientName: "Sarah Johnson", service: "General Checkup", date: "2024-12-23", time: "9:00 AM", status: "confirmed" },
+      { sessionId, patientName: "Michael Chen", service: "Vaccination", date: "2024-12-23", time: "10:30 AM", status: "pending" },
+      { sessionId, patientName: "Emily Davis", service: "Lab Work", date: "2024-12-23", time: "2:00 PM", status: "confirmed" },
+    ]);
+  }
+}
+
 export function registerChatToCodeRoutes(app: Express) {
+
+  // Demo API: Get appointments from database
+  app.get("/api/demo/:sessionId/appointments", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      await ensureDemoData(sessionId);
+      
+      const appointments = await db.select().from(demoAppointments)
+        .where(eq(demoAppointments.sessionId, sessionId));
+      
+      const confirmed = appointments.filter(a => a.status === 'confirmed').length;
+      const pending = appointments.filter(a => a.status === 'pending').length;
+      
+      res.json({ 
+        success: true, 
+        data: appointments,
+        stats: { total: appointments.length, confirmed, pending }
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: "Database error" });
+    }
+  });
+
+  // Demo API: Create appointment in database
+  app.post("/api/demo/:sessionId/appointments", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { patientName, service, date, time } = req.body;
+      
+      const [newAppointment] = await db.insert(demoAppointments).values({
+        sessionId,
+        patientName: patientName || "New Patient",
+        service: service || "General Checkup",
+        date: date || new Date().toISOString().split('T')[0],
+        time: time || "9:00 AM",
+        status: "confirmed"
+      }).returning();
+      
+      res.json({ success: true, data: newAppointment });
+    } catch (error) {
+      res.status(500).json({ success: false, error: "Database error" });
+    }
+  });
+
+  // Demo API: Get available times
+  app.get("/api/demo/:sessionId/available-times", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { date } = req.query;
+      const queryDate = (date as string) || new Date().toISOString().split('T')[0];
+      
+      // Check which times are already booked in the database
+      const booked = await db.select({ time: demoAppointments.time })
+        .from(demoAppointments)
+        .where(eq(demoAppointments.sessionId, sessionId));
+      
+      const bookedTimes = new Set(booked.map(b => b.time));
+      const allTimes = ["9:00 AM", "10:30 AM", "1:00 PM", "2:30 PM", "4:00 PM"];
+      
+      res.json({
+        success: true,
+        date: queryDate,
+        times: allTimes.map(time => ({ time, available: !bookedTimes.has(time) }))
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: "Database error" });
+    }
+  });
   
   // Guest demo endpoint - allows trying without authentication
   app.post("/api/chat/demo", chatRateLimiter, async (req, res) => {
