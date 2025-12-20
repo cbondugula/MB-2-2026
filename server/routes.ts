@@ -4899,6 +4899,28 @@ Respond with ONLY valid JSON array, no explanation.`;
     }
   });
 
+  // Executive Intelligence Dashboard - Strategic Metrics
+  app.get('/api/executive/metrics', isAuthenticated, async (req, res) => {
+    try {
+      const metrics = await storage.getExecutiveMetrics();
+      res.json(metrics);
+    } catch (error: any) {
+      console.error("Error fetching executive metrics:", error);
+      res.status(500).json({ message: "Failed to fetch executive metrics" });
+    }
+  });
+
+  app.get('/api/executive/projections', isAuthenticated, async (req, res) => {
+    try {
+      const { scenario } = req.query;
+      const projections = await storage.getRevenueProjections(scenario as string);
+      res.json(projections);
+    } catch (error: any) {
+      console.error("Error fetching projections:", error);
+      res.status(500).json({ message: "Failed to fetch revenue projections" });
+    }
+  });
+
   app.get('/api/example-prompts', async (req, res) => {
     try {
       const { userMode } = req.query;
