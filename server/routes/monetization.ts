@@ -5,19 +5,47 @@ import { z } from "zod";
 
 export const monetizationRouter = Router();
 
-const CREDIT_COSTS = {
-  ai_generation: 100, // $1.00 per generation
-  project_creation: 0, // Free
-  deployment: 500, // $5.00 per deployment
-  export: 200, // $2.00 per export
-};
+async function getCreditCosts(): Promise<Record<string, number>> {
+  return {
+    ai_generation: 100,
+    project_creation: 0,
+    deployment: 500,
+    export: 200,
+  };
+}
 
-const CREDIT_PACKAGES = [
-  { id: 1, name: "Starter Pack", credits: 10, priceInCents: 500, bonusCredits: 0, isPopular: false },
-  { id: 2, name: "Builder Pack", credits: 50, priceInCents: 2000, bonusCredits: 5, isPopular: true },
-  { id: 3, name: "Pro Pack", credits: 200, priceInCents: 6000, bonusCredits: 40, isPopular: false },
-  { id: 4, name: "Enterprise Pack", credits: 1000, priceInCents: 20000, bonusCredits: 300, isPopular: false },
-];
+async function getCreditPackages() {
+  const dbPackages = await storage.getCreditPackages();
+  if (dbPackages.length > 0) {
+    return dbPackages;
+  }
+  return [
+    { id: 1, name: "Starter Pack", credits: 10, priceInCents: 500, bonusCredits: 0, isActive: true, description: "Perfect for trying out MedBuilder" },
+    { id: 2, name: "Builder Pack", credits: 50, priceInCents: 2000, bonusCredits: 5, isActive: true, description: "Most popular for active builders" },
+    { id: 3, name: "Pro Pack", credits: 200, priceInCents: 6000, bonusCredits: 40, isActive: true, description: "For professional healthcare developers" },
+    { id: 4, name: "Enterprise Pack", credits: 1000, priceInCents: 20000, bonusCredits: 300, isActive: true, description: "For teams and organizations" },
+  ];
+}
+
+monetizationRouter.get("/credit-packages", async (req, res) => {
+  try {
+    const packages = await getCreditPackages();
+    res.json({ packages });
+  } catch (error: any) {
+    console.error("Error fetching credit packages:", error);
+    res.status(500).json({ error: "Failed to fetch packages" });
+  }
+});
+
+monetizationRouter.get("/credit-costs", async (req, res) => {
+  try {
+    const costs = await getCreditCosts();
+    res.json({ costs });
+  } catch (error: any) {
+    console.error("Error fetching credit costs:", error);
+    res.status(500).json({ error: "Failed to fetch costs" });
+  }
+});
 
 monetizationRouter.post("/guest-session", async (req, res) => {
   try {
@@ -71,8 +99,9 @@ monetizationRouter.get("/guest-session/:sessionId", async (req, res) => {
 monetizationRouter.post("/use-credit", async (req, res) => {
   try {
     const { sessionId, userId, creditType } = req.body;
+    const creditCosts = await getCreditCosts();
 
-    if (!creditType || !CREDIT_COSTS[creditType as keyof typeof CREDIT_COSTS]) {
+    if (!creditType || creditCosts[creditType] === undefined) {
       return res.status(400).json({ error: "Invalid credit type" });
     }
 
@@ -103,7 +132,7 @@ monetizationRouter.post("/use-credit", async (req, res) => {
         return res.status(404).json({ error: "User quota not found" });
       }
 
-      const cost = CREDIT_COSTS[creditType as keyof typeof CREDIT_COSTS];
+      const cost = creditCosts[creditType];
       
       if (creditType === "ai_generation") {
         if ((quota.aiCallsUsed || 0) >= (quota.aiCallsLimit || 50)) {
@@ -133,21 +162,13 @@ monetizationRouter.post("/use-credit", async (req, res) => {
   }
 });
 
-monetizationRouter.get("/credit-packages", async (req, res) => {
-  try {
-    res.json(CREDIT_PACKAGES);
-  } catch (error: any) {
-    console.error("Error fetching credit packages:", error);
-    res.status(500).json({ error: "Failed to fetch packages" });
-  }
-});
-
 monetizationRouter.post("/purchase-credits", async (req: any, res) => {
   try {
     const { packageId, sessionId } = req.body;
     const userId = req.user?.claims?.sub;
 
-    const pkg = CREDIT_PACKAGES.find(p => p.id === packageId);
+    const packages = await getCreditPackages();
+    const pkg = packages.find(p => p.id === packageId);
     if (!pkg) {
       return res.status(400).json({ error: "Invalid package" });
     }

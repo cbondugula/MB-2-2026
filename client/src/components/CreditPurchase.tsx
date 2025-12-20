@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Coins, Zap, Rocket, Building, Check, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { loadStripe } from "@stripe/stripe-js";
@@ -11,48 +11,22 @@ import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "");
 
-const CREDIT_PACKAGES = [
-  { 
-    id: 1, 
-    name: "Starter Pack", 
-    credits: 10, 
-    priceInCents: 500, 
-    bonusCredits: 0, 
-    isPopular: false,
-    icon: Coins,
-    description: "Perfect for trying out MedBuilder"
-  },
-  { 
-    id: 2, 
-    name: "Builder Pack", 
-    credits: 50, 
-    priceInCents: 2000, 
-    bonusCredits: 5, 
-    isPopular: true,
-    icon: Zap,
-    description: "Most popular for active builders"
-  },
-  { 
-    id: 3, 
-    name: "Pro Pack", 
-    credits: 200, 
-    priceInCents: 6000, 
-    bonusCredits: 40, 
-    isPopular: false,
-    icon: Rocket,
-    description: "For professional healthcare developers"
-  },
-  { 
-    id: 4, 
-    name: "Enterprise Pack", 
-    credits: 1000, 
-    priceInCents: 20000, 
-    bonusCredits: 300, 
-    isPopular: false,
-    icon: Building,
-    description: "For teams and organizations"
-  },
-];
+interface CreditPackageData {
+  id: number;
+  name: string;
+  credits: number;
+  priceInCents: number;
+  bonusCredits: number;
+  isActive?: boolean;
+  description?: string;
+}
+
+const PACKAGE_ICONS: Record<number, any> = {
+  1: Coins,
+  2: Zap,
+  3: Rocket,
+  4: Building,
+};
 
 function PaymentForm({ 
   clientSecret, 
@@ -120,9 +94,16 @@ interface CreditPurchaseProps {
 }
 
 export function CreditPurchase({ sessionId, onPurchaseComplete, trigger }: CreditPurchaseProps) {
-  const [selectedPackage, setSelectedPackage] = useState<typeof CREDIT_PACKAGES[0] | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<CreditPackageData | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const { data: packagesData, isLoading: packagesLoading } = useQuery<{ packages: CreditPackageData[] }>({
+    queryKey: ["/api/monetization/credit-packages"],
+    enabled: isOpen,
+  });
+
+  const creditPackages = useMemo(() => packagesData?.packages || [], [packagesData]);
 
   const purchaseMutation = useMutation({
     mutationFn: async (packageId: number) => {
@@ -137,7 +118,7 @@ export function CreditPurchase({ sessionId, onPurchaseComplete, trigger }: Credi
     },
   });
 
-  const handleSelectPackage = (pkg: typeof CREDIT_PACKAGES[0]) => {
+  const handleSelectPackage = (pkg: CreditPackageData) => {
     setSelectedPackage(pkg);
     purchaseMutation.mutate(pkg.id);
   };
@@ -163,22 +144,30 @@ export function CreditPurchase({ sessionId, onPurchaseComplete, trigger }: Credi
       <DialogContent className="max-w-3xl bg-gray-900 border-gray-700">
         <DialogHeader>
           <DialogTitle className="text-white text-xl">Purchase Credits</DialogTitle>
+          <DialogDescription className="text-gray-400">
+            Choose a credit package to continue building healthcare apps
+          </DialogDescription>
         </DialogHeader>
 
-        {!clientSecret ? (
+        {packagesLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-emerald-500" />
+          </div>
+        ) : !clientSecret ? (
           <div className="grid grid-cols-2 gap-4 mt-4">
-            {CREDIT_PACKAGES.map((pkg) => {
-              const Icon = pkg.icon;
+            {creditPackages.map((pkg) => {
+              const Icon = PACKAGE_ICONS[pkg.id] || Coins;
+              const isPopular = pkg.id === 2;
               return (
                 <Card 
                   key={pkg.id}
                   className={`bg-gray-800 border-2 cursor-pointer transition-all hover:border-emerald-500 ${
-                    pkg.isPopular ? "border-emerald-500" : "border-gray-700"
+                    isPopular ? "border-emerald-500" : "border-gray-700"
                   } ${selectedPackage?.id === pkg.id ? "ring-2 ring-emerald-400" : ""}`}
                   onClick={() => handleSelectPackage(pkg)}
                   data-testid={`credit-package-${pkg.id}`}
                 >
-                  {pkg.isPopular && (
+                  {isPopular && (
                     <div className="absolute -top-2 right-4">
                       <Badge className="bg-emerald-600 text-white text-xs">Popular</Badge>
                     </div>
