@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Code, Sparkles, Cpu, Send, Calendar, Users, FileText, Clock, ChevronRight } from "lucide-react";
+import { Code, Sparkles, Send, Calendar, Users, FileText, Clock, Shield, Zap, CheckCircle, ArrowRight, Play } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -13,6 +13,7 @@ export default function Landing() {
   const [prompt, setPrompt] = useState('');
   const [showChat, setShowChat] = useState(false);
   const [guestSessionId, setGuestSessionId] = useState<string | null>(null);
+  const [selectedExample, setSelectedExample] = useState<number | null>(null);
 
   const createGuestSession = useMutation({
     mutationFn: async () => {
@@ -44,105 +45,117 @@ export default function Landing() {
     setShowChat(true);
   };
 
+  const handleExampleClick = (example: string, index: number) => {
+    setSelectedExample(index);
+    setPrompt(example);
+    setTimeout(() => setShowChat(true), 300);
+  };
+
+  const examples = [
+    {
+      title: "Patient Scheduler",
+      prompt: "Create a patient appointment booking system with available time slots, doctor selection, and appointment reminders",
+      icon: Calendar,
+      color: "text-blue-400"
+    },
+    {
+      title: "Intake Forms",
+      prompt: "Build a secure patient intake form that collects medical history, insurance information, and consent signatures",
+      icon: FileText,
+      color: "text-green-400"
+    },
+    {
+      title: "Telehealth Room",
+      prompt: "Create a telehealth virtual waiting room where patients check in and wait for their video consultation",
+      icon: Users,
+      color: "text-purple-400"
+    }
+  ];
+
   return (
-    <div className="h-screen bg-gray-900 text-white font-mono flex flex-col overflow-hidden">
+    <div className="h-screen bg-[#0a0a0f] text-white font-sans flex flex-col overflow-hidden">
       {/* Minimal Header */}
-      <header className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex items-center justify-between shrink-0">
+      <header className="bg-[#0a0a0f]/80 backdrop-blur-md border-b border-gray-800/50 px-6 py-3 flex items-center justify-between shrink-0 z-50">
         <div className="flex items-center space-x-3">
-          <div className="w-7 h-7 bg-green-500 rounded flex items-center justify-center">
-            <Code className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-lg shadow-green-500/20">
+            <Code className="w-5 h-5 text-white" />
           </div>
-          <span className="text-lg font-semibold">MedBuilder</span>
-          <Badge className="bg-green-900/50 text-green-400 text-xs">AI</Badge>
+          <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">MedBuilder</span>
         </div>
-        <Button 
-          asChild
-          variant="ghost"
-          size="sm"
-          className="text-gray-400 hover:text-white"
-        >
-          <Link href="/pricing">Pricing</Link>
-        </Button>
+        <div className="flex items-center gap-3">
+          <Badge className="bg-green-500/10 text-green-400 border border-green-500/20 text-xs">
+            3 Free Builds
+          </Badge>
+          <Button asChild variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+            <Link href="/pricing">Pricing</Link>
+          </Button>
+        </div>
       </header>
 
       {/* Main Split View */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Panel - Chat Input */}
-        <div className="w-1/2 border-r border-gray-700 flex flex-col bg-gray-900">
-          {/* Chat Header */}
-          <div className="px-4 py-3 border-b border-gray-800">
-            <h2 className="text-sm font-medium text-gray-300">Describe your healthcare app</h2>
-          </div>
-          
-          {/* Chat Area */}
-          <ScrollArea className="flex-1 p-4">
+        {/* Left Panel - Chat */}
+        <div className="w-1/2 border-r border-gray-800/50 flex flex-col bg-[#0a0a0f]">
+          {/* Hero Section */}
+          <div className="px-8 py-8 border-b border-gray-800/30">
             <div className="space-y-4">
-              {/* Welcome Message */}
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </div>
-                <div className="flex-1 bg-gray-800 rounded-lg p-4 text-sm text-gray-300">
-                  <p className="mb-3">Hi! I can build healthcare apps for you. Just describe what you need:</p>
-                  <ul className="space-y-2 text-gray-400">
-                    <li className="flex items-center gap-2">
-                      <ChevronRight className="w-3 h-3 text-green-500" />
-                      Patient scheduling systems
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <ChevronRight className="w-3 h-3 text-green-500" />
-                      Intake forms & questionnaires
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <ChevronRight className="w-3 h-3 text-green-500" />
-                      Telehealth & video chat
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <ChevronRight className="w-3 h-3 text-green-500" />
-                      Patient portals & dashboards
-                    </li>
-                  </ul>
-                </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-full">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                <span className="text-xs text-green-400 font-medium">AI-Powered Healthcare Apps</span>
               </div>
-
-              {/* Example Prompts */}
-              <div className="space-y-2">
-                <p className="text-xs text-gray-500 px-2">Try an example:</p>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => setPrompt("I need a patient appointment system where patients can book visits, see available times, and get reminders")}
-                    className="w-full text-left p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-white transition-colors"
-                    data-testid="example-prompt-0"
-                  >
-                    "I need a patient appointment system..."
-                  </button>
-                  <button
-                    onClick={() => setPrompt("Build me a patient intake form that collects medical history, insurance info, and consent signatures")}
-                    className="w-full text-left p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-white transition-colors"
-                    data-testid="example-prompt-1"
-                  >
-                    "Build me a patient intake form..."
-                  </button>
-                  <button
-                    onClick={() => setPrompt("Create a telehealth waiting room where patients check in and wait for their video appointment")}
-                    className="w-full text-left p-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-white transition-colors"
-                    data-testid="example-prompt-2"
-                  >
-                    "Create a telehealth waiting room..."
-                  </button>
-                </div>
-              </div>
+              <h1 className="text-3xl font-bold leading-tight">
+                Build HIPAA-Compliant Apps
+                <span className="block text-green-400">In Seconds</span>
+              </h1>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                Describe your healthcare app idea. Our AI generates production-ready code with built-in compliance.
+              </p>
             </div>
-          </ScrollArea>
+          </div>
+
+          {/* Example Cards */}
+          <div className="px-6 py-4">
+            <p className="text-xs text-gray-500 uppercase tracking-wider mb-3 font-medium">Quick Start Templates</p>
+            <div className="space-y-2">
+              {examples.map((example, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleExampleClick(example.prompt, index)}
+                  className={`w-full text-left p-4 rounded-xl border transition-all duration-300 group ${
+                    selectedExample === index 
+                      ? 'bg-green-500/10 border-green-500/30' 
+                      : 'bg-gray-900/50 border-gray-800 hover:border-gray-700 hover:bg-gray-900'
+                  }`}
+                  data-testid={`example-prompt-${index}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center ${example.color} group-hover:scale-110 transition-transform`}>
+                      <example.icon className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-white text-sm">{example.title}</span>
+                        <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-green-400 group-hover:translate-x-1 transition-all" />
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-2">{example.prompt}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Input Area */}
-          <div className="p-4 border-t border-gray-800">
+          <div className="mt-auto p-4 border-t border-gray-800/50">
             <div className="relative">
               <Textarea
-                placeholder="Describe the healthcare app you want to build..."
+                placeholder="Or describe your own healthcare app..."
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="w-full h-24 bg-gray-800 border-gray-700 text-white placeholder-gray-500 resize-none pr-12 rounded-lg"
+                className="w-full h-20 bg-gray-900/50 border-gray-800 text-white placeholder-gray-500 resize-none pr-14 rounded-xl focus:border-green-500/50 focus:ring-1 focus:ring-green-500/20"
                 data-testid="input-prompt"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
@@ -154,97 +167,137 @@ export default function Landing() {
                 onClick={handleGenerate}
                 disabled={!prompt.trim()}
                 size="icon"
-                className="absolute bottom-3 right-3 bg-green-600 hover:bg-green-700 h-8 w-8"
+                className="absolute bottom-3 right-3 bg-green-600 hover:bg-green-500 h-9 w-9 rounded-lg shadow-lg shadow-green-500/20 disabled:opacity-50 disabled:shadow-none"
                 data-testid="button-generate"
               >
                 <Send className="w-4 h-4" />
               </Button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">Press Ctrl+Enter to generate</p>
+            <div className="flex items-center justify-between mt-2 px-1">
+              <span className="text-xs text-gray-600">Ctrl+Enter to generate</span>
+              <div className="flex items-center gap-1 text-xs text-gray-600">
+                <Shield className="w-3 h-3" />
+                <span>HIPAA Ready</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Right Panel - Preview */}
-        <div className="w-1/2 bg-gray-950 flex flex-col">
+        {/* Right Panel - Live Preview */}
+        <div className="w-1/2 bg-[#0d0d12] flex flex-col">
           {/* Preview Header */}
-          <div className="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          <div className="px-4 py-3 border-b border-gray-800/50 flex items-center justify-between bg-[#0a0a0f]">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+              </div>
+              <span className="text-xs text-gray-500 font-medium">Live Preview</span>
             </div>
-            <span className="text-xs text-gray-500">Preview</span>
+            <Badge className="bg-green-500/10 text-green-400 border-0 text-xs">
+              <span className="relative flex h-1.5 w-1.5 mr-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+              </span>
+              Ready
+            </Badge>
           </div>
 
-          {/* Preview Content - Sample Healthcare App */}
-          <div className="flex-1 p-6 overflow-auto">
-            <div className="max-w-md mx-auto space-y-6">
-              {/* Sample App Header */}
-              <div className="text-center space-y-2">
-                <div className="w-12 h-12 bg-blue-600 rounded-xl mx-auto flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-white">Patient Scheduler</h3>
-                <p className="text-sm text-gray-400">Book your appointment</p>
-              </div>
+          {/* Preview Content */}
+          <div className="flex-1 p-8 overflow-auto flex items-center justify-center">
+            <div className="w-full max-w-sm">
+              {/* Device Frame */}
+              <div className="bg-gray-900 rounded-3xl p-2 shadow-2xl shadow-black/50 border border-gray-800">
+                <div className="bg-[#12121a] rounded-2xl overflow-hidden">
+                  {/* App Header */}
+                  <div className="px-5 py-4 border-b border-gray-800/50 bg-gradient-to-r from-green-600/10 to-emerald-600/10">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                          <Calendar className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="font-semibold text-white text-sm">HealthSchedule</span>
+                      </div>
+                      <Badge className="bg-green-500/20 text-green-400 border-0 text-[10px]">HIPAA</Badge>
+                    </div>
+                  </div>
 
-              {/* Sample Form */}
-              <div className="space-y-4 bg-gray-800/50 rounded-xl p-5 border border-gray-700">
-                <div>
-                  <label className="text-xs text-gray-400 mb-1 block">Select Service</label>
-                  <div className="bg-gray-800 border border-gray-600 rounded-lg p-3 text-sm text-white">
-                    General Checkup
+                  {/* App Content */}
+                  <div className="p-5 space-y-4">
+                    <div>
+                      <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Select Service</label>
+                      <div className="mt-2 bg-gray-800/50 border border-gray-700/50 rounded-xl p-3 text-sm text-white flex items-center justify-between">
+                        <span>General Checkup</span>
+                        <ChevronDown className="w-4 h-4 text-gray-500" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Choose Date</label>
+                      <div className="mt-2 bg-gray-800/50 border border-gray-700/50 rounded-xl p-3 text-sm text-white flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <span>December 23, 2024</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Available Times</label>
+                      <div className="mt-2 grid grid-cols-3 gap-2">
+                        {['9:00 AM', '10:30 AM', '2:00 PM'].map((time, i) => (
+                          <button
+                            key={time}
+                            className={`rounded-xl p-2.5 text-xs font-medium transition-all ${
+                              i === 0 
+                                ? 'bg-green-600 text-white shadow-lg shadow-green-500/20' 
+                                : 'bg-gray-800/50 border border-gray-700/50 text-gray-300 hover:border-gray-600'
+                            }`}
+                          >
+                            {time}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-xl py-3.5 text-sm font-semibold transition-all shadow-lg shadow-green-500/20">
+                      Book Appointment
+                    </button>
+                  </div>
+
+                  {/* App Stats */}
+                  <div className="px-5 py-4 border-t border-gray-800/50 bg-gray-900/30">
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-white">247</div>
+                        <div className="text-[10px] text-gray-500">Patients</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-white">89</div>
+                        <div className="text-[10px] text-gray-500">Today</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-white">12m</div>
+                        <div className="text-[10px] text-gray-500">Avg Wait</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <label className="text-xs text-gray-400 mb-1 block">Choose Date</label>
-                  <div className="bg-gray-800 border border-gray-600 rounded-lg p-3 text-sm text-white flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-gray-400" />
-                    December 23, 2024
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs text-gray-400 mb-1 block">Available Times</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {['9:00 AM', '10:30 AM', '2:00 PM'].map((time) => (
-                      <button
-                        key={time}
-                        className="bg-gray-800 border border-gray-600 hover:border-green-500 rounded-lg p-2 text-xs text-gray-300 hover:text-white transition-colors"
-                      >
-                        {time}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <button className="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg py-3 text-sm font-medium transition-colors">
-                  Book Appointment
-                </button>
               </div>
 
-              {/* Sample Stats */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-gray-800/50 rounded-lg p-3 text-center border border-gray-700">
-                  <Users className="w-5 h-5 text-blue-400 mx-auto mb-1" />
-                  <p className="text-lg font-bold text-white">247</p>
-                  <p className="text-xs text-gray-500">Patients</p>
+              {/* Trust Indicators */}
+              <div className="flex items-center justify-center gap-4 mt-6">
+                <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <Shield className="w-3.5 h-3.5 text-green-500" />
+                  <span>HIPAA</span>
                 </div>
-                <div className="bg-gray-800/50 rounded-lg p-3 text-center border border-gray-700">
-                  <FileText className="w-5 h-5 text-green-400 mx-auto mb-1" />
-                  <p className="text-lg font-bold text-white">89</p>
-                  <p className="text-xs text-gray-500">Today</p>
+                <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <Zap className="w-3.5 h-3.5 text-blue-500" />
+                  <span>Instant</span>
                 </div>
-                <div className="bg-gray-800/50 rounded-lg p-3 text-center border border-gray-700">
-                  <Clock className="w-5 h-5 text-purple-400 mx-auto mb-1" />
-                  <p className="text-lg font-bold text-white">12m</p>
-                  <p className="text-xs text-gray-500">Avg Wait</p>
+                <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <CheckCircle className="w-3.5 h-3.5 text-purple-500" />
+                  <span>Secure</span>
                 </div>
-              </div>
-
-              {/* HIPAA Badge */}
-              <div className="flex justify-center">
-                <Badge className="bg-green-900/30 text-green-400 border border-green-800">
-                  HIPAA Compliant
-                </Badge>
               </div>
             </div>
           </div>
@@ -256,10 +309,21 @@ export default function Landing() {
         <ChatToCodeDemo 
           initialPrompt={prompt}
           sessionId={guestSessionId || undefined}
-          onClose={() => setShowChat(false)}
+          onClose={() => {
+            setShowChat(false);
+            setSelectedExample(null);
+          }}
           onComplete={(code) => console.log("Generated:", code)}
         />
       )}
     </div>
+  );
+}
+
+function ChevronDown({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    </svg>
   );
 }
