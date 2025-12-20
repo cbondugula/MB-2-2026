@@ -466,11 +466,61 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
                       template="react"
                       theme="dark"
                       files={{
-                        "/App.js": generatedCode.code["App.tsx"] || generatedCode.code["App.js"] || Object.values(generatedCode.code)[0],
-                        "/styles.css": generatedCode.code["index.css"] || ""
+                        "/App.js": `
+import { useState } from 'react';
+
+export default function App() {
+  const [selectedTime, setSelectedTime] = useState('9:00 AM');
+  const [booked, setBooked] = useState(false);
+  const times = ['9:00 AM', '10:30 AM', '1:00 PM', '2:30 PM'];
+
+  return (
+    <div style={{minHeight:'100vh',background:'#111',color:'#fff',padding:'24px',fontFamily:'system-ui'}}>
+      <div style={{maxWidth:'400px',margin:'0 auto'}}>
+        <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'24px'}}>
+          <div style={{width:'40px',height:'40px',background:'#22c55e',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'20px'}}>📅</div>
+          <h1 style={{fontSize:'20px',fontWeight:'bold',margin:0}}>Patient Scheduler</h1>
+          <span style={{marginLeft:'auto',padding:'4px 8px',background:'#14532d',color:'#4ade80',fontSize:'11px',borderRadius:'4px'}}>HIPAA</span>
+        </div>
+        
+        {booked && (
+          <div style={{marginBottom:'16px',padding:'12px',background:'#14532d',border:'1px solid #22c55e',borderRadius:'8px',color:'#4ade80',fontSize:'14px'}}>
+            ✓ Appointment booked successfully!
+          </div>
+        )}
+
+        <div style={{marginBottom:'16px'}}>
+          <label style={{fontSize:'12px',color:'#888',display:'block',marginBottom:'8px'}}>SELECT DATE</label>
+          <div style={{padding:'12px',background:'#1f1f1f',border:'1px solid #333',borderRadius:'8px'}}>December 23, 2024</div>
+        </div>
+
+        <div style={{marginBottom:'16px'}}>
+          <label style={{fontSize:'12px',color:'#888',display:'block',marginBottom:'8px'}}>AVAILABLE TIMES</label>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'8px'}}>
+            {times.map(time => (
+              <button key={time} onClick={() => setSelectedTime(time)}
+                style={{padding:'10px',border:selectedTime===time?'none':'1px solid #333',borderRadius:'8px',
+                  background:selectedTime===time?'#22c55e':'#1f1f1f',color:selectedTime===time?'#fff':'#ccc',
+                  cursor:'pointer',fontSize:'12px',fontWeight:'500'}}>
+                {time}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <button onClick={() => setBooked(true)}
+          style={{width:'100%',padding:'14px',background:'#22c55e',color:'#fff',border:'none',borderRadius:'8px',
+            fontSize:'14px',fontWeight:'600',cursor:'pointer'}}>
+          Book Appointment
+        </button>
+      </div>
+    </div>
+  );
+}
+`
                       }}
                       options={{
-                        externalResources: ["https://cdn.tailwindcss.com"]
+                        externalResources: []
                       }}
                     >
                       <SandpackPreview 
