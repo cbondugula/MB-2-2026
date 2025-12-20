@@ -263,6 +263,231 @@ body { font-family: system-ui, sans-serif; }`
     techStack: { framework: "React", language: "TypeScript", styling: "Tailwind CSS" },
     explanation: "Built a telehealth waiting room with countdown timer and video call integration",
     nextSteps: ["WebRTC video", "Chat messaging", "Screen sharing"]
+  },
+  wellness: {
+    code: {
+      "App.tsx": `import { useState } from 'react';
+
+export default function WellnessTracker() {
+  const [mood, setMood] = useState(3);
+  const [water, setWater] = useState(4);
+  const [steps, setSteps] = useState(6847);
+  const [logged, setLogged] = useState(false);
+
+  const moods = ['😢', '😕', '😐', '🙂', '😊'];
+  
+  const handleLog = () => {
+    setLogged(true);
+    setTimeout(() => setLogged(false), 3000);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="max-w-md mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+            <span className="text-xl">💜</span>
+          </div>
+          <h1 className="text-xl font-bold">Wellness Tracker</h1>
+          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded">HIPAA</span>
+        </div>
+
+        {logged && (
+          <div className="mb-4 p-3 bg-purple-900/50 border border-purple-600 rounded-lg text-purple-300 text-sm">
+            ✓ Daily wellness logged successfully!
+          </div>
+        )}
+
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="bg-gray-800 rounded-xl p-4 text-center">
+            <div className="text-2xl mb-1">{moods[mood]}</div>
+            <div className="text-xs text-gray-400">Mood</div>
+          </div>
+          <div className="bg-gray-800 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-blue-400">{water}</div>
+            <div className="text-xs text-gray-400">Glasses 💧</div>
+          </div>
+          <div className="bg-gray-800 rounded-xl p-4 text-center">
+            <div className="text-lg font-bold text-green-400">{steps.toLocaleString()}</div>
+            <div className="text-xs text-gray-400">Steps 👟</div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm text-gray-400 mb-2 block">How are you feeling today?</label>
+            <div className="flex justify-between bg-gray-800 rounded-lg p-3">
+              {moods.map((emoji, i) => (
+                <button key={i} onClick={() => setMood(i)}
+                  className={\`text-2xl p-2 rounded-lg transition-all \${mood === i ? 'bg-purple-600 scale-110' : 'hover:bg-gray-700'}\`}>
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-400 mb-2 block">Water intake</label>
+            <div className="flex gap-2">
+              {[...Array(8)].map((_, i) => (
+                <button key={i} onClick={() => setWater(i + 1)}
+                  className={\`flex-1 h-8 rounded transition-all \${i < water ? 'bg-blue-500' : 'bg-gray-700'}\`} />
+              ))}
+            </div>
+          </div>
+
+          <button onClick={handleLog}
+            className="w-full py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-semibold transition-all">
+            Log Today's Wellness
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}`,
+      "index.css": `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; }`
+    },
+    dependencies: { "react": "^18.0.0" },
+    techStack: { framework: "React", language: "TypeScript", styling: "Tailwind CSS" },
+    explanation: "Built a wellness tracking app with mood, hydration, and activity monitoring",
+    nextSteps: ["Health goals", "Weekly reports", "Wearable sync"]
+  },
+  pharmacy: {
+    code: {
+      "App.tsx": `import { useState } from 'react';
+
+export default function PharmacyPortal() {
+  const [medications, setMedications] = useState([
+    { name: 'Lisinopril 10mg', refills: 2, dueDate: '2024-12-28', status: 'ready' },
+    { name: 'Metformin 500mg', refills: 3, dueDate: '2025-01-05', status: 'pending' },
+    { name: 'Atorvastatin 20mg', refills: 1, dueDate: '2024-12-30', status: 'ready' }
+  ]);
+  const [refillRequested, setRefillRequested] = useState('');
+
+  const handleRefill = (name: string) => {
+    setRefillRequested(name);
+    setTimeout(() => setRefillRequested(''), 3000);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="max-w-md mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
+            <span className="text-xl">💊</span>
+          </div>
+          <h1 className="text-xl font-bold">My Medications</h1>
+          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded">HIPAA</span>
+        </div>
+
+        {refillRequested && (
+          <div className="mb-4 p-3 bg-orange-900/50 border border-orange-600 rounded-lg text-orange-300 text-sm">
+            ✓ Refill requested for {refillRequested}!
+          </div>
+        )}
+
+        <div className="space-y-3">
+          {medications.map((med, i) => (
+            <div key={i} className="bg-gray-800 rounded-xl p-4">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <div className="font-semibold">{med.name}</div>
+                  <div className="text-sm text-gray-400">{med.refills} refills remaining</div>
+                </div>
+                <span className={\`px-2 py-1 text-xs rounded \${med.status === 'ready' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}\`}>
+                  {med.status === 'ready' ? '✓ Ready' : '⏳ Pending'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center mt-3">
+                <span className="text-xs text-gray-500">Due: {med.dueDate}</span>
+                <button onClick={() => handleRefill(med.name)}
+                  className="px-3 py-1 bg-orange-600 hover:bg-orange-500 rounded text-sm font-medium">
+                  Request Refill
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}`,
+      "index.css": `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; }`
+    },
+    dependencies: { "react": "^18.0.0" },
+    techStack: { framework: "React", language: "TypeScript", styling: "Tailwind CSS" },
+    explanation: "Built a pharmacy portal for medication management and refill requests",
+    nextSteps: ["Pharmacy finder", "Drug interactions", "Insurance check"]
+  },
+  lab: {
+    code: {
+      "App.tsx": `import { useState } from 'react';
+
+export default function LabResults() {
+  const [selectedTest, setSelectedTest] = useState(0);
+  const results = [
+    { name: 'Complete Blood Count', date: '2024-12-18', status: 'normal', values: [{name: 'WBC', value: '7.2', unit: 'K/uL', range: '4.5-11.0'}, {name: 'RBC', value: '4.8', unit: 'M/uL', range: '4.5-5.5'}] },
+    { name: 'Lipid Panel', date: '2024-12-15', status: 'attention', values: [{name: 'LDL', value: '142', unit: 'mg/dL', range: '<100'}, {name: 'HDL', value: '52', unit: 'mg/dL', range: '>40'}] },
+    { name: 'Glucose', date: '2024-12-10', status: 'normal', values: [{name: 'Fasting', value: '95', unit: 'mg/dL', range: '70-100'}] }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="max-w-md mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-cyan-600 rounded-lg flex items-center justify-center">
+            <span className="text-xl">🔬</span>
+          </div>
+          <h1 className="text-xl font-bold">Lab Results</h1>
+          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded">HIPAA</span>
+        </div>
+
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+          {results.map((r, i) => (
+            <button key={i} onClick={() => setSelectedTest(i)}
+              className={\`px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-all \${selectedTest === i ? 'bg-cyan-600' : 'bg-gray-800 hover:bg-gray-700'}\`}>
+              {r.name}
+            </button>
+          ))}
+        </div>
+
+        <div className="bg-gray-800 rounded-xl p-4">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <div className="font-semibold">{results[selectedTest].name}</div>
+              <div className="text-sm text-gray-400">{results[selectedTest].date}</div>
+            </div>
+            <span className={\`px-2 py-1 text-xs rounded \${results[selectedTest].status === 'normal' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}\`}>
+              {results[selectedTest].status === 'normal' ? '✓ Normal' : '⚠ Review'}
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {results[selectedTest].values.map((v, i) => (
+              <div key={i} className="flex justify-between items-center py-2 border-b border-gray-700">
+                <span className="text-gray-300">{v.name}</span>
+                <div className="text-right">
+                  <span className="font-mono font-semibold">{v.value}</span>
+                  <span className="text-gray-500 text-sm ml-1">{v.unit}</span>
+                  <div className="text-xs text-gray-500">Range: {v.range}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}`,
+      "index.css": `* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; }`
+    },
+    dependencies: { "react": "^18.0.0" },
+    techStack: { framework: "React", language: "TypeScript", styling: "Tailwind CSS" },
+    explanation: "Built a lab results viewer with test history and value analysis",
+    nextSteps: ["PDF download", "Trend charts", "Doctor notes"]
   }
 };
 
@@ -419,8 +644,11 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
     
     // Pattern matching for different healthcare app types
     const patterns: Record<string, string[]> = {
-      intake: ["intake", "registration", "onboard", "new patient", "sign up", "enroll", "checkin", "check-in", "admission", "history", "medical record"],
-      telehealth: ["telehealth", "telemedicine", "video", "virtual", "waiting room", "remote", "call", "consult", "online visit", "virtual care"],
+      wellness: ["wellness", "health", "fitness", "mood", "mental", "meditation", "sleep", "stress", "mindful", "exercise", "nutrition", "diet", "weight", "tracker", "habit", "lifestyle", "self-care", "wellbeing"],
+      pharmacy: ["pharmacy", "medication", "medicine", "prescription", "refill", "drug", "pill", "rx", "dose", "dosage", "pharma"],
+      lab: ["lab", "laboratory", "test", "result", "blood", "diagnostic", "pathology", "specimen", "sample", "panel", "screening"],
+      intake: ["intake", "registration", "onboard", "new patient", "sign up", "enroll", "checkin", "check-in", "admission", "history", "medical record", "form", "questionnaire"],
+      telehealth: ["telehealth", "telemedicine", "video", "virtual", "waiting room", "remote", "call", "consult", "online visit", "virtual care", "video chat"],
       scheduler: ["schedule", "appointment", "booking", "book", "calendar", "slot", "time", "doctor", "visit", "reminder"]
     };
     
@@ -438,7 +666,9 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
     
     // If no specific match found, try to infer from context
     if (bestScore === 0) {
-      if (prompt.includes("form") || prompt.includes("data") || prompt.includes("collect")) {
+      if (prompt.includes("app") && (prompt.includes("health") || prompt.includes("care"))) {
+        bestMatch = "wellness";
+      } else if (prompt.includes("form") || prompt.includes("data") || prompt.includes("collect")) {
         bestMatch = "intake";
       } else if (prompt.includes("connect") || prompt.includes("meet") || prompt.includes("talk")) {
         bestMatch = "telehealth";
