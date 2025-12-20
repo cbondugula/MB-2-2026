@@ -127,6 +127,18 @@ import {
   type PlatformFeature,
   type QuickAction,
   type AuditLog,
+  guestSessions,
+  usageCredits,
+  creditPackages,
+  usageQuotas,
+  type GuestSession,
+  type InsertGuestSession,
+  type UsageCredit,
+  type InsertUsageCredit,
+  type CreditPackage,
+  type InsertCreditPackage,
+  type UsageQuota,
+  type InsertUsageQuota,
   insertHealthcareDomainSchema,
   insertHealthcareAgentSchema,
   insertHealthcareStandardSchema,
@@ -418,6 +430,28 @@ export interface IStorage {
   getVulnerablePackages(projectId: number): Promise<PackageHealth[]>;
   createPackageHealth(data: InsertPackageHealth): Promise<PackageHealth>;
   deletePackageHealth(projectId: number, packageName: string): Promise<void>;
+  
+  // Guest Session operations (for frictionless signup)
+  createGuestSession(session: InsertGuestSession): Promise<GuestSession>;
+  getGuestSession(sessionId: string): Promise<GuestSession | undefined>;
+  useGuestCredit(sessionId: string): Promise<void>;
+  addGuestCredits(sessionId: string, credits: number): Promise<void>;
+  convertGuestToUser(sessionId: string, userId: string): Promise<void>;
+  
+  // Usage Quota operations
+  getUserQuota(userId: string): Promise<UsageQuota | undefined>;
+  createUserQuota(quota: InsertUsageQuota): Promise<UsageQuota>;
+  incrementAiCalls(userId: string): Promise<void>;
+  addCredits(userId: string, credits: number): Promise<void>;
+  deductCredits(userId: string, credits: number): Promise<void>;
+  
+  // Usage Credit tracking
+  recordCreditUsage(credit: InsertUsageCredit): Promise<UsageCredit>;
+  getCreditHistory(userId: string, limit?: number): Promise<UsageCredit[]>;
+  
+  // Credit Packages
+  getCreditPackages(): Promise<CreditPackage[]>;
+  getCreditPackage(id: number): Promise<CreditPackage | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -2489,6 +2523,111 @@ This agreement incorporates organization-specific requirements and automatically
         eq(packageHealth.projectId, projectId),
         eq(packageHealth.packageName, packageName)
       ));
+  }
+
+  // Guest Session operations (for frictionless signup)
+  async createGuestSession(session: InsertGuestSession): Promise<GuestSession> {
+    const [newSession] = await db.insert(guestSessions).values(session).returning();
+    return newSession;
+  }
+
+  async getGuestSession(sessionId: string): Promise<GuestSession | undefined> {
+    const [session] = await db.select().from(guestSessions).where(eq(guestSessions.sessionId, sessionId));
+    return session;
+  }
+
+  async useGuestCredit(sessionId: string): Promise<void> {
+    await db.update(guestSessions)
+      .set({ 
+        creditsRemaining: sql`${guestSessions.creditsRemaining} - 1`,
+        aiGenerationsUsed: sql`${guestSessions.aiGenerationsUsed} + 1`,
+        updatedAt: new Date()
+      })
+      .where(eq(guestSessions.sessionId, sessionId));
+  }
+
+  async addGuestCredits(sessionId: string, credits: number): Promise<void> {
+    await db.update(guestSessions)
+      .set({ 
+        creditsRemaining: sql`${guestSessions.creditsRemaining} + ${credits}`,
+        updatedAt: new Date()
+      })
+      .where(eq(guestSessions.sessionId, sessionId));
+  }
+
+  async convertGuestToUser(sessionId: string, userId: string): Promise<void> {
+    await db.update(guestSessions)
+      .set({ 
+        convertedToUserId: userId,
+        updatedAt: new Date()
+      })
+      .where(eq(guestSessions.sessionId, sessionId));
+  }
+
+  // Usage Quota operations
+  async getUserQuota(userId: string): Promise<UsageQuota | undefined> {
+    const [quota] = await db.select().from(usageQuotas).where(eq(usageQuotas.userId, userId));
+    return quota;
+  }
+
+  async createUserQuota(quota: InsertUsageQuota): Promise<UsageQuota> {
+    const [newQuota] = await db.insert(usageQuotas).values(quota).returning();
+    return newQuota;
+  }
+
+  async incrementAiCalls(userId: string): Promise<void> {
+    await db.update(usageQuotas)
+      .set({ 
+        aiCallsUsed: sql`${usageQuotas.aiCallsUsed} + 1`,
+        updatedAt: new Date()
+      })
+      .where(eq(usageQuotas.userId, userId));
+  }
+
+  async addCredits(userId: string, credits: number): Promise<void> {
+    const existing = await this.getUserQuota(userId);
+    if (!existing) {
+      await this.createUserQuota({ userId, creditsBalance: credits });
+    } else {
+      await db.update(usageQuotas)
+        .set({ 
+          creditsBalance: sql`${usageQuotas.creditsBalance} + ${credits}`,
+          updatedAt: new Date()
+        })
+        .where(eq(usageQuotas.userId, userId));
+    }
+  }
+
+  async deductCredits(userId: string, credits: number): Promise<void> {
+    await db.update(usageQuotas)
+      .set({ 
+        creditsBalance: sql`${usageQuotas.creditsBalance} - ${credits}`,
+        updatedAt: new Date()
+      })
+      .where(eq(usageQuotas.userId, userId));
+  }
+
+  // Usage Credit tracking
+  async recordCreditUsage(credit: InsertUsageCredit): Promise<UsageCredit> {
+    const [newCredit] = await db.insert(usageCredits).values(credit).returning();
+    return newCredit;
+  }
+
+  async getCreditHistory(userId: string, limit: number = 50): Promise<UsageCredit[]> {
+    return await db.select().from(usageCredits)
+      .where(eq(usageCredits.userId, userId))
+      .orderBy(desc(usageCredits.createdAt))
+      .limit(limit);
+  }
+
+  // Credit Packages
+  async getCreditPackages(): Promise<CreditPackage[]> {
+    return await db.select().from(creditPackages).where(eq(creditPackages.isActive, true));
+  }
+
+  async getCreditPackage(id: number): Promise<CreditPackage | undefined> {
+    const [pkg] = await db.select().from(creditPackages).where(eq(creditPackages.id, id));
+    return pkg;
   }
 }
 

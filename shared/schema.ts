@@ -1801,6 +1801,49 @@ export const showcaseVotes = pgTable("showcase_votes", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Anonymous/Guest Sessions - For frictionless signup
+export const guestSessions = pgTable("guest_sessions", {
+  id: serial("id").primaryKey(),
+  sessionId: varchar("session_id").notNull().unique(),
+  fingerprint: varchar("fingerprint"),
+  ipAddress: varchar("ip_address"),
+  creditsRemaining: integer("credits_remaining").default(3), // 3 free generations
+  projectsCreated: integer("projects_created").default(0),
+  aiGenerationsUsed: integer("ai_generations_used").default(0),
+  convertedToUserId: varchar("converted_to_user_id"),
+  expiresAt: timestamp("expires_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Usage Credits - Per-generation pricing
+export const usageCredits = pgTable("usage_credits", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id"),
+  guestSessionId: varchar("guest_session_id"),
+  creditType: varchar("credit_type").notNull(), // ai_generation, project_creation, deployment, export
+  creditsUsed: integer("credits_used").default(1),
+  creditCost: integer("credit_cost").default(0), // in cents
+  description: text("description"),
+  metadata: jsonb("metadata"),
+  stripePaymentIntentId: varchar("stripe_payment_intent_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Credit Packages - Purchasable credit bundles
+export const creditPackages = pgTable("credit_packages", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  credits: integer("credits").notNull(),
+  priceInCents: integer("price_in_cents").notNull(),
+  bonusCredits: integer("bonus_credits").default(0),
+  isPopular: boolean("is_popular").default(false),
+  isActive: boolean("is_active").default(true),
+  stripePriceId: varchar("stripe_price_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Usage Quotas - Free tier limits
 export const usageQuotas = pgTable("usage_quotas", {
   id: serial("id").primaryKey(),
@@ -1817,6 +1860,7 @@ export const usageQuotas = pgTable("usage_quotas", {
   collaboratorsLimit: integer("collaborators_limit").default(1),
   deploymentsUsed: integer("deployments_used").default(0),
   deploymentsLimit: integer("deployments_limit").default(1),
+  creditsBalance: integer("credits_balance").default(0), // Purchased credits
   resetsAt: timestamp("resets_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -2361,6 +2405,21 @@ export type Showcase = typeof showcases.$inferSelect;
 export const insertShowcaseVoteSchema = createInsertSchema(showcaseVotes).omit({ id: true, createdAt: true });
 export type InsertShowcaseVote = z.infer<typeof insertShowcaseVoteSchema>;
 export type ShowcaseVote = typeof showcaseVotes.$inferSelect;
+
+// Guest Sessions
+export const insertGuestSessionSchema = createInsertSchema(guestSessions).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertGuestSession = z.infer<typeof insertGuestSessionSchema>;
+export type GuestSession = typeof guestSessions.$inferSelect;
+
+// Usage Credits
+export const insertUsageCreditSchema = createInsertSchema(usageCredits).omit({ id: true, createdAt: true });
+export type InsertUsageCredit = z.infer<typeof insertUsageCreditSchema>;
+export type UsageCredit = typeof usageCredits.$inferSelect;
+
+// Credit Packages
+export const insertCreditPackageSchema = createInsertSchema(creditPackages).omit({ id: true, createdAt: true });
+export type InsertCreditPackage = z.infer<typeof insertCreditPackageSchema>;
+export type CreditPackage = typeof creditPackages.$inferSelect;
 
 // Usage Quotas
 export const insertUsageQuotaSchema = createInsertSchema(usageQuotas).omit({ id: true, createdAt: true, updatedAt: true });
