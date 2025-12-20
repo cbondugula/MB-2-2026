@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Code, Sparkles, Send, Calendar, Users, FileText, Clock, Shield, Zap, CheckCircle, ArrowRight, Play } from "lucide-react";
+import { Code, Sparkles, Send, Calendar, Users, FileText, Shield, Zap, CheckCircle, ArrowRight, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -14,6 +13,13 @@ export default function Landing() {
   const [showChat, setShowChat] = useState(false);
   const [guestSessionId, setGuestSessionId] = useState<string | null>(null);
   const [selectedExample, setSelectedExample] = useState<number | null>(null);
+  
+  // Interactive preview state
+  const [selectedService, setSelectedService] = useState('General Checkup');
+  const [selectedTime, setSelectedTime] = useState('9:00 AM');
+  const [isBooked, setIsBooked] = useState(false);
+  const [showServiceDropdown, setShowServiceDropdown] = useState(false);
+  const [patientCount, setPatientCount] = useState(247);
 
   const createGuestSession = useMutation({
     mutationFn: async () => {
@@ -50,6 +56,15 @@ export default function Landing() {
     setPrompt(example);
     setTimeout(() => setShowChat(true), 300);
   };
+
+  const handleBookAppointment = () => {
+    setIsBooked(true);
+    setPatientCount(prev => prev + 1);
+    setTimeout(() => setIsBooked(false), 3000);
+  };
+
+  const services = ['General Checkup', 'Vaccination', 'Lab Work', 'Consultation'];
+  const times = ['9:00 AM', '10:30 AM', '2:00 PM', '3:30 PM'];
 
   const examples = [
     {
@@ -117,7 +132,7 @@ export default function Landing() {
           </div>
 
           {/* Example Cards */}
-          <div className="px-6 py-4">
+          <div className="px-6 py-4 flex-1 overflow-auto">
             <p className="text-xs text-gray-500 uppercase tracking-wider mb-3 font-medium">Quick Start Templates</p>
             <div className="space-y-2">
               {examples.map((example, index) => (
@@ -149,7 +164,7 @@ export default function Landing() {
           </div>
 
           {/* Input Area */}
-          <div className="mt-auto p-4 border-t border-gray-800/50">
+          <div className="p-4 border-t border-gray-800/50">
             <div className="relative">
               <Textarea
                 placeholder="Or describe your own healthcare app..."
@@ -183,7 +198,7 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* Right Panel - Live Preview */}
+        {/* Right Panel - Interactive Preview */}
         <div className="w-1/2 bg-[#0d0d12] flex flex-col">
           {/* Preview Header */}
           <div className="px-4 py-3 border-b border-gray-800/50 flex items-center justify-between bg-[#0a0a0f]">
@@ -193,14 +208,14 @@ export default function Landing() {
                 <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
                 <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
               </div>
-              <span className="text-xs text-gray-500 font-medium">Live Preview</span>
+              <span className="text-xs text-gray-500 font-medium">Interactive Demo</span>
             </div>
             <Badge className="bg-green-500/10 text-green-400 border-0 text-xs">
               <span className="relative flex h-1.5 w-1.5 mr-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
               </span>
-              Ready
+              Live
             </Badge>
           </div>
 
@@ -223,14 +238,45 @@ export default function Landing() {
                     </div>
                   </div>
 
+                  {/* Success Message */}
+                  {isBooked && (
+                    <div className="mx-5 mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-xl flex items-center gap-2 animate-pulse">
+                      <Check className="w-4 h-4 text-green-400" />
+                      <span className="text-sm text-green-400 font-medium">Appointment Booked!</span>
+                    </div>
+                  )}
+
                   {/* App Content */}
                   <div className="p-5 space-y-4">
-                    <div>
+                    {/* Service Dropdown */}
+                    <div className="relative">
                       <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Select Service</label>
-                      <div className="mt-2 bg-gray-800/50 border border-gray-700/50 rounded-xl p-3 text-sm text-white flex items-center justify-between">
-                        <span>General Checkup</span>
-                        <ChevronDown className="w-4 h-4 text-gray-500" />
-                      </div>
+                      <button
+                        onClick={() => setShowServiceDropdown(!showServiceDropdown)}
+                        className="mt-2 w-full bg-gray-800/50 border border-gray-700/50 hover:border-gray-600 rounded-xl p-3 text-sm text-white flex items-center justify-between transition-colors"
+                        data-testid="button-service-dropdown"
+                      >
+                        <span>{selectedService}</span>
+                        <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${showServiceDropdown ? 'rotate-180' : ''}`} />
+                      </button>
+                      {showServiceDropdown && (
+                        <div className="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-xl">
+                          {services.map((service) => (
+                            <button
+                              key={service}
+                              onClick={() => {
+                                setSelectedService(service);
+                                setShowServiceDropdown(false);
+                              }}
+                              className={`w-full text-left px-4 py-2.5 text-sm hover:bg-gray-700 transition-colors ${
+                                selectedService === service ? 'text-green-400 bg-gray-700/50' : 'text-white'
+                              }`}
+                            >
+                              {service}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     <div>
@@ -243,15 +289,17 @@ export default function Landing() {
 
                     <div>
                       <label className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Available Times</label>
-                      <div className="mt-2 grid grid-cols-3 gap-2">
-                        {['9:00 AM', '10:30 AM', '2:00 PM'].map((time, i) => (
+                      <div className="mt-2 grid grid-cols-4 gap-2">
+                        {times.map((time) => (
                           <button
                             key={time}
-                            className={`rounded-xl p-2.5 text-xs font-medium transition-all ${
-                              i === 0 
-                                ? 'bg-green-600 text-white shadow-lg shadow-green-500/20' 
-                                : 'bg-gray-800/50 border border-gray-700/50 text-gray-300 hover:border-gray-600'
+                            onClick={() => setSelectedTime(time)}
+                            className={`rounded-xl p-2 text-xs font-medium transition-all ${
+                              selectedTime === time 
+                                ? 'bg-green-600 text-white shadow-lg shadow-green-500/20 scale-105' 
+                                : 'bg-gray-800/50 border border-gray-700/50 text-gray-300 hover:border-green-500/50 hover:text-white'
                             }`}
+                            data-testid={`button-time-${time.replace(/[: ]/g, '-')}`}
                           >
                             {time}
                           </button>
@@ -259,8 +307,23 @@ export default function Landing() {
                       </div>
                     </div>
 
-                    <button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-xl py-3.5 text-sm font-semibold transition-all shadow-lg shadow-green-500/20">
-                      Book Appointment
+                    <button 
+                      onClick={handleBookAppointment}
+                      disabled={isBooked}
+                      className={`w-full rounded-xl py-3.5 text-sm font-semibold transition-all shadow-lg ${
+                        isBooked 
+                          ? 'bg-green-700 text-white shadow-green-500/10' 
+                          : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white shadow-green-500/20 hover:scale-[1.02] active:scale-[0.98]'
+                      }`}
+                      data-testid="button-book-appointment"
+                    >
+                      {isBooked ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <Check className="w-4 h-4" /> Confirmed!
+                        </span>
+                      ) : (
+                        'Book Appointment'
+                      )}
                     </button>
                   </div>
 
@@ -268,7 +331,7 @@ export default function Landing() {
                   <div className="px-5 py-4 border-t border-gray-800/50 bg-gray-900/30">
                     <div className="grid grid-cols-3 gap-3">
                       <div className="text-center">
-                        <div className="text-lg font-bold text-white">247</div>
+                        <div className="text-lg font-bold text-white">{patientCount}</div>
                         <div className="text-[10px] text-gray-500">Patients</div>
                       </div>
                       <div className="text-center">
