@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Shield, Code, Zap, Sparkles, Cpu, Terminal, Activity, Brain, Network, TrendingUp, CheckCircle, MessageSquare, Gift, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { ChatToCode } from "@/components/ChatToCode";
+import { ChatToCodeDemo } from "@/components/ChatToCodeDemo";
 import { CreditMeter } from "@/components/CreditMeter";
 import { TrustBadges } from "@/components/SuccessToast";
 import { apiRequest } from "@/lib/queryClient";
@@ -651,25 +651,15 @@ export default function Landing() {
         </div>
       </footer>
 
-      {/* Chat-to-Code Dialog */}
-      <Dialog open={showChat} onOpenChange={setShowChat}>
-        <DialogContent className="max-w-5xl h-[85vh] bg-gray-900 border-gray-700 text-white p-0">
-          <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-800">
-            <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              AI Chat-to-Code
-              <Badge className="bg-green-900 text-green-300 ml-2">
-                Live Demo
-              </Badge>
-            </DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 overflow-hidden">
-            <ChatToCode initialPrompt={prompt} />
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Chat-to-Code Demo */}
+      {showChat && (
+        <ChatToCodeDemo 
+          initialPrompt={prompt}
+          sessionId={guestSessionId || undefined}
+          onClose={() => setShowChat(false)}
+          onComplete={(code) => console.log("Generated:", code)}
+        />
+      )}
     </div>
   );
 }

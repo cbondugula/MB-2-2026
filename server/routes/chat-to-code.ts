@@ -15,6 +15,79 @@ function getUserId(req: any): string {
 
 export function registerChatToCodeRoutes(app: Express) {
   
+  // Guest demo endpoint - allows trying without authentication
+  app.post("/api/chat/demo", chatRateLimiter, async (req, res) => {
+    try {
+      const { prompt, sessionId } = req.body;
+      
+      if (!prompt || typeof prompt !== 'string') {
+        return res.status(400).json({ error: "prompt is required and must be a string" });
+      }
+      
+      // Use guest session ID or generate one
+      const guestId = sessionId || `guest_${Date.now()}`;
+      
+      // Set up streaming response with proper headers
+      res.setHeader("Content-Type", "text/event-stream");
+      res.setHeader("Cache-Control", "no-cache, no-transform");
+      res.setHeader("Connection", "keep-alive");
+      res.setHeader("X-Accel-Buffering", "no");
+      res.flushHeaders();
+      
+      try {
+        // Generate code using the chat service
+        const stream = await chatToCodeService.generateCode(
+          guestId,
+          `demo_${Date.now()}`,
+          prompt,
+          []
+        );
+        
+        let generatedCode: any = null;
+        let done = false;
+        let lastResult: any = null;
+        
+        while (!done) {
+          const result = await stream.next();
+          lastResult = result;
+          done = result.done || false;
+          
+          if (!done && typeof result.value === 'string') {
+            const chunk = `data: ${JSON.stringify({ type: "chunk", content: result.value })}\n\n`;
+            res.write(chunk);
+            // Force flush for real-time streaming
+            if (typeof (res as any).flush === 'function') {
+              (res as any).flush();
+            }
+          }
+        }
+        
+        generatedCode = lastResult?.value;
+        
+        const completeEvent = `data: ${JSON.stringify({ 
+          type: "complete", 
+          generatedCode,
+          explanation: generatedCode?.explanation || "Healthcare application generated successfully",
+          nextSteps: generatedCode?.nextSteps || []
+        })}\n\n`;
+        res.write(completeEvent);
+        
+        // Add small delay to ensure complete event is received
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+      } catch (error) {
+        console.error("Error generating demo:", error);
+        res.write(`data: ${JSON.stringify({ type: "error", error: "Failed to generate response" })}\n\n`);
+      }
+      
+      res.end();
+      
+    } catch (error) {
+      console.error("Error in demo endpoint:", error);
+      res.status(500).json({ error: "Failed to generate demo" });
+    }
+  });
+  
   // Create a new conversation (requires authentication)
   app.post("/api/chat/conversations", chatRateLimiter, isAuthenticated, async (req, res) => {
     try {
