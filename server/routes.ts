@@ -4921,6 +4921,121 @@ Respond with ONLY valid JSON array, no explanation.`;
     }
   });
 
+  // PHI Governance Dashboard Endpoints
+  app.get('/api/phi-governance/overview', isAuthenticated, async (req, res) => {
+    try {
+      const overview = await storage.getPHIGovernanceOverview();
+      res.json(overview);
+    } catch (error: any) {
+      console.error("Error fetching PHI overview:", error);
+      res.status(500).json({ message: "Failed to fetch PHI governance overview" });
+    }
+  });
+
+  app.get('/api/phi-governance/data-flows', isAuthenticated, async (req, res) => {
+    try {
+      const flows = await storage.getPHIDataFlows();
+      res.json(flows);
+    } catch (error: any) {
+      console.error("Error fetching data flows:", error);
+      res.status(500).json({ message: "Failed to fetch PHI data flows" });
+    }
+  });
+
+  app.get('/api/phi-governance/access-logs', isAuthenticated, async (req, res) => {
+    try {
+      const logs = await storage.getPHIAccessLogs();
+      res.json(logs);
+    } catch (error: any) {
+      console.error("Error fetching access logs:", error);
+      res.status(500).json({ message: "Failed to fetch PHI access logs" });
+    }
+  });
+
+  app.get('/api/phi-governance/policies', isAuthenticated, async (req, res) => {
+    try {
+      const policies = await storage.getPHIPolicies();
+      res.json(policies);
+    } catch (error: any) {
+      console.error("Error fetching policies:", error);
+      res.status(500).json({ message: "Failed to fetch PHI policies" });
+    }
+  });
+
+  app.post('/api/phi-governance/scan', isAuthenticated, async (req, res) => {
+    try {
+      const result = await storage.runPHIScan();
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error running PHI scan:", error);
+      res.status(500).json({ message: "Failed to run PHI scan" });
+    }
+  });
+
+  app.post('/api/phi-governance/policies/:id/toggle', isAuthenticated, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await storage.togglePHIPolicy(id);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error toggling policy:", error);
+      res.status(500).json({ message: "Failed to toggle policy" });
+    }
+  });
+
+  // EHR Integration Orchestrator Endpoints
+  app.get('/api/ehr/connectors', isAuthenticated, async (req, res) => {
+    try {
+      const connectors = await storage.getEHRConnectors();
+      res.json(connectors);
+    } catch (error: any) {
+      console.error("Error fetching EHR connectors:", error);
+      res.status(500).json({ message: "Failed to fetch EHR connectors" });
+    }
+  });
+
+  app.get('/api/ehr/fhir-resources', isAuthenticated, async (req, res) => {
+    try {
+      const resources = await storage.getFHIRResources();
+      res.json(resources);
+    } catch (error: any) {
+      console.error("Error fetching FHIR resources:", error);
+      res.status(500).json({ message: "Failed to fetch FHIR resources" });
+    }
+  });
+
+  app.get('/api/ehr/logs', isAuthenticated, async (req, res) => {
+    try {
+      const logs = await storage.getEHRIntegrationLogs();
+      res.json(logs);
+    } catch (error: any) {
+      console.error("Error fetching EHR logs:", error);
+      res.status(500).json({ message: "Failed to fetch EHR logs" });
+    }
+  });
+
+  app.post('/api/ehr/connectors/:id/sync', isAuthenticated, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await storage.syncEHRConnector(id);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error syncing connector:", error);
+      res.status(500).json({ message: "Failed to sync EHR connector" });
+    }
+  });
+
+  app.post('/api/ehr/connectors/:id/test', isAuthenticated, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await storage.testEHRConnection(id);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error testing connection:", error);
+      res.status(500).json({ message: "Failed to test EHR connection" });
+    }
+  });
+
   app.get('/api/example-prompts', async (req, res) => {
     try {
       const { userMode } = req.query;

@@ -29,6 +29,8 @@ import Marketplace from "@/pages/marketplace";
 import Academy from "@/pages/academy";
 import ComplianceHub from "@/pages/compliance-hub";
 import ExecutiveIntelligence from "@/pages/executive-intelligence";
+import PHIGovernance from "@/pages/phi-governance";
+import EHRIntegration from "@/pages/ehr-integration";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -77,6 +79,8 @@ function Router() {
           <Route path="/academy" component={Academy} />
           <Route path="/compliance-hub" component={ComplianceHub} />
           <Route path="/executive-intelligence" component={ExecutiveIntelligence} />
+          <Route path="/phi-governance" component={PHIGovernance} />
+          <Route path="/ehr-integration" component={EHRIntegration} />
         </>
       )}
       <Route component={NotFound} />
