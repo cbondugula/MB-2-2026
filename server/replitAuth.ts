@@ -125,12 +125,47 @@ export async function setupAuth(app: Express) {
       );
     });
   });
+
+  // Demo login for testing (development only - disabled in production)
+  app.post("/api/demo-login", async (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(403).json({ message: "Demo login disabled in production" });
+    }
+    
+    const demoUser = {
+      claims: {
+        sub: "demo-user-123",
+        email: "demo@medbuilder.io",
+        first_name: "Demo",
+        last_name: "User",
+        profile_image_url: null
+      },
+      expires_at: Math.floor(Date.now() / 1000) + 86400, // 24 hours
+      access_token: "demo-token",
+      refresh_token: null
+    };
+    
+    await storage.upsertUser({
+      id: "demo-user-123",
+      email: "demo@medbuilder.io",
+      firstName: "Demo",
+      lastName: "User",
+      profileImageUrl: null
+    });
+
+    req.login(demoUser, (err) => {
+      if (err) {
+        return res.status(500).json({ message: "Login failed" });
+      }
+      res.json({ success: true, user: demoUser.claims });
+    });
+  });
 }
 
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
   const user = req.user as any;
 
-  if (!req.isAuthenticated() || !user.expires_at) {
+  if (!req.isAuthenticated() || !user?.expires_at) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 

@@ -104,6 +104,23 @@ export default function Landing() {
           <Button asChild variant="ghost" size="sm" className="text-gray-400 hover:text-white">
             <Link href="/pricing">Pricing</Link>
           </Button>
+          <Button 
+            size="sm" 
+            className="bg-emerald-600 hover:bg-emerald-500 text-white"
+            onClick={async () => {
+              try {
+                const res = await fetch('/api/demo-login', { method: 'POST', credentials: 'include' });
+                if (res.ok) {
+                  window.location.href = '/dashboard';
+                }
+              } catch (e) {
+                console.error('Demo login failed');
+              }
+            }}
+            data-testid="button-demo-login"
+          >
+            Demo Login
+          </Button>
         </div>
       </header>
 
