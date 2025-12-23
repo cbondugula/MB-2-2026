@@ -74,7 +74,7 @@ export default function PHIGovernance() {
   });
 
   const scanMutation = useMutation({
-    mutationFn: () => apiRequest('/api/phi-governance/scan', { method: 'POST' }),
+    mutationFn: () => apiRequest('POST', '/api/phi-governance/scan'),
     onSuccess: () => {
       toast({ title: 'PHI Scan Complete', description: 'All data flows analyzed successfully' });
       queryClient.invalidateQueries({ queryKey: ['/api/phi-governance'] });
@@ -82,7 +82,7 @@ export default function PHIGovernance() {
   });
 
   const togglePolicyMutation = useMutation({
-    mutationFn: (policyId: string) => apiRequest(`/api/phi-governance/policies/${policyId}/toggle`, { method: 'POST' }),
+    mutationFn: (policyId: string) => apiRequest('POST', `/api/phi-governance/policies/${policyId}/toggle`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/phi-governance/policies'] });
     }

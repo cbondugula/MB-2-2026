@@ -109,7 +109,7 @@ export default function Templates() {
       }, 300);
 
       try {
-        const response = await apiRequest('/api/app-builder/build', 'POST', {
+        const response = await apiRequest('POST', '/api/app-builder/build', {
           templateId,
           clinicName,
           name: clinicName,

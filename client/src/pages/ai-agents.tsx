@@ -144,10 +144,7 @@ export default function AIAgents() {
   // Generate healthcare agent mutation
   const generateAgentMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('/api/ai/generate-healthcare-agent', {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
+      return apiRequest('POST', '/api/ai/generate-healthcare-agent', data);
     },
     onSuccess: () => {
       toast({

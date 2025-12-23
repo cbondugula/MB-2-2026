@@ -95,7 +95,7 @@ export default function Dashboard() {
       }, 400);
 
       try {
-        const response = await apiRequest('/api/app-builder/build', 'POST', {
+        const response = await apiRequest('POST', '/api/app-builder/build', {
           name: description.slice(0, 30),
           description,
           type: 'custom',

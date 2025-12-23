@@ -44,7 +44,7 @@ export default function AppBuilder() {
       }, 400);
 
       try {
-        const result = await apiRequest('/api/app-builder/build', 'POST', {
+        const result = await apiRequest('POST', '/api/app-builder/build', {
           name: description.slice(0, 30),
           description,
           type: 'custom',

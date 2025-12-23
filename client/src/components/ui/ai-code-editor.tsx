@@ -79,15 +79,15 @@ export function AICodeEditor({
     
     setIsSuggestionsLoading(true);
     try {
-      const response = await apiRequest('/api/ai/code-completion', 'POST', {
+      const response = await apiRequest('POST', '/api/ai/code-completion', {
         code,
         cursor: cursorPosition,
         filePath: fileName,
         language,
         context: { projectId, isHealthcare: true }
       });
-      
-      setSuggestions(response.suggestions || []);
+      const data = await response.json();
+      setSuggestions(data.suggestions || []);
     } catch (error) {
       console.error("AI suggestions error:", error);
     } finally {
@@ -101,14 +101,14 @@ export function AICodeEditor({
     
     setIsAnalyzing(true);
     try {
-      const response = await apiRequest('/api/ai/code-analysis', 'POST', {
+      const response = await apiRequest('POST', '/api/ai/code-analysis', {
         code,
         filePath: fileName,
         analysisType,
         projectId
       });
-      
-      setAnalysis(response);
+      const data = await response.json();
+      setAnalysis(data);
     } catch (error) {
       console.error("Code analysis error:", error);
       toast({

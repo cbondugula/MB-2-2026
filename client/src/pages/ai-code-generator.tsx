@@ -80,18 +80,18 @@ export default function AICodeGenerator() {
         });
       }, 300);
 
-      const result = await apiRequest('/api/ai/generate-code', 'POST', codeRequest);
+      const response = await apiRequest('POST', '/api/ai/generate-code', codeRequest);
       
       clearInterval(progressInterval);
       setGenerationProgress(100);
       
-      return result;
+      return await response.json();
     },
-    onSuccess: (result) => {
+    onSuccess: (result: any) => {
       setGeneratedCode(result.code);
       toast({
         title: "Code Generated Successfully",
-        description: `Generated ${result.linesOfCode} lines of ${selectedLanguage} code.`,
+        description: `Generated ${result.linesOfCode || 0} lines of ${selectedLanguage} code.`,
       });
       setGenerationProgress(0);
       setIsGenerating(false);
