@@ -48,7 +48,7 @@ export default function MyApps() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "deployed":
-        return "bg-emerald-900/50 text-emerald-300 border-emerald-700";
+        return "bg-[#76B900]/20 text-[#76B900] border-[#76B900]/50";
       case "preview":
         return "bg-blue-900/50 text-blue-300 border-blue-700";
       case "draft":
@@ -82,7 +82,7 @@ export default function MyApps() {
     <Button
       asChild
       size="sm"
-      className="bg-emerald-600 hover:bg-emerald-500 text-white"
+      className="bg-[#76B900] hover:bg-[#8CC63F] text-white"
       data-testid="create-new-app-button"
     >
       <Link href="/app-builder">
@@ -108,7 +108,7 @@ export default function MyApps() {
             placeholder="Search apps by name or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-gray-900 border-gray-800 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-emerald-500"
+            className="pl-10 bg-gray-900 border-gray-800 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-[#76B900]"
             data-testid="search-apps-input"
           />
         </div>
@@ -121,7 +121,7 @@ export default function MyApps() {
               size="sm"
               className={`${
                 statusFilter === status
-                  ? "bg-emerald-600 text-white border-emerald-500"
+                  ? "bg-[#76B900] text-white border-[#76B900]"
                   : "bg-gray-900 text-gray-300 border-gray-800 hover:bg-gray-800"
               }`}
               onClick={() => setStatusFilter(status)}
@@ -149,7 +149,7 @@ export default function MyApps() {
             </p>
             <Button
               asChild
-              className="bg-emerald-600 hover:bg-emerald-500 text-white"
+              className="bg-[#76B900] hover:bg-[#8CC63F] text-white"
             >
               <Link href="/app-builder">
                 <Sparkles className="w-4 h-4 mr-2" />
@@ -170,7 +170,7 @@ export default function MyApps() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <CardTitle className="text-lg text-white mb-2 flex items-center gap-2">
-                      <Code className="w-4 h-4 text-emerald-400" />
+                      <Code className="w-4 h-4 text-[#76B900]" />
                       {app.name}
                     </CardTitle>
                     <CardDescription className="text-gray-400 text-sm line-clamp-2">
@@ -187,7 +187,7 @@ export default function MyApps() {
                     {app.framework}
                   </Badge>
                   {app.isHipaaCompliant && (
-                    <Badge variant="outline" className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                    <Badge variant="outline" className="bg-[#76B900]/20 text-[#76B900] border-[#76B900]/50">
                       HIPAA
                     </Badge>
                   )}
@@ -212,7 +212,7 @@ export default function MyApps() {
                   <Button
                     asChild
                     size="sm"
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white"
+                    className="flex-1 bg-[#76B900] hover:bg-[#8CC63F] text-white"
                     data-testid={`view-app-${app.id}`}
                   >
                     <Link href={`/apps/${app.id}`}>
