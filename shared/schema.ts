@@ -26,10 +26,12 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
-// User storage table (mandatory for Replit Auth)
+// User storage table (supports both Replit Auth and email/password)
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique(),
+  passwordHash: varchar("password_hash"),
+  authProvider: varchar("auth_provider").default("local"),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
@@ -850,6 +852,22 @@ export const insertHealthcareSimulationSchema = createInsertSchema(healthcareSim
 export const insertPrivacyComplianceSchema = createInsertSchema(privacyCompliance);
 export const insertMulticulturalSupportSchema = createInsertSchema(multiculturalSupport);
 export const insertAlternativeMedicineSchema = createInsertSchema(alternativeMedicine);
+
+// Auth signup schema (for email/password registration)
+export const signupSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+});
+
+export const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export type SignupData = z.infer<typeof signupSchema>;
+export type LoginData = z.infer<typeof loginSchema>;
 
 // Initial Types
 export type UpsertUser = z.infer<typeof insertUserSchema>;
