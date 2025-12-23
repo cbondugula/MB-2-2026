@@ -224,7 +224,7 @@ export default function MyApps() {
                     className="flex-1 bg-[#76B900] hover:bg-[#8CC63F] text-white"
                     data-testid={`view-app-${app.id}`}
                   >
-                    <Link href={`/apps/${app.id}`}>
+                    <Link href={`/workspace/${app.id}`}>
                       <Eye className="w-3 h-3 mr-1.5" />
                       View
                     </Link>
