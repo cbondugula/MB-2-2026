@@ -46,6 +46,7 @@ import { healthcareTestingRouter } from "./healthcare-testing-service";
 import { superCSAgentRoutes } from "./routes/super-cs-agent";
 import { viralGrowthRouter } from "./routes/viral-growth";
 import { monetizationRouter } from "./routes/monetization";
+import { authLocalRouter } from "./routes/auth-local";
 // Removed: multiAIInnovationService - now handled by orchestrators
 import { csAgentService } from "./cs-agent-dynamic-service";
 import { platformAnalyticsService } from "./platform-analytics-service";
@@ -3725,6 +3726,9 @@ Respond with a JSON object:
   // Viral Growth Features Routes (Public Gallery, Sharing, Marketplace, Teams, etc.)
   app.use('/api/viral', viralGrowthRouter);
   app.use('/api/monetization', monetizationRouter);
+  
+  // Local Auth Routes (email/password signup/login)
+  app.use(authLocalRouter);
 
   app.post('/api/super-agent/convert-static-to-dynamic', async (req, res) => {
     try {
