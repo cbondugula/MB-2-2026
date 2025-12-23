@@ -36,7 +36,22 @@ export default function AppPreview() {
   });
 
   const app = project;
-  const codeFiles = (app?.code as Record<string, string>) || {};
+  
+  // Extract code files - handle both wrapped and unwrapped formats
+  const extractCodeFiles = (): Record<string, string> => {
+    if (!app?.code) return {};
+    const code = app.code as any;
+    // If code has a 'files' property, extract it
+    if (typeof code === 'object' && code.files && typeof code.files === 'object') {
+      return code.files;
+    }
+    // Otherwise treat code directly as files object
+    if (typeof code === 'object' && !code.files) {
+      return code;
+    }
+    return {};
+  };
+  const codeFiles = extractCodeFiles();
 
   const copyToClipboard = (content: string, fileName: string) => {
     navigator.clipboard.writeText(content);
