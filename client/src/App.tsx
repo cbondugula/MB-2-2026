@@ -34,36 +34,27 @@ function Router() {
 
   return (
     <Switch>
+      <Route path="/signup" component={Signup} />
+      <Route path="/login" component={Login} />
+      <Route path="/pricing" component={Pricing} />
+      <Route path="/custom-pricing" component={CustomPricing} />
+      <Route path="/checkout" component={Checkout} />
+      <Route path="/templates" component={Templates} />
+      <Route path="/contract-onboarding" component={ContractOnboarding} />
+      <Route path="/legal-documents" component={LegalDocuments} />
+      <Route path="/documentation" component={Documentation} />
+      <Route path="/apps/:appId" component={AppPreview} />
+      
       {isLoading || !isAuthenticated ? (
-        <>
-          <Route path="/" component={Landing} />
-          <Route path="/pricing" component={Pricing} />
-          <Route path="/custom-pricing" component={CustomPricing} />
-          <Route path="/checkout" component={Checkout} />
-          <Route path="/templates" component={Templates} />
-          <Route path="/contract-onboarding" component={ContractOnboarding} />
-          <Route path="/legal-documents" component={LegalDocuments} />
-          <Route path="/documentation" component={Documentation} />
-          <Route path="/apps/:appId" component={AppPreview} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/login" component={Login} />
-        </>
+        <Route path="/" component={Landing} />
       ) : (
         <>
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/app-builder" component={AppBuilder} />
           <Route path="/code-editor" component={CodeEditor} />
-          <Route path="/templates" component={Templates} />
-                    <Route path="/preview" component={Preview} />
+          <Route path="/preview" component={Preview} />
           <Route path="/hipaa-tools" component={HIPAATools} />
-          <Route path="/pricing" component={Pricing} />
-          <Route path="/custom-pricing" component={CustomPricing} />
-          <Route path="/checkout" component={Checkout} />
-          <Route path="/contract-onboarding" component={ContractOnboarding} />
-          <Route path="/legal-documents" component={LegalDocuments} />
-          <Route path="/documentation" component={Documentation} />
-          <Route path="/apps/:appId" component={AppPreview} />
           <Route path="/editor/:projectId" component={ProjectEditor} />
           <Route path="/workspace/:projectId" component={Workspace} />
           <Route path="/my-apps" component={MyApps} />
