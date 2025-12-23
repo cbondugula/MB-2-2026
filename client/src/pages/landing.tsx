@@ -106,11 +106,11 @@ export default function Landing() {
           </Button>
           <Button 
             size="sm" 
+            asChild
             className="bg-[#76B900] hover:bg-[#8CC63F] text-white"
-            onClick={() => window.location.href = '/api/login'}
             data-testid="button-login"
           >
-            Sign In
+            <Link href="/login">Sign In</Link>
           </Button>
         </div>
       </header>

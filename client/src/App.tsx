@@ -26,6 +26,8 @@ import ComplianceHub from "@/pages/compliance-hub";
 import ExecutiveIntelligence from "@/pages/executive-intelligence";
 import PHIGovernance from "@/pages/phi-governance";
 import EHRIntegration from "@/pages/ehr-integration";
+import Signup from "@/pages/signup";
+import Login from "@/pages/login";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -43,6 +45,8 @@ function Router() {
           <Route path="/legal-documents" component={LegalDocuments} />
           <Route path="/documentation" component={Documentation} />
           <Route path="/apps/:appId" component={AppPreview} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/login" component={Login} />
         </>
       ) : (
         <>
