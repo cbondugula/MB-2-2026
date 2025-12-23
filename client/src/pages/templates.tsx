@@ -202,7 +202,7 @@ export default function Templates() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
           <Input
             placeholder="Search templates..."
-            className="pl-10 bg-gray-900 border-gray-800 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-emerald-500"
+            className="pl-10 bg-gray-900 border-gray-800 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-[#76B900]"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             data-testid="input-search-templates"
@@ -229,7 +229,7 @@ export default function Templates() {
           return (
             <Card 
               key={template.id} 
-              className="bg-gray-900 border-gray-800 hover:border-emerald-700 transition-all cursor-pointer group overflow-hidden" 
+              className="bg-gray-900 border-gray-800 hover:border-[#76B900] transition-all cursor-pointer group overflow-hidden" 
               data-testid={`template-card-${template.id}`}
               onClick={() => handleSelectTemplate(template)}
             >
@@ -241,7 +241,7 @@ export default function Templates() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
                 <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                  <Badge className="bg-emerald-600 text-white">{template.category}</Badge>
+                  <Badge className="bg-[#76B900] text-white">{template.category}</Badge>
                   {template.isHipaaCompliant && (
                     <Badge className="bg-blue-600 text-white flex items-center gap-1">
                       <Shield className="w-3 h-3" />
@@ -253,7 +253,7 @@ export default function Templates() {
               <CardHeader className="pb-2 pt-4">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-gray-800 rounded-lg">
-                    <Icon className="w-5 h-5 text-emerald-400" />
+                    <Icon className="w-5 h-5 text-[#76B900]" />
                   </div>
                   <CardTitle className="text-lg text-white">{template.name}</CardTitle>
                 </div>
@@ -272,7 +272,7 @@ export default function Templates() {
                   </div>
                   <Button 
                     size="sm"
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white opacity-0 group-hover:opacity-100 transition-opacity" 
+                    className="bg-[#76B900] hover:bg-[#76B900] text-white opacity-0 group-hover:opacity-100 transition-opacity" 
                     data-testid={`button-use-template-${template.id}`}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -303,16 +303,16 @@ export default function Templates() {
         <DialogContent className="bg-gray-900 border-gray-800 max-w-lg">
           {isBuilding ? (
             <div className="py-8 text-center">
-              <Rocket className="w-16 h-16 text-emerald-400 mx-auto mb-6 animate-bounce" />
+              <Rocket className="w-16 h-16 text-[#76B900] mx-auto mb-6 animate-bounce" />
               <h2 className="text-xl font-bold text-white mb-2">Building Your App...</h2>
               <p className="text-gray-400 mb-6">Generating HIPAA-compliant code, configuring database, setting up security</p>
               <div className="w-full bg-gray-800 rounded-full h-3 mb-2">
                 <div 
-                  className="bg-emerald-500 h-3 rounded-full transition-all duration-300"
+                  className="bg-[#76B900] h-3 rounded-full transition-all duration-300"
                   style={{ width: `${buildProgress}%` }}
                 />
               </div>
-              <p className="text-emerald-400 font-medium">{Math.round(buildProgress)}%</p>
+              <p className="text-[#76B900] font-medium">{Math.round(buildProgress)}%</p>
             </div>
           ) : (
             <>
@@ -320,7 +320,7 @@ export default function Templates() {
                 <DialogTitle className="text-white text-xl flex items-center gap-3">
                   {selectedTemplate && (() => {
                     const Icon = getIcon(selectedTemplate.category);
-                    return <Icon className="w-6 h-6 text-emerald-400" />;
+                    return <Icon className="w-6 h-6 text-[#76B900]" />;
                   })()}
                   {selectedTemplate?.name}
                 </DialogTitle>
@@ -374,7 +374,7 @@ export default function Templates() {
                   Cancel
                 </Button>
                 <Button 
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white"
+                  className="flex-1 bg-[#76B900] hover:bg-[#76B900] text-white"
                   onClick={handleCreateProject}
                   disabled={!clinicName.trim()}
                   data-testid="button-create-project"

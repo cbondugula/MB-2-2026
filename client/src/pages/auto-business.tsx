@@ -114,7 +114,7 @@ export default function AutoBusiness() {
                   </CardDescription>
                 </div>
               </div>
-              <Badge className="bg-green-500 text-white font-bold text-sm px-3 py-1">
+              <Badge className="bg-[#76B900] text-white font-bold text-sm px-3 py-1">
                 ACTIVE
               </Badge>
             </div>
@@ -214,7 +214,7 @@ export default function AutoBusiness() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <TrendingUp className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <TrendingUp className="w-5 h-5 text-[#76B900] flex-shrink-0 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-sm">Market Analysis</h4>
                     <p className="text-xs text-gray-600 dark:text-gray-400">
@@ -268,7 +268,7 @@ export default function AutoBusiness() {
 
         {/* Generated Business Plan */}
         {businessPlan && (
-          <Card className="border-2 border-green-400">
+          <Card className="border-2 border-[#8CC63F]">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-2xl">Generated Business Plan</CardTitle>
@@ -303,13 +303,13 @@ export default function AutoBusiness() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-green-50 dark:bg-green-950">
+                <Card className="bg-[#76B900]50 dark:bg-[#1a3d00]">
                   <CardContent className="p-4">
                     <h4 className="font-semibold mb-2 flex items-center gap-2">
-                      <Users className="w-5 h-5 text-green-500" />
+                      <Users className="w-5 h-5 text-[#76B900]" />
                       Target Customers
                     </h4>
-                    <p className="text-lg font-semibold text-green-600">{businessPlan.customers.count}</p>
+                    <p className="text-lg font-semibold text-[#76B900]">{businessPlan.customers.count}</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                       {businessPlan.customers.target}
                     </p>
@@ -320,26 +320,26 @@ export default function AutoBusiness() {
               {/* Revenue Projections */}
               <div>
                 <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-green-500" />
+                  <DollarSign className="w-5 h-5 text-[#76B900]" />
                   Revenue Projections
                 </h3>
                 <div className="grid grid-cols-3 gap-4">
                   <Card>
                     <CardContent className="p-4 text-center">
                       <p className="text-sm text-gray-600 dark:text-gray-400">Year 1</p>
-                      <p className="text-2xl font-bold text-green-600">{businessPlan.targetRevenue.year1}</p>
+                      <p className="text-2xl font-bold text-[#76B900]">{businessPlan.targetRevenue.year1}</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4 text-center">
                       <p className="text-sm text-gray-600 dark:text-gray-400">Year 3</p>
-                      <p className="text-2xl font-bold text-green-600">{businessPlan.targetRevenue.year3}</p>
+                      <p className="text-2xl font-bold text-[#76B900]">{businessPlan.targetRevenue.year3}</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4 text-center">
                       <p className="text-sm text-gray-600 dark:text-gray-400">Year 5</p>
-                      <p className="text-2xl font-bold text-green-600">{businessPlan.targetRevenue.year5}</p>
+                      <p className="text-2xl font-bold text-[#76B900]">{businessPlan.targetRevenue.year5}</p>
                     </CardContent>
                   </Card>
                 </div>

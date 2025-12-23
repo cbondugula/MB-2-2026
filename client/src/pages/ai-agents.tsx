@@ -215,13 +215,13 @@ export default function AIAgents() {
   };
 
   const getDeploymentIcon = (isLocal: boolean) => {
-    return isLocal ? <Monitor className="h-4 w-4 text-green-500" /> : <Cloud className="h-4 w-4 text-blue-500" />;
+    return isLocal ? <Monitor className="h-4 w-4 text-[#76B900]" /> : <Cloud className="h-4 w-4 text-blue-500" />;
   };
 
   const getConnectionStatus = () => {
     if (ollamaLoading) return <Activity className="h-4 w-4 animate-spin" />;
     return ollamaStatus?.available ? 
-      <Wifi className="h-4 w-4 text-green-500" /> : 
+      <Wifi className="h-4 w-4 text-[#76B900]" /> : 
       <WifiOff className="h-4 w-4 text-red-500" />;
   };
 
@@ -310,7 +310,7 @@ export default function AIAgents() {
                           key={language.code}
                           className={`p-2 border rounded cursor-pointer text-sm transition-colors ${
                             selectedLanguages.includes(language.code)
-                              ? 'bg-green-100 dark:bg-green-900 border-green-200 dark:border-green-700 text-green-900 dark:text-green-100'
+                              ? 'bg-[#76B900]100 dark:bg-[#1a3d00] border-[#76B900]200 dark:border-[#5a8f00] text-[#1a3d00] dark:text-[#76B900]100'
                               : 'hover:bg-gray-100 dark:hover:bg-gray-800'
                           }`}
                           onClick={() => toggleLanguage(language.code)}
@@ -387,15 +387,15 @@ export default function AIAgents() {
                     <h4 className="font-medium mb-2">Deployment Benefits</h4>
                     <ul className="text-sm space-y-1">
                       <li className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-[#76B900]" />
                         <span>{useLocalModels ? 'Maximum privacy (local processing)' : 'Cloud scalability'}</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-[#76B900]" />
                         <span>{useLocalModels ? 'HIPAA compliant by design' : 'Latest AI capabilities'}</span>
                       </li>
                       <li className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-[#76B900]" />
                         <span>{useLocalModels ? 'No data leaves your environment' : 'Automatic scaling'}</span>
                       </li>
                     </ul>
@@ -527,11 +527,11 @@ export default function AIAgents() {
                     ))}
                   </div>
 
-                  <div className="mt-6 p-4 bg-green-100 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg">
-                    <h4 className="font-medium text-green-900 dark:text-green-100 mb-2">
+                  <div className="mt-6 p-4 bg-[#76B900]100 dark:bg-[#1a3d00] border border-[#76B900]200 dark:border-[#5a8f00] rounded-lg">
+                    <h4 className="font-medium text-[#1a3d00] dark:text-[#76B900]100 mb-2">
                       Ollama Connected Successfully
                     </h4>
-                    <p className="text-sm text-green-800 dark:text-green-200">
+                    <p className="text-sm text-[#5a8f00] dark:text-[#76B900]200">
                       Local AI models are available for maximum privacy and HIPAA compliance. 
                       All processing happens on your local infrastructure.
                     </p>

@@ -95,7 +95,7 @@ export default function Components() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
           <Input
             placeholder="Search components..."
-            className="pl-10 bg-gray-900 border-gray-800 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-emerald-500"
+            className="pl-10 bg-gray-900 border-gray-800 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-[#76B900]"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             data-testid="input-search-components"
@@ -122,7 +122,7 @@ export default function Components() {
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="p-2 bg-gray-800 rounded-lg">
-                    <UserCheck className="w-5 h-5 text-emerald-400" />
+                    <UserCheck className="w-5 h-5 text-[#76B900]" />
                   </div>
                   <div>
                     <CardTitle className="text-lg text-white">{component.name}</CardTitle>
@@ -131,12 +131,12 @@ export default function Components() {
                 </div>
                 <div className="flex items-center space-x-1">
                   {component.isVerified && (
-                    <Badge className="text-xs bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                    <Badge className="text-xs bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">
                       Verified
                     </Badge>
                   )}
                   {component.isHipaaCompliant && (
-                    <Shield className="w-4 h-4 text-emerald-400" />
+                    <Shield className="w-4 h-4 text-[#76B900]" />
                   )}
                 </div>
               </div>
@@ -168,7 +168,7 @@ export default function Components() {
                 </Button>
                 <Button 
                   size="sm" 
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white"
+                  className="flex-1 bg-[#76B900] hover:bg-[#76B900] text-white"
                   onClick={() => {
                     toast({
                       title: "Component Added",

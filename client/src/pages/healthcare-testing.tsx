@@ -113,8 +113,8 @@ export default function HealthcareTesting() {
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-2">
-          <TestTube className="h-8 w-8 text-green-600" />
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+          <TestTube className="h-8 w-8 text-[#76B900]" />
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-[#76B900] to-blue-600 bg-clip-text text-transparent">
             Advanced Healthcare Testing
           </h1>
         </div>
@@ -122,7 +122,7 @@ export default function HealthcareTesting() {
           AI-powered comprehensive testing framework for healthcare applications with HIPAA compliance and clinical workflow validation
         </p>
         <div className="flex items-center justify-center gap-2">
-          <Badge className="bg-gradient-to-r from-green-500 to-blue-500 text-white">
+          <Badge className="bg-gradient-to-r from-[#76B900] to-blue-500 text-white">
             <Brain className="h-3 w-3 mr-1" />
             AI-Powered Testing
           </Badge>
@@ -239,7 +239,7 @@ export default function HealthcareTesting() {
                 <Button 
                   type="submit" 
                   disabled={executeTestMutation.isPending || !applicationId.trim() || testTypes.length === 0}
-                  className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600"
+                  className="bg-gradient-to-r from-[#76B900] to-blue-500 hover:from-[#76B900] hover:to-blue-600"
                 >
                   {executeTestMutation.isPending ? (
                     <>
@@ -317,7 +317,7 @@ export default function HealthcareTesting() {
               {generateStrategyMutation.data && (
                 <Card className="mt-6">
                   <CardHeader>
-                    <CardTitle className="text-green-600">Testing Strategy Generated</CardTitle>
+                    <CardTitle className="text-[#76B900]">Testing Strategy Generated</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
@@ -355,7 +355,7 @@ export default function HealthcareTesting() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {analyticsLoading ? (
               <div className="col-span-full text-center p-8">
-                <div className="animate-spin w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full mx-auto mb-4" />
+                <div className="animate-spin w-8 h-8 border-4 border-[#76B900] border-t-transparent rounded-full mx-auto mb-4" />
                 <p>Loading analytics...</p>
               </div>
             ) : analyticsData && (
@@ -479,13 +479,13 @@ export default function HealthcareTesting() {
           {executeTestMutation.data ? (
             <Card>
               <CardHeader>
-                <CardTitle className="text-green-600">Test Execution Results</CardTitle>
+                <CardTitle className="text-[#76B900]">Test Execution Results</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   <div className="grid md:grid-cols-4 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">
+                      <div className="text-2xl font-bold text-[#76B900]">
                         {(executeTestMutation.data as any)?.testing_results?.results?.passed || 0}
                       </div>
                       <p className="text-sm text-muted-foreground">Tests Passed</p>

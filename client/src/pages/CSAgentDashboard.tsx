@@ -139,7 +139,7 @@ export default function CSAgentDashboard() {
           </p>
           {agentHealth && (
             <div className="flex items-center justify-center space-x-4">
-              <Badge variant="outline" className="bg-green-100 text-green-800">
+              <Badge variant="outline" className="bg-[#76B900]100 text-[#5a8f00]">
                 <CheckCircle className="w-4 h-4 mr-1" />
                 {agentHealth.status || 'Active'}
               </Badge>
@@ -201,7 +201,7 @@ export default function CSAgentDashboard() {
                   <CardHeader>
                     <CardTitle className="flex items-center">
                       {platformAnalysis.platform_status === 'healthy' ? (
-                        <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                        <CheckCircle className="w-5 h-5 text-[#76B900] mr-2" />
                       ) : (
                         <AlertTriangle className="w-5 h-5 text-yellow-600 mr-2" />
                       )}
@@ -286,7 +286,7 @@ export default function CSAgentDashboard() {
                   <div className="space-y-2">
                     {platformAnalysis.recommendations.map((recommendation, index) => (
                       <div key={index} className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-[#76B900] mt-1 flex-shrink-0" />
                         <span className="text-sm">{recommendation}</span>
                       </div>
                     ))}
@@ -350,7 +350,7 @@ export default function CSAgentDashboard() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center space-y-4">
-                      <div className="text-3xl font-bold text-green-600">
+                      <div className="text-3xl font-bold text-[#76B900]">
                         {agentHealth.power_level || '100x'}
                       </div>
                       <Progress value={100} className="w-full" />
@@ -399,7 +399,7 @@ export default function CSAgentDashboard() {
                         <div className="space-y-2">
                           {healthcareAnalysis.compliance_features.recommendations.map((rec: string, index: number) => (
                             <div key={index} className="flex items-start space-x-2">
-                              <CheckCircle className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
+                              <CheckCircle className="w-4 h-4 text-[#76B900] mt-1 flex-shrink-0" />
                               <span className="text-sm">{rec}</span>
                             </div>
                           ))}
@@ -473,7 +473,7 @@ export default function CSAgentDashboard() {
                     {Object.entries(agentHealth.capabilities).map(([capability, enabled]) => (
                       <div key={capability} className="flex items-center space-x-2">
                         {enabled ? (
-                          <CheckCircle className="w-5 h-5 text-green-600" />
+                          <CheckCircle className="w-5 h-5 text-[#76B900]" />
                         ) : (
                           <AlertTriangle className="w-5 h-5 text-yellow-600" />
                         )}

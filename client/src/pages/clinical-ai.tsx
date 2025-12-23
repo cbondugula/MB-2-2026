@@ -73,14 +73,14 @@ const CLINICAL_DOMAINS = [
 ];
 
 const RISK_LEVELS = [
-  { value: 'low', label: 'Low Risk', color: 'bg-green-500' },
+  { value: 'low', label: 'Low Risk', color: 'bg-[#76B900]' },
   { value: 'moderate', label: 'Moderate Risk', color: 'bg-yellow-500' },
   { value: 'high', label: 'High Risk', color: 'bg-orange-500' },
   { value: 'critical', label: 'Critical Risk', color: 'bg-red-500' }
 ];
 
 const EVIDENCE_LEVELS = {
-  'A': { label: 'High Quality Evidence', color: 'bg-green-600', description: 'Multiple RCTs or meta-analysis' },
+  'A': { label: 'High Quality Evidence', color: 'bg-[#76B900]', description: 'Multiple RCTs or meta-analysis' },
   'B': { label: 'Moderate Quality Evidence', color: 'bg-blue-600', description: 'Single RCT or cohort studies' },
   'C': { label: 'Low Quality Evidence', color: 'bg-yellow-600', description: 'Case-control or observational studies' },
   'D': { label: 'Expert Opinion', color: 'bg-gray-600', description: 'Expert consensus or case reports' }
@@ -192,10 +192,10 @@ export default function ClinicalAI() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-r from-blue-600 to-green-600 rounded-full">
+            <div className="p-3 bg-gradient-to-r from-blue-600 to-[#76B900] rounded-full">
               <Brain className="h-8 w-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-[#76B900] bg-clip-text text-transparent">
               Clinical AI Constellation
             </h1>
             <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-300">
@@ -216,9 +216,9 @@ export default function ClinicalAI() {
                 <p className="text-sm text-gray-600">Multi-layer safety validation</p>
               </CardContent>
             </Card>
-            <Card className="border-green-200 dark:border-green-800">
+            <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
               <CardContent className="p-4 text-center">
-                <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                <CheckCircle className="h-8 w-8 text-[#76B900] mx-auto mb-2" />
                 <h3 className="font-semibold">HIPAA Compliant</h3>
                 <p className="text-sm text-gray-600">Built-in compliance checking</p>
               </CardContent>
@@ -421,7 +421,7 @@ export default function ClinicalAI() {
                         <div className="grid grid-cols-3 gap-4">
                           <Card className="p-4">
                             <div className="text-center">
-                              <div className="text-2xl font-bold text-green-600">
+                              <div className="text-2xl font-bold text-[#76B900]">
                                 {result.consensusScore}%
                               </div>
                               <div className="text-sm text-gray-600">Consensus Score</div>
@@ -431,7 +431,7 @@ export default function ClinicalAI() {
                             <div className="text-center">
                               <div className="text-2xl font-bold">
                                 {result.safetyVerified ? (
-                                  <CheckCircle className="h-8 w-8 text-green-600 mx-auto" />
+                                  <CheckCircle className="h-8 w-8 text-[#76B900] mx-auto" />
                                 ) : (
                                   <AlertTriangle className="h-8 w-8 text-red-600 mx-auto" />
                                 )}
@@ -455,10 +455,10 @@ export default function ClinicalAI() {
                         </div>
 
                         {/* Primary Recommendation */}
-                        <Card className="border-green-200 dark:border-green-800">
+                        <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
                           <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
+                              <CheckCircle className="h-5 w-5 text-[#76B900]" />
                               Primary Recommendation
                               <Badge 
                                 className={`${EVIDENCE_LEVELS[result.primaryRecommendation.evidenceLevel].color} text-white`}
@@ -468,8 +468,8 @@ export default function ClinicalAI() {
                             </CardTitle>
                           </CardHeader>
                           <CardContent className="space-y-4">
-                            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                              <p className="font-medium text-green-900 dark:text-green-100">
+                            <div className="bg-[#76B900]50 dark:bg-[#1a3d00]/20 p-4 rounded-lg">
+                              <p className="font-medium text-[#1a3d00] dark:text-[#76B900]100">
                                 {result.primaryRecommendation.recommendation}
                               </p>
                             </div>
@@ -554,7 +554,7 @@ export default function ClinicalAI() {
                             <div className="space-y-2">
                               {result.primaryRecommendation.complianceNotes.map((note, idx) => (
                                 <div key={idx} className="flex items-start gap-2">
-                                  <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
+                                  <CheckCircle className="h-4 w-4 text-[#76B900] mt-0.5" />
                                   <span className="text-sm">{note}</span>
                                 </div>
                               ))}
@@ -600,9 +600,9 @@ export default function ClinicalAI() {
                       Convert between healthcare standards while preserving semantic meaning
                     </p>
                   </Card>
-                  <Card className="p-4 bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950 dark:to-teal-950">
+                  <Card className="p-4 bg-gradient-to-br from-green-50 to-teal-50 dark:from-[#1a3d00] dark:to-teal-950">
                     <div className="flex items-center gap-2 mb-2">
-                      <Shield className="h-5 w-5 text-green-600" />
+                      <Shield className="h-5 w-5 text-[#76B900]" />
                       <h3 className="font-semibold">193 Countries</h3>
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -832,13 +832,13 @@ export default function ClinicalAI() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <Card className="p-4 border-green-200 dark:border-green-800">
-                    <h3 className="font-semibold text-green-700 dark:text-green-300">Patent #001</h3>
+                  <Card className="p-4 border-[#76B900]200 dark:border-[#5a8f00]">
+                    <h3 className="font-semibold text-[#5a8f00] dark:text-[#8CC63F]">Patent #001</h3>
                     <h4 className="font-medium mb-2">Multi-Modal Clinical Decision Support AI</h4>
                     <p className="text-sm text-gray-600 mb-3">
                       Safety constellation architecture with 99.02% accuracy
                     </p>
-                    <Badge className="bg-green-100 text-green-800">High Priority</Badge>
+                    <Badge className="bg-[#76B900]100 text-[#5a8f00]">High Priority</Badge>
                   </Card>
 
                   <Card className="p-4 border-blue-200 dark:border-blue-800">
@@ -860,11 +860,11 @@ export default function ClinicalAI() {
                   </Card>
                 </div>
 
-                <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg">
+                <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 dark:from-[#1a3d00]/20 dark:to-blue-900/20 rounded-lg">
                   <h3 className="text-lg font-semibold mb-2">Portfolio Value</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-2xl font-bold text-green-600">$78-117M</p>
+                      <p className="text-2xl font-bold text-[#76B900]">$78-117M</p>
                       <p className="text-sm text-gray-600">Estimated Portfolio Value</p>
                     </div>
                     <div>

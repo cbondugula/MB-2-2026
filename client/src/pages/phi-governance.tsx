@@ -133,7 +133,7 @@ export default function PHIGovernance() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-      case 'allowed': return 'bg-emerald-900/50 text-emerald-300 border-emerald-700';
+      case 'allowed': return 'bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]';
       case 'paused':
       case 'flagged': return 'bg-amber-900/50 text-amber-300 border-amber-700';
       case 'blocked':
@@ -144,7 +144,7 @@ export default function PHIGovernance() {
 
   const getEncryptionIcon = (encryption: string) => {
     switch (encryption) {
-      case 'aes-256': return <Lock className="w-4 h-4 text-emerald-400" />;
+      case 'aes-256': return <Lock className="w-4 h-4 text-[#76B900]" />;
       case 'tls-1.3': return <Shield className="w-4 h-4 text-blue-400" />;
       default: return <AlertTriangle className="w-4 h-4 text-red-400" />;
     }
@@ -198,14 +198,14 @@ export default function PHIGovernance() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-emerald-900/40 to-gray-900 border-emerald-700/50">
+          <Card className="bg-gradient-to-br from-[#1a3d00]/40 to-gray-900 border-[#76B900]/50">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-400">Encryption Coverage</p>
-                  <p className="text-3xl font-bold text-emerald-400" data-testid="text-encryption">{overview.encryptionCoverage}%</p>
+                  <p className="text-3xl font-bold text-[#76B900]" data-testid="text-encryption">{overview.encryptionCoverage}%</p>
                 </div>
-                <Lock className="w-8 h-8 text-emerald-400" />
+                <Lock className="w-8 h-8 text-[#76B900]" />
               </div>
               <Progress value={overview.encryptionCoverage} className="mt-2 h-2" />
             </CardContent>
@@ -360,7 +360,7 @@ export default function PHIGovernance() {
                     >
                       <div className="flex items-center gap-4">
                         {log.status === 'allowed' ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                          <CheckCircle2 className="w-5 h-5 text-[#76B900]" />
                         ) : log.status === 'flagged' ? (
                           <AlertTriangle className="w-5 h-5 text-amber-400" />
                         ) : (
@@ -406,7 +406,7 @@ export default function PHIGovernance() {
                       <div className="flex-1">
                         <div className="flex items-center gap-3">
                           <h3 className="font-semibold text-white">{policy.name}</h3>
-                          <Badge className={policy.enabled ? 'bg-emerald-900/50 text-emerald-300' : 'bg-gray-800 text-gray-400'}>
+                          <Badge className={policy.enabled ? 'bg-[#1a3d00]/50 text-[#8CC63F]' : 'bg-gray-800 text-gray-400'}>
                             {policy.enabled ? 'Active' : 'Disabled'}
                           </Badge>
                         </div>
@@ -456,7 +456,7 @@ export default function PHIGovernance() {
                       {['SSN Pattern', 'MRN Format', 'DOB Detection', 'Address Match', 'Phone Numbers', 'Email PHI'].map((pattern) => (
                         <div key={pattern} className="flex items-center justify-between">
                           <span className="text-sm text-gray-400">{pattern}</span>
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <CheckCircle2 className="w-4 h-4 text-[#76B900]" />
                         </div>
                       ))}
                     </div>
@@ -479,8 +479,8 @@ export default function PHIGovernance() {
                         <p className="text-sm text-amber-300">Unmasked SSN in logs</p>
                         <p className="text-xs text-gray-500">server/audit.log:247</p>
                       </div>
-                      <div className="p-2 bg-emerald-900/20 rounded border border-emerald-700/50">
-                        <p className="text-sm text-emerald-300">PHI properly encrypted</p>
+                      <div className="p-2 bg-[#1a3d00]/20 rounded border border-[#76B900]/50">
+                        <p className="text-sm text-[#8CC63F]">PHI properly encrypted</p>
                         <p className="text-xs text-gray-500">All patient tables</p>
                       </div>
                     </div>

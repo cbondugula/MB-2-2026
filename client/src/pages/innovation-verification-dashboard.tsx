@@ -85,7 +85,7 @@ export default function InnovationVerificationDashboard() {
             </div>
             
             <div className="flex space-x-2">
-              <Badge variant="outline" className="text-green-400 border-green-400">
+              <Badge variant="outline" className="text-[#8CC63F] border-[#8CC63F]">
                 $800M-$1.12B Portfolio Value
               </Badge>
               <Badge variant="outline" className="text-blue-400 border-blue-400">
@@ -121,12 +121,12 @@ export default function InnovationVerificationDashboard() {
 
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-green-900 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Shield className="w-6 h-6 text-green-400" />
+              <div className="w-12 h-12 bg-[#1a3d00] rounded-lg flex items-center justify-center mx-auto mb-3">
+                <Shield className="w-6 h-6 text-[#8CC63F]" />
               </div>
-              <div className="text-2xl font-bold text-green-400 mb-1">7</div>
+              <div className="text-2xl font-bold text-[#8CC63F] mb-1">7</div>
               <div className="text-sm text-gray-400">Total Patents</div>
-              <div className="text-xs text-green-300">Complete Ecosystem Coverage</div>
+              <div className="text-xs text-[#8CC63F]">Complete Ecosystem Coverage</div>
             </CardContent>
           </Card>
 
@@ -178,22 +178,22 @@ export default function InnovationVerificationDashboard() {
                               <div className="text-sm text-gray-400">Portfolio Value</div>
                             </div>
                             <div className="text-center">
-                              <div className="text-2xl font-bold text-green-400">3</div>
+                              <div className="text-2xl font-bold text-[#8CC63F]">3</div>
                               <div className="text-sm text-gray-400">Enterprise AI Technology</div>
                             </div>
                           </div>
                           
                           <div className="space-y-2 text-sm">
                             <div className="flex items-center space-x-2">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-[#8CC63F]" />
                               <span className="text-gray-300">AI-powered application development</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-[#8CC63F]" />
                               <span className="text-gray-300">Universal no-code visual builder</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-[#8CC63F]" />
                               <span className="text-gray-300">Integrated multimodal development platform</span>
                             </div>
                           </div>
@@ -219,26 +219,26 @@ export default function InnovationVerificationDashboard() {
                               <div className="text-sm text-gray-400">Portfolio Value</div>
                             </div>
                             <div className="text-center">
-                              <div className="text-2xl font-bold text-green-400">4</div>
+                              <div className="text-2xl font-bold text-[#8CC63F]">4</div>
                               <div className="text-sm text-gray-400">Backend Patents</div>
                             </div>
                           </div>
                           
                           <div className="space-y-2 text-sm">
                             <div className="flex items-center space-x-2">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-[#8CC63F]" />
                               <span className="text-gray-300">Automated backend infrastructure generation</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-[#8CC63F]" />
                               <span className="text-gray-300">AI-powered database management</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-[#8CC63F]" />
                               <span className="text-gray-300">Intelligent healthcare API generation</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <CheckCircle className="w-4 h-4 text-[#8CC63F]" />
                               <span className="text-gray-300">Automated DevOps pipeline creation</span>
                             </div>
                           </div>
@@ -259,8 +259,8 @@ export default function InnovationVerificationDashboard() {
                       {combinedPortfolioMutation.data ? (
                         <div className="space-y-3">
                           <div className="flex items-center space-x-2 mb-2">
-                            <CheckCircle className="w-5 h-5 text-green-400" />
-                            <span className="text-green-400 font-medium">Complete Ecosystem Analysis Complete</span>
+                            <CheckCircle className="w-5 h-5 text-[#8CC63F]" />
+                            <span className="text-[#8CC63F] font-medium">Complete Ecosystem Analysis Complete</span>
                           </div>
                           
                           <div className="grid grid-cols-3 gap-4 text-center">
@@ -269,7 +269,7 @@ export default function InnovationVerificationDashboard() {
                               <div className="text-xs text-gray-400">Max Portfolio Value</div>
                             </div>
                             <div>
-                              <div className="text-lg font-bold text-green-400">7</div>
+                              <div className="text-lg font-bold text-[#8CC63F]">7</div>
                               <div className="text-xs text-gray-400">Total Patents</div>
                             </div>
                             <div>
@@ -316,7 +316,7 @@ export default function InnovationVerificationDashboard() {
                         <div className="text-sm text-gray-400">Total Market</div>
                       </div>
                       <div>
-                        <div className="text-xl font-bold text-green-400">90%</div>
+                        <div className="text-xl font-bold text-[#8CC63F]">90%</div>
                         <div className="text-sm text-gray-400">Time Reduction</div>
                       </div>
                       <div>
@@ -325,9 +325,9 @@ export default function InnovationVerificationDashboard() {
                       </div>
                     </div>
                     
-                    <div className="bg-green-900/20 p-3 rounded border border-green-600">
-                      <div className="text-green-400 text-sm font-medium">REVOLUTIONARY DISRUPTION</div>
-                      <div className="text-green-300 text-xs">
+                    <div className="bg-[#1a3d00]/20 p-3 rounded border border-[#76B900]">
+                      <div className="text-[#8CC63F] text-sm font-medium">REVOLUTIONARY DISRUPTION</div>
+                      <div className="text-[#8CC63F] text-xs">
                         Complete absence of no-code healthcare backend platforms - massive whitespace opportunity
                       </div>
                     </div>
@@ -351,8 +351,8 @@ export default function InnovationVerificationDashboard() {
               <CardContent className="space-y-4">
                 <div className="bg-gray-900 p-3 rounded-lg">
                   <div className="flex items-center space-x-2 mb-2">
-                    <Shield className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400 text-sm font-medium">FULLY PROTECTED</span>
+                    <Shield className="w-4 h-4 text-[#8CC63F]" />
+                    <span className="text-[#8CC63F] text-sm font-medium">FULLY PROTECTED</span>
                   </div>
                   <p className="text-xs text-gray-400">
                     Revolutionary technology with comprehensive patent protection
@@ -370,11 +370,11 @@ export default function InnovationVerificationDashboard() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Trade Secrets:</span>
-                    <span className="text-green-400">✓ Secured</span>
+                    <span className="text-[#8CC63F]">✓ Secured</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Code Obfuscation:</span>
-                    <span className="text-green-400">✓ Active</span>
+                    <span className="text-[#8CC63F]">✓ Active</span>
                   </div>
                 </div>
               </CardContent>
@@ -391,7 +391,7 @@ export default function InnovationVerificationDashboard() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-400">United States:</span>
-                    <span className="text-green-400">Priority</span>
+                    <span className="text-[#8CC63F]">Priority</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">European Union:</span>
@@ -435,13 +435,13 @@ export default function InnovationVerificationDashboard() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Google:</span>
-                    <span className="text-green-400">$2.0B</span>
+                    <span className="text-[#8CC63F]">$2.0B</span>
                   </div>
                 </div>
 
-                <div className="mt-4 p-3 bg-green-900/20 rounded border border-green-600">
-                  <div className="text-green-400 text-xs font-medium">STRATEGIC VALUE</div>
-                  <div className="text-green-300 text-xs">
+                <div className="mt-4 p-3 bg-[#1a3d00]/20 rounded border border-[#76B900]">
+                  <div className="text-[#8CC63F] text-xs font-medium">STRATEGIC VALUE</div>
+                  <div className="text-[#8CC63F] text-xs">
                     Healthcare cloud services and developer tools synergy
                   </div>
                 </div>
@@ -487,8 +487,8 @@ export default function InnovationVerificationDashboard() {
                   <h4 className="text-white font-medium mb-3">Revolutionary Replacements</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center space-x-2">
-                      <Mic className="w-4 h-4 text-green-400" />
-                      <span className="text-green-300">AI-powered development</span>
+                      <Mic className="w-4 h-4 text-[#8CC63F]" />
+                      <span className="text-[#8CC63F]">AI-powered development</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Eye className="w-4 h-4 text-blue-400" />

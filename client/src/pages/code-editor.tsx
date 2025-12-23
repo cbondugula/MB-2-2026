@@ -84,7 +84,7 @@ export default function PatientPortal() {
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <div className="flex items-center space-x-2">
-            <Shield className="w-5 h-5 text-emerald-500" />
+            <Shield className="w-5 h-5 text-[#76B900]" />
             <CardTitle>Patient Registration</CardTitle>
           </div>
         </CardHeader>
@@ -112,7 +112,7 @@ export default function PatientPortal() {
         <Eye className="w-4 h-4 mr-2" />
         Preview
       </Button>
-      <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500 text-white">
+      <Button size="sm" className="bg-[#76B900] hover:bg-[#76B900] text-white">
         <Play className="w-4 h-4 mr-2" />
         Run
       </Button>
@@ -146,7 +146,7 @@ export default function PatientPortal() {
                   onClick={() => setActiveFile(file.name)}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                     activeFile === file.name
-                      ? 'bg-gray-800 text-emerald-400'
+                      ? 'bg-gray-800 text-[#76B900]'
                       : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                   }`}
                   data-testid={`file-${file.name}`}
@@ -187,7 +187,7 @@ export default function PatientPortal() {
                     <span className="text-sm text-gray-500">src/components/</span>
                     <span className="text-sm text-gray-200">{activeFile}</span>
                   </div>
-                  <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                  <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">
                     <Shield className="w-3 h-3 mr-1" />
                     Secure
                   </Badge>
@@ -207,7 +207,7 @@ export default function PatientPortal() {
                   <Card className="bg-gray-800 border-gray-700">
                     <CardHeader>
                       <div className="flex items-center space-x-2">
-                        <Shield className="w-5 h-5 text-emerald-400" />
+                        <Shield className="w-5 h-5 text-[#76B900]" />
                         <CardTitle className="text-white">Patient Registration</CardTitle>
                       </div>
                       <p className="text-sm text-gray-400">
@@ -219,18 +219,18 @@ export default function PatientPortal() {
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label className="text-sm font-medium text-gray-300 mb-1 block">First Name</label>
-                            <input className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                            <input className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#76B900]" />
                           </div>
                           <div>
                             <label className="text-sm font-medium text-gray-300 mb-1 block">Last Name</label>
-                            <input className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                            <input className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#76B900]" />
                           </div>
                         </div>
                         <div>
                           <label className="text-sm font-medium text-gray-300 mb-1 block">Email</label>
-                          <input type="email" className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                          <input type="email" className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#76B900]" />
                         </div>
-                        <Button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white">
+                        <Button className="w-full bg-[#76B900] hover:bg-[#76B900] text-white">
                           Register Patient
                         </Button>
                       </div>
@@ -246,26 +246,26 @@ export default function PatientPortal() {
                   <Card className="bg-gray-800 border-gray-700">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2 text-white">
-                        <Shield className="w-5 h-5 text-emerald-400" />
+                        <Shield className="w-5 h-5 text-[#76B900]" />
                         <span>HIPAA Compliance Settings</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-300">Encryption at Rest</span>
-                        <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">Enabled</Badge>
+                        <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">Enabled</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-300">Data Masking</span>
-                        <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">Enabled</Badge>
+                        <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">Enabled</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-300">Audit Logging</span>
-                        <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">Enabled</Badge>
+                        <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">Enabled</Badge>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-300">Access Control</span>
-                        <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">Role-Based</Badge>
+                        <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">Role-Based</Badge>
                       </div>
                     </CardContent>
                   </Card>

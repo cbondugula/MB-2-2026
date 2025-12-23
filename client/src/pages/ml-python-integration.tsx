@@ -163,7 +163,7 @@ export default function MLPythonIntegration() {
             </div>
             
             <div className="flex space-x-2">
-              <Badge variant="outline" className="text-green-400 border-green-400">
+              <Badge variant="outline" className="text-[#8CC63F] border-[#8CC63F]">
                 TensorFlow 2.13
               </Badge>
               <Badge variant="outline" className="text-blue-400 border-blue-400">
@@ -327,7 +327,7 @@ print("Healthcare ML template loaded successfully!")
                 {currentPipeline && (
                   <Button 
                     variant="outline" 
-                    className="w-full border-green-600 text-green-300"
+                    className="w-full border-[#76B900] text-[#8CC63F]"
                     onClick={() => deployModelMutation.mutate(currentPipeline)}
                     disabled={deployModelMutation.isPending}
                   >
@@ -349,7 +349,7 @@ print("Healthcare ML template loaded successfully!")
                     Python ML Code Editor
                   </div>
                   <div className="flex space-x-2">
-                    <Badge variant="outline" className="text-green-400 border-green-400">
+                    <Badge variant="outline" className="text-[#8CC63F] border-[#8CC63F]">
                       Python 3.9
                     </Badge>
                     <Badge variant="outline" className="text-blue-400 border-blue-400">
@@ -380,7 +380,7 @@ print('Healthcare ML environment ready!')
                         size="sm" 
                         onClick={() => executePythonMutation.mutate({ pythonCode })}
                         disabled={!pythonCode || executePythonMutation.isPending}
-                        className="bg-green-600 hover:bg-green-700"
+                        className="bg-[#76B900] hover:bg-[#5a8f00]"
                       >
                         <Play className="w-4 h-4 mr-2" />
                         Run Code
@@ -423,7 +423,7 @@ print('Healthcare ML environment ready!')
                     
                     <TabsContent value="output" className="space-y-4">
                       <div className="bg-gray-900 p-4 rounded-lg border border-gray-600">
-                        <pre className="text-green-400 text-sm whitespace-pre-wrap font-mono">
+                        <pre className="text-[#8CC63F] text-sm whitespace-pre-wrap font-mono">
                           {executePythonMutation.data?.result?.output || 'No output available'}
                         </pre>
                       </div>
@@ -434,7 +434,7 @@ print('Healthcare ML environment ready!')
                         <div className="grid grid-cols-2 gap-4">
                           <div className="bg-gray-900 p-4 rounded-lg">
                             <div className="text-center">
-                              <div className="text-2xl font-bold text-green-400">
+                              <div className="text-2xl font-bold text-[#8CC63F]">
                                 {(currentPipeline.performance.accuracy * 100).toFixed(1)}%
                               </div>
                               <div className="text-sm text-gray-400">Accuracy</div>
@@ -460,7 +460,7 @@ print('Healthcare ML environment ready!')
                             <div className="space-y-2 text-sm">
                               <div className="flex justify-between">
                                 <span className="text-gray-400">Health Check:</span>
-                                <span className="text-green-400">/health</span>
+                                <span className="text-[#8CC63F]">/health</span>
                               </div>
                               <div className="flex justify-between">
                                 <span className="text-gray-400">Prediction:</span>

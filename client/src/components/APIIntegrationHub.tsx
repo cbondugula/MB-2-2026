@@ -92,7 +92,7 @@ export default function APIIntegrationHub() {
                 }`}>
                   <integration.icon className={`text-xl ${
                     integration.type === "FHIR" ? "text-medical-blue-500" :
-                    integration.type === "HL7" ? "text-trust-green-500" :
+                    integration.type === "HL7" ? "text-trust-[#76B900]" :
                     "text-healthcare-teal-500"
                   }`} />
                 </div>
@@ -101,7 +101,7 @@ export default function APIIntegrationHub() {
                 <Button 
                   className={`w-full transition-colors ${
                     integration.type === "FHIR" ? "bg-medical-blue-500 hover:bg-medical-blue-600" :
-                    integration.type === "HL7" ? "bg-trust-green-500 hover:bg-trust-green-600" :
+                    integration.type === "HL7" ? "bg-trust-[#76B900] hover:bg-trust-[#76B900]" :
                     "bg-healthcare-teal-500 hover:bg-healthcare-teal-600"
                   }`}
                 >

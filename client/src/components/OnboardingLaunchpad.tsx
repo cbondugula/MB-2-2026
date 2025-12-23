@@ -109,7 +109,7 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
 
   const getComplexityColor = (complexity: string) => {
     switch (complexity) {
-      case "beginner": return "bg-green-600";
+      case "beginner": return "bg-[#76B900]";
       case "intermediate": return "bg-yellow-600";
       case "advanced": return "bg-orange-600";
       default: return "bg-gray-600";
@@ -120,7 +120,7 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
     <div className="max-w-5xl mx-auto py-8 px-4">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Sparkles className="w-8 h-8 text-emerald-400" />
+          <Sparkles className="w-8 h-8 text-[#76B900]" />
           <h1 className="text-3xl font-bold text-white">Welcome to MedBuilder</h1>
         </div>
         <p className="text-gray-400 text-lg">
@@ -129,21 +129,21 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
         
         <div className="flex items-center justify-center gap-6 mt-6">
           <div className="flex items-center gap-2">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-emerald-600' : 'bg-gray-700'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-[#76B900]' : 'bg-gray-700'}`}>
               {step > 1 ? <CheckCircle className="w-5 h-5 text-white" /> : <span className="text-white font-bold">1</span>}
             </div>
             <span className={step >= 1 ? 'text-white' : 'text-gray-500'}>Choose Use Case</span>
           </div>
           <div className="w-12 h-0.5 bg-gray-700" />
           <div className="flex items-center gap-2">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-emerald-600' : 'bg-gray-700'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-[#76B900]' : 'bg-gray-700'}`}>
               {step > 2 ? <CheckCircle className="w-5 h-5 text-white" /> : <span className={step >= 2 ? 'text-white' : 'text-gray-400'} >2</span>}
             </div>
             <span className={step >= 2 ? 'text-white' : 'text-gray-500'}>Configure</span>
           </div>
           <div className="w-12 h-0.5 bg-gray-700" />
           <div className="flex items-center gap-2">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-emerald-600' : 'bg-gray-700'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-[#76B900]' : 'bg-gray-700'}`}>
               <span className={step >= 3 ? 'text-white' : 'text-gray-400'}>3</span>
             </div>
             <span className={step >= 3 ? 'text-white' : 'text-gray-500'}>Preview & Build</span>
@@ -158,14 +158,14 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
             return (
               <Card 
                 key={useCase.id}
-                className="bg-gray-800 border-gray-700 hover:border-emerald-500 transition-all cursor-pointer group"
+                className="bg-gray-800 border-gray-700 hover:border-[#76B900] transition-all cursor-pointer group"
                 onClick={() => handleSelectUseCase(useCase)}
                 data-testid={`usecase-${useCase.id}`}
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
-                    <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center group-hover:bg-emerald-600/30 transition-colors">
-                      <Icon className="w-6 h-6 text-emerald-400" />
+                    <div className="w-12 h-12 bg-[#76B900]/20 rounded-lg flex items-center justify-center group-hover:bg-[#76B900]/30 transition-colors">
+                      <Icon className="w-6 h-6 text-[#76B900]" />
                     </div>
                     <Badge className={`${getComplexityColor(useCase.complexity)} text-white text-xs`}>
                       {useCase.complexity}
@@ -206,8 +206,8 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
         <Card className="bg-gray-800 border-gray-700 max-w-2xl mx-auto">
           <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center">
-                <selectedUseCase.icon className="w-6 h-6 text-emerald-400" />
+              <div className="w-12 h-12 bg-[#76B900]/20 rounded-lg flex items-center justify-center">
+                <selectedUseCase.icon className="w-6 h-6 text-[#76B900]" />
               </div>
               <div>
                 <CardTitle className="text-white">{selectedUseCase.title}</CardTitle>
@@ -219,13 +219,13 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-gray-900 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <Shield className="w-5 h-5 text-emerald-400" />
+                  <Shield className="w-5 h-5 text-[#76B900]" />
                   <div>
                     <p className="text-white font-medium">HIPAA Compliance</p>
                     <p className="text-gray-400 text-sm">Automatic PHI safeguards enabled</p>
                   </div>
                 </div>
-                <CheckCircle className="w-5 h-5 text-emerald-400" />
+                <CheckCircle className="w-5 h-5 text-[#76B900]" />
               </div>
               
               <div className="flex items-center justify-between p-4 bg-gray-900 rounded-lg">
@@ -236,7 +236,7 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
                     <p className="text-gray-400 text-sm">Interoperability standards included</p>
                   </div>
                 </div>
-                <CheckCircle className="w-5 h-5 text-emerald-400" />
+                <CheckCircle className="w-5 h-5 text-[#76B900]" />
               </div>
 
               <div className="flex items-center justify-between p-4 bg-gray-900 rounded-lg">
@@ -247,7 +247,7 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
                     <p className="text-gray-400 text-sm">Clinician, admin, patient roles</p>
                   </div>
                 </div>
-                <CheckCircle className="w-5 h-5 text-emerald-400" />
+                <CheckCircle className="w-5 h-5 text-[#76B900]" />
               </div>
             </div>
 
@@ -255,7 +255,7 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
               <Button variant="outline" onClick={() => setStep(1)} className="border-gray-600 text-gray-300">
                 Back
               </Button>
-              <Button onClick={handleContinue} className="bg-emerald-600 hover:bg-emerald-700">
+              <Button onClick={handleContinue} className="bg-[#76B900] hover:bg-[#76B900]">
                 Continue
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -268,7 +268,7 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
         <Card className="bg-gray-800 border-gray-700 max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-emerald-400" />
+              <Sparkles className="w-5 h-5 text-[#76B900]" />
               Ready to Build!
             </CardTitle>
             <CardDescription className="text-gray-400">
@@ -276,7 +276,7 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="bg-gradient-to-r from-emerald-600/20 to-blue-600/20 rounded-lg p-6 text-center">
+            <div className="bg-gradient-to-r from-[#76B900]/20 to-blue-600/20 rounded-lg p-6 text-center">
               <p className="text-white font-medium mb-2">You have {creditsRemaining} free credits</p>
               <p className="text-gray-400 text-sm">Each AI generation uses 1 credit</p>
             </div>
@@ -285,19 +285,19 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
               <h4 className="text-white font-medium">What happens next:</h4>
               <ul className="space-y-2 text-gray-300 text-sm">
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
                   AI generates your complete application code
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
                   Live preview opens in the workspace
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
                   Customize and iterate with AI assistance
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
                   Deploy with one click when ready
                 </li>
               </ul>
@@ -309,7 +309,7 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
               </Button>
               <Button 
                 asChild
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-[#76B900] hover:bg-[#76B900]"
               >
                 <Link href={`/templates?usecase=${selectedUseCase.id}`}>
                   Start Building
@@ -324,7 +324,7 @@ export function OnboardingLaunchpad({ onSelectUseCase, creditsRemaining = 3 }: O
       <div className="mt-8 text-center">
         <p className="text-gray-500 text-sm">
           Or{" "}
-          <Link href="/templates" className="text-emerald-400 hover:underline">
+          <Link href="/templates" className="text-[#76B900] hover:underline">
             browse all templates
           </Link>
           {" "}to start from scratch

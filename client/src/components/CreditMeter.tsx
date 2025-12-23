@@ -47,7 +47,7 @@ export function CreditMeter({ sessionId, userId, compact = false }: CreditMeterP
             className={`gap-2 ${isLow ? 'text-amber-400' : 'text-gray-300'} hover:bg-gray-800`}
             data-testid="credit-meter-compact"
           >
-            <Coins className={`w-4 h-4 ${isEmpty ? 'text-red-400' : isLow ? 'text-amber-400' : 'text-emerald-400'}`} />
+            <Coins className={`w-4 h-4 ${isEmpty ? 'text-red-400' : isLow ? 'text-amber-400' : 'text-[#76B900]'}`} />
             <span className="font-medium">{credits}</span>
           </Button>
         </PopoverTrigger>
@@ -108,7 +108,7 @@ function CreditMeterContent({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Coins className={`w-5 h-5 ${isEmpty ? 'text-red-400' : isLow ? 'text-amber-400' : 'text-emerald-400'}`} />
+          <Coins className={`w-5 h-5 ${isEmpty ? 'text-red-400' : isLow ? 'text-amber-400' : 'text-[#76B900]'}`} />
           <span className="text-white font-medium">Credits</span>
         </div>
         <span className={`text-lg font-bold ${isEmpty ? 'text-red-400' : isLow ? 'text-amber-400' : 'text-white'}`}>
@@ -147,14 +147,14 @@ function CreditMeterContent({
       )}
 
       {!userId && (
-        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3" data-testid="signup-prompt">
+        <div className="bg-[#76B900]/10 border border-[#76B900]/30 rounded-lg p-3" data-testid="signup-prompt">
           <div className="flex items-center gap-2">
-            <Gift className="w-4 h-4 text-emerald-400" />
-            <p className="text-emerald-400 text-sm font-medium">Sign up for 10 free credits</p>
+            <Gift className="w-4 h-4 text-[#76B900]" />
+            <p className="text-[#76B900] text-sm font-medium">Sign up for 10 free credits</p>
           </div>
           <Button 
             size="sm" 
-            className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700"
+            className="w-full mt-2 bg-[#76B900] hover:bg-[#76B900]"
             data-testid="button-create-account"
           >
             Create Free Account

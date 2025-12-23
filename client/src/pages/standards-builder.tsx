@@ -263,7 +263,7 @@ export default function StandardsBuilder() {
 
   const getComplexityColor = (complexity: string) => {
     switch (complexity) {
-      case 'basic': return 'bg-green-500';
+      case 'basic': return 'bg-[#76B900]';
       case 'intermediate': return 'bg-yellow-500';
       case 'advanced': return 'bg-orange-500';
       case 'expert': return 'bg-red-500';
@@ -523,7 +523,7 @@ export default function StandardsBuilder() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <div className="flex items-center space-x-2 text-green-600">
+                  <div className="flex items-center space-x-2 text-[#76B900]">
                     <CheckCircle className="h-4 w-4" />
                     <span className="text-sm">FHIR schema validation passed</span>
                   </div>

@@ -71,7 +71,7 @@ export default function TJCCompliance() {
 
   const getReadinessColor = (level: string) => {
     switch (level) {
-      case 'survey_ready': return 'text-green-600 bg-green-50';
+      case 'survey_ready': return 'text-[#76B900] bg-[#76B900]50';
       case 'needs_improvement': return 'text-yellow-600 bg-yellow-50';
       case 'critical_gaps': return 'text-orange-600 bg-orange-50';
       case 'non_compliant': return 'text-red-600 bg-red-50';
@@ -115,7 +115,7 @@ export default function TJCCompliance() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center">
-                <Clock className="h-8 w-8 text-green-600 mr-3" />
+                <Clock className="h-8 w-8 text-[#76B900] mr-3" />
                 <div>
                   <p className="text-2xl font-bold text-gray-900">75%</p>
                   <p className="text-sm text-gray-600">Time Reduction</p>
@@ -275,7 +275,7 @@ export default function TJCCompliance() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <CheckCircle className="h-6 w-6 text-green-600 mr-2" />
+                    <CheckCircle className="h-6 w-6 text-[#76B900] mr-2" />
                     Real-Time Compliance Monitoring Active
                   </CardTitle>
                   <CardDescription>
@@ -292,7 +292,7 @@ export default function TJCCompliance() {
                           {monitoringData?.compliance_trends?.current_score || 0}%
                         </span>
                       </div>
-                      <p className="text-sm text-green-600 mt-1">
+                      <p className="text-sm text-[#76B900] mt-1">
                         +{monitoringData?.compliance_trends?.change_percentage || 0}% from last assessment
                       </p>
                     </div>
@@ -321,7 +321,7 @@ export default function TJCCompliance() {
                               <div className="flex-1">
                                 <p className="font-medium text-gray-900">{alert.alert}</p>
                                 <p className="text-sm text-gray-600 mt-1">Standard: {alert.standard}</p>
-                                <p className="text-sm text-green-700 mt-2">
+                                <p className="text-sm text-[#5a8f00] mt-2">
                                   <strong>Action:</strong> {alert.action_required}
                                 </p>
                               </div>
@@ -340,7 +340,7 @@ export default function TJCCompliance() {
                     <ul className="space-y-2">
                       {(monitoringData?.automated_fixes || []).map((fix: string, index: number) => (
                         <li key={index} className="flex items-center">
-                          <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                          <CheckCircle className="h-4 w-4 text-[#76B900] mr-2" />
                           <span className="text-sm text-gray-700">{fix}</span>
                         </li>
                       ))}
@@ -364,28 +364,28 @@ export default function TJCCompliance() {
               <CardContent>
                 <ul className="space-y-3">
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#76B900] mr-3 mt-0.5" />
                     <div>
                       <p className="font-medium">Real-time compliance monitoring</p>
                       <p className="text-sm text-gray-600">Continuous assessment of all TJC standards</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#76B900] mr-3 mt-0.5" />
                     <div>
                       <p className="font-medium">Automated gap analysis</p>
                       <p className="text-sm text-gray-600">Identifies compliance gaps before they become critical</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#76B900] mr-3 mt-0.5" />
                     <div>
                       <p className="font-medium">Predictive survey readiness</p>
                       <p className="text-sm text-gray-600">Know exactly when you're ready for TJC survey</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-[#76B900] mr-3 mt-0.5" />
                     <div>
                       <p className="font-medium">Custom action planning</p>
                       <p className="text-sm text-gray-600">AI generates specific improvement plans</p>
@@ -410,7 +410,7 @@ export default function TJCCompliance() {
                   </li>
                   <li className="flex justify-between">
                     <span>Survey preparation time:</span>
-                    <span className="font-semibold text-green-600">75% reduction</span>
+                    <span className="font-semibold text-[#76B900]">75% reduction</span>
                   </li>
                   <li className="flex justify-between">
                     <span>Compliance monitoring:</span>

@@ -95,7 +95,7 @@ export function AICopilot({ context = "general", projectType, onSuggestionClick 
     switch (type) {
       case "tip": return <Lightbulb className="w-4 h-4 text-yellow-400" />;
       case "warning": return <AlertTriangle className="w-4 h-4 text-amber-400" />;
-      case "success": return <CheckCircle className="w-4 h-4 text-emerald-400" />;
+      case "success": return <CheckCircle className="w-4 h-4 text-[#76B900]" />;
       default: return <Info className="w-4 h-4 text-blue-400" />;
     }
   };
@@ -108,7 +108,7 @@ export function AICopilot({ context = "general", projectType, onSuggestionClick 
     <div className="w-80 bg-gray-900 border-l border-gray-700 flex flex-col h-full">
       <div className="p-4 border-b border-gray-700">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[#76B900] rounded-lg flex items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -126,11 +126,11 @@ export function AICopilot({ context = "general", projectType, onSuggestionClick 
               className="flex items-center justify-between w-full p-3 bg-gray-800 rounded-lg hover:bg-gray-750 transition-colors"
             >
               <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-emerald-400" />
+                <Shield className="w-4 h-4 text-[#76B900]" />
                 <span className="text-white font-medium text-sm">HIPAA Compliance</span>
               </div>
               <div className="flex items-center gap-2">
-                <Badge className={compliancePercentage === 100 ? "bg-emerald-600" : "bg-amber-600"}>
+                <Badge className={compliancePercentage === 100 ? "bg-[#76B900]" : "bg-amber-600"}>
                   {compliancePercentage}%
                 </Badge>
                 {expandedSections.includes("hipaa") ? (
@@ -146,7 +146,7 @@ export function AICopilot({ context = "general", projectType, onSuggestionClick 
                   key={item.id}
                   className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-800/50"
                 >
-                  <div className={`mt-0.5 ${item.completed ? 'text-emerald-400' : 'text-gray-500'}`}>
+                  <div className={`mt-0.5 ${item.completed ? 'text-[#76B900]' : 'text-gray-500'}`}>
                     {item.completed ? (
                       <CheckCircle className="w-4 h-4" />
                     ) : (

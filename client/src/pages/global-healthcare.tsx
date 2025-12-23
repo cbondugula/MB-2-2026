@@ -160,7 +160,7 @@ export default function GlobalHealthcare() {
 
           <Card className="text-center">
             <CardContent className="p-6">
-              <Languages className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              <Languages className="h-8 w-8 text-[#76B900] mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {displayData?.complianceStats?.supportedLanguages || 45}
               </div>
@@ -190,7 +190,7 @@ export default function GlobalHealthcare() {
 
           <Card className="text-center">
             <CardContent className="p-6">
-              <TrendingUp className="h-8 w-8 text-emerald-500 mx-auto mb-2" />
+              <TrendingUp className="h-8 w-8 text-[#76B900] mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {displayData?.complianceStats?.complianceScore || 94}%
               </div>
@@ -244,7 +244,7 @@ export default function GlobalHealthcare() {
                       <ul className="text-sm space-y-1">
                         {law.keyRequirements.slice(0, 3).map((req, idx) => (
                           <li key={idx} className="flex items-start">
-                            <CheckCircle className="h-3 w-3 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <CheckCircle className="h-3 w-3 text-[#76B900] mr-2 mt-0.5 flex-shrink-0" />
                             {req}
                           </li>
                         ))}
@@ -320,7 +320,7 @@ export default function GlobalHealthcare() {
                       <ul className="text-sm space-y-1">
                         {profile.healthBeliefs.map((belief, beliefIdx) => (
                           <li key={beliefIdx} className="flex items-start">
-                            <CheckCircle className="h-3 w-3 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <CheckCircle className="h-3 w-3 text-[#76B900] mr-2 mt-0.5 flex-shrink-0" />
                             {belief}
                           </li>
                         ))}
@@ -381,7 +381,7 @@ export default function GlobalHealthcare() {
                       <ul className="text-sm space-y-1">
                         {system.principles.map((principle, principleIdx) => (
                           <li key={principleIdx} className="flex items-start">
-                            <CheckCircle className="h-3 w-3 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <CheckCircle className="h-3 w-3 text-[#76B900] mr-2 mt-0.5 flex-shrink-0" />
                             {principle}
                           </li>
                         ))}

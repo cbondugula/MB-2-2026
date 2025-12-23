@@ -85,7 +85,7 @@ export default function Documentation() {
         asChild
         variant="outline"
         size="sm"
-        className="bg-gray-900 border-emerald-700 text-emerald-300 hover:bg-emerald-900/50"
+        className="bg-gray-900 border-[#76B900] text-[#8CC63F] hover:bg-[#1a3d00]/50"
       >
         <Link href="/pricing">Pricing</Link>
       </Button>
@@ -101,11 +101,11 @@ export default function Documentation() {
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="flex items-center justify-center mb-6">
-          <div className="bg-gradient-to-r from-emerald-500 to-blue-600 p-4 rounded-full">
+          <div className="bg-gradient-to-r from-[#76B900] to-blue-600 p-4 rounded-full">
             <Book className="h-12 w-12 text-white" />
           </div>
         </div>
-        <h2 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent leading-tight mb-4">
+        <h2 className="text-4xl font-bold bg-gradient-to-r from-[#76B900] to-blue-400 bg-clip-text text-transparent leading-tight mb-4">
           Enterprise Contract Documentation
         </h2>
         <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -116,9 +116,9 @@ export default function Documentation() {
 
       {/* Enterprise Benefits */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <Card className="bg-gray-900 border-gray-800 hover:border-emerald-700 transition-all">
+        <Card className="bg-gray-900 border-gray-800 hover:border-[#76B900] transition-all">
           <CardContent className="p-8 text-center">
-            <Shield className="w-8 h-8 text-emerald-400 mx-auto mb-3" />
+            <Shield className="w-8 h-8 text-[#76B900] mx-auto mb-3" />
             <h3 className="text-lg font-semibold text-white mb-2">Automated Compliance</h3>
             <p className="text-gray-400 text-sm">
               HIPAA, GDPR, and 193 country regulatory compliance built-in with enterprise-grade security
@@ -126,7 +126,7 @@ export default function Documentation() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-900 border-gray-800 hover:border-emerald-700 transition-all">
+        <Card className="bg-gray-900 border-gray-800 hover:border-[#76B900] transition-all">
           <CardContent className="p-8 text-center">
             <Zap className="w-8 h-8 text-blue-400 mx-auto mb-3" />
             <h3 className="text-lg font-semibold text-white mb-2">Instant Deployment</h3>
@@ -136,7 +136,7 @@ export default function Documentation() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-900 border-gray-800 hover:border-emerald-700 transition-all">
+        <Card className="bg-gray-900 border-gray-800 hover:border-[#76B900] transition-all">
           <CardContent className="p-8 text-center">
             <Code className="w-8 h-8 text-purple-400 mx-auto mb-3" />
             <h3 className="text-lg font-semibold text-white mb-2">AI-Powered Development</h3>
@@ -152,16 +152,16 @@ export default function Documentation() {
         <Card className="bg-gray-900 border-gray-800 mb-12">
           <CardContent className="p-6">
             <div className="flex items-center space-x-3 mb-6">
-              <Activity className="h-8 w-8 text-emerald-400" />
+              <Activity className="h-8 w-8 text-[#76B900]" />
               <h3 className="text-2xl font-bold text-white">Enterprise Platform Analytics</h3>
-              <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">Live Data</Badge>
+              <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">Live Data</Badge>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <Card className="bg-gray-800 border-gray-700">
                 <CardContent className="p-4">
                   <div className="flex items-center space-x-2">
-                    <Building className="h-6 w-6 text-emerald-400" />
+                    <Building className="h-6 w-6 text-[#76B900]" />
                     <div>
                       {contractLoading ? (
                         <div className="animate-pulse">
@@ -274,7 +274,7 @@ export default function Documentation() {
                         <div key={index} className="space-y-2">
                           <div className="flex justify-between items-center text-sm">
                             <span className="text-gray-300">{deployment.organizationName}</span>
-                            <Badge className={`text-xs ${deployment.status === 'deployed' ? 'bg-emerald-900/50 text-emerald-300 border-emerald-700' : 'bg-gray-700 text-gray-300'}`}>
+                            <Badge className={`text-xs ${deployment.status === 'deployed' ? 'bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]' : 'bg-gray-700 text-gray-300'}`}>
                               {deployment.status}
                             </Badge>
                           </div>
@@ -319,7 +319,7 @@ export default function Documentation() {
                             <div className="text-white font-medium">{feature.name}</div>
                             <div className="text-gray-500 text-xs">{feature.category}</div>
                           </div>
-                          <div className="text-emerald-400 font-bold">
+                          <div className="text-[#76B900] font-bold">
                             {feature.adoption ? `${Math.round(feature.adoption * 100)}%` : '85%'}
                           </div>
                         </div>
@@ -339,7 +339,7 @@ export default function Documentation() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
-              <CardTitle className="text-emerald-400 flex items-center">
+              <CardTitle className="text-[#76B900] flex items-center">
                 <Shield className="w-5 h-5 mr-2" />
                 Compliance & Security
               </CardTitle>
@@ -348,19 +348,19 @@ export default function Documentation() {
               <div className="space-y-3 text-sm text-gray-300">
                 <div className="flex justify-between">
                   <span>HIPAA Compliance Suite</span>
-                  <span className="text-emerald-400">$300/mo</span>
+                  <span className="text-[#76B900]">$300/mo</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Global Privacy Laws (GDPR, etc.)</span>
-                  <span className="text-emerald-400">$500/mo</span>
+                  <span className="text-[#76B900]">$500/mo</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Advanced Security Monitoring</span>
-                  <span className="text-emerald-400">$400/mo</span>
+                  <span className="text-[#76B900]">$400/mo</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Audit Trail & Reporting</span>
-                  <span className="text-emerald-400">$200/mo</span>
+                  <span className="text-[#76B900]">$200/mo</span>
                 </div>
               </div>
             </CardContent>
@@ -377,19 +377,19 @@ export default function Documentation() {
               <div className="space-y-3 text-sm text-gray-300">
                 <div className="flex justify-between">
                   <span>AI-Powered Development</span>
-                  <span className="text-emerald-400">$1000/mo</span>
+                  <span className="text-[#76B900]">$1000/mo</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Multi-AI Verification System</span>
-                  <span className="text-emerald-400">$750/mo</span>
+                  <span className="text-[#76B900]">$750/mo</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Clinical AI Platform</span>
-                  <span className="text-emerald-400">$1200/mo</span>
+                  <span className="text-[#76B900]">$1200/mo</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Custom ML Model Training</span>
-                  <span className="text-emerald-400">$800/mo</span>
+                  <span className="text-[#76B900]">$800/mo</span>
                 </div>
               </div>
             </CardContent>
@@ -406,19 +406,19 @@ export default function Documentation() {
               <div className="space-y-3 text-sm text-gray-300">
                 <div className="flex justify-between">
                   <span>API Documentation</span>
-                  <span className="text-emerald-400">Included</span>
+                  <span className="text-[#76B900]">Included</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Integration Guides</span>
-                  <span className="text-emerald-400">Included</span>
+                  <span className="text-[#76B900]">Included</span>
                 </div>
                 <div className="flex justify-between">
                   <span>24/7 Enterprise Support</span>
-                  <span className="text-emerald-400">$500/mo</span>
+                  <span className="text-[#76B900]">$500/mo</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Dedicated Success Manager</span>
-                  <span className="text-emerald-400">$1000/mo</span>
+                  <span className="text-[#76B900]">$1000/mo</span>
                 </div>
               </div>
             </CardContent>
@@ -427,10 +427,10 @@ export default function Documentation() {
       </div>
 
       {/* Call to Action */}
-      <Card className="bg-emerald-900/30 border-emerald-700">
+      <Card className="bg-[#1a3d00]/30 border-[#76B900]">
         <CardContent className="p-8 text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <CheckCircle className="w-6 h-6 text-emerald-400" />
+            <CheckCircle className="w-6 h-6 text-[#76B900]" />
             <h3 className="text-2xl font-bold text-white">Ready to Get Started?</h3>
           </div>
           <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
@@ -438,7 +438,7 @@ export default function Documentation() {
           </p>
           <Button
             asChild
-            className="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-3 text-lg"
+            className="bg-[#76B900] hover:bg-[#76B900] text-white px-8 py-3 text-lg"
           >
             <Link href="/pricing">
               Configure Enterprise Contract

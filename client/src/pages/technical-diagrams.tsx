@@ -119,14 +119,14 @@ export default function TechnicalDiagrams() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="flex items-center space-x-2">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <CheckCircle className="h-5 w-5 text-[#76B900]" />
                   <span>Complete Patent Drawing Portfolio</span>
                 </CardTitle>
                 <CardDescription>
                   All TJC compliance patents include professional technical illustrations
                 </CardDescription>
               </div>
-              <Badge variant="outline" className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700">
+              <Badge variant="outline" className="bg-[#76B900]100 dark:bg-[#1a3d00] text-[#5a8f00] dark:text-[#76B900]200 border-[#76B900]200 dark:border-[#5a8f00]">
                 USPTO Ready
               </Badge>
             </div>
@@ -209,9 +209,9 @@ export default function TechnicalDiagrams() {
         </Tabs>
 
         {/* Filing Actions */}
-        <Card className="mt-8 border-green-200 dark:border-green-800">
+        <Card className="mt-8 border-[#76B900]200 dark:border-[#5a8f00]">
           <CardHeader>
-            <CardTitle className="text-green-700 dark:text-green-300">Ready for Patent Filing</CardTitle>
+            <CardTitle className="text-[#5a8f00] dark:text-[#8CC63F]">Ready for Patent Filing</CardTitle>
             <CardDescription>
               All technical drawings completed and USPTO-compliant for immediate attorney review
             </CardDescription>
@@ -219,7 +219,7 @@ export default function TechnicalDiagrams() {
           <CardContent>
             <div className="flex flex-wrap gap-4">
               <Button 
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-[#76B900] hover:bg-[#5a8f00]"
                 onClick={() => window.open('/api/patent-drawings/all-tjc-drawings', '_blank')}
               >
                 <Download className="h-4 w-4 mr-2" />
@@ -271,7 +271,7 @@ function PatentDrawingDisplay({ patent, title, value, description }: PatentDrawi
               <CardDescription className="text-base mt-2">{description}</CardDescription>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-green-600">{value}</div>
+              <div className="text-2xl font-bold text-[#76B900]">{value}</div>
               <div className="text-sm text-gray-600">Patent Value</div>
             </div>
           </div>
@@ -342,7 +342,7 @@ function PatentDrawingDisplay({ patent, title, value, description }: PatentDrawi
       {/* USPTO Compliance Notes */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-green-700 dark:text-green-300 flex items-center space-x-2">
+          <CardTitle className="text-[#5a8f00] dark:text-[#8CC63F] flex items-center space-x-2">
             <CheckCircle className="h-5 w-5" />
             <span>USPTO Compliance Verification</span>
           </CardTitle>
@@ -351,7 +351,7 @@ function PatentDrawingDisplay({ patent, title, value, description }: PatentDrawi
           <div className="grid md:grid-cols-2 gap-4">
             {patent?.complianceNotes?.map((note: string, index: number) => (
               <div key={index} className="flex items-start space-x-2">
-                <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
+                <CheckCircle className="h-4 w-4 text-[#76B900] mt-0.5" />
                 <span className="text-sm">{note}</span>
               </div>
             ))}

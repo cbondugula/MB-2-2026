@@ -56,7 +56,7 @@ export default function BCICapabilities() {
   ];
 
   const statusColors = {
-    active: "bg-green-500",
+    active: "bg-[#76B900]",
     beta: "bg-yellow-500",
     development: "bg-blue-500",
     research: "bg-purple-500"
@@ -125,9 +125,9 @@ export default function BCICapabilities() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-green-50 dark:bg-green-950 border-green-200">
+              <Card className="bg-[#76B900]50 dark:bg-[#1a3d00] border-[#76B900]200">
                 <CardContent className="p-6 text-center">
-                  <Heart className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                  <Heart className="w-12 h-12 text-[#76B900] mx-auto mb-3" />
                   <h3 className="font-semibold text-lg mb-2">Health Monitoring</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Real-time developer wellness tracking
@@ -258,10 +258,10 @@ export default function BCICapabilities() {
                 </div>
 
                 {activeDemo && (
-                  <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-2 border-green-400">
+                  <Card className="bg-gradient-to-r from-green-50 to-[#e8f5d9] dark:from-[#1a3d00] dark:to-[#76B900]950 border-2 border-[#8CC63F]">
                     <CardContent className="p-6">
                       <div className="text-center space-y-3">
-                        <div className="text-2xl font-bold text-green-600">
+                        <div className="text-2xl font-bold text-[#76B900]">
                           {activeDemo === "voice" ? "🎤 Voice Control Active" : "🧠 Neural Interface Connected"}
                         </div>
                         <p className="text-gray-700 dark:text-gray-300">
@@ -270,7 +270,7 @@ export default function BCICapabilities() {
                             : "Think about: 'Patient database schema', 'Telehealth appointment system', 'Medical charts UI'"}
                         </p>
                         <div className="flex items-center justify-center gap-2 pt-4">
-                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                          <div className="w-3 h-3 bg-[#76B900] rounded-full animate-pulse"></div>
                           <span className="text-sm font-medium">Active and listening</span>
                         </div>
                         <Button 
@@ -309,8 +309,8 @@ export default function BCICapabilities() {
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-green-600 font-bold">2</span>
+                    <div className="w-8 h-8 bg-[#76B900]100 dark:bg-[#1a3d00] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-[#76B900] font-bold">2</span>
                     </div>
                     <div>
                       <h4 className="font-semibold">Patient Rehabilitation Apps</h4>

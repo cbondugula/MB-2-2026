@@ -116,7 +116,7 @@ export default function EHRIntegration() {
     const icons: Record<string, JSX.Element> = {
       epic: <Heart className="w-6 h-6 text-red-400" />,
       cerner: <Building2 className="w-6 h-6 text-blue-400" />,
-      allscripts: <Stethoscope className="w-6 h-6 text-emerald-400" />,
+      allscripts: <Stethoscope className="w-6 h-6 text-[#76B900]" />,
       athena: <Globe className="w-6 h-6 text-purple-400" />,
       meditech: <Server className="w-6 h-6 text-amber-400" />,
       custom: <Code className="w-6 h-6 text-cyan-400" />
@@ -126,7 +126,7 @@ export default function EHRIntegration() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'connected': return <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700"><CheckCircle2 className="w-3 h-3 mr-1" />Connected</Badge>;
+      case 'connected': return <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]"><CheckCircle2 className="w-3 h-3 mr-1" />Connected</Badge>;
       case 'syncing': return <Badge className="bg-blue-900/50 text-blue-300 border-blue-700"><Loader2 className="w-3 h-3 mr-1 animate-spin" />Syncing</Badge>;
       case 'disconnected': return <Badge className="bg-gray-800 text-gray-400 border-gray-700"><X className="w-3 h-3 mr-1" />Disconnected</Badge>;
       case 'error': return <Badge className="bg-red-900/50 text-red-300 border-red-700"><AlertTriangle className="w-3 h-3 mr-1" />Error</Badge>;
@@ -194,16 +194,16 @@ export default function EHRIntegration() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-emerald-900/40 to-gray-900 border-emerald-700/50">
+          <Card className="bg-gradient-to-br from-[#1a3d00]/40 to-gray-900 border-[#76B900]/50">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-400">Records Synced</p>
-                  <p className="text-3xl font-bold text-emerald-400" data-testid="text-records-synced">{(totalRecords / 1000).toFixed(0)}K</p>
+                  <p className="text-3xl font-bold text-[#76B900]" data-testid="text-records-synced">{(totalRecords / 1000).toFixed(0)}K</p>
                 </div>
-                <Database className="w-8 h-8 text-emerald-400" />
+                <Database className="w-8 h-8 text-[#76B900]" />
               </div>
-              <p className="text-xs text-emerald-500 mt-2">Across all connectors</p>
+              <p className="text-xs text-[#76B900] mt-2">Across all connectors</p>
             </CardContent>
           </Card>
 
@@ -284,7 +284,7 @@ export default function EHRIntegration() {
                       </div>
 
                       <div className="text-center min-w-[80px]">
-                        <p className="text-lg font-bold text-emerald-400">{connector.compliance}%</p>
+                        <p className="text-lg font-bold text-[#76B900]">{connector.compliance}%</p>
                         <p className="text-xs text-gray-500">Compliant</p>
                       </div>
 
@@ -346,7 +346,7 @@ export default function EHRIntegration() {
                         <h4 className="font-medium text-white">{resource.type}</h4>
                       </div>
                       <Badge className={
-                        resource.syncStatus === 'synced' ? 'bg-emerald-900/50 text-emerald-300' :
+                        resource.syncStatus === 'synced' ? 'bg-[#1a3d00]/50 text-[#8CC63F]' :
                         resource.syncStatus === 'pending' ? 'bg-amber-900/50 text-amber-300' :
                         'bg-red-900/50 text-red-300'
                       }>
@@ -390,7 +390,7 @@ export default function EHRIntegration() {
                     >
                       <div className="flex items-center gap-4">
                         {log.status === 'success' ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                          <CheckCircle2 className="w-5 h-5 text-[#76B900]" />
                         ) : log.status === 'warning' ? (
                           <AlertTriangle className="w-5 h-5 text-amber-400" />
                         ) : (
@@ -439,7 +439,7 @@ export default function EHRIntegration() {
                         <div key={idx} className="flex items-center gap-3 p-2 bg-gray-900/50 rounded">
                           <code className="text-sm text-cyan-400 flex-1">{mapping.source}</code>
                           <ArrowUpRight className="w-4 h-4 text-gray-500" />
-                          <code className="text-sm text-emerald-400 flex-1">{mapping.target}</code>
+                          <code className="text-sm text-[#76B900] flex-1">{mapping.target}</code>
                           <Badge variant="outline" className="text-xs">{mapping.transform}</Badge>
                         </div>
                       ))}
@@ -460,7 +460,7 @@ export default function EHRIntegration() {
                           <div className="flex items-center gap-2">
                             <span className="text-sm text-gray-400">{rule.count}</span>
                             {rule.status === 'Passing' ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                              <CheckCircle2 className="w-4 h-4 text-[#76B900]" />
                             ) : (
                               <AlertTriangle className="w-4 h-4 text-amber-400" />
                             )}

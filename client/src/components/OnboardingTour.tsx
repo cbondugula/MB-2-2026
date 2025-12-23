@@ -172,7 +172,7 @@ export default function OnboardingTour({ onComplete, onSkip }: OnboardingTourPro
           <div className="space-y-3 mb-6">
             {step.tips.map((tip, index) => (
               <div key={index} className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle className="w-5 h-5 text-[#76B900] flex-shrink-0 mt-0.5" />
                 <p className="text-gray-700 dark:text-gray-300">{tip}</p>
               </div>
             ))}
@@ -218,7 +218,7 @@ export default function OnboardingTour({ onComplete, onSkip }: OnboardingTourPro
                     index === currentStep
                       ? 'bg-blue-500'
                       : index < currentStep
-                      ? 'bg-green-500'
+                      ? 'bg-[#76B900]'
                       : 'bg-gray-300'
                   }`}
                 />

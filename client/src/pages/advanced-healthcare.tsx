@@ -200,7 +200,7 @@ const ADVANCED_CAPABILITIES: AdvancedCapability[] = [
 const CAPABILITY_CATEGORIES = [
   { id: 'ai-ml', name: 'AI & Machine Learning', icon: Brain, color: 'text-blue-600' },
   { id: 'immersive', name: 'VR/AR/XR', icon: Headphones, color: 'text-purple-600' },
-  { id: 'blockchain', name: 'Blockchain & Web3', icon: Lock, color: 'text-green-600' },
+  { id: 'blockchain', name: 'Blockchain & Web3', icon: Lock, color: 'text-[#76B900]' },
   { id: 'iot', name: 'IoT & Sensors', icon: Wifi, color: 'text-orange-600' },
   { id: 'precision-medicine', name: 'Precision Medicine', icon: Dna, color: 'text-red-600' },
   { id: 'research', name: 'Research & Analytics', icon: TrendingUp, color: 'text-indigo-600' }
@@ -287,7 +287,7 @@ export default function AdvancedHealthcare() {
               <Brain className="h-8 w-8 text-blue-600 mx-auto mb-2" />
               <h3 className="font-semibold">AI Constellation</h3>
               <p className="text-sm text-gray-600">8 specialized medical AI models</p>
-              <Badge variant="secondary" className="mt-2 bg-green-100 text-green-800">Active</Badge>
+              <Badge variant="secondary" className="mt-2 bg-[#76B900]100 text-[#5a8f00]">Active</Badge>
             </CardContent>
           </Card>
           <Card className="border-purple-200 dark:border-purple-800">
@@ -298,9 +298,9 @@ export default function AdvancedHealthcare() {
               <Badge variant="outline">Available</Badge>
             </CardContent>
           </Card>
-          <Card className="border-green-200 dark:border-green-800">
+          <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
             <CardContent className="p-4 text-center">
-              <Lock className="h-8 w-8 text-green-600 mx-auto mb-2" />
+              <Lock className="h-8 w-8 text-[#76B900] mx-auto mb-2" />
               <h3 className="font-semibold">Blockchain Records</h3>
               <p className="text-sm text-gray-600">Secure decentralized health data</p>
               <Badge variant="outline">Available</Badge>
@@ -364,7 +364,7 @@ export default function AdvancedHealthcare() {
                   key={capability.id} 
                   className={`transition-all duration-200 ${
                     enabledCapabilities.has(capability.id) 
-                      ? 'border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-900/10' 
+                      ? 'border-[#76B900]200 dark:border-[#5a8f00] bg-[#76B900]50/50 dark:bg-[#1a3d00]/10' 
                       : 'hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
@@ -373,12 +373,12 @@ export default function AdvancedHealthcare() {
                       <div className="flex items-center gap-3">
                         <div className={`p-2 rounded-lg ${
                           enabledCapabilities.has(capability.id) 
-                            ? 'bg-green-100 dark:bg-green-900/30' 
+                            ? 'bg-[#76B900]100 dark:bg-[#1a3d00]/30' 
                             : 'bg-gray-100 dark:bg-gray-800'
                         }`}>
                           <capability.icon className={`h-6 w-6 ${
                             enabledCapabilities.has(capability.id) 
-                              ? 'text-green-600' 
+                              ? 'text-[#76B900]' 
                               : 'text-gray-600'
                           }`} />
                         </div>
@@ -391,13 +391,13 @@ export default function AdvancedHealthcare() {
                                 capability.complexity === 'expert' ? 'border-red-300 text-red-700' :
                                 capability.complexity === 'advanced' ? 'border-orange-300 text-orange-700' :
                                 capability.complexity === 'intermediate' ? 'border-blue-300 text-blue-700' :
-                                'border-green-300 text-green-700'
+                                'border-[#8CC63F] text-[#5a8f00]'
                               }`}
                             >
                               {capability.complexity}
                             </Badge>
                             {enabledCapabilities.has(capability.id) && (
-                              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                              <Badge variant="secondary" className="bg-[#76B900]100 text-[#5a8f00]">
                                 Active
                               </Badge>
                             )}
@@ -518,7 +518,7 @@ export default function AdvancedHealthcare() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Database className="h-5 w-5 text-green-600" />
+                    <Database className="h-5 w-5 text-[#76B900]" />
                     Healthcare Standards
                   </CardTitle>
                 </CardHeader>
@@ -580,11 +580,11 @@ export default function AdvancedHealthcare() {
               {/* Q3 2025 */}
               <div>
                 <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full" />
+                  <div className="w-3 h-3 bg-[#76B900] rounded-full" />
                   Q3 2025 - Foundation & Core AI
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-6">
-                  <Card className="border-green-200 dark:border-green-800">
+                  <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
                     <CardContent className="p-4">
                       <h4 className="font-medium flex items-center gap-2">
                         <Brain className="h-4 w-4" />
@@ -593,7 +593,7 @@ export default function AdvancedHealthcare() {
                       <p className="text-sm text-gray-600 mt-1">
                         Multi-modal AI system with safety verification
                       </p>
-                      <Badge variant="secondary" className="mt-2 bg-green-100 text-green-800">Completed</Badge>
+                      <Badge variant="secondary" className="mt-2 bg-[#76B900]100 text-[#5a8f00]">Completed</Badge>
                     </CardContent>
                   </Card>
                   <Card>

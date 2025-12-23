@@ -116,7 +116,7 @@ export default function Pricing() {
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start">
-                      <Check className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-[#76B900] mr-2 mt-0.5 flex-shrink-0" />
                       <span className="text-sm text-gray-600">{feature}</span>
                     </li>
                   ))}
@@ -170,7 +170,7 @@ export default function Pricing() {
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-4 flex items-center">
-                  <Shield className="w-6 h-6 text-green-500 mr-2" />
+                  <Shield className="w-6 h-6 text-[#76B900] mr-2" />
                   Compliance
                 </h3>
                 <ul className="space-y-2">
@@ -215,7 +215,7 @@ export default function Pricing() {
       <header className="border-b border-gray-800 px-6 py-4">
         <div className="container mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#76B900] rounded-lg flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold">MedBuilder</span>
@@ -242,7 +242,7 @@ export default function Pricing() {
         <div className="text-center max-w-4xl mx-auto mb-16">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Choose Your
-            <span className="text-green-400 block">Healthcare Plan</span>
+            <span className="text-[#8CC63F] block">Healthcare Plan</span>
           </h1>
           <p className="text-xl text-gray-400 mb-8">
             Start building secure, HIPAA-compliant healthcare applications today.
@@ -257,7 +257,7 @@ export default function Pricing() {
             <button
               onClick={() => setBillingPeriod(billingPeriod === 'monthly' ? 'annual' : 'monthly')}
               className={`relative w-14 h-7 rounded-full transition-colors ${
-                billingPeriod === 'annual' ? 'bg-green-600' : 'bg-gray-600'
+                billingPeriod === 'annual' ? 'bg-[#76B900]' : 'bg-gray-600'
               }`}
             >
               <div
@@ -270,7 +270,7 @@ export default function Pricing() {
               Annual
             </span>
             {billingPeriod === 'annual' && (
-              <Badge className="bg-green-600 text-white">Save 20%</Badge>
+              <Badge className="bg-[#76B900] text-white">Save 20%</Badge>
             )}
           </div>
         </div>
@@ -278,7 +278,7 @@ export default function Pricing() {
         {/* Pricing Cards */}
         {plansLoading ? (
           <div className="text-center mb-16">
-            <div className="animate-spin w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-8 h-8 border-4 border-[#76B900] border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-gray-400">Loading pricing plans...</p>
           </div>
         ) : (
@@ -292,13 +292,13 @@ export default function Pricing() {
                 key={plan.id}
                 className={`relative bg-gray-800 border-gray-700 ${
                   plan.popular
-                    ? 'border-green-500 shadow-green-500/20 shadow-lg scale-105'
+                    ? 'border-[#76B900] shadow-[#76B900]/20 shadow-lg scale-105'
                     : 'hover:border-gray-600'
                 } transition-all`}
               >
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-green-600 text-white px-4 py-1">
+                    <Badge className="bg-[#76B900] text-white px-4 py-1">
                       <Star className="w-3 h-3 mr-1" />
                       Most Popular
                     </Badge>
@@ -345,7 +345,7 @@ export default function Pricing() {
                       onClick={() => handleSubscribe(plan.id)}
                       className={`w-full ${
                         plan.popular
-                          ? 'bg-green-600 hover:bg-green-700'
+                          ? 'bg-[#76B900] hover:bg-[#5a8f00]'
                           : 'bg-gray-700 hover:bg-gray-600'
                       } text-white`}
                     >
@@ -359,7 +359,7 @@ export default function Pricing() {
                     <ul className="space-y-2">
                       {plan.features.map((feature, index) => (
                         <li key={index} className="flex items-start space-x-3">
-                          <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                          <Check className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
                           <span className="text-sm text-gray-300">{feature}</span>
                         </li>
                       ))}
@@ -376,7 +376,7 @@ export default function Pricing() {
         <div className="text-center max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <div className="flex flex-col items-center">
-              <Shield className="w-8 h-8 text-green-500 mb-3" />
+              <Shield className="w-8 h-8 text-[#76B900] mb-3" />
               <h3 className="font-semibold text-white mb-2">HIPAA Compliant</h3>
               <p className="text-sm text-gray-400">
                 Built with healthcare compliance in mind
@@ -413,7 +413,7 @@ export default function Pricing() {
             <Button 
               asChild 
               size="lg" 
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-[#76B900] hover:bg-[#5a8f00]"
             >
               <Link href="/custom-pricing">Get Custom Quote</Link>
             </Button>

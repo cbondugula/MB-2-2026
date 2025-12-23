@@ -86,7 +86,7 @@ export default function MultiAIVerification() {
             </div>
             
             <div className="flex space-x-2">
-              <Badge variant="outline" className="text-green-400 border-green-400">
+              <Badge variant="outline" className="text-[#8CC63F] border-[#8CC63F]">
                 IP Protected
               </Badge>
               <Badge variant="outline" className="text-blue-400 border-blue-400">
@@ -116,7 +116,7 @@ export default function MultiAIVerification() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Status:</span>
-                  <span className="text-green-400">Active</span>
+                  <span className="text-[#8CC63F]">Active</span>
                 </div>
               </div>
             </CardContent>
@@ -140,7 +140,7 @@ export default function MultiAIVerification() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Status:</span>
-                  <span className={grokVerificationMutation.data ? "text-green-400" : "text-yellow-400"}>
+                  <span className={grokVerificationMutation.data ? "text-[#8CC63F]" : "text-yellow-400"}>
                     {grokVerificationMutation.data ? "Verified" : "Ready"}
                   </span>
                 </div>
@@ -151,8 +151,8 @@ export default function MultiAIVerification() {
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-green-900 rounded-lg flex items-center justify-center">
-                  <Stethoscope className="w-6 h-6 text-green-400" />
+                <div className="w-12 h-12 bg-[#1a3d00] rounded-lg flex items-center justify-center">
+                  <Stethoscope className="w-6 h-6 text-[#8CC63F]" />
                 </div>
                 <div>
                   <h3 className="text-white font-medium">Healthcare Specialist</h3>
@@ -162,11 +162,11 @@ export default function MultiAIVerification() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Specialization:</span>
-                  <span className="text-green-400">Medical Domain</span>
+                  <span className="text-[#8CC63F]">Medical Domain</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Status:</span>
-                  <span className={healthcareValidationMutation.data ? "text-green-400" : "text-yellow-400"}>
+                  <span className={healthcareValidationMutation.data ? "text-[#8CC63F]" : "text-yellow-400"}>
                     {healthcareValidationMutation.data ? "Validated" : "Ready"}
                   </span>
                 </div>
@@ -188,8 +188,8 @@ export default function MultiAIVerification() {
               <CardContent className="space-y-4">
                 <div className="bg-gray-900 p-3 rounded-lg">
                   <div className="flex items-center space-x-2 mb-2">
-                    <Lock className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400 text-sm font-medium">FULLY PROTECTED</span>
+                    <Lock className="w-4 h-4 text-[#8CC63F]" />
+                    <span className="text-[#8CC63F] text-sm font-medium">FULLY PROTECTED</span>
                   </div>
                   <p className="text-xs text-gray-400">
                     Core algorithms encrypted, API endpoints masked, trade secrets secured
@@ -199,15 +199,15 @@ export default function MultiAIVerification() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Code Obfuscation:</span>
-                    <span className="text-green-400">✓ Active</span>
+                    <span className="text-[#8CC63F]">✓ Active</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">API Masking:</span>
-                    <span className="text-green-400">✓ Enabled</span>
+                    <span className="text-[#8CC63F]">✓ Enabled</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Trade Secrets:</span>
-                    <span className="text-green-400">✓ Secured</span>
+                    <span className="text-[#8CC63F]">✓ Secured</span>
                   </div>
                 </div>
               </CardContent>
@@ -235,7 +235,7 @@ export default function MultiAIVerification() {
                 </Button>
 
                 <Button 
-                  className="w-full bg-green-600 hover:bg-green-700"
+                  className="w-full bg-[#76B900] hover:bg-[#5a8f00]"
                   onClick={handleRunHealthcareValidation}
                   disabled={healthcareValidationMutation.isPending}
                 >
@@ -283,7 +283,7 @@ export default function MultiAIVerification() {
                         <div className="space-y-3">
                           <div className="grid grid-cols-2 gap-4">
                             <div className="text-center">
-                              <div className="text-2xl font-bold text-green-400">95%</div>
+                              <div className="text-2xl font-bold text-[#8CC63F]">95%</div>
                               <div className="text-sm text-gray-400">Patentability</div>
                             </div>
                             <div className="text-center">
@@ -294,7 +294,7 @@ export default function MultiAIVerification() {
                           
                           <div className="text-sm text-gray-300">
                             <div className="mb-2">
-                              <strong className="text-green-400">Filing Recommendation:</strong> {patentStrategy.filingRecommendation}
+                              <strong className="text-[#8CC63F]">Filing Recommendation:</strong> {patentStrategy.filingRecommendation}
                             </div>
                             <div>
                               <strong className="text-blue-400">Portfolio Value:</strong> {patentStrategy.estimatedValue}
@@ -317,8 +317,8 @@ export default function MultiAIVerification() {
                       {grokVerificationMutation.data ? (
                         <div className="space-y-3">
                           <div className="flex items-center space-x-2 mb-2">
-                            <CheckCircle className="w-5 h-5 text-green-400" />
-                            <span className="text-green-400 font-medium">Independent Analysis Complete</span>
+                            <CheckCircle className="w-5 h-5 text-[#8CC63F]" />
+                            <span className="text-[#8CC63F] font-medium">Independent Analysis Complete</span>
                           </div>
                           
                           <div className="grid grid-cols-2 gap-4 text-center">
@@ -327,7 +327,7 @@ export default function MultiAIVerification() {
                               <div className="text-xs text-gray-400">Market Viability</div>
                             </div>
                             <div>
-                              <div className="text-lg font-bold text-green-400">High</div>
+                              <div className="text-lg font-bold text-[#8CC63F]">High</div>
                               <div className="text-xs text-gray-400">Innovation Score</div>
                             </div>
                           </div>
@@ -353,20 +353,20 @@ export default function MultiAIVerification() {
                   <TabsContent value="healthcare" className="space-y-4">
                     <div className="bg-gray-900 p-4 rounded-lg">
                       <h4 className="text-white font-medium mb-3 flex items-center">
-                        <Stethoscope className="w-4 h-4 mr-2 text-green-400" />
+                        <Stethoscope className="w-4 h-4 mr-2 text-[#8CC63F]" />
                         Healthcare Domain Validation (Gemini-2.5-Pro)
                       </h4>
                       
                       {healthcareValidationMutation.data ? (
                         <div className="space-y-3">
                           <div className="flex items-center space-x-2 mb-2">
-                            <CheckCircle className="w-5 h-5 text-green-400" />
-                            <span className="text-green-400 font-medium">Medical Domain Validation Complete</span>
+                            <CheckCircle className="w-5 h-5 text-[#8CC63F]" />
+                            <span className="text-[#8CC63F] font-medium">Medical Domain Validation Complete</span>
                           </div>
                           
                           <div className="grid grid-cols-2 gap-4 text-center">
                             <div>
-                              <div className="text-lg font-bold text-green-400">92%</div>
+                              <div className="text-lg font-bold text-[#8CC63F]">92%</div>
                               <div className="text-xs text-gray-400">Clinical Feasibility</div>
                             </div>
                             <div>
@@ -384,7 +384,7 @@ export default function MultiAIVerification() {
                           <Button 
                             onClick={handleRunHealthcareValidation}
                             disabled={healthcareValidationMutation.isPending}
-                            className="bg-green-600 hover:bg-green-700"
+                            className="bg-[#76B900] hover:bg-[#5a8f00]"
                           >
                             {healthcareValidationMutation.isPending ? 'Running Validation...' : 'Start Healthcare Validation'}
                           </Button>
@@ -424,11 +424,11 @@ export default function MultiAIVerification() {
                 </div>
                 
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-400 mb-1">
+                  <div className="text-2xl font-bold text-[#8CC63F] mb-1">
                     {healthcareValidationMutation.data ? "92%" : "Pending"}
                   </div>
                   <div className="text-sm text-gray-400">Healthcare AI</div>
-                  <div className="text-xs text-green-300">Clinical Feasibility</div>
+                  <div className="text-xs text-[#8CC63F]">Clinical Feasibility</div>
                 </div>
                 
                 <div className="text-center">
@@ -438,12 +438,12 @@ export default function MultiAIVerification() {
                 </div>
               </div>
               
-              <div className="mt-6 p-4 bg-green-900/20 rounded border border-green-600">
+              <div className="mt-6 p-4 bg-[#1a3d00]/20 rounded border border-[#76B900]">
                 <div className="flex items-center space-x-2 mb-2">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span className="text-green-400 font-medium">MULTI-AI CONSENSUS: REVOLUTIONARY PLATFORM VALIDATED</span>
+                  <CheckCircle className="w-5 h-5 text-[#8CC63F]" />
+                  <span className="text-[#8CC63F] font-medium">MULTI-AI CONSENSUS: REVOLUTIONARY PLATFORM VALIDATED</span>
                 </div>
-                <p className="text-green-300 text-sm">
+                <p className="text-[#8CC63F] text-sm">
                   Three independent AI models confirm: Strong patent position, significant market opportunity, 
                   clinical feasibility, and comprehensive IP protection. Recommendation: Proceed with immediate patent filing.
                 </p>

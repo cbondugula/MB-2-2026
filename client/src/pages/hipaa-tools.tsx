@@ -139,13 +139,13 @@ export default function HIPAATools() {
         <Card className="bg-gray-900 border-gray-800">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center space-x-2 text-white">
-              <Shield className="w-5 h-5 text-emerald-400" />
+              <Shield className="w-5 h-5 text-[#76B900]" />
               <span>Compliance Score</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-400 mb-2">{complianceScore}%</div>
+              <div className="text-4xl font-bold text-[#76B900] mb-2">{complianceScore}%</div>
               <Progress value={complianceScore} className="w-full h-2 mb-2" />
               <p className="text-sm text-gray-400">Excellent compliance rating</p>
             </div>
@@ -155,7 +155,7 @@ export default function HIPAATools() {
         <Card className="bg-gray-900 border-gray-800">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center space-x-2 text-white">
-              <CheckCircle className="w-5 h-5 text-emerald-400" />
+              <CheckCircle className="w-5 h-5 text-[#76B900]" />
               <span>Security Checks</span>
             </CardTitle>
           </CardHeader>
@@ -167,14 +167,14 @@ export default function HIPAATools() {
               </div>
             ) : (
               <div className="text-center">
-                <div className="text-4xl font-bold text-emerald-400 mb-2">{passedChecks}/{complianceChecks.length}</div>
+                <div className="text-4xl font-bold text-[#76B900] mb-2">{passedChecks}/{complianceChecks.length}</div>
                 <p className="text-sm text-gray-400 mb-2">Checks passed</p>
                 {warningChecks > 0 ? (
                   <Badge className="bg-yellow-900/50 text-yellow-300 border-yellow-700">
                     {warningChecks} Warning{warningChecks > 1 ? 's' : ''}
                   </Badge>
                 ) : (
-                  <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                  <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">
                     All Passed
                   </Badge>
                 )}
@@ -186,7 +186,7 @@ export default function HIPAATools() {
         <Card className="bg-gray-900 border-gray-800">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center space-x-2 text-white">
-              <Activity className="w-5 h-5 text-emerald-400" />
+              <Activity className="w-5 h-5 text-[#76B900]" />
               <span>Audit Events</span>
             </CardTitle>
           </CardHeader>
@@ -198,9 +198,9 @@ export default function HIPAATools() {
               </div>
             ) : (
               <div className="text-center">
-                <div className="text-4xl font-bold text-emerald-400 mb-2">{auditLogs.length}</div>
+                <div className="text-4xl font-bold text-[#76B900] mb-2">{auditLogs.length}</div>
                 <p className="text-sm text-gray-400 mb-2">Events logged</p>
-                <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">
                   All Secure
                 </Badge>
               </div>
@@ -222,7 +222,7 @@ export default function HIPAATools() {
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-white">
-                <ScanLine className="w-5 h-5 text-emerald-400" />
+                <ScanLine className="w-5 h-5 text-[#76B900]" />
                 <span>Security Vulnerability Scan</span>
               </CardTitle>
               <p className="text-gray-400">
@@ -234,7 +234,7 @@ export default function HIPAATools() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-400">Scanning in progress...</span>
-                    <span className="text-sm font-semibold text-emerald-400">{scanProgress}%</span>
+                    <span className="text-sm font-semibold text-[#76B900]">{scanProgress}%</span>
                   </div>
                   <Progress value={scanProgress} className="w-full h-2" />
                 </div>
@@ -264,15 +264,15 @@ export default function HIPAATools() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-400">API Endpoints</span>
-                      <CheckCircle className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-400">Database Queries</span>
-                      <CheckCircle className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-400">Authentication</span>
-                      <CheckCircle className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                     </div>
                   </div>
                 </div>
@@ -281,7 +281,7 @@ export default function HIPAATools() {
               <Button 
                 onClick={handleSecurityScan}
                 disabled={isScanning}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+                className="w-full bg-[#76B900] hover:bg-[#76B900] text-white"
               >
                 {isScanning ? (
                   <>
@@ -303,7 +303,7 @@ export default function HIPAATools() {
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-white">
-                <ClipboardCheck className="w-5 h-5 text-emerald-400" />
+                <ClipboardCheck className="w-5 h-5 text-[#76B900]" />
                 <span>HIPAA Compliance Checklist</span>
               </CardTitle>
               <p className="text-gray-400">
@@ -324,17 +324,17 @@ export default function HIPAATools() {
                     return (
                       <div key={item.id} className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg" data-testid={`compliance-item-${item.id}`}>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                          item.status === 'passed' ? 'bg-emerald-900/50' : 'bg-yellow-900/50'
+                          item.status === 'passed' ? 'bg-[#1a3d00]/50' : 'bg-yellow-900/50'
                         }`}>
                           <IconComponent className={`w-4 h-4 ${
-                            item.status === 'passed' ? 'text-emerald-400' : 'text-yellow-400'
+                            item.status === 'passed' ? 'text-[#76B900]' : 'text-yellow-400'
                           }`} />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
                             <span className="font-medium text-white">{item.name}</span>
                             {item.status === 'passed' ? (
-                              <CheckCircle className="w-4 h-4 text-emerald-400" />
+                              <CheckCircle className="w-4 h-4 text-[#76B900]" />
                             ) : (
                               <AlertTriangle className="w-4 h-4 text-yellow-400" />
                             )}
@@ -356,7 +356,7 @@ export default function HIPAATools() {
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-white">
-                <Activity className="w-5 h-5 text-emerald-400" />
+                <Activity className="w-5 h-5 text-[#76B900]" />
                 <span>Audit Trail</span>
               </CardTitle>
               <p className="text-gray-400">
@@ -379,8 +379,8 @@ export default function HIPAATools() {
                 <div className="space-y-4">
                   {auditLogs.map((log) => (
                     <div key={log.id} className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg" data-testid={`audit-log-${log.id}`}>
-                      <div className="w-10 h-10 bg-emerald-900/50 rounded-full flex items-center justify-center">
-                        <Activity className="w-5 h-5 text-emerald-400" />
+                      <div className="w-10 h-10 bg-[#1a3d00]/50 rounded-full flex items-center justify-center">
+                        <Activity className="w-5 h-5 text-[#76B900]" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
@@ -409,7 +409,7 @@ export default function HIPAATools() {
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-white">
-                <FileText className="w-5 h-5 text-emerald-400" />
+                <FileText className="w-5 h-5 text-[#76B900]" />
                 <span>Business Associate Agreement Generator</span>
               </CardTitle>
               <p className="text-gray-400">
@@ -441,12 +441,12 @@ export default function HIPAATools() {
                 </div>
               </div>
 
-              <div className="p-4 bg-emerald-900/30 border border-emerald-700 rounded-lg">
+              <div className="p-4 bg-[#1a3d00]/30 border border-[#76B900] rounded-lg">
                 <div className="flex items-center space-x-2 mb-2">
-                  <CheckCircle className="w-5 h-5 text-emerald-400" />
-                  <span className="font-semibold text-emerald-300">BAA Compliance Features</span>
+                  <CheckCircle className="w-5 h-5 text-[#76B900]" />
+                  <span className="font-semibold text-[#8CC63F]">BAA Compliance Features</span>
                 </div>
-                <ul className="text-sm text-emerald-200 space-y-1">
+                <ul className="text-sm text-[#8CC63F] space-y-1">
                   <li>• Automated compliance clause generation</li>
                   <li>• Regular template updates for regulatory changes</li>
                   <li>• Legal review and validation</li>

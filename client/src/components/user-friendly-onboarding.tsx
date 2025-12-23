@@ -46,7 +46,7 @@ interface UserProfile {
 
 const industries = [
   { id: 'healthcare', name: 'Healthcare', icon: Heart, color: 'bg-red-500' },
-  { id: 'fintech', name: 'Financial Services', icon: Building, color: 'bg-green-500' },
+  { id: 'fintech', name: 'Financial Services', icon: Building, color: 'bg-[#76B900]' },
   { id: 'education', name: 'Education', icon: Brain, color: 'bg-blue-500' },
   { id: 'ecommerce', name: 'E-commerce', icon: Globe, color: 'bg-purple-500' },
   { id: 'legal', name: 'Legal Tech', icon: Shield, color: 'bg-yellow-500' },
@@ -195,7 +195,7 @@ export default function UserFriendlyOnboarding({ onComplete, onSkip }: Onboardin
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#76B900] to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Brain className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-2xl font-bold mb-2">Your Experience Level</h2>
@@ -209,7 +209,7 @@ export default function UserFriendlyOnboarding({ onComplete, onSkip }: Onboardin
                 <Card 
                   key={level.id}
                   className={`cursor-pointer transition-all hover:shadow-md ${
-                    userProfile.experience === level.id ? 'ring-2 ring-green-500 bg-green-50 dark:bg-green-950' : ''
+                    userProfile.experience === level.id ? 'ring-2 ring-[#76B900] bg-[#76B900]50 dark:bg-[#1a3d00]' : ''
                   }`}
                   onClick={() => updateProfile({ experience: level.id })}
                 >
@@ -221,7 +221,7 @@ export default function UserFriendlyOnboarding({ onComplete, onSkip }: Onboardin
                       </p>
                     </div>
                     {userProfile.experience === level.id && (
-                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <CheckCircle className="w-5 h-5 text-[#76B900]" />
                     )}
                   </CardContent>
                 </Card>
@@ -319,7 +319,7 @@ export default function UserFriendlyOnboarding({ onComplete, onSkip }: Onboardin
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-[#76B900] rounded-full flex items-center justify-center mx-auto mb-4">
                 <Rocket className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-2xl font-bold mb-2">Perfect! Let's Set Your Preferences</h2>
@@ -369,7 +369,7 @@ export default function UserFriendlyOnboarding({ onComplete, onSkip }: Onboardin
                     <Card 
                       key={option.id}
                       className={`cursor-pointer transition-all hover:shadow-md ${
-                        userProfile.preferences?.complexity === option.id ? 'ring-2 ring-green-500 bg-green-50 dark:bg-green-950' : ''
+                        userProfile.preferences?.complexity === option.id ? 'ring-2 ring-[#76B900] bg-[#76B900]50 dark:bg-[#1a3d00]' : ''
                       }`}
                       onClick={() => updateProfile({ 
                         preferences: { ...userProfile.preferences!, complexity: option.id as any } 

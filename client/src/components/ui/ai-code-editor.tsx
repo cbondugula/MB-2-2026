@@ -189,7 +189,7 @@ export function AICodeEditor({
   };
 
   const getComplianceColor = (score: number) => {
-    if (score >= 90) return "text-green-600 dark:text-green-400";
+    if (score >= 90) return "text-[#76B900] dark:text-[#8CC63F]";
     if (score >= 70) return "text-yellow-600 dark:text-yellow-400";
     return "text-red-600 dark:text-red-400";
   };
@@ -390,7 +390,7 @@ function HealthcareComponent() {
                             {finding.type === "error" && <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5" />}
                             {finding.type === "warning" && <AlertTriangle className="h-4 w-4 text-yellow-500 mt-0.5" />}
                             {finding.type === "info" && <CheckCircle className="h-4 w-4 text-blue-500 mt-0.5" />}
-                            {finding.type === "suggestion" && <Lightbulb className="h-4 w-4 text-green-500 mt-0.5" />}
+                            {finding.type === "suggestion" && <Lightbulb className="h-4 w-4 text-[#76B900] mt-0.5" />}
                             
                             <div className="flex-1">
                               <p className="text-sm font-medium">{finding.message}</p>
@@ -424,7 +424,7 @@ function HealthcareComponent() {
                         <ul className="text-sm space-y-1">
                           {analysis.recommendations.map((rec, index) => (
                             <li key={index} className="flex items-start gap-2">
-                              <CheckCircle className="h-3 w-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              <CheckCircle className="h-3 w-3 text-[#76B900] mt-0.5 flex-shrink-0" />
                               {rec}
                             </li>
                           ))}

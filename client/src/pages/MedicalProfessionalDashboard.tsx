@@ -110,7 +110,7 @@ export default function MedicalProfessionalDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="text-center" data-testid="card-hipaa-score">
             <CardContent className="p-6">
-              <Shield className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              <Shield className="h-8 w-8 text-[#76B900] mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {(complianceScore as any)?.hipaa_compliance_score || '95%'}
               </div>
@@ -181,7 +181,7 @@ export default function MedicalProfessionalDashboard() {
                       {voiceEnabled ? 'Stop Listening' : 'Start Voice Control'}
                     </Button>
                     <div className="flex items-center">
-                      <div className={`h-3 w-3 rounded-full mr-2 ${voiceEnabled ? 'bg-green-500 animate-pulse' : 'bg-gray-300'}`} />
+                      <div className={`h-3 w-3 rounded-full mr-2 ${voiceEnabled ? 'bg-[#76B900] animate-pulse' : 'bg-gray-300'}`} />
                       <span className="text-sm text-gray-600 dark:text-gray-400">
                         {voiceEnabled ? 'Listening...' : 'Voice control disabled'}
                       </span>

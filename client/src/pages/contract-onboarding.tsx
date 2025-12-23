@@ -39,21 +39,21 @@ function Stepper({ currentStep, steps }: StepperProps) {
                 isActive 
                   ? 'bg-blue-600 text-white' 
                   : isCompleted 
-                    ? 'bg-green-600 text-white' 
+                    ? 'bg-[#76B900] text-white' 
                     : 'bg-gray-700 text-gray-400'
               }`}>
                 <Icon className="w-5 h-5" />
               </div>
               <div className="ml-2">
                 <div className={`text-sm font-medium ${
-                  isActive ? 'text-blue-400' : isCompleted ? 'text-green-400' : 'text-gray-400'
+                  isActive ? 'text-blue-400' : isCompleted ? 'text-[#8CC63F]' : 'text-gray-400'
                 }`}>
                   {step.title}
                 </div>
               </div>
               {index < steps.length - 1 && (
                 <div className={`mx-4 h-0.5 w-8 ${
-                  isCompleted ? 'bg-green-600' : 'bg-gray-700'
+                  isCompleted ? 'bg-[#76B900]' : 'bg-gray-700'
                 }`} />
               )}
             </div>
@@ -488,7 +488,7 @@ export default function ContractOnboarding() {
                 <Button
                   type="submit"
                   disabled={createOrganizationMutation.isPending}
-                  className="w-full bg-green-600 hover:bg-green-700"
+                  className="w-full bg-[#76B900] hover:bg-[#5a8f00]"
                 >
                   {createOrganizationMutation.isPending 
                     ? "Processing..." 
@@ -506,7 +506,7 @@ export default function ContractOnboarding() {
         {currentStep === 2 && (
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="text-center py-12">
-              <div className="animate-spin w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+              <div className="animate-spin w-12 h-12 border-4 border-[#76B900] border-t-transparent rounded-full mx-auto mb-4"></div>
               <h3 className="text-xl font-semibold text-white mb-2">Generating Your Contract</h3>
               <p className="text-gray-400">
                 Our AI is analyzing your requirements and creating a custom contract...
@@ -520,7 +520,7 @@ export default function ContractOnboarding() {
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
               <CardTitle className="text-white flex items-center">
-                <FileText className="w-6 h-6 mr-2 text-green-500" />
+                <FileText className="w-6 h-6 mr-2 text-[#76B900]" />
                 Review Your Custom Contract
               </CardTitle>
               <CardDescription>
@@ -577,7 +577,7 @@ export default function ContractOnboarding() {
                 </Button>
                 <Button
                   onClick={handleContractApproval}
-                  className="flex-1 bg-green-600 hover:bg-green-700"
+                  className="flex-1 bg-[#76B900] hover:bg-[#5a8f00]"
                 >
                   Approve Contract
                 </Button>
@@ -591,7 +591,7 @@ export default function ContractOnboarding() {
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
               <CardTitle className="text-white flex items-center">
-                <CreditCard className="w-6 h-6 mr-2 text-green-500" />
+                <CreditCard className="w-6 h-6 mr-2 text-[#76B900]" />
                 Payment & Digital Signature
               </CardTitle>
               <CardDescription>
@@ -606,13 +606,13 @@ export default function ContractOnboarding() {
                   <Card 
                     className={`cursor-pointer transition-all ${
                       paymentMethod === 'credit_card' 
-                        ? 'border-green-500 bg-green-900/20' 
+                        ? 'border-[#76B900] bg-[#1a3d00]/20' 
                         : 'border-gray-600 bg-gray-700'
                     }`}
                     onClick={() => setPaymentMethod('credit_card')}
                   >
                     <CardContent className="p-4 text-center">
-                      <CreditCard className="w-8 h-8 mx-auto mb-2 text-green-500" />
+                      <CreditCard className="w-8 h-8 mx-auto mb-2 text-[#76B900]" />
                       <h4 className="text-white font-semibold">Credit Card</h4>
                       <p className="text-gray-400 text-sm">Instant processing</p>
                     </CardContent>
@@ -621,13 +621,13 @@ export default function ContractOnboarding() {
                   <Card 
                     className={`cursor-pointer transition-all ${
                       paymentMethod === 'ach' 
-                        ? 'border-green-500 bg-green-900/20' 
+                        ? 'border-[#76B900] bg-[#1a3d00]/20' 
                         : 'border-gray-600 bg-gray-700'
                     }`}
                     onClick={() => setPaymentMethod('ach')}
                   >
                     <CardContent className="p-4 text-center">
-                      <Building className="w-8 h-8 mx-auto mb-2 text-green-500" />
+                      <Building className="w-8 h-8 mx-auto mb-2 text-[#76B900]" />
                       <h4 className="text-white font-semibold">ACH Transfer</h4>
                       <p className="text-gray-400 text-sm">Bank transfer (3-5 days)</p>
                     </CardContent>
@@ -648,7 +648,7 @@ export default function ContractOnboarding() {
                     <Button
                       onClick={() => handlePaymentAndSignature("digital_signature_placeholder")}
                       disabled={signContractMutation.isPending}
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-[#76B900] hover:bg-[#5a8f00]"
                     >
                       {signContractMutation.isPending ? "Processing..." : "Sign Contract"}
                     </Button>
@@ -663,7 +663,7 @@ export default function ContractOnboarding() {
         {currentStep === 5 && (
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="text-center py-12">
-              <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
+              <CheckCircle className="w-16 h-16 mx-auto mb-4 text-[#76B900]" />
               <h3 className="text-2xl font-semibold text-white mb-4">Contract Completed!</h3>
               <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
                 Your contract has been successfully signed and submitted. Our account representative 
@@ -671,7 +671,7 @@ export default function ContractOnboarding() {
                 the contract is fully executed.
               </p>
               <div className="space-y-4">
-                <p className="text-green-400 font-semibold">
+                <p className="text-[#8CC63F] font-semibold">
                   Expected completion: Within 24 hours
                 </p>
                 <div className="space-x-4">
@@ -683,7 +683,7 @@ export default function ContractOnboarding() {
                   </Button>
                   <Button
                     onClick={() => setLocation('/dashboard')}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-[#76B900] hover:bg-[#5a8f00]"
                   >
                     Go to Dashboard
                   </Button>

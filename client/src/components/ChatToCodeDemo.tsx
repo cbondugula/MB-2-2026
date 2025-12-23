@@ -61,15 +61,15 @@ export default function PatientScheduler() {
     <div className="min-h-screen bg-gray-900 text-white p-6">
       <div className="max-w-md mx-auto">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-[#76B900] rounded-lg flex items-center justify-center">
             <span className="text-xl">📅</span>
           </div>
           <h1 className="text-xl font-bold">Patient Scheduler</h1>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded">HIPAA</span>
         </div>
 
         {booked && (
-          <div className="mb-4 p-3 bg-green-900/50 border border-green-600 rounded-lg text-green-400 text-sm">
+          <div className="mb-4 p-3 bg-[#1a3d00]/50 border border-[#76B900] rounded-lg text-[#8CC63F] text-sm">
             ✓ Appointment confirmed! Reminder sent.
           </div>
         )}
@@ -94,7 +94,7 @@ export default function PatientScheduler() {
                   onClick={() => setSelectedTime(time)}
                   className={\`p-2 rounded-lg text-sm font-medium transition-all \${
                     selectedTime === time 
-                      ? 'bg-green-600 text-white' 
+                      ? 'bg-[#76B900] text-white' 
                       : 'bg-gray-800 hover:bg-gray-700'
                   }\`}
                 >
@@ -107,7 +107,7 @@ export default function PatientScheduler() {
           <button
             onClick={handleBook}
             disabled={!selectedTime}
-            className="w-full py-3 bg-green-600 hover:bg-green-500 disabled:opacity-50 rounded-lg font-semibold transition-all"
+            className="w-full py-3 bg-[#76B900] hover:bg-[#76B900] disabled:opacity-50 rounded-lg font-semibold transition-all"
           >
             Book Appointment
           </button>
@@ -145,7 +145,7 @@ export default function IntakeForm() {
             <span className="text-xl">📋</span>
           </div>
           <h1 className="text-xl font-bold">Patient Intake</h1>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded">HIPAA</span>
         </div>
 
         <div className="flex gap-2 mb-6">
@@ -232,11 +232,11 @@ export default function TelehealthRoom() {
           )}
           {status === 'ready' && (
             <>
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-green-900 flex items-center justify-center">
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-[#1a3d00] flex items-center justify-center">
                 <span className="text-3xl">✓</span>
               </div>
-              <p className="text-xl font-semibold text-green-400 mb-4">Doctor is ready!</p>
-              <button onClick={() => setStatus('connected')} className="px-8 py-3 bg-green-600 hover:bg-green-500 rounded-lg font-semibold">
+              <p className="text-xl font-semibold text-[#8CC63F] mb-4">Doctor is ready!</p>
+              <button onClick={() => setStatus('connected')} className="px-8 py-3 bg-[#76B900] hover:bg-[#76B900] rounded-lg font-semibold">
                 Join Video Call
               </button>
             </>
@@ -246,12 +246,12 @@ export default function TelehealthRoom() {
               <div className="aspect-video bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
                 <span className="text-4xl">📹</span>
               </div>
-              <p className="text-green-400">Connected with Dr. Smith</p>
+              <p className="text-[#8CC63F]">Connected with Dr. Smith</p>
             </>
           )}
         </div>
 
-        <span className="px-3 py-1 bg-green-900 text-green-400 text-xs rounded">🔒 End-to-End Encrypted</span>
+        <span className="px-3 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded">🔒 End-to-End Encrypted</span>
       </div>
     </div>
   );
@@ -289,7 +289,7 @@ export default function WellnessTracker() {
             <span className="text-xl">💜</span>
           </div>
           <h1 className="text-xl font-bold">Wellness Tracker</h1>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded">HIPAA</span>
         </div>
 
         {logged && (
@@ -308,7 +308,7 @@ export default function WellnessTracker() {
             <div className="text-xs text-gray-400">Glasses 💧</div>
           </div>
           <div className="bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-green-400">{steps.toLocaleString()}</div>
+            <div className="text-lg font-bold text-[#8CC63F]">{steps.toLocaleString()}</div>
             <div className="text-xs text-gray-400">Steps 👟</div>
           </div>
         </div>
@@ -378,7 +378,7 @@ export default function PharmacyPortal() {
             <span className="text-xl">💊</span>
           </div>
           <h1 className="text-xl font-bold">My Medications</h1>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded">HIPAA</span>
         </div>
 
         {refillRequested && (
@@ -395,7 +395,7 @@ export default function PharmacyPortal() {
                   <div className="font-semibold">{med.name}</div>
                   <div className="text-sm text-gray-400">{med.refills} refills remaining</div>
                 </div>
-                <span className={\`px-2 py-1 text-xs rounded \${med.status === 'ready' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}\`}>
+                <span className={\`px-2 py-1 text-xs rounded \${med.status === 'ready' ? 'bg-[#1a3d00] text-[#8CC63F]' : 'bg-yellow-900 text-yellow-400'}\`}>
                   {med.status === 'ready' ? '✓ Ready' : '⏳ Pending'}
                 </span>
               </div>
@@ -441,7 +441,7 @@ export default function LabResults() {
             <span className="text-xl">🔬</span>
           </div>
           <h1 className="text-xl font-bold">Lab Results</h1>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded">HIPAA</span>
         </div>
 
         <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
@@ -459,7 +459,7 @@ export default function LabResults() {
               <div className="font-semibold">{results[selectedTest].name}</div>
               <div className="text-sm text-gray-400">{results[selectedTest].date}</div>
             </div>
-            <span className={\`px-2 py-1 text-xs rounded \${results[selectedTest].status === 'normal' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}\`}>
+            <span className={\`px-2 py-1 text-xs rounded \${results[selectedTest].status === 'normal' ? 'bg-[#1a3d00] text-[#8CC63F]' : 'bg-yellow-900 text-yellow-400'}\`}>
               {results[selectedTest].status === 'normal' ? '✓ Normal' : '⚠ Review'}
             </span>
           </div>
@@ -616,7 +616,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center text-xl">💜</div>
           <h2 className="text-xl font-bold text-white">Wellness Tracker</h2>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded-md">HIPAA</span>
         </div>
         
         {wellnessLogged && (
@@ -635,7 +635,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
             <div className="text-xs text-gray-400">Glasses 💧</div>
           </div>
           <div className="bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-lg font-bold text-green-400">{steps.toLocaleString()}</div>
+            <div className="text-lg font-bold text-[#8CC63F]">{steps.toLocaleString()}</div>
             <div className="text-xs text-gray-400">Steps 👟</div>
           </div>
         </div>
@@ -678,7 +678,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         </div>
         <div className="mt-4 text-center">
           <span className="inline-flex items-center gap-2 text-xs text-gray-500">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="w-2 h-2 bg-[#76B900] rounded-full animate-pulse"></span>
             Connected to PostgreSQL Database
           </span>
         </div>
@@ -692,7 +692,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center text-xl">💊</div>
           <h2 className="text-xl font-bold text-white">My Medications</h2>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded-md">HIPAA</span>
         </div>
         
         {refillRequested && (
@@ -709,7 +709,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
                   <div className="font-semibold text-white">{med.name}</div>
                   <div className="text-sm text-gray-400">{med.refills} refills remaining</div>
                 </div>
-                <span className={`px-2 py-1 text-xs rounded ${med.status === 'ready' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}`}>
+                <span className={`px-2 py-1 text-xs rounded ${med.status === 'ready' ? 'bg-[#1a3d00] text-[#8CC63F]' : 'bg-yellow-900 text-yellow-400'}`}>
                   {med.status === 'ready' ? '✓ Ready' : '⏳ Pending'}
                 </span>
               </div>
@@ -728,7 +728,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         </div>
         <div className="mt-4 text-center">
           <span className="inline-flex items-center gap-2 text-xs text-gray-500">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="w-2 h-2 bg-[#76B900] rounded-full animate-pulse"></span>
             Connected to PostgreSQL Database
           </span>
         </div>
@@ -742,7 +742,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-cyan-600 rounded-lg flex items-center justify-center text-xl">🔬</div>
           <h2 className="text-xl font-bold text-white">Lab Results</h2>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded-md">HIPAA</span>
         </div>
         <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
           {labResults.map((r, i) => (
@@ -762,7 +762,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
               <div className="font-semibold text-white">{labResults[selectedTest].name}</div>
               <div className="text-sm text-gray-400">{labResults[selectedTest].date}</div>
             </div>
-            <span className={`px-2 py-1 text-xs rounded ${labResults[selectedTest].status === 'normal' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}`}>
+            <span className={`px-2 py-1 text-xs rounded ${labResults[selectedTest].status === 'normal' ? 'bg-[#1a3d00] text-[#8CC63F]' : 'bg-yellow-900 text-yellow-400'}`}>
               {labResults[selectedTest].status === 'normal' ? '✓ Normal' : '⚠ Review'}
             </span>
           </div>
@@ -781,7 +781,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         </div>
         <div className="mt-4 text-center">
           <span className="inline-flex items-center gap-2 text-xs text-gray-500">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="w-2 h-2 bg-[#76B900] rounded-full animate-pulse"></span>
             Connected to PostgreSQL Database
           </span>
         </div>
@@ -795,7 +795,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         <div className="flex items-center gap-3 mb-6 justify-center">
           <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-xl">📹</div>
           <h2 className="text-xl font-bold text-white">Virtual Waiting Room</h2>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded-md">HIPAA</span>
         </div>
         <div className="bg-gray-800 rounded-xl p-8">
           {teleStatus === 'waiting' && (
@@ -809,13 +809,13 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
           )}
           {teleStatus === 'ready' && (
             <>
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-green-900 flex items-center justify-center">
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-[#1a3d00] flex items-center justify-center">
                 <span className="text-3xl">✓</span>
               </div>
-              <p className="text-xl font-semibold text-green-400 mb-4">Doctor is ready!</p>
+              <p className="text-xl font-semibold text-[#8CC63F] mb-4">Doctor is ready!</p>
               <button 
                 onClick={() => setTeleStatus('connected')} 
-                className="px-8 py-3 bg-green-600 hover:bg-green-500 rounded-lg font-semibold transition-all"
+                className="px-8 py-3 bg-[#76B900] hover:bg-[#76B900] rounded-lg font-semibold transition-all"
                 data-testid="button-join-call"
               >
                 Join Video Call
@@ -827,8 +827,8 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
               <div className="aspect-video bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
                 <span className="text-4xl">📹</span>
               </div>
-              <p className="text-green-400 flex items-center justify-center gap-2">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              <p className="text-[#8CC63F] flex items-center justify-center gap-2">
+                <span className="w-2 h-2 bg-[#76B900] rounded-full animate-pulse"></span>
                 Connected with Dr. Smith
               </p>
               <button 
@@ -841,10 +841,10 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
             </>
           )}
         </div>
-        <span className="mt-4 inline-block px-3 py-1 bg-green-900 text-green-400 text-xs rounded">🔒 End-to-End Encrypted</span>
+        <span className="mt-4 inline-block px-3 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded">🔒 End-to-End Encrypted</span>
         <div className="mt-4 text-center">
           <span className="inline-flex items-center gap-2 text-xs text-gray-500">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="w-2 h-2 bg-[#76B900] rounded-full animate-pulse"></span>
             Connected to PostgreSQL Database
           </span>
         </div>
@@ -858,7 +858,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-xl">📋</div>
           <h2 className="text-xl font-bold text-white">Patient Registration</h2>
-          <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+          <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded-md">HIPAA</span>
         </div>
         
         {intakeSubmitted && (
@@ -951,7 +951,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         </div>
         <div className="mt-4 text-center">
           <span className="inline-flex items-center gap-2 text-xs text-gray-500">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="w-2 h-2 bg-[#76B900] rounded-full animate-pulse"></span>
             Connected to PostgreSQL Database
           </span>
         </div>
@@ -963,9 +963,9 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
   return (
     <div className="max-w-md mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center text-xl">📅</div>
+        <div className="w-10 h-10 bg-[#76B900] rounded-lg flex items-center justify-center text-xl">📅</div>
         <h2 className="text-xl font-bold text-white">Patient Scheduler</h2>
-        <span className="ml-auto px-2 py-1 bg-green-900 text-green-400 text-xs rounded-md">HIPAA</span>
+        <span className="ml-auto px-2 py-1 bg-[#1a3d00] text-[#8CC63F] text-xs rounded-md">HIPAA</span>
       </div>
       
       {/* Real-time Stats from API */}
@@ -975,7 +975,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
           <div className="text-xs text-gray-400">Total</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-3 text-center">
-          <div className="text-2xl font-bold text-green-400">{loading ? '...' : stats.confirmed}</div>
+          <div className="text-2xl font-bold text-[#8CC63F]">{loading ? '...' : stats.confirmed}</div>
           <div className="text-xs text-gray-400">Confirmed</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-3 text-center">
@@ -985,7 +985,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
       </div>
       
       {booked && (
-        <div className="mb-4 p-3 bg-green-900/50 border border-green-600 rounded-lg text-green-400 text-sm flex items-center gap-2">
+        <div className="mb-4 p-3 bg-[#1a3d00]/50 border border-[#76B900] rounded-lg text-[#8CC63F] text-sm flex items-center gap-2">
           <CheckCircle className="w-4 h-4" /> Appointment saved to database!
         </div>
       )}
@@ -1002,7 +1002,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
                 <div className="text-white text-sm font-medium">{apt.patientName}</div>
                 <div className="text-gray-400 text-xs">{apt.service} - {apt.time}</div>
               </div>
-              <span className={`px-2 py-0.5 rounded text-xs ${apt.status === 'confirmed' ? 'bg-green-900 text-green-400' : 'bg-yellow-900 text-yellow-400'}`}>
+              <span className={`px-2 py-0.5 rounded text-xs ${apt.status === 'confirmed' ? 'bg-[#1a3d00] text-[#8CC63F]' : 'bg-yellow-900 text-yellow-400'}`}>
                 {apt.status}
               </span>
             </div>
@@ -1020,7 +1020,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
               onClick={() => setSelectedTime(time)}
               className={`p-2 rounded-lg text-xs font-medium transition-all ${
                 selectedTime === time 
-                  ? 'bg-green-600 text-white' 
+                  ? 'bg-[#76B900] text-white' 
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
@@ -1030,7 +1030,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
         </div>
         <button
           onClick={handleBook}
-          className="w-full py-3 bg-green-600 hover:bg-green-500 text-white rounded-lg font-semibold transition-all"
+          className="w-full py-3 bg-[#76B900] hover:bg-[#76B900] text-white rounded-lg font-semibold transition-all"
         >
           Book & Save to Database
         </button>
@@ -1038,7 +1038,7 @@ function LiveDemoPreview({ sessionId, demoType = "scheduler" }: { sessionId?: st
       
       <div className="mt-4 text-center">
         <span className="inline-flex items-center gap-2 text-xs text-gray-500">
-          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          <span className="w-2 h-2 bg-[#76B900] rounded-full animate-pulse"></span>
           Connected to PostgreSQL Database
         </span>
       </div>
@@ -1136,7 +1136,7 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
         <CardHeader className="border-b border-gray-800 py-3 px-4 flex-shrink-0 bg-[#0a0a0f]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+              <div className="w-9 h-9 bg-gradient-to-br from-[#76B900] to-[#76B900] rounded-lg flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -1144,7 +1144,7 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant="outline" className="border-green-600/50 text-green-400 bg-green-500/10">
+              <Badge variant="outline" className="border-[#76B900]/50 text-[#8CC63F] bg-[#76B900]/10">
                 <Shield className="w-3 h-3 mr-1" />
                 HIPAA Ready
               </Badge>
@@ -1162,7 +1162,7 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
             <div className="flex-1 flex flex-col items-center justify-center p-8 bg-[#0a0a0f]">
               <div className="w-full max-w-md space-y-8">
                 <div className="text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center animate-pulse">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-[#76B900] to-[#76B900] rounded-2xl flex items-center justify-center animate-pulse">
                     <Zap className="w-8 h-8 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-white mb-2">Building Your App</h2>
@@ -1174,13 +1174,13 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
                     <div 
                       key={index}
                       className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-300 ${
-                        index < buildStep ? 'bg-green-500/10 border border-green-500/30' :
+                        index < buildStep ? 'bg-[#76B900]/10 border border-[#76B900]/30' :
                         index === buildStep ? 'bg-gray-800 border border-gray-700 animate-pulse' :
                         'bg-gray-900/50 border border-gray-800/50 opacity-50'
                       }`}
                     >
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg ${
-                        index < buildStep ? 'bg-green-600' :
+                        index < buildStep ? 'bg-[#76B900]' :
                         index === buildStep ? 'bg-gray-700' : 'bg-gray-800'
                       }`}>
                         {index < buildStep ? <CheckCircle className="w-4 h-4 text-white" /> : step.icon}
@@ -1191,10 +1191,10 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
                         {step.label}
                       </span>
                       {index === buildStep && (
-                        <Loader2 className="w-4 h-4 text-green-400 animate-spin ml-auto" />
+                        <Loader2 className="w-4 h-4 text-[#8CC63F] animate-spin ml-auto" />
                       )}
                       {index < buildStep && (
-                        <CheckCircle className="w-4 h-4 text-green-400 ml-auto" />
+                        <CheckCircle className="w-4 h-4 text-[#8CC63F] ml-auto" />
                       )}
                     </div>
                   ))}
@@ -1218,7 +1218,7 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
                       onClick={() => setSelectedFile(file)}
                       className={`w-full text-left px-3 py-2 rounded-lg text-sm truncate transition-colors ${
                         selectedFile === file
-                          ? "bg-green-600/20 text-green-400 border border-green-600/30"
+                          ? "bg-[#76B900]/20 text-[#8CC63F] border border-[#76B900]/30"
                           : "text-gray-400 hover:bg-gray-800 hover:text-white"
                       }`}
                       data-testid={`button-file-${file.replace(/[^a-zA-Z0-9]/g, '-')}`}
@@ -1265,7 +1265,7 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
                         Copy
                       </Button>
                       <Button 
-                        className="bg-green-600 hover:bg-green-500" 
+                        className="bg-[#76B900] hover:bg-[#76B900]" 
                         size="sm" 
                         onClick={() => window.location.href = '/pricing'}
                         data-testid="button-deploy-app"
@@ -1291,7 +1291,7 @@ export function ChatToCodeDemo({ initialPrompt, sessionId, onClose, onComplete }
                 
                 <div className="p-4 border-t border-gray-800 bg-[#0a0a0f]">
                   <div className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-[#8CC63F] mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-white font-medium text-sm">{generatedCode.explanation}</p>
                       <div className="mt-2 flex flex-wrap gap-2">

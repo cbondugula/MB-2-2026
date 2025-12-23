@@ -107,7 +107,7 @@ export default function ComponentsLibrary() {
                 <p className="text-sm text-slate-600 mb-3">{component.description}</p>
                 <Badge 
                   variant="secondary" 
-                  className="bg-trust-green-100 text-trust-green-600"
+                  className="bg-trust-green-100 text-trust-[#76B900]"
                 >
                   Verified
                 </Badge>

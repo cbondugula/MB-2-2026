@@ -193,7 +193,7 @@ export default function SuperCSAgent() {
                     strategicRecommendationSuccess: '94.2%'
                   }).map(([metric, value]) => (
                     <div key={metric} className="text-center p-3 border rounded">
-                      <div className="text-lg font-bold text-green-600">{value as string}</div>
+                      <div className="text-lg font-bold text-[#76B900]">{value as string}</div>
                       <div className="text-xs text-gray-600 dark:text-gray-300 capitalize">
                         {metric.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
@@ -227,12 +227,12 @@ export default function SuperCSAgent() {
         {/* Technology Integration */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Integrated Technologies */}
-          <Card className="border-green-200 dark:border-green-800">
+          <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div>
                   <CardTitle className="text-xl flex items-center">
-                    <Cpu className="mr-2 h-5 w-5 text-green-600" />
+                    <Cpu className="mr-2 h-5 w-5 text-[#76B900]" />
                     Integrated Technologies
                   </CardTitle>
                   <CardDescription>Production-ready revolutionary technologies</CardDescription>
@@ -366,7 +366,7 @@ export default function SuperCSAgent() {
                 <Button 
                   onClick={() => handleEnhance("Voice Control", "high")}
                   disabled={enhanceMutation.isPending}
-                  className="w-full bg-green-600 hover:bg-green-700"
+                  className="w-full bg-[#76B900] hover:bg-[#5a8f00]"
                 >
                   Enhance Voice Systems
                 </Button>
@@ -439,7 +439,7 @@ export default function SuperCSAgent() {
                         <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
                           {discovery.discovery}
                         </p>
-                        <p className="text-xs text-green-600 dark:text-green-400">
+                        <p className="text-xs text-[#76B900] dark:text-[#8CC63F]">
                           Impact: {discovery.impact}
                         </p>
                       </div>
@@ -471,13 +471,13 @@ export default function SuperCSAgent() {
                 {/* Owner Recommendations */}
                 <div>
                   <h4 className="font-semibold mb-3 flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                    <CheckCircle className="mr-2 h-4 w-4 text-[#76B900]" />
                     Owner Recommendations
                   </h4>
                   <div className="space-y-2">
                     {((learningReport as any)?.learningReport?.ownerRecommendations || []).map((rec: string, index: number) => (
-                      <Alert key={index} className="border-green-200 dark:border-green-800">
-                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      <Alert key={index} className="border-[#76B900]200 dark:border-[#5a8f00]">
+                        <CheckCircle className="h-4 w-4 text-[#76B900]" />
                         <AlertDescription className="text-sm">
                           {rec}
                         </AlertDescription>

@@ -85,7 +85,7 @@ export default function ProjectEditor() {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <Loader2 className="w-12 h-12 text-green-500 animate-spin mx-auto" />
+          <Loader2 className="w-12 h-12 text-[#76B900] animate-spin mx-auto" />
           <p className="text-gray-400">Loading project...</p>
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function ProjectEditor() {
               <div>
                 <h1 className="text-xl font-semibold text-white">{project.name}</h1>
                 <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="secondary" className="bg-green-900 text-green-300 text-xs">
+                  <Badge variant="secondary" className="bg-[#1a3d00] text-[#8CC63F] text-xs">
                     {project.framework}
                   </Badge>
                   <Badge variant="secondary" className="bg-blue-900 text-blue-300 text-xs">
@@ -173,7 +173,7 @@ export default function ProjectEditor() {
                 onClick={handleSave}
                 disabled={!hasUnsavedChanges || saveProjectMutation.isPending}
                 size="sm"
-                className="bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
+                className="bg-[#76B900] hover:bg-[#5a8f00] text-white disabled:opacity-50"
                 data-testid="save-button"
               >
                 {saveProjectMutation.isPending ? (
@@ -198,7 +198,7 @@ export default function ProjectEditor() {
                 Code Editor
               </CardTitle>
               {project.isHipaaCompliant && (
-                <Badge variant="secondary" className="bg-green-900 text-green-300">
+                <Badge variant="secondary" className="bg-[#1a3d00] text-[#8CC63F]">
                   HIPAA Compliant
                 </Badge>
               )}

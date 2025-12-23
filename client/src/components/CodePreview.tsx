@@ -49,10 +49,10 @@ export function CodePreview({ code, framework = "react", className = "" }: CodeP
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <CardTitle className="text-lg text-white flex items-center gap-2">
-              <Play className="w-5 h-5 text-green-400" />
+              <Play className="w-5 h-5 text-[#8CC63F]" />
               Live Preview
             </CardTitle>
-            <Badge variant="outline" className="bg-green-900 text-green-300 border-green-700 text-xs">
+            <Badge variant="outline" className="bg-[#1a3d00] text-[#8CC63F] border-[#5a8f00] text-xs">
               {framework}
             </Badge>
           </div>

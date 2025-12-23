@@ -29,7 +29,7 @@ export default function PowerEnhancementBanner() {
             <div className="flex items-center mb-3 flex-wrap gap-2">
               <Sparkles className="w-6 h-6 text-yellow-300 flex-shrink-0" />
               <h3 className="text-xl font-bold text-white drop-shadow-md">🚀 MedBuilder Power Enhancements LIVE</h3>
-              <Badge className="bg-green-500 text-white text-xs font-bold px-2 py-1 shadow-md">
+              <Badge className="bg-[#76B900] text-white text-xs font-bold px-2 py-1 shadow-md">
                 NEW
               </Badge>
             </div>

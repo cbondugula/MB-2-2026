@@ -70,7 +70,7 @@ export default function Preview() {
           variant={viewMode === 'desktop' ? 'default' : 'ghost'}
           size="sm"
           onClick={() => setViewMode('desktop')}
-          className={viewMode === 'desktop' ? 'bg-emerald-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}
+          className={viewMode === 'desktop' ? 'bg-[#76B900] text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}
         >
           <Monitor className="w-4 h-4" />
         </Button>
@@ -78,7 +78,7 @@ export default function Preview() {
           variant={viewMode === 'tablet' ? 'default' : 'ghost'}
           size="sm"
           onClick={() => setViewMode('tablet')}
-          className={viewMode === 'tablet' ? 'bg-emerald-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}
+          className={viewMode === 'tablet' ? 'bg-[#76B900] text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}
         >
           <Tablet className="w-4 h-4" />
         </Button>
@@ -86,7 +86,7 @@ export default function Preview() {
           variant={viewMode === 'mobile' ? 'default' : 'ghost'}
           size="sm"
           onClick={() => setViewMode('mobile')}
-          className={viewMode === 'mobile' ? 'bg-emerald-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}
+          className={viewMode === 'mobile' ? 'bg-[#76B900] text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}
         >
           <Smartphone className="w-4 h-4" />
         </Button>
@@ -124,21 +124,21 @@ export default function Preview() {
                   <div className="flex space-x-2">
                     <div className="w-3 h-3 rounded-full bg-red-500"></div>
                     <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-[#76B900]"></div>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <Shield className="w-4 h-4 text-emerald-400" />
+                    <Shield className="w-4 h-4 text-[#76B900]" />
                     <span>https://your-app.medbuilder.io</span>
                   </div>
                 </div>
-                <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">
                   HIPAA Compliant
                 </Badge>
               </div>
             </CardHeader>
             <CardContent className="p-0 bg-gray-950">
               {/* Sample Preview App */}
-              <div className="bg-emerald-600 text-white p-4">
+              <div className="bg-[#76B900] text-white p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
@@ -146,7 +146,7 @@ export default function Preview() {
                     </div>
                     <div>
                       <h1 className="text-lg font-semibold">HealthCare Portal</h1>
-                      <p className="text-xs text-emerald-100">HIPAA Compliant</p>
+                      <p className="text-xs text-[#c8e6a5]">HIPAA Compliant</p>
                     </div>
                   </div>
                   <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
@@ -160,8 +160,8 @@ export default function Preview() {
                   <Card className="bg-gray-900 border-gray-800">
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-emerald-900/50 rounded-lg flex items-center justify-center">
-                          <Calendar className="w-5 h-5 text-emerald-400" />
+                        <div className="w-10 h-10 bg-[#1a3d00]/50 rounded-lg flex items-center justify-center">
+                          <Calendar className="w-5 h-5 text-[#76B900]" />
                         </div>
                         <div>
                           <p className="text-sm text-gray-400">Next Appointment</p>
@@ -174,8 +174,8 @@ export default function Preview() {
                   <Card className="bg-gray-900 border-gray-800">
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-emerald-900/50 rounded-lg flex items-center justify-center">
-                          <Activity className="w-5 h-5 text-emerald-400" />
+                        <div className="w-10 h-10 bg-[#1a3d00]/50 rounded-lg flex items-center justify-center">
+                          <Activity className="w-5 h-5 text-[#76B900]" />
                         </div>
                         <div>
                           <p className="text-sm text-gray-400">Health Score</p>
@@ -192,8 +192,8 @@ export default function Preview() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-emerald-900/50 rounded-full flex items-center justify-center">
-                        <Video className="w-4 h-4 text-emerald-400" />
+                      <div className="w-8 h-8 bg-[#1a3d00]/50 rounded-full flex items-center justify-center">
+                        <Video className="w-4 h-4 text-[#76B900]" />
                       </div>
                       <div className="flex-1">
                         <p className="text-sm text-white">Telemedicine consultation completed</p>
@@ -202,8 +202,8 @@ export default function Preview() {
                     </div>
                     
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-emerald-900/50 rounded-full flex items-center justify-center">
-                        <MessageSquare className="w-4 h-4 text-emerald-400" />
+                      <div className="w-8 h-8 bg-[#1a3d00]/50 rounded-full flex items-center justify-center">
+                        <MessageSquare className="w-4 h-4 text-[#76B900]" />
                       </div>
                       <div className="flex-1">
                         <p className="text-sm text-white">New message from Dr. Smith</p>
@@ -212,8 +212,8 @@ export default function Preview() {
                     </div>
                     
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-emerald-900/50 rounded-full flex items-center justify-center">
-                        <Clock className="w-4 h-4 text-emerald-400" />
+                      <div className="w-8 h-8 bg-[#1a3d00]/50 rounded-full flex items-center justify-center">
+                        <Clock className="w-4 h-4 text-[#76B900]" />
                       </div>
                       <div className="flex-1">
                         <p className="text-sm text-white">Prescription refill reminder</p>

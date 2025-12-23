@@ -154,12 +154,12 @@ export default function OwnerDashboard() {
           </Card>
 
           {/* Revenue Projections */}
-          <Card className="border-green-200 dark:border-green-800">
+          <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div>
                   <CardTitle className="text-xl flex items-center">
-                    <TrendingUp className="mr-2 h-5 w-5 text-green-600" />
+                    <TrendingUp className="mr-2 h-5 w-5 text-[#76B900]" />
                     Revenue Projections
                   </CardTitle>
                   <CardDescription>Live revenue forecasting and growth analysis</CardDescription>
@@ -179,7 +179,7 @@ export default function OwnerDashboard() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="text-3xl font-bold text-green-600">
+                  <div className="text-3xl font-bold text-[#76B900]">
                     ${(revenueProjections as any)?.year5ARR || '8.3B ARR'}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">
@@ -255,7 +255,7 @@ export default function OwnerDashboard() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600 mb-2">Protected Privacy</div>
+                  <div className="text-2xl font-bold text-[#76B900] mb-2">Protected Privacy</div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">
                     All other users see only public healthcare information
                   </div>

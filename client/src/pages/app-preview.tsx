@@ -48,7 +48,7 @@ export default function AppPreview() {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <Loader2 className="w-12 h-12 text-green-500 animate-spin mx-auto" />
+          <Loader2 className="w-12 h-12 text-[#76B900] animate-spin mx-auto" />
           <p className="text-gray-400">Loading your app...</p>
         </div>
       </div>
@@ -104,7 +104,7 @@ export default function AppPreview() {
               <div>
                 <h1 className="text-xl font-semibold text-white">{app.name}</h1>
                 <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="secondary" className="bg-green-900 text-green-300 text-xs">
+                  <Badge variant="secondary" className="bg-[#1a3d00] text-[#8CC63F] text-xs">
                     {app.framework}
                   </Badge>
                   <Badge variant="secondary" className="bg-blue-900 text-blue-300 text-xs">
@@ -134,7 +134,7 @@ export default function AppPreview() {
               </Button>
               <Button
                 size="sm"
-                className="bg-green-600 hover:bg-green-700 text-white"
+                className="bg-[#76B900] hover:bg-[#5a8f00] text-white"
                 data-testid="deploy-app-button"
               >
                 <Play className="w-4 h-4 mr-2" />
@@ -179,7 +179,7 @@ export default function AppPreview() {
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {app.techStack && typeof app.techStack === 'object' && (
                       <>
-                        <Badge variant="outline" className="border-green-700 text-green-400 text-xs">
+                        <Badge variant="outline" className="border-[#5a8f00] text-[#8CC63F] text-xs">
                           {(app.techStack as any).frontend || app.framework}
                         </Badge>
                         <Badge variant="outline" className="border-blue-700 text-blue-400 text-xs">
@@ -200,7 +200,7 @@ export default function AppPreview() {
                 
                 <div>
                   <p className="text-sm text-gray-400 mb-1">HIPAA Compliant</p>
-                  <Badge variant="secondary" className="bg-green-900 text-green-300 text-xs">
+                  <Badge variant="secondary" className="bg-[#1a3d00] text-[#8CC63F] text-xs">
                     {app.isHipaaCompliant ? "✓ Yes" : "No"}
                   </Badge>
                 </div>
@@ -221,7 +221,7 @@ export default function AppPreview() {
                 {app.settings && typeof app.settings === 'object' && (app.settings as any).complianceScore !== undefined && (
                   <div>
                     <p className="text-sm text-gray-400 mb-1">HIPAA Compliance Score</p>
-                    <p className="text-2xl font-bold text-green-400">{(app.settings as any).complianceScore}%</p>
+                    <p className="text-2xl font-bold text-[#8CC63F]">{(app.settings as any).complianceScore}%</p>
                   </div>
                 )}
               </CardContent>
@@ -281,7 +281,7 @@ export default function AppPreview() {
                           >
                             {copiedFile === fileName ? (
                               <>
-                                <CheckCircle className="w-3 h-3 mr-1.5 text-green-400" />
+                                <CheckCircle className="w-3 h-3 mr-1.5 text-[#8CC63F]" />
                                 Copied!
                               </>
                             ) : (

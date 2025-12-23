@@ -353,7 +353,7 @@ export default function SuperAgent() {
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
               <CardTitle className="text-white flex items-center">
-                <TrendingUp className="w-6 h-6 mr-2 text-green-400" />
+                <TrendingUp className="w-6 h-6 mr-2 text-[#8CC63F]" />
                 Super Agent Results
               </CardTitle>
               <CardDescription>
@@ -366,16 +366,16 @@ export default function SuperAgent() {
                   {/* Performance Metrics */}
                   <div className="grid grid-cols-2 gap-4">
                     {response.confidence !== undefined && (
-                      <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
-                        <div className="text-green-400 text-sm font-medium">Confidence</div>
+                      <div className="bg-[#1a3d00]/30 p-4 rounded-lg border border-[#5a8f00]">
+                        <div className="text-[#8CC63F] text-sm font-medium">Confidence</div>
                         <div className="text-2xl font-bold text-white">
                           {(response.confidence * 100).toFixed(1)}%
                         </div>
                       </div>
                     )}
                     {response.orchestrationPlan?.confidence && (
-                      <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
-                        <div className="text-green-400 text-sm font-medium">AI Confidence</div>
+                      <div className="bg-[#1a3d00]/30 p-4 rounded-lg border border-[#5a8f00]">
+                        <div className="text-[#8CC63F] text-sm font-medium">AI Confidence</div>
                         <div className="text-2xl font-bold text-white">
                           {response.orchestrationPlan.confidence}%
                         </div>
@@ -390,8 +390,8 @@ export default function SuperAgent() {
                       </div>
                     )}
                     {response.success !== undefined && (
-                      <div className={`p-4 rounded-lg border ${response.success ? 'bg-green-900/30 border-green-700' : 'bg-red-900/30 border-red-700'}`}>
-                        <div className={`text-sm font-medium ${response.success ? 'text-green-400' : 'text-red-400'}`}>Status</div>
+                      <div className={`p-4 rounded-lg border ${response.success ? 'bg-[#1a3d00]/30 border-[#5a8f00]' : 'bg-red-900/30 border-red-700'}`}>
+                        <div className={`text-sm font-medium ${response.success ? 'text-[#8CC63F]' : 'text-red-400'}`}>Status</div>
                         <div className="text-2xl font-bold text-white">
                           {response.success ? 'Success' : 'Failed'}
                         </div>
@@ -422,7 +422,7 @@ export default function SuperAgent() {
                           <div key={name} className="bg-blue-900/20 p-3 rounded-lg border border-blue-700">
                             <div className="text-blue-300 font-medium text-sm mb-1">{name}</div>
                             <div className="text-gray-400 text-xs mb-1">{agent.capability}</div>
-                            <Badge variant="outline" className="text-green-400 border-green-400 text-xs">
+                            <Badge variant="outline" className="text-[#8CC63F] border-[#8CC63F] text-xs">
                               {agent.status}
                             </Badge>
                           </div>
@@ -437,14 +437,14 @@ export default function SuperAgent() {
                       <h3 className="text-white font-semibold mb-2">Compliance Status</h3>
                       <div className="grid grid-cols-2 gap-2">
                         <div className="flex items-center">
-                          <Shield className="w-4 h-4 mr-2 text-green-400" />
+                          <Shield className="w-4 h-4 mr-2 text-[#8CC63F]" />
                           <span className="text-white">HIPAA: </span>
                           <Badge variant={response.compliance_status.hipaa ? "default" : "destructive"} className="ml-2">
                             {response.compliance_status.hipaa ? "Compliant" : "Issues"}
                           </Badge>
                         </div>
                         <div className="flex items-center">
-                          <Globe className="w-4 h-4 mr-2 text-green-400" />
+                          <Globe className="w-4 h-4 mr-2 text-[#8CC63F]" />
                           <span className="text-white">GDPR: </span>
                           <Badge variant={response.compliance_status.gdpr ? "default" : "destructive"} className="ml-2">
                             {response.compliance_status.gdpr ? "Compliant" : "Issues"}
@@ -516,7 +516,7 @@ export default function SuperAgent() {
                     <div className="mt-6">
                       <div className="flex items-center justify-between mb-3">
                         <h3 className="text-white font-semibold flex items-center">
-                          <Code className="w-5 h-5 mr-2 text-green-400" />
+                          <Code className="w-5 h-5 mr-2 text-[#8CC63F]" />
                           Generated Code
                         </h3>
                         <div className="flex gap-2">
@@ -530,14 +530,14 @@ export default function SuperAgent() {
                       </div>
                       
                       {response.complianceRequirements && (
-                        <div className="mb-3 flex items-center text-green-400 text-sm">
+                        <div className="mb-3 flex items-center text-[#8CC63F] text-sm">
                           <Shield className="w-4 h-4 mr-2" />
                           <span>{response.complianceRequirements} Compliant Code</span>
                         </div>
                       )}
                       
-                      <div className="bg-gray-900 p-4 rounded-lg border border-green-700 shadow-lg">
-                        <pre className="text-green-300 text-sm overflow-auto max-h-96 font-mono">
+                      <div className="bg-gray-900 p-4 rounded-lg border border-[#5a8f00] shadow-lg">
+                        <pre className="text-[#8CC63F] text-sm overflow-auto max-h-96 font-mono">
                           {response.generatedCode}
                         </pre>
                       </div>
@@ -547,7 +547,7 @@ export default function SuperAgent() {
                           <h4 className="text-white text-sm font-medium mb-2">Code Features:</h4>
                           <div className="flex flex-wrap gap-2">
                             {response.complianceNotes.map((note, index) => (
-                              <Badge key={index} variant="outline" className="text-green-400 border-green-400 text-xs">
+                              <Badge key={index} variant="outline" className="text-[#8CC63F] border-[#8CC63F] text-xs">
                                 {note}
                               </Badge>
                             ))}
@@ -586,10 +586,10 @@ export default function SuperAgent() {
                 <p className="text-blue-400 text-xs mt-1">60+ Templates Available</p>
               </div>
               <div className="text-center">
-                <Stethoscope className="w-12 h-12 text-green-400 mx-auto mb-2" />
+                <Stethoscope className="w-12 h-12 text-[#8CC63F] mx-auto mb-2" />
                 <h3 className="text-white font-semibold">Clinical Analysis</h3>
                 <p className="text-gray-400 text-sm">Multi-modal medical AI</p>
-                <p className="text-green-400 text-xs mt-1">9 Medical AI Models</p>
+                <p className="text-[#8CC63F] text-xs mt-1">9 Medical AI Models</p>
               </div>
               <div className="text-center">
                 <Shield className="w-12 h-12 text-yellow-400 mx-auto mb-2" />
@@ -606,7 +606,7 @@ export default function SuperAgent() {
             </div>
             
             <div className="mt-8 text-center">
-              <div className="bg-gradient-to-r from-blue-900/30 via-purple-900/30 to-green-900/30 p-6 rounded-lg border border-blue-700">
+              <div className="bg-gradient-to-r from-blue-900/30 via-purple-900/30 to-[#1a3d00]/30 p-6 rounded-lg border border-blue-700">
                 <h4 className="text-white text-xl font-bold mb-2">🎯 100 Million Application Goal</h4>
                 <p className="text-gray-300 mb-4">
                   Our Super Agent is engineered to enable the creation of 100 million healthcare applications. 
@@ -616,7 +616,7 @@ export default function SuperAgent() {
                   <Badge variant="outline" className="text-blue-400 border-blue-400">
                     Scalable Architecture
                   </Badge>
-                  <Badge variant="outline" className="text-green-400 border-green-400">
+                  <Badge variant="outline" className="text-[#8CC63F] border-[#8CC63F]">
                     Auto-Deployment
                   </Badge>
                   <Badge variant="outline" className="text-yellow-400 border-yellow-400">

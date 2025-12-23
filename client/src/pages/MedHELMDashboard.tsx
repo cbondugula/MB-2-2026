@@ -122,12 +122,12 @@ export default function MedHELMDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-[#e8f5d9] to-teal-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-4">
-            <Brain className="h-12 w-12 text-emerald-600 mr-4" />
+            <Brain className="h-12 w-12 text-[#76B900] mr-4" />
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
               Stanford MedHELM Integration
             </h1>
@@ -142,7 +142,7 @@ export default function MedHELMDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="text-center" data-testid="card-service-status">
             <CardContent className="p-6">
-              <Activity className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              <Activity className="h-8 w-8 text-[#76B900] mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {(healthStatus as any)?.status === 'operational' ? 'Active' : 'Checking'}
               </div>
@@ -313,7 +313,7 @@ export default function MedHELMDashboard() {
                   </Button>
 
                   {clinicalDecisionMutation.data && (
-                    <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                    <div className="bg-[#76B900]50 dark:bg-[#1a3d00]/20 p-4 rounded-lg">
                       <h3 className="font-semibold mb-2">MedHELM Clinical Recommendations</h3>
                       <pre className="text-sm whitespace-pre-wrap">
                         {JSON.stringify(clinicalDecisionMutation.data, null, 2)}
@@ -426,7 +426,7 @@ export default function MedHELMDashboard() {
                   </Button>
 
                   {nlpMutation.data && (
-                    <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg">
+                    <div className="bg-[#e8f5d9] dark:bg-[#1a3d00]/20 p-4 rounded-lg">
                       <h3 className="font-semibold mb-2">NLP Processing Results</h3>
                       <pre className="text-sm whitespace-pre-wrap">
                         {JSON.stringify(nlpMutation.data, null, 2)}

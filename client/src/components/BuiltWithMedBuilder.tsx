@@ -22,7 +22,7 @@ export function BuiltWithMedBuilder({
     return (
       <button
         onClick={handleClick}
-        className={`inline-flex items-center gap-1 text-xs text-gray-500 hover:text-emerald-500 transition-colors ${className}`}
+        className={`inline-flex items-center gap-1 text-xs text-gray-500 hover:text-[#76B900] transition-colors ${className}`}
         data-testid="built-with-medbuilder-minimal"
       >
         <HeartPulse className="w-3 h-3" />
@@ -39,15 +39,15 @@ export function BuiltWithMedBuilder({
       >
         <button
           onClick={handleClick}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-900 border border-gray-700 rounded-full shadow-lg hover:border-emerald-500 hover:bg-gray-800 transition-all group"
+          className="flex items-center gap-2 px-4 py-2 bg-gray-900 border border-gray-700 rounded-full shadow-lg hover:border-[#76B900] hover:bg-gray-800 transition-all group"
         >
-          <div className="w-6 h-6 bg-emerald-600 rounded-md flex items-center justify-center">
+          <div className="w-6 h-6 bg-[#76B900] rounded-md flex items-center justify-center">
             <HeartPulse className="w-4 h-4 text-white" />
           </div>
           <span className="text-sm text-gray-300 group-hover:text-white">
-            Built with <span className="font-semibold text-emerald-400">MedBuilder</span>
+            Built with <span className="font-semibold text-[#76B900]">MedBuilder</span>
           </span>
-          {showLink && <ExternalLink className="w-3 h-3 text-gray-500 group-hover:text-emerald-400" />}
+          {showLink && <ExternalLink className="w-3 h-3 text-gray-500 group-hover:text-[#76B900]" />}
         </button>
       </div>
     );
@@ -63,9 +63,9 @@ export function BuiltWithMedBuilder({
           onClick={handleClick}
           className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
         >
-          <HeartPulse className="w-4 h-4 text-emerald-500" />
+          <HeartPulse className="w-4 h-4 text-[#76B900]" />
           <span className="text-sm">
-            Powered by <span className="font-semibold text-emerald-400">MedBuilder</span> - AI Healthcare Development
+            Powered by <span className="font-semibold text-[#76B900]">MedBuilder</span> - AI Healthcare Development
           </span>
         </button>
       </div>
@@ -74,13 +74,13 @@ export function BuiltWithMedBuilder({
 
   return (
     <Badge 
-      className={`bg-gray-900 border border-gray-700 hover:border-emerald-500 cursor-pointer transition-colors ${className}`}
+      className={`bg-gray-900 border border-gray-700 hover:border-[#76B900] cursor-pointer transition-colors ${className}`}
       onClick={handleClick}
       data-testid="built-with-medbuilder-badge"
     >
-      <HeartPulse className="w-3 h-3 mr-1 text-emerald-500" />
+      <HeartPulse className="w-3 h-3 mr-1 text-[#76B900]" />
       <span className="text-gray-300">Built with</span>
-      <span className="ml-1 text-emerald-400 font-semibold">MedBuilder</span>
+      <span className="ml-1 text-[#76B900] font-semibold">MedBuilder</span>
     </Badge>
   );
 }

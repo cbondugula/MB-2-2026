@@ -90,18 +90,18 @@ export default function AppBuilder() {
     <PageLayout title="Build App" description="Describe your healthcare app and we'll build it">
       <div className="max-w-3xl mx-auto space-y-8">
         {isBuilding ? (
-          <Card className="bg-gradient-to-br from-emerald-900/40 to-gray-900 border-emerald-700">
+          <Card className="bg-gradient-to-br from-[#1a3d00]/40 to-gray-900 border-[#76B900]">
             <CardContent className="py-12 text-center">
-              <Rocket className="w-12 h-12 text-emerald-400 mx-auto mb-4 animate-bounce" />
+              <Rocket className="w-12 h-12 text-[#76B900] mx-auto mb-4 animate-bounce" />
               <h2 className="text-2xl font-bold text-white mb-2">Building your app...</h2>
               <p className="text-gray-400 mb-6">Setting up HIPAA compliance, generating code, configuring database</p>
               <div className="w-full max-w-md mx-auto bg-gray-800 rounded-full h-3">
                 <div 
-                  className="bg-emerald-500 h-3 rounded-full transition-all duration-300"
+                  className="bg-[#76B900] h-3 rounded-full transition-all duration-300"
                   style={{ width: `${buildProgress}%` }}
                 />
               </div>
-              <p className="text-emerald-400 mt-2">{Math.round(buildProgress)}%</p>
+              <p className="text-[#76B900] mt-2">{Math.round(buildProgress)}%</p>
             </CardContent>
           </Card>
         ) : (
@@ -109,7 +109,7 @@ export default function AppBuilder() {
             <Card className="bg-gray-900 border-gray-800">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-5 h-5 text-emerald-400" />
+                  <Sparkles className="w-5 h-5 text-[#76B900]" />
                   <span className="text-gray-300 font-medium">What do you want to build?</span>
                 </div>
                 <Textarea
@@ -122,7 +122,7 @@ export default function AppBuilder() {
                 <div className="flex justify-end mt-4">
                   <Button 
                     size="lg"
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white px-8"
+                    className="bg-[#76B900] hover:bg-[#76B900] text-white px-8"
                     onClick={handleBuild}
                     disabled={!prompt.trim()}
                     data-testid="button-build"
@@ -143,10 +143,10 @@ export default function AppBuilder() {
                     <button
                       key={item.label}
                       onClick={() => handleQuickStart(item)}
-                      className="p-4 bg-gray-900 border border-gray-800 rounded-lg hover:border-emerald-600 hover:bg-gray-800 transition-all text-left group"
+                      className="p-4 bg-gray-900 border border-gray-800 rounded-lg hover:border-[#76B900] hover:bg-gray-800 transition-all text-left group"
                       data-testid={`button-template-${item.label.toLowerCase().replace(' ', '-')}`}
                     >
-                      <Icon className="w-6 h-6 text-gray-500 group-hover:text-emerald-400 mb-2" />
+                      <Icon className="w-6 h-6 text-gray-500 group-hover:text-[#76B900] mb-2" />
                       <span className="text-white font-medium block">{item.label}</span>
                     </button>
                   );

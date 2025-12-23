@@ -161,7 +161,7 @@ export default function VisualBuilder() {
               <Wand2 className="w-8 h-8 mr-3 text-purple-400" />
               Visual Healthcare Builder
             </h1>
-            <Badge variant="outline" className="text-green-400 border-green-400">
+            <Badge variant="outline" className="text-[#8CC63F] border-[#8CC63F]">
               No Code Required
             </Badge>
             <Badge variant="outline" className="text-blue-400 border-blue-400">
@@ -191,7 +191,7 @@ export default function VisualBuilder() {
             
             <Button 
               onClick={() => currentApp && deployMutation.mutate(currentApp)}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-[#76B900] hover:bg-[#5a8f00]"
               disabled={!currentApp || deployMutation.isPending}
             >
               <CloudUpload className="w-4 h-4 mr-2" />
@@ -312,7 +312,7 @@ export default function VisualBuilder() {
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-bold text-gray-800">{currentApp.name}</h2>
                     <div className="flex space-x-2">
-                      <Badge className="bg-green-100 text-green-800">HIPAA Compliant</Badge>
+                      <Badge className="bg-[#76B900]100 text-[#5a8f00]">HIPAA Compliant</Badge>
                       <Badge className="bg-blue-100 text-blue-800">Real-time</Badge>
                     </div>
                   </div>

@@ -68,7 +68,7 @@ export default function QuickStats() {
         <CardContent className="p-6">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-trust-green-100 rounded-lg flex items-center justify-center">
-              <Shield className="w-6 h-6 text-trust-green-500" />
+              <Shield className="w-6 h-6 text-trust-[#76B900]" />
             </div>
             <div>
               <p className="text-sm text-slate-600">HIPAA Compliant</p>

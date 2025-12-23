@@ -91,7 +91,7 @@ export default function ExecutiveDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="text-center" data-testid="card-total-roi">
             <CardContent className="p-6">
-              <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
+              <TrendingUp className="h-8 w-8 text-[#76B900] mx-auto mb-2" />
               <div className="text-2xl font-bold text-gray-900 dark:text-white">
                 {dynamicROI.totalROI}%
               </div>
@@ -159,7 +159,7 @@ export default function ExecutiveDashboard() {
                     <div>
                       <div className="flex justify-between items-center mb-3">
                         <span className="font-medium">Development Cost Reduction</span>
-                        <span className="text-2xl font-bold text-green-600">
+                        <span className="text-2xl font-bold text-[#76B900]">
                           {dynamicROI.developmentCostReduction}%
                         </span>
                       </div>
@@ -197,14 +197,14 @@ export default function ExecutiveDashboard() {
                       </p>
                     </div>
 
-                    <div className="bg-green-100 dark:bg-green-900 border border-green-200 dark:border-green-700 p-4 rounded-lg">
+                    <div className="bg-[#76B900]100 dark:bg-[#1a3d00] border border-[#76B900]200 dark:border-[#5a8f00] p-4 rounded-lg">
                       <div className="flex items-center">
-                        <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400 mr-3" />
+                        <TrendingUp className="h-6 w-6 text-[#76B900] dark:text-[#8CC63F] mr-3" />
                         <div>
-                          <h3 className="font-semibold text-green-900 dark:text-green-100">
+                          <h3 className="font-semibold text-[#1a3d00] dark:text-[#76B900]100">
                             Total Annual ROI: {dynamicROI.totalROI}%
                           </h3>
-                          <p className="text-sm text-green-800 dark:text-green-200">
+                          <p className="text-sm text-[#5a8f00] dark:text-[#76B900]200">
                             Investment payback period: 3.2 months for typical healthcare organization
                           </p>
                         </div>
@@ -257,7 +257,7 @@ export default function ExecutiveDashboard() {
 
                       <Card className="text-center">
                         <CardContent className="p-4">
-                          <DollarSign className="h-6 w-6 text-green-500 mx-auto mb-2" />
+                          <DollarSign className="h-6 w-6 text-[#76B900] mx-auto mb-2" />
                           <div className="text-xl font-bold">
                             ${dynamicRevenue?.[selectedTimeframe].arpu}/mo
                           </div>
@@ -313,7 +313,7 @@ export default function ExecutiveDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-center mb-4">
-                    <div className="text-3xl font-bold text-green-600">
+                    <div className="text-3xl font-bold text-[#76B900]">
                       {dynamicCompetitive.patentPortfolio}
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">89 Patents Strategic Value</p>
@@ -346,11 +346,11 @@ export default function ExecutiveDashboard() {
                   <div className="space-y-4">
                     <div>
                       <h3 className="font-semibold mb-2">Competitive Analysis</h3>
-                      <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded">
-                        <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                      <div className="bg-[#76B900]100 dark:bg-[#1a3d00]/20 p-3 rounded">
+                        <p className="text-sm font-medium text-[#5a8f00] dark:text-[#76B900]200">
                           {dynamicCompetitive.marketPosition}
                         </p>
-                        <p className="text-xs text-green-700 dark:text-green-300 mt-1">
+                        <p className="text-xs text-[#5a8f00] dark:text-[#8CC63F] mt-1">
                           First-mover advantage in AI-powered healthcare development
                         </p>
                       </div>
@@ -505,9 +505,9 @@ export default function ExecutiveDashboard() {
                 <CardContent>
                   <div className="space-y-6">
                     <div className="grid gap-4">
-                      <div className="p-4 border-l-4 border-green-500 bg-green-50 dark:bg-green-900/20">
-                        <h3 className="font-semibold text-green-800 dark:text-green-200">Low Risk</h3>
-                        <p className="text-sm text-green-700 dark:text-green-300">
+                      <div className="p-4 border-l-4 border-[#76B900] bg-[#76B900]50 dark:bg-[#1a3d00]/20">
+                        <h3 className="font-semibold text-[#5a8f00] dark:text-[#76B900]200">Low Risk</h3>
+                        <p className="text-sm text-[#5a8f00] dark:text-[#8CC63F]">
                           Technical implementation - Platform fully functional with 100x CS Agent capabilities
                         </p>
                       </div>

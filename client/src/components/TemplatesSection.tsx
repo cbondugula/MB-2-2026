@@ -123,7 +123,7 @@ export default function TemplatesSection() {
                       variant="secondary" 
                       className={
                         tag === "HIPAA" 
-                          ? "bg-trust-green-100 text-trust-green-600" 
+                          ? "bg-trust-green-100 text-trust-[#76B900]" 
                           : "bg-medical-blue-100 text-medical-blue-600"
                       }
                     >

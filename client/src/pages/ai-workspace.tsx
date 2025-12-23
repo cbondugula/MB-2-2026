@@ -214,14 +214,14 @@ export default function AIWorkspace() {
       case 'critical': return 'bg-red-500';
       case 'high': return 'bg-orange-500';
       case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-green-500';
+      case 'low': return 'bg-[#76B900]';
       default: return 'bg-gray-500';
     }
   };
 
   const getComplianceColor = (status: string) => {
     switch (status) {
-      case 'compliant': return 'bg-green-500';
+      case 'compliant': return 'bg-[#76B900]';
       case 'non-compliant': return 'bg-red-500';
       case 'partially-compliant': return 'bg-yellow-500';
       default: return 'bg-gray-500';

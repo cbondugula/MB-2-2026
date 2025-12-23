@@ -132,20 +132,20 @@ export default function ExecutiveIntelligence() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card className="bg-gradient-to-br from-emerald-900/40 to-gray-900 border-emerald-700/50">
+          <Card className="bg-gradient-to-br from-[#1a3d00]/40 to-gray-900 border-[#76B900]/50">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-400">Projected ARR (Y5)</p>
-                  <p className="text-2xl font-bold text-emerald-400" data-testid="text-arr-projection">
+                  <p className="text-2xl font-bold text-[#76B900]" data-testid="text-arr-projection">
                     {formatCurrency(currentProjection.year5, true)}
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-emerald-900/50 flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-emerald-400" />
+                <div className="w-12 h-12 rounded-full bg-[#1a3d00]/50 flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-[#76B900]" />
                 </div>
               </div>
-              <p className="text-xs text-emerald-500 mt-2">+{currentProjection.cagr}% CAGR</p>
+              <p className="text-xs text-[#76B900] mt-2">+{currentProjection.cagr}% CAGR</p>
             </CardContent>
           </Card>
 
@@ -245,7 +245,7 @@ export default function ExecutiveIntelligence() {
               <Card className="bg-gray-900/50 border-gray-800">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-emerald-400" />
+                    <TrendingUp className="w-5 h-5 text-[#76B900]" />
                     5-Year Revenue Trajectory
                   </CardTitle>
                   <CardDescription>Annual Recurring Revenue projections</CardDescription>
@@ -267,16 +267,16 @@ export default function ExecutiveIntelligence() {
                             className="h-6"
                           />
                         </div>
-                        <span className="w-24 text-right font-semibold text-emerald-400">
+                        <span className="w-24 text-right font-semibold text-[#76B900]">
                           {formatCurrency(item.value, true)}
                         </span>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-6 p-4 bg-emerald-900/20 rounded-lg border border-emerald-700/50">
+                  <div className="mt-6 p-4 bg-[#1a3d00]/20 rounded-lg border border-[#76B900]/50">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-300">Compound Annual Growth Rate</span>
-                      <span className="text-2xl font-bold text-emerald-400">{currentProjection.cagr}%</span>
+                      <span className="text-2xl font-bold text-[#76B900]">{currentProjection.cagr}%</span>
                     </div>
                   </div>
                 </CardContent>
@@ -351,7 +351,7 @@ export default function ExecutiveIntelligence() {
                           <div className="space-y-3">
                             <div>
                               <p className="text-xs text-gray-400">Y5 Revenue</p>
-                              <p className="text-lg font-bold text-emerald-400">{formatCurrency(proj.year5, true)}</p>
+                              <p className="text-lg font-bold text-[#76B900]">{formatCurrency(proj.year5, true)}</p>
                             </div>
                             <div>
                               <p className="text-xs text-gray-400">Exit Multiple</p>
@@ -421,7 +421,7 @@ export default function ExecutiveIntelligence() {
                           <p className="text-sm text-gray-400">{tx.sector} • {tx.year}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-emerald-400">{formatCurrency(tx.exitValue, true)}</p>
+                          <p className="font-bold text-[#76B900]">{formatCurrency(tx.exitValue, true)}</p>
                           <p className="text-sm text-blue-400">{tx.multiple}x revenue</p>
                         </div>
                       </div>
@@ -440,19 +440,19 @@ export default function ExecutiveIntelligence() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="p-4 bg-gradient-to-r from-emerald-900/30 to-gray-900 rounded-lg border border-emerald-700/50">
+                    <div className="p-4 bg-gradient-to-r from-[#1a3d00]/30 to-gray-900 rounded-lg border border-[#76B900]/50">
                       <div className="flex items-center gap-3 mb-2">
-                        <Building2 className="w-5 h-5 text-emerald-400" />
+                        <Building2 className="w-5 h-5 text-[#76B900]" />
                         <h4 className="font-semibold text-white">Strategic Acquisition</h4>
                       </div>
                       <p className="text-sm text-gray-400 mb-3">
                         Target acquirers: Epic, Cerner, Oracle Health, Microsoft, Google Health
                       </p>
                       <div className="flex items-center justify-between">
-                        <Badge className="bg-emerald-900/50 text-emerald-300 border-emerald-700">
+                        <Badge className="bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]">
                           Highest Probability
                         </Badge>
-                        <span className="text-emerald-400 font-bold">12-15x multiple</span>
+                        <span className="text-[#76B900] font-bold">12-15x multiple</span>
                       </div>
                     </div>
 
@@ -527,18 +527,18 @@ export default function ExecutiveIntelligence() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-emerald-900/30 to-gray-900 border-emerald-700/50">
+              <Card className="bg-gradient-to-br from-[#1a3d00]/30 to-gray-900 border-[#76B900]/50">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <Target className="w-5 h-5 text-emerald-400" />
+                    <Target className="w-5 h-5 text-[#76B900]" />
                     Serviceable Obtainable Market
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-4xl font-bold text-emerald-400 mb-2">{formatCurrency(marketMetrics.som, true)}</p>
+                  <p className="text-4xl font-bold text-[#76B900] mb-2">{formatCurrency(marketMetrics.som, true)}</p>
                   <p className="text-sm text-gray-400">Realistic 5-Year Capture Target</p>
-                  <div className="mt-4 p-3 bg-emerald-900/20 rounded-lg">
-                    <p className="text-sm text-emerald-300">{formatPercent(marketMetrics.marketShare.projected)} market share</p>
+                  <div className="mt-4 p-3 bg-[#1a3d00]/20 rounded-lg">
+                    <p className="text-sm text-[#8CC63F]">{formatPercent(marketMetrics.marketShare.projected)} market share</p>
                   </div>
                 </CardContent>
               </Card>

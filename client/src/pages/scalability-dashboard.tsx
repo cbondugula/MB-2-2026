@@ -67,7 +67,7 @@ export default function ScalabilityDashboard() {
         <Card className="bg-gray-800 border-gray-700 mb-8">
           <CardHeader>
             <CardTitle className="text-white flex items-center text-2xl">
-              <TrendingUp className="w-8 h-8 mr-3 text-green-400" />
+              <TrendingUp className="w-8 h-8 mr-3 text-[#8CC63F]" />
               Progress to 100M Applications
             </CardTitle>
             <CardDescription>
@@ -109,10 +109,10 @@ export default function ScalabilityDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
+                <div className="bg-[#1a3d00]/30 p-4 rounded-lg border border-[#5a8f00]">
                   <div className="flex items-center space-x-2 mb-2">
-                    <Zap className="w-5 h-5 text-green-400" />
-                    <span className="text-green-400 text-sm font-medium">Velocity</span>
+                    <Zap className="w-5 h-5 text-[#8CC63F]" />
+                    <span className="text-[#8CC63F] text-sm font-medium">Velocity</span>
                   </div>
                   <div className="text-2xl font-bold text-white">
                     {scalabilityMetrics?.currentVelocity?.toFixed(1) || 0}/hr
@@ -149,7 +149,7 @@ export default function ScalabilityDashboard() {
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
               <CardTitle className="text-white flex items-center">
-                <BarChart3 className="w-6 h-6 mr-2 text-green-400" />
+                <BarChart3 className="w-6 h-6 mr-2 text-[#8CC63F]" />
                 Recent Applications Generated
               </CardTitle>
               <CardDescription>
@@ -165,7 +165,7 @@ export default function ScalabilityDashboard() {
                       <p className="text-gray-400 text-sm">{app.category}</p>
                     </div>
                     <div className="text-right">
-                      <Badge variant="outline" className="text-green-400 border-green-400">
+                      <Badge variant="outline" className="text-[#8CC63F] border-[#8CC63F]">
                         {app.generationTime}ms
                       </Badge>
                       <p className="text-gray-400 text-xs mt-1">{app.timeAgo}</p>
@@ -217,7 +217,7 @@ export default function ScalabilityDashboard() {
         </div>
 
         {/* Call to Action */}
-        <Card className="bg-gradient-to-r from-blue-900/30 via-purple-900/30 to-green-900/30 border-blue-700 mt-8">
+        <Card className="bg-gradient-to-r from-blue-900/30 via-purple-900/30 to-[#1a3d00]/30 border-blue-700 mt-8">
           <CardContent className="p-8 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">
               Join the 100M Application Revolution

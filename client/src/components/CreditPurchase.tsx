@@ -71,7 +71,7 @@ function PaymentForm({
       )}
       <Button 
         type="submit" 
-        className="w-full bg-emerald-600 hover:bg-emerald-700"
+        className="w-full bg-[#76B900] hover:bg-[#76B900]"
         disabled={!stripe || isProcessing}
       >
         {isProcessing ? (
@@ -135,7 +135,7 @@ export function CreditPurchase({ sessionId, onPurchaseComplete, trigger }: Credi
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="bg-emerald-600 hover:bg-emerald-700">
+          <Button className="bg-[#76B900] hover:bg-[#76B900]">
             <Coins className="w-4 h-4 mr-2" />
             Buy Credits
           </Button>
@@ -151,7 +151,7 @@ export function CreditPurchase({ sessionId, onPurchaseComplete, trigger }: Credi
 
         {packagesLoading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-emerald-500" />
+            <Loader2 className="w-6 h-6 animate-spin text-[#76B900]" />
           </div>
         ) : !clientSecret ? (
           <div className="grid grid-cols-2 gap-4 mt-4">
@@ -161,20 +161,20 @@ export function CreditPurchase({ sessionId, onPurchaseComplete, trigger }: Credi
               return (
                 <Card 
                   key={pkg.id}
-                  className={`bg-gray-800 border-2 cursor-pointer transition-all hover:border-emerald-500 ${
-                    isPopular ? "border-emerald-500" : "border-gray-700"
-                  } ${selectedPackage?.id === pkg.id ? "ring-2 ring-emerald-400" : ""}`}
+                  className={`bg-gray-800 border-2 cursor-pointer transition-all hover:border-[#76B900] ${
+                    isPopular ? "border-[#76B900]" : "border-gray-700"
+                  } ${selectedPackage?.id === pkg.id ? "ring-2 ring-[#76B900]" : ""}`}
                   onClick={() => handleSelectPackage(pkg)}
                   data-testid={`credit-package-${pkg.id}`}
                 >
                   {isPopular && (
                     <div className="absolute -top-2 right-4">
-                      <Badge className="bg-emerald-600 text-white text-xs">Popular</Badge>
+                      <Badge className="bg-[#76B900] text-white text-xs">Popular</Badge>
                     </div>
                   )}
                   <CardHeader className="pb-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
+                      <div className="w-10 h-10 bg-[#76B900] rounded-lg flex items-center justify-center">
                         <Icon className="w-5 h-5 text-white" />
                       </div>
                       <div>
@@ -196,11 +196,11 @@ export function CreditPurchase({ sessionId, onPurchaseComplete, trigger }: Credi
                     </div>
                     <div className="space-y-1 text-sm">
                       <div className="flex items-center gap-2 text-gray-300">
-                        <Check className="w-4 h-4 text-emerald-500" />
+                        <Check className="w-4 h-4 text-[#76B900]" />
                         {pkg.credits} AI generations
                       </div>
                       {pkg.bonusCredits > 0 && (
-                        <div className="flex items-center gap-2 text-emerald-400">
+                        <div className="flex items-center gap-2 text-[#76B900]">
                           <Check className="w-4 h-4" />
                           +{pkg.bonusCredits} bonus credits
                         </div>
@@ -280,7 +280,7 @@ export function CreditsDisplay({
         <CreditPurchase 
           sessionId={sessionId}
           trigger={
-            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">
+            <Button size="sm" className="bg-[#76B900] hover:bg-[#76B900]">
               Buy More
             </Button>
           }

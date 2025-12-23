@@ -236,7 +236,7 @@ export default function HealthcareAppBuilder() {
               </div>
               <div className="flex items-center space-x-4 text-sm text-slate-500">
                 <div className="flex items-center space-x-1">
-                  <Shield className="w-4 h-4 text-green-500" />
+                  <Shield className="w-4 h-4 text-[#76B900]" />
                   <span>HIPAA Compliant</span>
                 </div>
                 <div className="flex items-center space-x-1">
@@ -394,7 +394,7 @@ export default function HealthcareAppBuilder() {
                         <span>Clinical Decision Support</span>
                       </div>
                       <div className="flex items-center space-x-2 text-sm">
-                        <Activity className="w-4 h-4 text-green-500" />
+                        <Activity className="w-4 h-4 text-[#76B900]" />
                         <span>Medical NER & Classification</span>
                       </div>
                       <div className="flex items-center space-x-2 text-sm">

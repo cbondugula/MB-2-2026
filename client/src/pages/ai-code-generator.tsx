@@ -336,7 +336,7 @@ export default function AICodeGenerator() {
                       </div>
                     </div>
                     <div className="bg-slate-900 rounded-lg p-4 max-h-96 overflow-y-auto">
-                      <pre className="text-green-400 text-sm">
+                      <pre className="text-[#8CC63F] text-sm">
                         <code>{generatedCode}</code>
                       </pre>
                     </div>
@@ -446,7 +446,7 @@ export default function AICodeGenerator() {
                 <div className="space-y-3">
                   <div className="p-3 border rounded-lg">
                     <div className="flex items-center space-x-2 mb-2">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <CheckCircle className="h-4 w-4 text-[#76B900]" />
                       <span className="text-sm font-medium">Security Enhancement</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
@@ -506,7 +506,7 @@ export default function AICodeGenerator() {
                       <Badge variant="secondary">{example.useCase}</Badge>
                     </div>
                     <div className="bg-slate-900 rounded-lg p-3 max-h-32 overflow-y-auto">
-                      <pre className="text-green-400 text-xs">
+                      <pre className="text-[#8CC63F] text-xs">
                         <code>{example.code}</code>
                       </pre>
                     </div>

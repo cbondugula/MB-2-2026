@@ -20,7 +20,7 @@ export default function HIPAATools() {
             className="w-full bg-trust-green-50 border-trust-green-200 hover:bg-trust-green-100 text-left justify-start h-auto p-4"
           >
             <div className="flex items-center space-x-3">
-              <ScanLine className="w-5 h-5 text-trust-green-500" />
+              <ScanLine className="w-5 h-5 text-trust-[#76B900]" />
               <div>
                 <p className="font-medium text-slate-900">Security Scan</p>
                 <p className="text-sm text-slate-600">Check for vulnerabilities</p>

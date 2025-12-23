@@ -50,7 +50,7 @@ export default function PlatformAnalysis() {
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-teal-600 to-green-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-teal-600 to-[#76B900] bg-clip-text text-transparent mb-4">
             MedBuilder Platform Analysis
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -110,7 +110,7 @@ export default function PlatformAnalysis() {
                 {/* Healthcare Specialization */}
                 <div>
                   <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-green-600" />
+                    <Shield className="w-5 h-5 text-[#76B900]" />
                     Healthcare-Specific Features
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -192,10 +192,10 @@ export default function PlatformAnalysis() {
 
           {/* VALUE PROPOSITION TAB */}
           <TabsContent value="value" className="space-y-6">
-            <Card className="border-green-200 dark:border-green-800">
+            <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Award className="w-5 h-5 text-green-600" />
+                  <Award className="w-5 h-5 text-[#76B900]" />
                   Unique Value Propositions
                 </CardTitle>
                 <CardDescription>What makes MedBuilder different from competitors</CardDescription>
@@ -258,7 +258,7 @@ export default function PlatformAnalysis() {
                 <Separator />
 
                 <ValueProp
-                  icon={<DollarSign className="w-6 h-6 text-green-600" />}
+                  icon={<DollarSign className="w-6 h-6 text-[#76B900]" />}
                   title="80% Cost Reduction"
                   description="Dramatically lower healthcare software development costs"
                   benefits={[
@@ -309,10 +309,10 @@ export default function PlatformAnalysis() {
 
           {/* REVENUE POTENTIAL TAB */}
           <TabsContent value="revenue" className="space-y-6">
-            <Card className="border-green-200 dark:border-green-800">
+            <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-green-600" />
+                  <DollarSign className="w-5 h-5 text-[#76B900]" />
                   Revenue Potential Analysis
                 </CardTitle>
                 <CardDescription>Market sizing, pricing strategy, and growth projections</CardDescription>
@@ -377,10 +377,10 @@ export default function PlatformAnalysis() {
                       volume="100 users"
                       arr="$6.0M ARR"
                     />
-                    <div className="mt-4 p-4 bg-green-50 dark:bg-green-950 rounded-lg">
+                    <div className="mt-4 p-4 bg-[#76B900]50 dark:bg-[#1a3d00] rounded-lg">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold">Total Projected ARR (Year 3)</span>
-                        <span className="text-2xl font-bold text-green-600">$22.7M</span>
+                        <span className="text-2xl font-bold text-[#76B900]">$22.7M</span>
                       </div>
                     </div>
                   </div>
@@ -427,7 +427,7 @@ export default function PlatformAnalysis() {
                 <div>
                   <div className="flex items-center gap-3 mb-4">
                     <h3 className="font-semibold text-lg">Intellectual Property Valuation</h3>
-                    <Badge className="bg-green-600 text-white hover:bg-green-700">
+                    <Badge className="bg-[#76B900] text-white hover:bg-[#5a8f00]">
                       <Award className="w-3 h-3 mr-1" />
                       5 PROVISIONAL PATENTS FILED
                     </Badge>
@@ -440,7 +440,7 @@ export default function PlatformAnalysis() {
                             <div className="flex items-center gap-2 mb-1">
                               <h4 className="font-semibold text-gray-900 dark:text-white">{patent.name}</h4>
                               {patent.filingStatus === 'provisional' && (
-                                <Badge variant="outline" className="text-xs border-green-600 text-green-700 dark:text-green-400">
+                                <Badge variant="outline" className="text-xs border-[#76B900] text-[#5a8f00] dark:text-[#8CC63F]">
                                   Patent Pending
                                 </Badge>
                               )}
@@ -479,7 +479,7 @@ export default function PlatformAnalysis() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                        <CheckCircle2 className="w-4 h-4 text-green-600" />
+                        <CheckCircle2 className="w-4 h-4 text-[#76B900]" />
                         <span className="font-medium">5 Provisional Patents Filed with USPTO (September 2025)</span>
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
@@ -766,8 +766,8 @@ export default function PlatformAnalysis() {
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
-                <div className="p-4 bg-green-50 dark:bg-green-950 rounded-lg text-center">
-                  <div className="text-3xl font-bold text-green-600">$40-67M</div>
+                <div className="p-4 bg-[#76B900]50 dark:bg-[#1a3d00] rounded-lg text-center">
+                  <div className="text-3xl font-bold text-[#76B900]">$40-67M</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">ARR Potential (Year 5)</div>
                 </div>
                 <div className="p-4 bg-purple-50 dark:bg-purple-950 rounded-lg text-center">
@@ -787,19 +787,19 @@ export default function PlatformAnalysis() {
                 </h4>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
                     <span><strong>Immediate:</strong> File patent applications for 5 core innovations within 90 days (provisional patents cost $3-5K each)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
                     <span><strong>Short-term:</strong> Launch developer beta with 100 healthcare developers for product validation and case studies</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
                     <span><strong>Medium-term:</strong> Secure strategic partnerships with Epic/Cerner for distribution (similar to AWS HealthLake model)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
                     <span><strong>Long-term:</strong> Position for acquisition by major cloud provider (Google, AWS, Azure) or healthcare IT giant (Epic, Oracle Health)</span>
                   </li>
                 </ul>
@@ -861,7 +861,7 @@ function ValueProp({ icon, title, description, benefits }: {
       <ul className="space-y-1 ml-11">
         {benefits.map((benefit, i) => (
           <li key={i} className="flex items-start gap-2 text-sm">
-            <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#76B900] mt-0.5 flex-shrink-0" />
             <span>{benefit}</span>
           </li>
         ))}
@@ -884,10 +884,10 @@ function ComparisonRow({ feature, medbuilder, v0dev, boltnew, epic }: any) {
 
 function MetricCard({ value, label, subtext, trend }: any) {
   return (
-    <div className="p-4 bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950 dark:to-teal-950 rounded-lg border">
+    <div className="p-4 bg-gradient-to-br from-green-50 to-teal-50 dark:from-[#1a3d00] dark:to-teal-950 rounded-lg border">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-2xl font-bold text-green-600">{value}</span>
-        {trend === 'up' && <TrendingUp className="w-5 h-5 text-green-600" />}
+        <span className="text-2xl font-bold text-[#76B900]">{value}</span>
+        {trend === 'up' && <TrendingUp className="w-5 h-5 text-[#76B900]" />}
       </div>
       <div className="font-medium text-sm">{label}</div>
       <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{subtext}</div>
@@ -904,7 +904,7 @@ function RevenueStream({ tier, price, target, volume, arr }: any) {
           <div className="text-sm text-gray-600 dark:text-gray-400">{target}</div>
         </div>
         <div className="text-right">
-          <div className="font-semibold text-green-600">{price}</div>
+          <div className="font-semibold text-[#76B900]">{price}</div>
           <div className="text-xs text-gray-600 dark:text-gray-400">{volume}</div>
         </div>
       </div>
@@ -966,7 +966,7 @@ function MarketTrend({ trend, impact, description }: any) {
     <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border">
       <div className="flex items-center justify-between mb-2">
         <div className="font-semibold">{trend}</div>
-        <Badge variant="outline" className="text-green-600 border-green-600">{impact}</Badge>
+        <Badge variant="outline" className="text-[#76B900] border-[#76B900]">{impact}</Badge>
       </div>
       <div className="text-sm text-gray-600 dark:text-gray-400">{description}</div>
     </div>
@@ -1011,14 +1011,14 @@ function GeographicPhase({ phase, markets, focus, revenue }: any) {
 
 function SWOTQuadrant({ title, color, items }: { title: string; color: 'green' | 'red' | 'blue' | 'yellow'; items: string[] }) {
   const bgColor = {
-    green: 'bg-green-50 dark:bg-green-950',
+    green: 'bg-[#76B900]50 dark:bg-[#1a3d00]',
     red: 'bg-red-50 dark:bg-red-950',
     blue: 'bg-blue-50 dark:bg-blue-950',
     yellow: 'bg-yellow-50 dark:bg-yellow-950'
   }[color];
   
   const textColor = {
-    green: 'text-green-600',
+    green: 'text-[#76B900]',
     red: 'text-red-600',
     blue: 'text-blue-600',
     yellow: 'text-yellow-600'

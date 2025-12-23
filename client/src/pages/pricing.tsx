@@ -96,7 +96,7 @@ export default function Pricing() {
               onClick={() => setBillingPeriod('monthly')}
               className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
                 billingPeriod === 'monthly'
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-[#76B900] text-white'
                   : 'text-gray-400 hover:text-white'
               }`}
               data-testid="billing-monthly"
@@ -107,13 +107,13 @@ export default function Pricing() {
               onClick={() => setBillingPeriod('yearly')}
               className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
                 billingPeriod === 'yearly'
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-[#76B900] text-white'
                   : 'text-gray-400 hover:text-white'
               }`}
               data-testid="billing-yearly"
             >
               Yearly
-              <Badge className="ml-2 bg-emerald-900 text-emerald-300 text-xs">Save 17%</Badge>
+              <Badge className="ml-2 bg-[#1a3d00] text-[#8CC63F] text-xs">Save 17%</Badge>
             </button>
           </div>
         </div>
@@ -128,14 +128,14 @@ export default function Pricing() {
             return (
               <Card 
                 key={plan.name}
-                className={`bg-gray-900 border-2 transition-all hover:border-emerald-500 ${
-                  plan.popular ? 'border-emerald-500 relative' : 'border-gray-800'
+                className={`bg-gray-900 border-2 transition-all hover:border-[#76B900] ${
+                  plan.popular ? 'border-[#76B900] relative' : 'border-gray-800'
                 }`}
                 data-testid={`plan-card-${plan.name.toLowerCase()}`}
               >
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-emerald-600 text-white px-4 py-1">
+                    <Badge className="bg-[#76B900] text-white px-4 py-1">
                       Most Popular
                     </Badge>
                   </div>
@@ -143,7 +143,7 @@ export default function Pricing() {
                 
                 <CardHeader className="pt-8">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#76B900] rounded-lg flex items-center justify-center">
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                   </div>
@@ -161,7 +161,7 @@ export default function Pricing() {
                   <Button
                     className={`w-full py-3 ${
                       plan.popular
-                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                        ? 'bg-[#76B900] hover:bg-[#76B900] text-white'
                         : 'bg-gray-800 hover:bg-gray-700 text-white border border-gray-700'
                     }`}
                     onClick={() => handleSelectPlan(plan.name)}
@@ -173,7 +173,7 @@ export default function Pricing() {
                   <div className="pt-4 space-y-3">
                     {plan.features.map((feature, index) => (
                       <div key={index} className="flex items-start space-x-3">
-                        <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        <Check className="w-5 h-5 text-[#76B900] flex-shrink-0 mt-0.5" />
                         <span className="text-gray-300 text-sm">{feature}</span>
                       </div>
                     ))}
@@ -192,8 +192,8 @@ export default function Pricing() {
           
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-6 h-6 text-emerald-500" />
+              <div className="w-12 h-12 bg-[#76B900]/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-6 h-6 text-[#76B900]" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">HIPAA Compliant</h3>
               <p className="text-gray-400 text-sm">
@@ -202,8 +202,8 @@ export default function Pricing() {
             </div>
             
             <div className="text-center">
-              <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Cpu className="w-6 h-6 text-emerald-500" />
+              <div className="w-12 h-12 bg-[#76B900]/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Cpu className="w-6 h-6 text-[#76B900]" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">AI-Powered</h3>
               <p className="text-gray-400 text-sm">
@@ -212,8 +212,8 @@ export default function Pricing() {
             </div>
             
             <div className="text-center">
-              <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Globe className="w-6 h-6 text-emerald-500" />
+              <div className="w-12 h-12 bg-[#76B900]/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Globe className="w-6 h-6 text-[#76B900]" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Global Standards</h3>
               <p className="text-gray-400 text-sm">
@@ -222,8 +222,8 @@ export default function Pricing() {
             </div>
             
             <div className="text-center">
-              <div className="w-12 h-12 bg-emerald-600/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6 text-emerald-500" />
+              <div className="w-12 h-12 bg-[#76B900]/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Users className="w-6 h-6 text-[#76B900]" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Team Collaboration</h3>
               <p className="text-gray-400 text-sm">
@@ -234,17 +234,17 @@ export default function Pricing() {
         </div>
 
         {/* Enterprise CTA */}
-        <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-xl p-8 text-center">
+        <div className="bg-gradient-to-r from-[#76B900] to-[#76B900] rounded-xl p-8 text-center">
           <h2 className="text-2xl font-bold text-white mb-4">
             Need a Custom Solution?
           </h2>
-          <p className="text-emerald-100 mb-6 max-w-2xl mx-auto">
+          <p className="text-[#c8e6a5] mb-6 max-w-2xl mx-auto">
             For large healthcare organizations, hospitals, and enterprise deployments, 
             we offer custom pricing and dedicated support.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
-              className="bg-white text-emerald-700 hover:bg-gray-100 font-semibold px-8"
+              className="bg-white text-[#76B900] hover:bg-gray-100 font-semibold px-8"
               onClick={() => setLocation('/custom-pricing')}
               data-testid="button-custom-pricing"
             >
@@ -252,7 +252,7 @@ export default function Pricing() {
             </Button>
             <Button 
               variant="outline"
-              className="border-emerald-300 text-emerald-100 hover:bg-emerald-700"
+              className="border-[#8CC63F] text-[#c8e6a5] hover:bg-[#76B900]"
               onClick={() => setLocation('/documentation')}
               data-testid="button-view-docs"
             >

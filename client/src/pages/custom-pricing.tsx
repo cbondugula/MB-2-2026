@@ -229,7 +229,7 @@ export default function CustomPricing() {
               <Separator orientation="vertical" className="h-6" />
               <h1 className="text-xl font-semibold">Custom Solution Pricing</h1>
             </div>
-            <Badge variant="secondary" className="bg-green-900 text-green-300">
+            <Badge variant="secondary" className="bg-[#1a3d00] text-[#8CC63F]">
               <Sparkles className="w-3 h-3 mr-1" />
               Enterprise AI Technology
             </Badge>
@@ -245,12 +245,12 @@ export default function CustomPricing() {
               {[1, 2, 3, 4].map((stepNum) => (
                 <div key={stepNum} className="flex items-center">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    step >= stepNum ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-400'
+                    step >= stepNum ? 'bg-[#76B900] text-white' : 'bg-gray-700 text-gray-400'
                   }`}>
                     {step > stepNum ? <CheckCircle className="w-4 h-4" /> : stepNum}
                   </div>
                   {stepNum < 4 && <div className={`w-16 h-1 mx-2 ${
-                    step > stepNum ? 'bg-green-600' : 'bg-gray-700'
+                    step > stepNum ? 'bg-[#76B900]' : 'bg-gray-700'
                   }`} />}
                 </div>
               ))}
@@ -268,7 +268,7 @@ export default function CustomPricing() {
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
-                  <MessageSquare className="w-5 h-5 mr-2 text-green-400" />
+                  <MessageSquare className="w-5 h-5 mr-2 text-[#8CC63F]" />
                   Tell us about your organization
                 </CardTitle>
                 <CardDescription>
@@ -322,7 +322,7 @@ export default function CustomPricing() {
                 <Button 
                   onClick={() => setStep(2)} 
                   disabled={!factors.organizationType || !factors.userCount || !factors.dataVolume}
-                  className="w-full bg-green-600 hover:bg-green-700"
+                  className="w-full bg-[#76B900] hover:bg-[#5a8f00]"
                 >
                   Continue to Requirements
                 </Button>
@@ -380,7 +380,7 @@ export default function CustomPricing() {
                   <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
                     Back
                   </Button>
-                  <Button onClick={() => setStep(3)} className="flex-1 bg-green-600 hover:bg-green-700">
+                  <Button onClick={() => setStep(3)} className="flex-1 bg-[#76B900] hover:bg-[#5a8f00]">
                     Continue to Features
                   </Button>
                 </div>
@@ -455,7 +455,7 @@ export default function CustomPricing() {
                   <Button 
                     onClick={calculateCustomPrice}
                     disabled={!factors.timeline || !factors.support}
-                    className="flex-1 bg-green-600 hover:bg-green-700"
+                    className="flex-1 bg-[#76B900] hover:bg-[#5a8f00]"
                   >
                     <Calculator className="w-4 h-4 mr-2" />
                     Calculate Pricing
@@ -471,7 +471,7 @@ export default function CustomPricing() {
               {isCalculating ? (
                 <Card className="bg-gray-800 border-gray-700">
                   <CardContent className="py-16 text-center">
-                    <Calculator className="w-12 h-12 text-green-400 mx-auto mb-4 animate-pulse" />
+                    <Calculator className="w-12 h-12 text-[#8CC63F] mx-auto mb-4 animate-pulse" />
                     <h3 className="text-xl font-semibold text-white mb-2">Calculating Your Custom Pricing</h3>
                     <p className="text-gray-400">Analyzing your requirements and generating a tailored quote...</p>
                   </CardContent>
@@ -481,7 +481,7 @@ export default function CustomPricing() {
                   <Card className="bg-gray-800 border-gray-700">
                     <CardHeader>
                       <CardTitle className="text-white flex items-center">
-                        <CheckCircle className="w-5 h-5 mr-2 text-green-400" />
+                        <CheckCircle className="w-5 h-5 mr-2 text-[#8CC63F]" />
                         Your Custom Pricing
                       </CardTitle>
                       <CardDescription>
@@ -491,7 +491,7 @@ export default function CustomPricing() {
                     <CardContent>
                       <div className="grid md:grid-cols-3 gap-6">
                         <div className="text-center p-4 bg-gray-700 rounded-lg">
-                          <div className="text-3xl font-bold text-green-400">
+                          <div className="text-3xl font-bold text-[#8CC63F]">
                             ${calculatedPrice.monthly.toLocaleString()}
                           </div>
                           <div className="text-sm text-gray-400">per month</div>
@@ -544,7 +544,7 @@ export default function CustomPricing() {
                         // Navigate to contract onboarding
                         setLocation('/contract-onboarding');
                       }}
-                      className="flex-1 bg-green-600 hover:bg-green-700"
+                      className="flex-1 bg-[#76B900] hover:bg-[#5a8f00]"
                     >
                       Get Started with This Plan
                     </Button>

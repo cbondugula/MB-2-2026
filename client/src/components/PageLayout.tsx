@@ -35,7 +35,7 @@ export default function PageLayout({
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-emerald-500 mx-auto mb-4" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#76B900] mx-auto mb-4" />
           <p className="text-gray-400">Loading...</p>
         </div>
       </div>

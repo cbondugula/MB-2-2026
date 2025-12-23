@@ -184,7 +184,7 @@ export default function LangExtractDashboard() {
   };
 
   const confidence = extractionResult?.confidence || 0;
-  const confidenceColor = confidence >= 80 ? 'bg-green-500' : confidence >= 60 ? 'bg-yellow-500' : 'bg-red-500';
+  const confidenceColor = confidence >= 80 ? 'bg-[#76B900]' : confidence >= 60 ? 'bg-yellow-500' : 'bg-red-500';
 
   return (
     <div className="container mx-auto p-6 space-y-6" data-testid="langextract-dashboard">
@@ -204,7 +204,7 @@ export default function LangExtractDashboard() {
         <Card data-testid="service-status">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${serviceHealth.status === 'operational' ? 'bg-green-500' : 'bg-red-500'}`} />
+              <div className={`w-2 h-2 rounded-full ${serviceHealth.status === 'operational' ? 'bg-[#76B900]' : 'bg-red-500'}`} />
               Service Status: {serviceHealth.status}
             </CardTitle>
           </CardHeader>

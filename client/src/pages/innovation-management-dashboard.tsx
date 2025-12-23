@@ -41,7 +41,7 @@ export default function InnovationManagementDashboard() {
       value: '$200-300M',
       status: 'FILING_IMMEDIATELY',
       priority: 'EMERGENCY',
-      color: 'bg-green-500'
+      color: 'bg-[#76B900]'
     },
     {
       id: 'PATENT_012',
@@ -123,10 +123,10 @@ export default function InnovationManagementDashboard() {
       </div>
 
       {/* Global Deployment Layer */}
-      <div className="absolute top-84 left-4 right-4 h-16 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+      <div className="absolute top-84 left-4 right-4 h-16 bg-[#76B900]100 dark:bg-[#1a3d00] rounded-lg flex items-center justify-center">
         <div className="text-center">
-          <Globe className="h-6 w-6 mx-auto mb-1 text-green-600" />
-          <span className="text-sm font-semibold text-green-800 dark:text-green-200">Global Healthcare Deployment</span>
+          <Globe className="h-6 w-6 mx-auto mb-1 text-[#76B900]" />
+          <span className="text-sm font-semibold text-[#5a8f00] dark:text-[#76B900]200">Global Healthcare Deployment</span>
         </div>
       </div>
 
@@ -140,26 +140,26 @@ export default function InnovationManagementDashboard() {
   const CompetitiveAnalysisDiagram = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {/* Our Position */}
-      <Card className="border-2 border-green-500">
+      <Card className="border-2 border-[#76B900]">
         <CardHeader>
-          <CardTitle className="text-green-600">Our Revolutionary Position</CardTitle>
+          <CardTitle className="text-[#76B900]">Our Revolutionary Position</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-[#76B900] rounded-full"></div>
               <span className="text-sm">AI-Powered Backend Generation</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-[#76B900] rounded-full"></div>
               <span className="text-sm">Healthcare-Specialized Automation</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-[#76B900] rounded-full"></div>
               <span className="text-sm">Complete Tool Elimination</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-[#76B900] rounded-full"></div>
               <span className="text-sm">Automated Compliance Integration</span>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function InnovationManagementDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <Card>
           <CardContent className="p-6">
-            <div className="text-2xl font-bold text-green-600">7</div>
+            <div className="text-2xl font-bold text-[#76B900]">7</div>
             <p className="text-sm text-muted-foreground">Total Patents</p>
           </CardContent>
         </Card>
@@ -268,7 +268,7 @@ export default function InnovationManagementDashboard() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-muted-foreground">Estimated Value</span>
-                      <span className="font-semibold text-green-600">{patent.value}</span>
+                      <span className="font-semibold text-[#76B900]">{patent.value}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-muted-foreground">Status</span>
@@ -366,21 +366,21 @@ export default function InnovationManagementDashboard() {
                 <div>
                   <h4 className="font-semibold mb-3">Our Revolutionary Advantages</h4>
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center p-2 bg-green-50 dark:bg-green-950 rounded">
+                    <div className="flex justify-between items-center p-2 bg-[#76B900]50 dark:bg-[#1a3d00] rounded">
                       <span className="text-sm">Voice Backend Generation</span>
-                      <Badge variant="default" className="bg-green-600">FIRST EVER</Badge>
+                      <Badge variant="default" className="bg-[#76B900]">FIRST EVER</Badge>
                     </div>
-                    <div className="flex justify-between items-center p-2 bg-green-50 dark:bg-green-950 rounded">
+                    <div className="flex justify-between items-center p-2 bg-[#76B900]50 dark:bg-[#1a3d00] rounded">
                       <span className="text-sm">Healthcare Specialization</span>
-                      <Badge variant="default" className="bg-green-600">UNIQUE</Badge>
+                      <Badge variant="default" className="bg-[#76B900]">UNIQUE</Badge>
                     </div>
-                    <div className="flex justify-between items-center p-2 bg-green-50 dark:bg-green-950 rounded">
+                    <div className="flex justify-between items-center p-2 bg-[#76B900]50 dark:bg-[#1a3d00] rounded">
                       <span className="text-sm">Complete Tool Elimination</span>
-                      <Badge variant="default" className="bg-green-600">REVOLUTIONARY</Badge>
+                      <Badge variant="default" className="bg-[#76B900]">REVOLUTIONARY</Badge>
                     </div>
-                    <div className="flex justify-between items-center p-2 bg-green-50 dark:bg-green-950 rounded">
+                    <div className="flex justify-between items-center p-2 bg-[#76B900]50 dark:bg-[#1a3d00] rounded">
                       <span className="text-sm">Automated Compliance</span>
-                      <Badge variant="default" className="bg-green-600">UNPRECEDENTED</Badge>
+                      <Badge variant="default" className="bg-[#76B900]">UNPRECEDENTED</Badge>
                     </div>
                   </div>
                 </div>
@@ -420,8 +420,8 @@ export default function InnovationManagementDashboard() {
                     <div className="text-sm text-muted-foreground">Global protection filing</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-green-50 dark:bg-green-950 rounded-lg">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <div className="flex items-center gap-4 p-4 bg-[#76B900]50 dark:bg-[#1a3d00] rounded-lg">
+                  <div className="w-3 h-3 bg-[#76B900] rounded-full"></div>
                   <div>
                     <div className="font-semibold">12 Months: National Phase</div>
                     <div className="text-sm text-muted-foreground">EU, Canada, Japan, Australia entry</div>
@@ -453,7 +453,7 @@ export default function InnovationManagementDashboard() {
                   <hr />
                   <div className="flex justify-between font-bold">
                     <span>Total Investment</span>
-                    <span className="text-green-600">$150K-250K</span>
+                    <span className="text-[#76B900]">$150K-250K</span>
                   </div>
                 </div>
               </CardContent>
@@ -478,7 +478,7 @@ export default function InnovationManagementDashboard() {
                     <span className="font-semibold">3200-4500%</span>
                   </div>
                   <hr />
-                  <div className="flex justify-between font-bold text-green-600">
+                  <div className="flex justify-between font-bold text-[#76B900]">
                     <span>Risk-Adjusted Return</span>
                     <span>EXCEPTIONAL</span>
                   </div>

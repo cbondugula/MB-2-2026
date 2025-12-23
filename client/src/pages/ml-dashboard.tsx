@@ -151,7 +151,7 @@ export default function MLDashboard() {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-2">
-              <TrendingUp className="h-8 w-8 text-green-600" />
+              <TrendingUp className="h-8 w-8 text-[#76B900]" />
               <div>
                 <p className="text-2xl font-bold">{Math.round((analytics?.avgAccuracy || 0.89) * 100)}%</p>
                 <p className="text-sm text-muted-foreground">Average Accuracy</p>
@@ -237,7 +237,7 @@ export default function MLDashboard() {
                       <div className="text-sm text-muted-foreground">{model.domain}</div>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-green-600">{Math.round(model.accuracy * 100)}%</div>
+                      <div className="font-bold text-[#76B900]">{Math.round(model.accuracy * 100)}%</div>
                       <Badge variant="outline" className="text-xs">{model.type}</Badge>
                     </div>
                   </div>
@@ -319,7 +319,7 @@ export default function MLDashboard() {
                   <div className="text-sm text-muted-foreground">Connected Hospitals</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
-                  <Shield className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                  <Shield className="h-8 w-8 mx-auto mb-2 text-[#76B900]" />
                   <div className="text-2xl font-bold">99.8%</div>
                   <div className="text-sm text-muted-foreground">Privacy Score</div>
                 </div>
@@ -334,19 +334,19 @@ export default function MLDashboard() {
                 <h4 className="font-semibold">Federated Training Benefits</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <CheckCircle className="h-5 w-5 text-[#76B900]" />
                     <span>HIPAA-compliant data sharing</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <CheckCircle className="h-5 w-5 text-[#76B900]" />
                     <span>Differential privacy guarantees</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <CheckCircle className="h-5 w-5 text-[#76B900]" />
                     <span>Multi-institutional knowledge</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <CheckCircle className="h-5 w-5 text-[#76B900]" />
                     <span>Real-time model updates</span>
                   </div>
                 </div>
@@ -395,7 +395,7 @@ export default function MLDashboard() {
                     </div>
                     <div className="flex justify-between">
                       <span>System Uptime</span>
-                      <span className="font-bold text-green-600">{analytics?.performanceMetrics?.uptime || "99.8%"}</span>
+                      <span className="font-bold text-[#76B900]">{analytics?.performanceMetrics?.uptime || "99.8%"}</span>
                     </div>
                   </div>
                 </div>

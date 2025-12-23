@@ -176,8 +176,8 @@ export default function CompetitiveAdvantage() {
                       <div className="text-xs text-gray-600">Alexa Health Skills</div>
                     </div>
                   </div>
-                  <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded border-2 border-green-500">
-                    <div className="font-bold text-green-700">OUR ADVANTAGE</div>
+                  <div className="text-center p-3 bg-[#76B900]50 dark:bg-[#1a3d00]/20 rounded border-2 border-[#76B900]">
+                    <div className="font-bold text-[#5a8f00]">OUR ADVANTAGE</div>
                     <div className="text-sm">Advanced AI + Voice + Healthcare Specialization = UNIQUE</div>
                   </div>
                 </div>
@@ -247,12 +247,12 @@ export default function CompetitiveAdvantage() {
           </Card>
 
           {/* Patent Race Dashboard */}
-          <Card className="border-green-200 dark:border-green-800">
+          <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div>
                   <CardTitle className="text-xl flex items-center">
-                    <Award className="mr-2 h-5 w-5 text-green-600" />
+                    <Award className="mr-2 h-5 w-5 text-[#76B900]" />
                     Patent Race Dashboard
                   </CardTitle>
                   <CardDescription>Real-time patent filing competition</CardDescription>
@@ -272,8 +272,8 @@ export default function CompetitiveAdvantage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                    <div className="text-3xl font-bold text-green-600 mb-2">
+                  <div className="text-center p-4 bg-[#76B900]50 dark:bg-[#1a3d00]/20 rounded-lg">
+                    <div className="text-3xl font-bold text-[#76B900] mb-2">
                       {(patentRace as any)?.ourPosition || '#1'}
                     </div>
                     <div className="text-lg font-semibold">Our Market Position</div>
@@ -425,7 +425,7 @@ export default function CompetitiveAdvantage() {
                 <div className="font-semibold text-center">Market Domination</div>
                 <Button 
                   onClick={() => handleAccelerateInnovation("Strategic Partnership Blitz")}
-                  className="w-full bg-green-600 hover:bg-green-700"
+                  className="w-full bg-[#76B900] hover:bg-[#5a8f00]"
                 >
                   Partnership Blitz
                 </Button>

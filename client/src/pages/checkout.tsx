@@ -70,7 +70,7 @@ const CheckoutForm = ({ selectedPlan }: { selectedPlan: any }) => {
       <Button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg"
+        className="w-full bg-[#76B900] hover:bg-[#5a8f00] text-white py-3 text-lg"
       >
         {isProcessing ? (
           <>
@@ -183,7 +183,7 @@ export default function Checkout() {
           <p className="text-gray-400 mb-6">{error}</p>
           <div className="flex flex-col space-y-3">
             <Link href="/pricing">
-              <Button className="w-full bg-emerald-600 hover:bg-emerald-700" data-testid="button-back-pricing">
+              <Button className="w-full bg-[#76B900] hover:bg-[#76B900]" data-testid="button-back-pricing">
                 Back to Pricing
               </Button>
             </Link>
@@ -205,7 +205,7 @@ export default function Checkout() {
     return (
       <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full mx-auto mb-4" />
+          <div className="animate-spin w-8 h-8 border-4 border-[#76B900] border-t-transparent rounded-full mx-auto mb-4" />
           <p className="text-gray-400" data-testid="text-loading">Setting up your subscription...</p>
         </div>
       </div>
@@ -218,7 +218,7 @@ export default function Checkout() {
         <div className="text-center">
           <p className="text-gray-400 mb-4">Invalid plan selected</p>
           <Link href="/pricing">
-            <Button className="bg-green-600 hover:bg-green-700">
+            <Button className="bg-[#76B900] hover:bg-[#5a8f00]">
               Back to Pricing
             </Button>
           </Link>
@@ -251,20 +251,20 @@ export default function Checkout() {
             <Card className="bg-gray-800 border-gray-700 mb-8">
               <CardHeader>
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#76B900] rounded-lg flex items-center justify-center">
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <CardTitle className="text-xl text-white">{selectedPlan.name} Plan</CardTitle>
                     <div className="flex items-center space-x-2 mt-1">
-                      <span className="text-2xl font-bold text-green-400">
+                      <span className="text-2xl font-bold text-[#8CC63F]">
                         ${selectedPlan.price}
                       </span>
                       <span className="text-gray-400">
                         /{selectedPlan.billing === 'yearly' ? 'year' : 'month'}
                       </span>
                       {selectedPlan.billing === 'yearly' && (
-                        <Badge className="bg-green-600 text-white ml-2">Save 17%</Badge>
+                        <Badge className="bg-[#76B900] text-white ml-2">Save 17%</Badge>
                       )}
                     </div>
                   </div>
@@ -275,7 +275,7 @@ export default function Checkout() {
                 <h4 className="font-semibold text-white mb-3">What's included:</h4>
                 {selectedPlan.features.map((feature: string, index: number) => (
                   <div key={index} className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-[#76B900] flex-shrink-0 mt-0.5" />
                     <span className="text-gray-300 text-sm">{feature}</span>
                   </div>
                 ))}
@@ -286,19 +286,19 @@ export default function Checkout() {
               <h3 className="text-lg font-semibold text-white mb-4">Why Choose MedBuilder?</h3>
               <div className="space-y-3 text-sm text-gray-300">
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-[#76B900]" />
                   <span>14-day free trial with full access</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-[#76B900]" />
                   <span>Cancel anytime, no hidden fees</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-[#76B900]" />
                   <span>HIPAA compliant infrastructure</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-[#76B900]" />
                   <span>24/7 customer support</span>
                 </div>
               </div>

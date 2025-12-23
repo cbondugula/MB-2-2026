@@ -122,7 +122,7 @@ export default function AdvancedAI() {
                   </CardDescription>
                 </div>
               </div>
-              <Badge className="bg-green-500 text-white font-bold text-sm px-3 py-1">
+              <Badge className="bg-[#76B900] text-white font-bold text-sm px-3 py-1">
                 ACTIVE
               </Badge>
             </div>
@@ -214,7 +214,7 @@ export default function AdvancedAI() {
                           <div className="flex items-center justify-between">
                             <CardTitle className="text-base">{resp.model}</CardTitle>
                             <div className="flex items-center gap-2">
-                              <Badge variant="outline" className="bg-green-100 text-green-800">
+                              <Badge variant="outline" className="bg-[#76B900]100 text-[#5a8f00]">
                                 {resp.confidence.toFixed(1)}% Confidence
                               </Badge>
                               <Badge variant="outline">
@@ -252,17 +252,17 @@ export default function AdvancedAI() {
                   <CardContent>
                     <div className="space-y-3">
                       <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <CheckCircle className="w-4 h-4 text-[#76B900]" />
                         <span className="text-sm">
                           {model.category === "Medical AI" ? "Medical domain expertise" : "General purpose AI"}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <CheckCircle className="w-4 h-4 text-[#76B900]" />
                         <span className="text-sm">HIPAA compliant processing</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <CheckCircle className="w-4 h-4 text-[#76B900]" />
                         <span className="text-sm">Real-time generation</span>
                       </div>
                     </div>
@@ -293,9 +293,9 @@ export default function AdvancedAI() {
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-green-50 dark:bg-green-950 border-green-200">
+                  <Card className="bg-[#76B900]50 dark:bg-[#1a3d00] border-[#76B900]200">
                     <CardContent className="p-4">
-                      <CheckCircle className="w-8 h-8 text-green-500 mb-2" />
+                      <CheckCircle className="w-8 h-8 text-[#76B900] mb-2" />
                       <h4 className="font-semibold mb-1">Consensus Verification</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         Identify agreement across models

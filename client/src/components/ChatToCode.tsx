@@ -204,7 +204,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
       <div className="w-full h-full flex flex-col items-center justify-center p-8">
         <Card className="max-w-md bg-gray-800 border-gray-700">
           <CardHeader className="text-center space-y-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto">
+            <div className="w-16 h-16 bg-gradient-to-br from-[#76B900] to-blue-500 rounded-2xl flex items-center justify-center mx-auto">
               <Shield className="w-8 h-8 text-white" />
             </div>
             <div>
@@ -230,7 +230,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
               </ul>
             </div>
             <Button
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              className="w-full bg-[#76B900] hover:bg-[#5a8f00] text-white"
               size="lg"
               onClick={() => window.location.href = '/api/login'}
               data-testid="login-button"
@@ -248,7 +248,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
   if (isLoading) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-green-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#76B900] animate-spin" />
       </div>
     );
   }
@@ -259,7 +259,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
       <ScrollArea className="flex-1 p-4">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-6 py-12">
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-2xl flex items-center justify-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-[#76B900] to-blue-500 rounded-2xl flex items-center justify-center">
               <Sparkles className="w-8 h-8 text-white" />
             </div>
             <div className="space-y-2">
@@ -280,7 +280,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
                   onClick={() => setInput(prompt)}
                   data-testid={`example-prompt-${i}`}
                 >
-                  <Code className="w-4 h-4 mr-2 text-green-400" />
+                  <Code className="w-4 h-4 mr-2 text-[#8CC63F]" />
                   {prompt}
                 </Button>
               ))}
@@ -301,7 +301,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
                   <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
                     message.role === "user" 
                       ? "bg-blue-600" 
-                      : "bg-gradient-to-br from-green-500 to-blue-500"
+                      : "bg-gradient-to-br from-[#76B900] to-blue-500"
                   }`}>
                     {message.role === "user" ? (
                       <User className="w-4 h-4 text-white" />
@@ -323,15 +323,15 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
                     </Card>
                     
                     {message.appId && (
-                      <Card className="bg-gradient-to-br from-green-900/30 to-blue-900/30 border-green-500/50">
+                      <Card className="bg-gradient-to-br from-[#1a3d00]/30 to-blue-900/30 border-[#76B900]/50">
                         <CardContent className="p-4">
                           <div className="flex items-start gap-3">
-                            <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div className="w-10 h-10 bg-[#76B900] rounded-full flex items-center justify-center flex-shrink-0">
                               <CheckCircle className="w-5 h-5 text-white" />
                             </div>
                             <div className="flex-1 space-y-3">
                               <div>
-                                <h4 className="text-sm font-semibold text-green-400 mb-1">
+                                <h4 className="text-sm font-semibold text-[#8CC63F] mb-1">
                                   ✨ App Created Successfully!
                                 </h4>
                                 <p className="text-xs text-gray-300">
@@ -341,7 +341,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
                               <div className="flex flex-wrap gap-2">
                                 <Button
                                   size="sm"
-                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                  className="bg-[#76B900] hover:bg-[#5a8f00] text-white"
                                   asChild
                                   data-testid={`view-app-${message.appId}`}
                                 >
@@ -378,7 +378,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
                         </CardHeader>
                         <CardContent className="space-y-2">
                           <div className="flex flex-wrap gap-2 mb-3">
-                            <Badge variant="secondary" className="bg-green-900 text-green-300">
+                            <Badge variant="secondary" className="bg-[#1a3d00] text-[#8CC63F]">
                               {message.generatedCode.techStack?.framework || "react"}
                             </Badge>
                             <Badge variant="secondary" className="bg-blue-900 text-blue-300">
@@ -403,7 +403,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
             {isStreaming && (
               <div className="flex justify-start">
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#76B900] to-blue-500 flex items-center justify-center">
                     <Loader2 className="w-4 h-4 text-white animate-spin" />
                   </div>
                   <div className="flex items-center space-x-2 text-gray-400 text-sm">
@@ -433,7 +433,7 @@ export function ChatToCode({ initialPrompt }: ChatToCodeProps = {}) {
           <Button
             onClick={() => handleSendMessage()}
             disabled={!input.trim() || isStreaming}
-            className="bg-green-600 hover:bg-green-700 text-white self-end"
+            className="bg-[#76B900] hover:bg-[#5a8f00] text-white self-end"
             size="lg"
             data-testid="send-button"
           >

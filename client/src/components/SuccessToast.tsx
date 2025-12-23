@@ -15,7 +15,7 @@ export function useSuccessToast() {
 
   const showToast = ({ title, description, type = "success", duration = 4000 }: ShowToastOptions) => {
     const icons = {
-      success: <CheckCircle className="w-5 h-5 text-emerald-400" />,
+      success: <CheckCircle className="w-5 h-5 text-[#76B900]" />,
       error: <XCircle className="w-5 h-5 text-red-400" />,
       warning: <AlertTriangle className="w-5 h-5 text-amber-400" />,
       info: <Info className="w-5 h-5 text-blue-400" />,
@@ -23,7 +23,7 @@ export function useSuccessToast() {
     };
 
     const variants = {
-      success: "bg-emerald-950 border-emerald-800",
+      success: "bg-[#76B900]950 border-[#5a8f00]",
       error: "bg-red-950 border-red-800",
       warning: "bg-amber-950 border-amber-800",
       info: "bg-blue-950 border-blue-800",
@@ -63,9 +63,9 @@ export function useSuccessToast() {
 export function TrustBadges() {
   return (
     <div className="flex flex-wrap items-center justify-center gap-4 py-4" data-testid="trust-badges">
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-900/30 border border-emerald-700/50 rounded-full" data-testid="badge-hipaa">
-        <CheckCircle className="w-4 h-4 text-emerald-400" />
-        <span className="text-emerald-300 text-sm font-medium">HIPAA Compliant</span>
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1a3d00]/30 border border-[#76B900]/50 rounded-full" data-testid="badge-hipaa">
+        <CheckCircle className="w-4 h-4 text-[#76B900]" />
+        <span className="text-[#8CC63F] text-sm font-medium">HIPAA Compliant</span>
       </div>
       <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-900/30 border border-blue-700/50 rounded-full" data-testid="badge-soc2">
         <CheckCircle className="w-4 h-4 text-blue-400" />
@@ -98,11 +98,11 @@ export function MilestoneProgress({
     <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4" data-testid="milestone-progress">
       <div className="flex items-center justify-between mb-2">
         <span className="text-white font-medium">Your Progress</span>
-        <span className="text-emerald-400 font-bold" data-testid="text-progress-percentage">{percentage}%</span>
+        <span className="text-[#76B900] font-bold" data-testid="text-progress-percentage">{percentage}%</span>
       </div>
       <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
         <div 
-          className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
+          className="h-full bg-gradient-to-r from-[#76B900] to-[#76B900] transition-all duration-500"
           style={{ width: `${percentage}%` }}
           data-testid="progress-bar"
         />
@@ -117,7 +117,7 @@ export function MilestoneProgress({
           <div
             key={i}
             className={`w-3 h-3 rounded-full ${
-              i < completed ? 'bg-emerald-500' : 'bg-gray-600'
+              i < completed ? 'bg-[#76B900]' : 'bg-gray-600'
             }`}
             data-testid={`milestone-dot-${i}`}
           />

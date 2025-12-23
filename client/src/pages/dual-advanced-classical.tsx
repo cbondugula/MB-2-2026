@@ -115,7 +115,7 @@ export default function DualAdvancedClassical() {
                   </CardDescription>
                 </div>
               </div>
-              <Badge className="bg-green-500 text-white font-bold text-sm px-3 py-1">
+              <Badge className="bg-[#76B900] text-white font-bold text-sm px-3 py-1">
                 ACTIVE
               </Badge>
             </div>
@@ -141,9 +141,9 @@ export default function DualAdvancedClassical() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Portfolio Value</p>
-                  <p className="text-2xl font-bold text-green-600">{formatCurrency(stats.totalValue)}</p>
+                  <p className="text-2xl font-bold text-[#76B900]">{formatCurrency(stats.totalValue)}</p>
                 </div>
-                <DollarSign className="w-10 h-10 text-green-500" />
+                <DollarSign className="w-10 h-10 text-[#76B900]" />
               </div>
             </CardContent>
           </Card>
@@ -196,19 +196,19 @@ export default function DualAdvancedClassical() {
                   </p>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                       <span className="text-sm">Voice-controlled development systems</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                       <span className="text-sm">Brain-computer interface integration</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                       <span className="text-sm">Predictive AI compliance engines</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                       <span className="text-sm">Advanced neural processing</span>
                     </div>
                   </div>
@@ -236,19 +236,19 @@ export default function DualAdvancedClassical() {
                   </p>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                       <span className="text-sm">HIPAA compliance automation</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                       <span className="text-sm">Medical education platforms</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                       <span className="text-sm">Clinical decision support</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <CheckCircle className="w-4 h-4 text-[#76B900]" />
                       <span className="text-sm">Multi-AI verification systems</span>
                     </div>
                   </div>
@@ -264,10 +264,10 @@ export default function DualAdvancedClassical() {
               </Card>
             </div>
 
-            <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-2 border-green-400">
+            <Card className="bg-gradient-to-r from-green-50 to-[#e8f5d9] dark:from-[#1a3d00] dark:to-[#76B900]950 border-2 border-[#8CC63F]">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <Award className="w-6 h-6 text-green-600" />
+                  <Award className="w-6 h-6 text-[#76B900]" />
                   <CardTitle>Patent Success Rate</CardTitle>
                 </div>
               </CardHeader>
@@ -338,7 +338,7 @@ export default function DualAdvancedClassical() {
                         </h3>
                         <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                           <span>Filed: {patent.filingDate}</span>
-                          <span className="font-semibold text-green-600">
+                          <span className="font-semibold text-[#76B900]">
                             Value: {formatCurrency(patent.value)}
                           </span>
                         </div>
@@ -379,32 +379,32 @@ export default function DualAdvancedClassical() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900 dark:to-emerald-900 p-6 rounded-lg">
+                <div className="bg-gradient-to-r from-green-100 to-[#c8e6a5] dark:from-[#1a3d00] dark:to-[#1a3d00] p-6 rounded-lg">
                   <div className="flex items-center gap-3 mb-4">
-                    <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+                    <TrendingUp className="w-6 h-6 text-[#76B900] dark:text-[#8CC63F]" />
                     <h3 className="font-semibold text-gray-900 dark:text-white">Strategic Advantages</h3>
                   </div>
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-start gap-2">
-                      <span className="text-green-600 font-bold">•</span>
+                      <span className="text-[#76B900] font-bold">•</span>
                       <span className="text-gray-700 dark:text-gray-300">
                         <strong>Comprehensive Coverage:</strong> Protection across current and future healthcare AI technologies
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-600 font-bold">•</span>
+                      <span className="text-[#76B900] font-bold">•</span>
                       <span className="text-gray-700 dark:text-gray-300">
                         <strong>Competitive Moat:</strong> 3-5 year technology lead prevents market entry
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-600 font-bold">•</span>
+                      <span className="text-[#76B900] font-bold">•</span>
                       <span className="text-gray-700 dark:text-gray-300">
                         <strong>Global Protection:</strong> Coverage across 193 countries with multi-jurisdictional enforcement
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-600 font-bold">•</span>
+                      <span className="text-[#76B900] font-bold">•</span>
                       <span className="text-gray-700 dark:text-gray-300">
                         <strong>Acquisition Premium:</strong> Portfolio value of $46.63B-$84.88B significantly increases M&A attractiveness
                       </span>

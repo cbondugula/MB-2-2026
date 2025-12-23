@@ -221,7 +221,7 @@ export default function ConversationalInterface({
     switch (type) {
       case 'code': return <Code className="w-4 h-4" />;
       case 'suggestion': return <Lightbulb className="w-4 h-4" />;
-      case 'success': return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'success': return <CheckCircle className="w-4 h-4 text-[#76B900]" />;
       case 'error': return <AlertCircle className="w-4 h-4 text-red-500" />;
       default: return <Brain className="w-4 h-4" />;
     }

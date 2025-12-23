@@ -403,7 +403,7 @@ Wall motion abnormalities in the anterior and lateral walls.`
                           <span className="font-medium">{risk.factor}</span>
                           <Badge className={
                             risk.riskLevel === 'high' ? 'bg-red-500' :
-                            risk.riskLevel === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                            risk.riskLevel === 'medium' ? 'bg-yellow-500' : 'bg-[#76B900]'
                           }>
                             {risk.riskLevel} risk
                           </Badge>
@@ -424,7 +424,7 @@ Wall motion abnormalities in the anterior and lateral walls.`
                           <Badge variant="secondary">{rec.type}</Badge>
                           <Badge className={
                             rec.priority === 'high' ? 'bg-red-500' :
-                            rec.priority === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                            rec.priority === 'medium' ? 'bg-yellow-500' : 'bg-[#76B900]'
                           }>
                             {rec.priority} priority
                           </Badge>

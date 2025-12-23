@@ -224,7 +224,7 @@ export default function CompetitiveIntelligence() {
                     {(competitiveRealtime as any)?.trend === 'up' ? (
                       <ArrowUp className="h-5 w-5 text-red-600" />
                     ) : (competitiveRealtime as any)?.trend === 'down' ? (
-                      <ArrowDown className="h-5 w-5 text-green-600" />
+                      <ArrowDown className="h-5 w-5 text-[#76B900]" />
                     ) : (
                       <Minus className="h-5 w-5 text-gray-600" />
                     )}
@@ -244,12 +244,12 @@ export default function CompetitiveIntelligence() {
           </Card>
 
           {/* Market Funding Intelligence */}
-          <Card className="border-green-200 dark:border-green-800">
+          <Card className="border-[#76B900]200 dark:border-[#5a8f00]">
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div>
                   <CardTitle className="text-xl flex items-center">
-                    <DollarSign className="mr-2 h-5 w-5 text-green-600" />
+                    <DollarSign className="mr-2 h-5 w-5 text-[#76B900]" />
                     Live Market Funding
                   </CardTitle>
                   <CardDescription>Real-time funding levels and investment activity</CardDescription>
@@ -270,7 +270,7 @@ export default function CompetitiveIntelligence() {
               ) : (
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
-                    <div className="text-3xl font-bold text-green-600">
+                    <div className="text-3xl font-bold text-[#76B900]">
                       ${(marketFunding as any)?.totalFunding || '2.4B'}
                     </div>
                     <Badge variant="outline" className="text-xs">
@@ -401,7 +401,7 @@ export default function CompetitiveIntelligence() {
               </Button>
               <Button 
                 onClick={() => handleUrgentAction("Initiate Strategic Partnership")}
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-[#76B900] hover:bg-[#5a8f00]"
               >
                 Strategic Partnerships
               </Button>

@@ -162,7 +162,7 @@ export default function ComplianceHub() {
       case 'compliant':
       case 'complete':
       case 'resolved':
-        return 'bg-emerald-900/50 text-emerald-300 border-emerald-700';
+        return 'bg-[#1a3d00]/50 text-[#8CC63F] border-[#76B900]';
       case 'partial':
       case 'in-progress':
         return 'bg-amber-900/50 text-amber-300 border-amber-700';
@@ -211,7 +211,7 @@ export default function ComplianceHub() {
       </Button>
       <Button 
         size="sm" 
-        className="bg-emerald-600 hover:bg-emerald-500 text-white"
+        className="bg-[#76B900] hover:bg-[#76B900] text-white"
         onClick={() => handleExportReport('pdf')}
         disabled={isExporting}
       >
@@ -228,15 +228,15 @@ export default function ComplianceHub() {
       headerActions={headerActions}
     >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-emerald-900/40 to-gray-900 border-emerald-700/50">
+        <Card className="bg-gradient-to-br from-[#1a3d00]/40 to-gray-900 border-[#76B900]/50">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Overall Compliance</p>
-                <p className="text-3xl font-bold text-emerald-400">{overallScore}%</p>
+                <p className="text-3xl font-bold text-[#76B900]">{overallScore}%</p>
               </div>
-              <div className="w-16 h-16 rounded-full bg-emerald-900/50 flex items-center justify-center">
-                <Shield className="w-8 h-8 text-emerald-400" />
+              <div className="w-16 h-16 rounded-full bg-[#1a3d00]/50 flex items-center justify-center">
+                <Shield className="w-8 h-8 text-[#76B900]" />
               </div>
             </div>
             <Progress value={overallScore} className="mt-4 h-2" />
@@ -358,7 +358,7 @@ export default function ComplianceHub() {
                   
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Controls Passed</span>
-                    <span className="text-emerald-400">{framework.passedControls}/{framework.controls}</span>
+                    <span className="text-[#76B900]">{framework.passedControls}/{framework.controls}</span>
                   </div>
 
                   <div className="pt-2 border-t border-gray-800 space-y-2">
@@ -402,7 +402,7 @@ export default function ComplianceHub() {
                     variant={attestationFilter === 'all' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setAttestationFilter('all')}
-                    className={attestationFilter === 'all' ? 'bg-emerald-600' : 'bg-gray-800 border-gray-700'}
+                    className={attestationFilter === 'all' ? 'bg-[#76B900]' : 'bg-gray-800 border-gray-700'}
                   >
                     All
                   </Button>
@@ -464,7 +464,7 @@ export default function ComplianceHub() {
                               Due: {item.dueDate}
                             </span>
                             {item.evidence && (
-                              <span className="flex items-center gap-1 text-emerald-400">
+                              <span className="flex items-center gap-1 text-[#76B900]">
                                 <FileText className="w-3 h-3" />
                                 {item.evidence.length} evidence files
                               </span>
@@ -553,7 +553,7 @@ export default function ComplianceHub() {
                     Track and resolve compliance gaps
                   </CardDescription>
                 </div>
-                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-500">
+                <Button size="sm" className="bg-[#76B900] hover:bg-[#76B900]">
                   <Zap className="w-4 h-4 mr-2" />
                   Add Task
                 </Button>
@@ -611,11 +611,11 @@ export default function ComplianceHub() {
 
         <TabsContent value="reports" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Card className="bg-gray-900 border-gray-800 hover:border-emerald-700/50 transition-all cursor-pointer">
+            <Card className="bg-gray-900 border-gray-800 hover:border-[#76B900]/50 transition-all cursor-pointer">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-emerald-900/50 flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-emerald-400" />
+                  <div className="w-12 h-12 rounded-lg bg-[#1a3d00]/50 flex items-center justify-center">
+                    <FileText className="w-6 h-6 text-[#76B900]" />
                   </div>
                   <div>
                     <CardTitle className="text-white text-lg">HIPAA Attestation Report</CardTitle>
@@ -632,7 +632,7 @@ export default function ComplianceHub() {
                 <div className="flex gap-2">
                   <Button 
                     size="sm" 
-                    className="bg-emerald-600 hover:bg-emerald-500"
+                    className="bg-[#76B900] hover:bg-[#76B900]"
                     onClick={() => handleExportReport('pdf')}
                   >
                     <Download className="w-4 h-4 mr-2" />
