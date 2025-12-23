@@ -6,10 +6,7 @@ import {
   FolderOpen,
   FileText,
   BookOpen,
-  CreditCard,
-  Trophy,
-  Store,
-  GraduationCap
+  CreditCard
 } from "lucide-react";
 
 export default function LeftSidebar() {
@@ -20,12 +17,6 @@ export default function LeftSidebar() {
     { path: "/templates", label: "Templates", icon: FileCode },
     { path: "/my-apps", label: "My Apps", icon: FolderOpen },
     { path: "/hipaa-tools", label: "Compliance", icon: Shield },
-  ];
-
-  const communityItems = [
-    { path: "/showcase", label: "Community Showcase", icon: Trophy },
-    { path: "/marketplace", label: "Marketplace", icon: Store },
-    { path: "/academy", label: "Academy", icon: GraduationCap },
   ];
 
   const resourceItems = [
@@ -61,27 +52,6 @@ export default function LeftSidebar() {
             >
               <item.icon className={`w-5 h-5 ${isActive(item.path) ? 'text-emerald-400' : 'text-gray-500'}`} />
               <span>{item.label}</span>
-            </Link>
-          ))}
-        </div>
-
-        <div className="pt-4 border-t border-gray-800">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">
-            Community
-          </h3>
-          {communityItems.map((item) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
-                isActive(item.path)
-                  ? "bg-gray-800 text-emerald-400"
-                  : "text-gray-300 hover:bg-gray-900 hover:text-white"
-              }`}
-              data-testid={`nav-${item.path.replace('/', '')}`}
-            >
-              <item.icon className={`w-4 h-4 ${isActive(item.path) ? 'text-emerald-400' : 'text-gray-500'}`} />
-              <span className="text-sm">{item.label}</span>
             </Link>
           ))}
         </div>

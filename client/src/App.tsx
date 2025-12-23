@@ -22,9 +22,6 @@ import MyApps from "@/pages/my-apps";
 import Checkout from "@/pages/checkout";
 import CustomPricing from "@/pages/custom-pricing";
 import Workspace from "@/pages/workspace";
-import Showcase from "@/pages/showcase";
-import Marketplace from "@/pages/marketplace";
-import Academy from "@/pages/academy";
 import ComplianceHub from "@/pages/compliance-hub";
 import ExecutiveIntelligence from "@/pages/executive-intelligence";
 import PHIGovernance from "@/pages/phi-governance";
@@ -46,9 +43,6 @@ function Router() {
           <Route path="/legal-documents" component={LegalDocuments} />
           <Route path="/documentation" component={Documentation} />
           <Route path="/apps/:appId" component={AppPreview} />
-          <Route path="/showcase" component={Showcase} />
-          <Route path="/marketplace" component={Marketplace} />
-          <Route path="/academy" component={Academy} />
         </>
       ) : (
         <>
@@ -69,9 +63,6 @@ function Router() {
           <Route path="/editor/:projectId" component={ProjectEditor} />
           <Route path="/workspace/:projectId" component={Workspace} />
           <Route path="/my-apps" component={MyApps} />
-          <Route path="/showcase" component={Showcase} />
-          <Route path="/marketplace" component={Marketplace} />
-          <Route path="/academy" component={Academy} />
           <Route path="/compliance-hub" component={ComplianceHub} />
           <Route path="/executive-intelligence" component={ExecutiveIntelligence} />
           <Route path="/phi-governance" component={PHIGovernance} />
