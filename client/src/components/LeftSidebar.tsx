@@ -1,11 +1,8 @@
 import { Link, useLocation } from "wouter";
 import { 
   Home, 
-  Code, 
   FileCode, 
-  Eye, 
   Shield, 
-  Rocket,
   FolderOpen,
   FileText,
   BookOpen,
@@ -21,12 +18,9 @@ export default function LeftSidebar() {
 
   const menuItems = [
     { path: "/", label: "Dashboard", icon: Home },
-    { path: "/app-builder", label: "Build App", icon: Rocket },
     { path: "/templates", label: "Templates", icon: FileCode },
-    { path: "/code-editor", label: "Code Editor", icon: Code },
-    { path: "/preview", label: "Preview", icon: Eye },
-    { path: "/hipaa-tools", label: "Compliance", icon: Shield },
     { path: "/my-apps", label: "My Apps", icon: FolderOpen },
+    { path: "/hipaa-tools", label: "Compliance", icon: Shield },
   ];
 
   const communityItems = [
