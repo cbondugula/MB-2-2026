@@ -107,19 +107,10 @@ export default function Landing() {
           <Button 
             size="sm" 
             className="bg-emerald-600 hover:bg-emerald-500 text-white"
-            onClick={async () => {
-              try {
-                const res = await fetch('/api/demo-login', { method: 'POST', credentials: 'include' });
-                if (res.ok) {
-                  window.location.href = '/dashboard';
-                }
-              } catch (e) {
-                console.error('Demo login failed');
-              }
-            }}
-            data-testid="button-demo-login"
+            onClick={() => window.location.href = '/api/login'}
+            data-testid="button-login"
           >
-            Demo Login
+            Sign In
           </Button>
         </div>
       </header>
