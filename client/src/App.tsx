@@ -10,7 +10,6 @@ import Landing from "@/pages/landing";
 import Dashboard from "@/pages/dashboard";
 import CodeEditor from "@/pages/code-editor";
 import Templates from "@/pages/templates";
-import Components from "@/pages/components";
 import Preview from "@/pages/preview";
 import HIPAATools from "@/pages/hipaa-tools";
 import AppBuilder from "@/pages/app-builder";
@@ -60,8 +59,7 @@ function Router() {
           <Route path="/app-builder" component={AppBuilder} />
           <Route path="/code-editor" component={CodeEditor} />
           <Route path="/templates" component={Templates} />
-          <Route path="/components" component={Components} />
-          <Route path="/preview" component={Preview} />
+                    <Route path="/preview" component={Preview} />
           <Route path="/hipaa-tools" component={HIPAATools} />
           <Route path="/pricing" component={Pricing} />
           <Route path="/custom-pricing" component={CustomPricing} />

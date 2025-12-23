@@ -2,7 +2,6 @@ import { Link, useLocation } from "wouter";
 import { 
   Home, 
   Code, 
-  Puzzle, 
   FileCode, 
   Eye, 
   Shield, 
@@ -14,8 +13,7 @@ import {
   LayoutGrid,
   Trophy,
   Store,
-  GraduationCap,
-  Users
+  GraduationCap
 } from "lucide-react";
 
 export default function LeftSidebar() {
@@ -25,7 +23,6 @@ export default function LeftSidebar() {
     { path: "/", label: "Dashboard", icon: Home },
     { path: "/app-builder", label: "Build App", icon: Rocket },
     { path: "/templates", label: "Templates", icon: FileCode },
-    { path: "/components", label: "Components", icon: Puzzle },
     { path: "/code-editor", label: "Code Editor", icon: Code },
     { path: "/preview", label: "Preview", icon: Eye },
     { path: "/hipaa-tools", label: "Compliance", icon: Shield },
