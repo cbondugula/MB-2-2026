@@ -230,7 +230,7 @@ export default function Documentation() {
               <Card className="bg-gray-800 border-gray-700">
                 <CardContent className="p-4">
                   <div className="flex items-center space-x-2">
-                    <Shield className="h-6 w-6 text-teal-400" />
+                    <Shield className="h-6 w-6 text-[#76B900]" />
                     <div>
                       {complianceLoading ? (
                         <div className="animate-pulse">

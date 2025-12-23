@@ -77,7 +77,7 @@ export default function InnovationManagementDashboard() {
       value: '$50-90M',
       status: 'FILING_IMMEDIATELY',
       priority: 'EMERGENCY',
-      color: 'bg-teal-500'
+      color: 'bg-[#76B900]'
     }
   ];
 

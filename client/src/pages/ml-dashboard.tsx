@@ -175,7 +175,7 @@ export default function MLDashboard() {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-2">
-              <Shield className="h-8 w-8 text-teal-600" />
+              <Shield className="h-8 w-8 text-[#76B900]" />
               <div>
                 <p className="text-2xl font-bold">{analytics?.complianceScore?.overall || 96}%</p>
                 <p className="text-sm text-muted-foreground">Compliance Score</p>

@@ -81,8 +81,8 @@ export default function QuickStats() {
       <Card className="border-slate-200">
         <CardContent className="p-6">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-healthcare-teal-100 rounded-lg flex items-center justify-center">
-              <Puzzle className="w-6 h-6 text-healthcare-teal-500" />
+            <div className="w-12 h-12 bg-healthcare-[#c8e6a5] rounded-lg flex items-center justify-center">
+              <Puzzle className="w-6 h-6 text-healthcare-[#76B900]" />
             </div>
             <div>
               <p className="text-sm text-slate-600">Components Used</p>

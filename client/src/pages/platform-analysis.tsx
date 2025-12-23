@@ -50,7 +50,7 @@ export default function PlatformAnalysis() {
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-teal-600 to-[#76B900] bg-clip-text text-transparent mb-4">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-[#76B900] to-[#76B900] bg-clip-text text-transparent mb-4">
             MedBuilder Platform Analysis
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -142,7 +142,7 @@ export default function PlatformAnalysis() {
                 {/* Global Capabilities */}
                 <div>
                   <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                    <Globe className="w-5 h-5 text-teal-600" />
+                    <Globe className="w-5 h-5 text-[#76B900]" />
                     Global Healthcare Coverage
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -175,7 +175,7 @@ export default function PlatformAnalysis() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Code className="w-5 h-5 text-teal-600" />
+                  <Code className="w-5 h-5 text-[#76B900]" />
                   Technology Stack
                 </CardTitle>
               </CardHeader>
@@ -230,7 +230,7 @@ export default function PlatformAnalysis() {
                 <Separator />
 
                 <ValueProp
-                  icon={<Globe className="w-6 h-6 text-teal-600" />}
+                  icon={<Globe className="w-6 h-6 text-[#76B900]" />}
                   title="Global Healthcare Compliance Automation"
                   description="Only platform supporting 193 countries with automated multi-jurisdiction compliance"
                   benefits={[
@@ -918,7 +918,7 @@ function AdditionalRevenue({ source, description, potential }: any) {
     <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border">
       <div className="font-semibold mb-1">{source}</div>
       <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">{description}</div>
-      <div className="text-sm font-medium text-teal-600">{potential}</div>
+      <div className="text-sm font-medium text-[#76B900]">{potential}</div>
     </div>
   );
 }
@@ -1002,7 +1002,7 @@ function GeographicPhase({ phase, markets, focus, revenue }: any) {
         </div>
         <div>
           <div className="text-gray-600 dark:text-gray-400 mb-1">Focus: {focus}</div>
-          <div className="font-medium text-teal-600">{revenue}</div>
+          <div className="font-medium text-[#76B900]">{revenue}</div>
         </div>
       </div>
     </div>

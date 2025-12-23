@@ -88,12 +88,12 @@ export default function APIIntegrationHub() {
                 <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
                   integration.type === "FHIR" ? "bg-medical-blue-100" :
                   integration.type === "HL7" ? "bg-trust-green-100" :
-                  "bg-healthcare-teal-100"
+                  "bg-healthcare-[#c8e6a5]"
                 }`}>
                   <integration.icon className={`text-xl ${
                     integration.type === "FHIR" ? "text-medical-blue-500" :
                     integration.type === "HL7" ? "text-trust-[#76B900]" :
-                    "text-healthcare-teal-500"
+                    "text-healthcare-[#76B900]"
                   }`} />
                 </div>
                 <h3 className="font-semibold text-slate-900 mb-2">{integration.name}</h3>
@@ -102,7 +102,7 @@ export default function APIIntegrationHub() {
                   className={`w-full transition-colors ${
                     integration.type === "FHIR" ? "bg-medical-blue-500 hover:bg-medical-blue-600" :
                     integration.type === "HL7" ? "bg-trust-[#76B900] hover:bg-trust-[#76B900]" :
-                    "bg-healthcare-teal-500 hover:bg-healthcare-teal-600"
+                    "bg-healthcare-[#76B900] hover:bg-healthcare-[#76B900]"
                   }`}
                 >
                   Configure

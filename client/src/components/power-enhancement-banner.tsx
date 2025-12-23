@@ -22,7 +22,7 @@ export default function PowerEnhancementBanner() {
   if (!isVisible) return null;
 
   return (
-    <Card className="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 border-2 border-teal-400 mb-6 shadow-xl">
+    <Card className="bg-gradient-to-r from-[#76B900] via-cyan-600 to-blue-600 border-2 border-[#76B900] mb-6 shadow-xl">
       <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
@@ -60,7 +60,7 @@ export default function PowerEnhancementBanner() {
 
             <div className="flex flex-wrap items-center gap-3">
               <Link href="/super-agent">
-                <Button className="bg-white hover:bg-gray-100 text-teal-700 font-bold shadow-lg border-2 border-white">
+                <Button className="bg-white hover:bg-gray-100 text-[#5a8f00] font-bold shadow-lg border-2 border-white">
                   <Zap className="w-4 h-4 mr-2" />
                   Try Super Agent
                   <ArrowRight className="w-4 h-4 ml-2" />

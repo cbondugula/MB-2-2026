@@ -122,7 +122,7 @@ export default function MedHELMDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#e8f5d9] to-teal-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-[#e8f5d9] to-[#c8e6a5] dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">

@@ -248,7 +248,7 @@ export default function HealthcareAppBuilder() {
                   <span>AI-Powered</span>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <Globe className="w-4 h-4 text-teal-500" />
+                  <Globe className="w-4 h-4 text-[#76B900]" />
                   <span>Multi-Cultural</span>
                 </div>
               </div>
@@ -406,7 +406,7 @@ export default function HealthcareAppBuilder() {
                         <span>Voice Commands</span>
                       </div>
                       <div className="flex items-center space-x-2 text-sm">
-                        <BarChart3 className="w-4 h-4 text-teal-500" />
+                        <BarChart3 className="w-4 h-4 text-[#76B900]" />
                         <span>Healthcare Analytics</span>
                       </div>
                     </div>
