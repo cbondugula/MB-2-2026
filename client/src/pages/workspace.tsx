@@ -551,7 +551,18 @@ export default function Workspace() {
     enabled: !!projectId && showPackagesPanel,
   });
 
-  const codeFiles = (project?.code as Record<string, string>) || {};
+  const extractCodeFiles = (): Record<string, string> => {
+    if (!project?.code) return {};
+    const code = project.code as any;
+    if (typeof code === 'object' && code.files && typeof code.files === 'object') {
+      return code.files;
+    }
+    if (typeof code === 'object' && !code.files) {
+      return code;
+    }
+    return {};
+  };
+  const codeFiles = extractCodeFiles();
   const fileNames = Object.keys(codeFiles);
   const fileTree = buildFileTree(editedFiles);
 

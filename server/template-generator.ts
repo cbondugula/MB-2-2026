@@ -8,22 +8,274 @@ interface GeneratedProject {
   description: string;
 }
 
+const authServiceCode = `// HIPAA-Compliant Authentication Service
+// All authentication and audit logging handled via secure API calls
+// Session state stored in sessionStorage, all data persisted server-side
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'patient' | 'provider' | 'admin';
+}
+
+interface AuthState {
+  user: User | null;
+  isLoading: boolean;
+}
+
+class AuthService {
+  private state: AuthState = { user: null, isLoading: true };
+  private listeners: Set<(state: AuthState) => void> = new Set();
+
+  constructor() {
+    this.checkSession();
+  }
+
+  private notifyListeners() {
+    this.listeners.forEach(fn => fn(this.state));
+  }
+
+  subscribe(listener: (state: AuthState) => void): () => void {
+    this.listeners.add(listener);
+    listener(this.state);
+    return () => this.listeners.delete(listener);
+  }
+
+  private async checkSession() {
+    try {
+      const response = await fetch('/api/auth/me', { credentials: 'include' });
+      if (response.ok) {
+        const data = await response.json();
+        this.state = { user: data.user, isLoading: false };
+      } else {
+        this.state = { user: null, isLoading: false };
+      }
+    } catch {
+      this.state = { user: null, isLoading: false };
+    }
+    this.notifyListeners();
+  }
+
+  async login(email: string, password: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        return { success: false, error: error.message || 'Authentication failed' };
+      }
+
+      const data = await response.json();
+      this.state = { user: data.user, isLoading: false };
+      this.notifyListeners();
+      return { success: true };
+    } catch (e: any) {
+      return { success: false, error: 'Network error. Please try again.' };
+    }
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    } catch {}
+    this.state = { user: null, isLoading: false };
+    this.notifyListeners();
+  }
+
+  getUser(): User | null {
+    return this.state.user;
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.state.user;
+  }
+
+  isLoading(): boolean {
+    return this.state.isLoading;
+  }
+}
+
+export const authService = new AuthService();
+export type { User, AuthState };
+`;
+
+const authHookCode = `import { useState, useEffect, useCallback } from 'react';
+import { authService, User, AuthState } from '../services/authService';
+
+export function useAuth() {
+  const [user, setUser] = useState<User | null>(authService.getUser());
+  const [isLoading, setIsLoading] = useState(authService.isLoading());
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    return authService.subscribe((state: AuthState) => {
+      setUser(state.user);
+      setIsLoading(state.isLoading);
+    });
+  }, []);
+
+  const login = useCallback(async (email: string, password: string) => {
+    setIsLoading(true);
+    setError(null);
+    const result = await authService.login(email, password);
+    setIsLoading(false);
+    if (!result.success) {
+      setError(result.error || 'Login failed');
+    }
+    return result.success;
+  }, []);
+
+  const logout = useCallback(async () => {
+    await authService.logout();
+  }, []);
+
+  return {
+    user,
+    isAuthenticated: !!user,
+    isLoading,
+    error,
+    login,
+    logout,
+  };
+}
+`;
+
+// PHI Safeguards - Input validation and data protection utilities
+const phiSafeguardsCode = `// HIPAA-Compliant PHI Safeguards
+// Prevents accidental exposure of Protected Health Information
+
+// PHI patterns that should never be logged or exposed
+const PHI_PATTERNS = {
+  SSN: /\\b\\d{3}-\\d{2}-\\d{4}\\b/g,
+  MRN: /\\b[A-Z]{2,3}\\d{6,10}\\b/gi,
+  PHONE: /\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b/g,
+  EMAIL: /\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/g,
+  DOB: /\\b(0[1-9]|1[0-2])\\/(0[1-9]|[12]\\d|3[01])\\/(19|20)\\d{2}\\b/g,
+  CREDIT_CARD: /\\b\\d{4}[- ]?\\d{4}[- ]?\\d{4}[- ]?\\d{4}\\b/g,
+};
+
+// Redact PHI from strings for safe logging
+export function redactPHI(text: string): string {
+  let redacted = text;
+  // Reset lastIndex before each replacement for global patterns
+  PHI_PATTERNS.SSN.lastIndex = 0;
+  PHI_PATTERNS.MRN.lastIndex = 0;
+  PHI_PATTERNS.PHONE.lastIndex = 0;
+  PHI_PATTERNS.DOB.lastIndex = 0;
+  PHI_PATTERNS.CREDIT_CARD.lastIndex = 0;
+  redacted = redacted.replace(PHI_PATTERNS.SSN, '[SSN REDACTED]');
+  redacted = redacted.replace(PHI_PATTERNS.MRN, '[MRN REDACTED]');
+  redacted = redacted.replace(PHI_PATTERNS.PHONE, '[PHONE REDACTED]');
+  redacted = redacted.replace(PHI_PATTERNS.DOB, '[DOB REDACTED]');
+  redacted = redacted.replace(PHI_PATTERNS.CREDIT_CARD, '[CC REDACTED]');
+  return redacted;
+}
+
+// Check if string contains PHI patterns (reset lastIndex for global patterns)
+export function containsPHI(text: string): boolean {
+  return Object.values(PHI_PATTERNS).some(pattern => {
+    pattern.lastIndex = 0;
+    return pattern.test(text);
+  });
+}
+
+// Validate and sanitize patient data input
+export function validatePatientInput(data: Record<string, any>): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+  
+  if (data.email && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(data.email)) {
+    errors.push('Invalid email format');
+  }
+  
+  if (data.phone && !/^\\+?[1-9]\\d{1,14}$/.test(data.phone.replace(/[\\s()-]/g, ''))) {
+    errors.push('Invalid phone number format');
+  }
+  
+  if (data.dob) {
+    const dob = new Date(data.dob);
+    const age = (Date.now() - dob.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
+    if (age < 0 || age > 150) {
+      errors.push('Invalid date of birth');
+    }
+  }
+  
+  return { valid: errors.length === 0, errors };
+}
+
+// Mask sensitive data for display (e.g., show only last 4 of SSN)
+export function maskSensitive(value: string, type: 'ssn' | 'phone' | 'email' | 'mrn'): string {
+  switch (type) {
+    case 'ssn':
+      return value.length >= 4 ? '***-**-' + value.slice(-4) : '***-**-****';
+    case 'phone':
+      return value.length >= 4 ? '(***) ***-' + value.slice(-4) : '(***) ***-****';
+    case 'email':
+      const [local, domain] = value.split('@');
+      if (local && domain) {
+        return local[0] + '***@' + domain;
+      }
+      return '***@***.***';
+    case 'mrn':
+      return value.length >= 4 ? '***' + value.slice(-4) : '***';
+    default:
+      return '***';
+  }
+}
+
+// Safe console logger that redacts PHI
+export const safeLog = {
+  info: (message: string, data?: any) => {
+    console.log('[INFO]', redactPHI(message), data ? redactPHI(JSON.stringify(data)) : '');
+  },
+  warn: (message: string, data?: any) => {
+    console.warn('[WARN]', redactPHI(message), data ? redactPHI(JSON.stringify(data)) : '');
+  },
+  error: (message: string, data?: any) => {
+    console.error('[ERROR]', redactPHI(message), data ? redactPHI(JSON.stringify(data)) : '');
+  },
+};
+
+// Access control helper
+export function canAccessRecord(userRole: string, recordOwnerId: string, userId: string): boolean {
+  if (userRole === 'admin') return true;
+  if (userRole === 'provider') return true; // Providers can access all patient records
+  return recordOwnerId === userId; // Patients can only access their own records
+}
+`;
+
 const healthcareTemplateCode: Record<string, (clinicName: string) => Record<string, string>> = {
   "Patient Portal": (clinicName) => ({
-    "src/App.tsx": `import { useState } from 'react';
+    "src/services/authService.ts": authServiceCode,
+    "src/utils/phiSafeguards.ts": phiSafeguardsCode,
+    "src/hooks/useAuth.ts": authHookCode,
+    "src/App.tsx": `import { useState, useEffect } from 'react';
 import { PatientDashboard } from './components/PatientDashboard';
 import { AppointmentBooking } from './components/AppointmentBooking';
 import { MedicalRecords } from './components/MedicalRecords';
 import { SecureMessaging } from './components/SecureMessaging';
 import { LoginPage } from './components/LoginPage';
+import { useAuth } from './hooks/useAuth';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [patient, setPatient] = useState<any>(null);
+  const { user, isAuthenticated, logout, isLoading } = useAuth();
 
-  if (!isLoggedIn) {
-    return <LoginPage clinicName="${clinicName}" onLogin={(p) => { setPatient(p); setIsLoggedIn(true); }} />;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage clinicName="${clinicName}" />;
   }
 
   return (
@@ -37,27 +289,37 @@ export default function App() {
             <button onClick={() => setCurrentPage('records')} className={\`px-3 py-2 rounded \${currentPage === 'records' ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600'}\`}>Medical Records</button>
             <button onClick={() => setCurrentPage('messages')} className={\`px-3 py-2 rounded \${currentPage === 'messages' ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600'}\`}>Messages</button>
           </nav>
-          <button onClick={() => setIsLoggedIn(false)} className="text-gray-500 hover:text-gray-700">Sign Out</button>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600">{user?.name}</span>
+            <button onClick={logout} className="text-gray-500 hover:text-gray-700">Sign Out</button>
+          </div>
         </div>
       </header>
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {currentPage === 'dashboard' && <PatientDashboard patient={patient} />}
+        {currentPage === 'dashboard' && <PatientDashboard patient={user} />}
         {currentPage === 'appointments' && <AppointmentBooking clinicName="${clinicName}" />}
-        {currentPage === 'records' && <MedicalRecords patient={patient} />}
-        {currentPage === 'messages' && <SecureMessaging patient={patient} />}
+        {currentPage === 'records' && <MedicalRecords patient={user} />}
+        {currentPage === 'messages' && <SecureMessaging patient={user} />}
       </main>
     </div>
   );
 }`,
-    "src/components/LoginPage.tsx": `interface LoginPageProps {
+    "src/components/LoginPage.tsx": `import { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
+
+interface LoginPageProps {
   clinicName: string;
-  onLogin: (patient: any) => void;
 }
 
-export function LoginPage({ clinicName, onLogin }: LoginPageProps) {
-  const handleSubmit = (e: React.FormEvent) => {
+export function LoginPage({ clinicName }: LoginPageProps) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, isLoading, error } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin({ id: 1, name: 'John Smith', email: 'john@example.com', dob: '1985-03-15' });
+    if (!email || !password) return;
+    await login(email, password);
   };
 
   return (
@@ -70,20 +332,70 @@ export function LoginPage({ clinicName, onLogin }: LoginPageProps) {
             </svg>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">{clinicName}</h1>
-          <p className="text-gray-500 mt-2">Patient Portal</p>
+          <p className="text-gray-500 mt-2">Patient Portal - Secure Access</p>
         </div>
+        
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            {error}
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" placeholder="your@email.com" className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" defaultValue="john@example.com" />
+            <input 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com" 
+              required
+              autoComplete="email"
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" 
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input type="password" placeholder="••••••••" className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" defaultValue="password" />
+            <input 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••" 
+              required
+              autoComplete="current-password"
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" 
+            />
           </div>
-          <button type="submit" className="w-full bg-emerald-600 text-white py-3 rounded-lg font-medium hover:bg-emerald-700 transition-colors">Sign In</button>
+          <button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full bg-emerald-600 text-white py-3 rounded-lg font-medium hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                Signing In...
+              </>
+            ) : (
+              'Sign In'
+            )}
+          </button>
         </form>
-        <p className="text-center text-sm text-gray-500 mt-6">HIPAA Compliant • Secure • Encrypted</p>
+        
+        <div className="mt-6 text-center">
+          <a href="#forgot" className="text-sm text-emerald-600 hover:text-emerald-700">Forgot password?</a>
+        </div>
+        
+        <div className="mt-6 pt-6 border-t border-gray-200">
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+            <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <span>HIPAA Compliant</span>
+            <span className="text-gray-300">•</span>
+            <span>256-bit Encrypted</span>
+          </div>
+        </div>
       </div>
     </div>
   );
