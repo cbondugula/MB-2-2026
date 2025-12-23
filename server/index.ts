@@ -128,11 +128,11 @@ app.use(httpLoggingMiddleware);
         process.exit(1);
       }
       
-      log('Server closed, cleaning up resources...');
+      log.info('Server closed, cleaning up resources...');
       
       // Give ongoing requests time to complete
       setTimeout(() => {
-        log('Graceful shutdown complete');
+        log.info('Graceful shutdown complete');
         process.exit(0);
       }, 5000); // 5 second grace period
     });
