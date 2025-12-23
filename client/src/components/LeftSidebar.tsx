@@ -7,7 +7,6 @@ import {
   FileText,
   BookOpen,
   CreditCard,
-  LayoutGrid,
   Trophy,
   Store,
   GraduationCap
@@ -24,7 +23,6 @@ export default function LeftSidebar() {
   ];
 
   const communityItems = [
-    { path: "/gallery", label: "Template Gallery", icon: LayoutGrid },
     { path: "/showcase", label: "Community Showcase", icon: Trophy },
     { path: "/marketplace", label: "Marketplace", icon: Store },
     { path: "/academy", label: "Academy", icon: GraduationCap },
