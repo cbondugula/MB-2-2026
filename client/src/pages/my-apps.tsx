@@ -33,10 +33,19 @@ export default function MyApps() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['/api/chat/apps'],
+    queryKey: ['/api/projects'],
   });
 
-  const apps: App[] = data?.apps || [];
+  const apps: App[] = (data?.projects || data || []).map((p: any) => ({
+    id: p.id,
+    name: p.name,
+    description: p.description,
+    status: p.status || 'draft',
+    framework: p.framework || 'react',
+    isHipaaCompliant: p.isHipaaCompliant,
+    createdAt: p.createdAt,
+    viewCount: p.viewCount || 0
+  }));
 
   const filteredApps = apps.filter((app: App) => {
     const matchesSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
