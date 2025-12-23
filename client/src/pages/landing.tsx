@@ -77,7 +77,7 @@ export default function Landing() {
       title: "Intake Forms",
       prompt: "Build a secure patient intake form that collects medical history, insurance information, and consent signatures",
       icon: FileText,
-      color: "text-green-400"
+      color: "text-[#76B900]"
     },
     {
       title: "Telehealth Room",
@@ -358,7 +358,7 @@ export default function Landing() {
               {/* Trust Indicators */}
               <div className="flex items-center justify-center gap-4 mt-6">
                 <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                  <Shield className="w-3.5 h-3.5 text-green-500" />
+                  <Shield className="w-3.5 h-3.5 text-[#76B900]" />
                   <span>HIPAA</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-gray-500">
