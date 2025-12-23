@@ -42,10 +42,10 @@ export async function seedDatabase() {
   try {
     console.log('🌱 Starting database seeding...');
 
-    // Force fresh seeding by clearing existing data
-    console.log('🗑️ Clearing existing data...');
+    // Only clear non-user data - preserve user-created projects
+    console.log('🗑️ Clearing seed data (preserving user projects)...');
     
-    // Clear tables in correct order due to foreign key constraints
+    // Clear tables that don't contain user data
     await db.delete(environmentVariables);
     await db.delete(projectCollaborators);
     await db.delete(buildHistory);
@@ -53,7 +53,8 @@ export async function seedDatabase() {
     await db.delete(codeReviews);
     await db.delete(deployments);
     await db.delete(healthcareSimulations);
-    await db.delete(projects); 
+    // PRESERVE user-created projects - only delete demo projects
+    await db.delete(projects).where(eq(projects.userId, 'dev-user-123'));
     await db.delete(templates);
     await db.delete(components);
     await db.delete(healthcareDomains);
