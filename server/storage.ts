@@ -1638,20 +1638,54 @@ export default function MedicationTracker() {
 
   async getLegalDocument(organizationId: string, documentType: string): Promise<string> {
     // Fetch organization data (would be from database)
-    const organization = await this.getOrganizationById(organizationId);
-    const contract = await this.getActiveContract(organizationId);
+    const fetchedOrganization = await this.getOrganizationById(organizationId);
+    const fetchedContract = await this.getActiveContract(organizationId);
+    
+    // Provide default organization if not found
+    const organization = fetchedOrganization || {
+      id: organizationId,
+      name: 'Your Organization',
+      type: 'healthcare_provider',
+      size: 'small',
+      estimatedUsers: 10,
+      contactPerson: 'Administrator',
+      contactTitle: 'Account Manager',
+      contactEmail: 'admin@example.com',
+      state: 'California',
+      country: 'United States',
+      complianceNeeds: ['HIPAA'],
+      integrationNeeds: [],
+      aiModels: [{ name: 'GPT-4', type: 'general', provider: 'OpenAI' }],
+      dataRetentionPolicies: [{ type: 'patient_records', period: '7 years' }],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
+    // Provide default contract if not found  
+    const contract = fetchedContract || {
+      id: 'default-contract',
+      organizationId,
+      planId: 'starter',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+      status: 'pending',
+      monthlyPrice: 29,
+      annualPrice: 290,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
     
     const { LegalDocumentService } = await import('./legal-document-service');
     
     switch (documentType) {
       case 'terms-of-service':
-        return LegalDocumentService.generateTermsOfService(organization, contract);
+        return LegalDocumentService.generateTermsOfService(organization as any, contract as any);
       case 'privacy-policy':
-        return LegalDocumentService.generatePrivacyPolicy(organization);
+        return LegalDocumentService.generatePrivacyPolicy(organization as any);
       case 'ai-usage-policy':
-        return LegalDocumentService.generateAIUsagePolicy(organization);
+        return LegalDocumentService.generateAIUsagePolicy(organization as any);
       case 'business-associate-agreement':
-        return LegalDocumentService.generateBusinessAssociateAgreement(organization, contract);
+        return LegalDocumentService.generateBusinessAssociateAgreement(organization as any, contract as any);
       default:
         throw new Error(`Unknown document type: ${documentType}`);
     }
