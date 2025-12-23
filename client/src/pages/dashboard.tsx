@@ -11,14 +11,10 @@ import { Link, useLocation } from "wouter";
 import { 
   Code, 
   Shield, 
-  Sparkles, 
   Rocket,
   FolderOpen,
   FileCode,
-  Puzzle,
-  Eye,
   ArrowRight,
-  ArrowLeft,
   CheckCircle,
   Clock,
   Plus,
@@ -106,12 +102,6 @@ export default function Dashboard() {
       description: "View and manage your existing projects",
       icon: FolderOpen,
       href: "/my-apps"
-    },
-    {
-      title: "Components",
-      description: "Explore reusable UI components",
-      icon: Puzzle,
-      href: "/components"
     }
   ];
 
@@ -125,25 +115,13 @@ export default function Dashboard() {
         <main className="flex-1 p-6 lg:p-8 overflow-auto">
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setLocation('/')}
-                  className="bg-gray-900 border-gray-800 text-gray-200 hover:bg-gray-800 hover:text-white"
-                  data-testid="button-back"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back
-                </Button>
-                <div>
-                  <h1 className="text-2xl font-bold text-white" data-testid="welcome-heading">
-                    Welcome back, {user?.firstName || 'Developer'}
-                  </h1>
-                  <p className="text-gray-400 mt-1">
-                    Build HIPAA-compliant healthcare applications with AI
-                  </p>
-                </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white" data-testid="welcome-heading">
+                  Welcome back, {user?.firstName || 'Developer'}
+                </h1>
+                <p className="text-gray-400 mt-1">
+                  Build HIPAA-compliant healthcare applications with AI
+                </p>
               </div>
               <Badge className="bg-emerald-900/50 border border-emerald-700 text-emerald-300">
                 <Shield className="w-3 h-3 mr-1" />
@@ -151,7 +129,7 @@ export default function Dashboard() {
               </Badge>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {quickActions.map((action, index) => (
                 <Link key={action.href} href={action.href}>
                   <Card 
@@ -291,75 +269,6 @@ export default function Dashboard() {
               </Card>
             </div>
 
-            <Card className="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white border-0">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <Sparkles className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold">Build with AI</h3>
-                      <p className="text-white/80">Describe your healthcare app and let AI generate the code</p>
-                    </div>
-                  </div>
-                  <Link href="/app-builder">
-                    <Button 
-                      variant="secondary" 
-                      className="bg-white text-emerald-600 hover:bg-gray-100"
-                      data-testid="start-building-cta"
-                    >
-                      Start Building
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Link href="/code-editor">
-                <Card className="bg-gray-900 border-gray-800 hover:bg-gray-800 transition-colors cursor-pointer" data-testid="tool-code-editor">
-                  <CardContent className="p-5 flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
-                      <Code className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-white">Code Editor</h4>
-                      <p className="text-sm text-gray-400">Write and edit code</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href="/preview">
-                <Card className="bg-gray-900 border-gray-800 hover:bg-gray-800 transition-colors cursor-pointer" data-testid="tool-preview">
-                  <CardContent className="p-5 flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
-                      <Eye className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-white">Preview</h4>
-                      <p className="text-sm text-gray-400">Test your application</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href="/hipaa-tools">
-                <Card className="bg-gray-900 border-gray-800 hover:bg-gray-800 transition-colors cursor-pointer" data-testid="tool-hipaa">
-                  <CardContent className="p-5 flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
-                      <Shield className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-white">HIPAA Tools</h4>
-                      <p className="text-sm text-gray-400">Compliance scanning</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
           </div>
         </main>
       </div>
