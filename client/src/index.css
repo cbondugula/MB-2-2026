@@ -27,6 +27,12 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
+  /* NVIDIA Brand Green - Primary accent color */
+  --nvidia-green: #76B900;
+  --nvidia-green-light: #8CC63F;
+  --nvidia-green-dark: #5A8F00;
+  --nvidia-green-glow: rgba(118, 185, 0, 0.3);
+  
   /* Healthcare-specific color variables - Enhanced Contrast */
   --medical-blue-50: hsl(214, 100%, 97%);
   --medical-blue-100: hsl(214, 95%, 93%);

@@ -41,25 +41,25 @@ export default function LegalDocuments() {
       type: 'terms-of-service',
       title: 'Terms of Service',
       description: 'Comprehensive terms governing platform usage and service delivery',
-      icon: <FileText className="w-5 h-5 text-emerald-400" />
+      icon: <FileText className="w-5 h-5 text-[#76B900]" />
     },
     {
       type: 'privacy-policy',
       title: 'Privacy Policy',
       description: 'Data protection and privacy compliance across global jurisdictions',
-      icon: <Shield className="w-5 h-5 text-emerald-400" />
+      icon: <Shield className="w-5 h-5 text-[#76B900]" />
     },
     {
       type: 'ai-usage-policy',
       title: 'AI Usage Policy',
       description: 'AI system limitations, ethics, and clinical usage guidelines',
-      icon: <Bot className="w-5 h-5 text-emerald-400" />
+      icon: <Bot className="w-5 h-5 text-[#76B900]" />
     },
     {
       type: 'business-associate-agreement',
       title: 'Business Associate Agreement',
       description: 'HIPAA-compliant BAA for protected health information handling',
-      icon: <Users className="w-5 h-5 text-emerald-400" />
+      icon: <Users className="w-5 h-5 text-[#76B900]" />
     }
   ];
 
@@ -150,7 +150,7 @@ export default function LegalDocuments() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'current':
-        return <CheckCircle className="w-4 h-4 text-emerald-400" />;
+        return <CheckCircle className="w-4 h-4 text-[#76B900]" />;
       case 'updating':
         return <RefreshCw className="w-4 h-4 text-blue-400 animate-spin" />;
       case 'outdated':
@@ -169,7 +169,7 @@ export default function LegalDocuments() {
       <div className="min-h-screen bg-[#0a0a0f] p-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
+            <div className="animate-spin w-8 h-8 border-4 border-[#76B900] border-t-transparent rounded-full" />
             <span className="ml-3 text-lg text-gray-400">Generating legal documents...</span>
           </div>
         </div>
@@ -196,15 +196,15 @@ export default function LegalDocuments() {
           </p>
           <div className="flex items-center gap-4 text-sm text-gray-500">
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-emerald-400" />
+              <CheckCircle className="w-4 h-4 text-[#76B900]" />
               <span className="text-gray-300">HIPAA Compliant</span>
             </div>
             <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-emerald-400" />
+              <Shield className="w-4 h-4 text-[#76B900]" />
               <span className="text-gray-300">GDPR Ready</span>
             </div>
             <div className="flex items-center gap-2">
-              <Bot className="w-4 h-4 text-emerald-400" />
+              <Bot className="w-4 h-4 text-[#76B900]" />
               <span className="text-gray-300">AI-Generated</span>
             </div>
           </div>
@@ -215,7 +215,7 @@ export default function LegalDocuments() {
             <Card className="h-fit bg-gray-900 border-gray-800">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <FileText className="w-5 h-5 text-emerald-400" />
+                  <FileText className="w-5 h-5 text-[#76B900]" />
                   Legal Documents
                 </CardTitle>
                 <CardDescription className="text-gray-400">
@@ -228,7 +228,7 @@ export default function LegalDocuments() {
                     key={doc.type}
                     className={`p-4 border rounded-lg cursor-pointer transition-all ${
                       selectedDocument?.type === doc.type
-                        ? 'border-emerald-500 bg-emerald-500/10'
+                        ? 'border-[#76B900] bg-[#76B900]/10'
                         : 'border-gray-700 hover:border-gray-600 bg-gray-800/50'
                     }`}
                     onClick={() => setSelectedDocument(doc)}
@@ -302,7 +302,7 @@ export default function LegalDocuments() {
                       <Button
                         size="sm"
                         onClick={() => downloadDocument(selectedDocument)}
-                        className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white"
+                        className="flex items-center gap-2 bg-[#76B900] hover:bg-[#8CC63F] text-white"
                       >
                         <Download className="w-4 h-4" />
                         Download
