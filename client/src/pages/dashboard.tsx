@@ -66,13 +66,6 @@ const aiSuggestions = [
   "Build a remote patient monitoring dashboard",
 ];
 
-const hipaaChecklist = [
-  { id: 'encryption', label: 'Data Encryption', description: 'All data encrypted at rest and in transit', checked: true },
-  { id: 'access', label: 'Access Controls', description: 'Role-based authentication enabled', checked: true },
-  { id: 'audit', label: 'Audit Logging', description: 'All PHI access is logged', checked: true },
-  { id: 'backup', label: 'Backup & Recovery', description: 'Automated backup configured', checked: true },
-];
-
 const enterpriseTools = [
   { icon: Lock, label: 'PHI Governance', href: '/phi-governance', description: 'Monitor and protect patient data' },
   { icon: Network, label: 'EHR Integration', href: '/ehr-integration', description: 'Connect to Epic, Cerner, Allscripts' },
@@ -322,8 +315,7 @@ export default function Dashboard() {
               </>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2 space-y-4">
+            <div className="space-y-4">
                 <Card className="bg-gray-900 border-gray-800">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <div>
@@ -401,36 +393,6 @@ export default function Dashboard() {
                     })}
                   </div>
                 </div>
-              </div>
-
-              <Card className="bg-gray-900 border-gray-800 h-fit">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg text-white flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-emerald-400" />
-                    HIPAA Checklist
-                  </CardTitle>
-                  <CardDescription className="text-gray-400">Your compliance status</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {hipaaChecklist.map((item) => (
-                    <div key={item.id} className="flex items-start gap-3">
-                      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${item.checked ? 'bg-emerald-900/50' : 'bg-gray-800'}`}>
-                        <CheckCircle className={`w-3 h-3 ${item.checked ? 'text-emerald-400' : 'text-gray-500'}`} />
-                      </div>
-                      <div>
-                        <p className="text-white text-sm font-medium">{item.label}</p>
-                        <p className="text-gray-500 text-xs">{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                  <Link href="/compliance-hub">
-                    <Button variant="outline" size="sm" className="w-full mt-2 border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white">
-                      View Full Report
-                      <ArrowRight className="w-4 h-4 ml-1" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </main>
