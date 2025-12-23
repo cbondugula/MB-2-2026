@@ -6,17 +6,24 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { 
   Search, 
   Shield, 
   FileText, 
   Database,
-  Plus,
-  Loader2
+  Loader2,
+  Rocket,
+  Calendar,
+  Users,
+  Activity,
+  Pill,
+  Stethoscope,
+  Eye
 } from "lucide-react";
 
 interface HealthcareTemplate {
@@ -39,13 +46,38 @@ interface TemplatesApiResponse {
   categories: string[];
 }
 
+const categoryIcons: Record<string, any> = {
+  'Patient Portal': Users,
+  'Telehealth': Activity,
+  'Scheduling': Calendar,
+  'EHR': FileText,
+  'Pharmacy': Pill,
+  'Lab Management': Stethoscope,
+  'Research': Database,
+  'default': Database,
+};
+
+const previewImages: Record<string, string> = {
+  'Patient Portal': 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop',
+  'Telehealth': 'https://images.unsplash.com/photo-1588534331122-77ee8581e96f?w=600&h=400&fit=crop',
+  'Scheduling': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop',
+  'EHR': 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop',
+  'Pharmacy': 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=600&h=400&fit=crop',
+  'Lab Management': 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=600&h=400&fit=crop',
+  'default': 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop',
+};
+
 export default function Templates() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const { isAuthenticated, isLoading } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [creatingFromTemplate, setCreatingFromTemplate] = useState<number | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<HealthcareTemplate | null>(null);
+  const [clinicName, setClinicName] = useState("");
+  const [showCustomizeModal, setShowCustomizeModal] = useState(false);
+  const [buildProgress, setBuildProgress] = useState(0);
+  const [isBuilding, setIsBuilding] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -68,20 +100,40 @@ export default function Templates() {
   });
 
   const createProjectMutation = useMutation({
-    mutationFn: async (templateId: number) => {
-      const template = templatesData?.templates.find(t => t.id === templateId);
-      const response = await apiRequest('POST', `/api/projects/from-template/${templateId}`, {
-        name: template?.name ? `${template.name} Project` : 'New Project',
-        description: template?.description || ''
-      });
-      return await response.json();
+    mutationFn: async ({ templateId, clinicName }: { templateId: number; clinicName: string }) => {
+      setIsBuilding(true);
+      setBuildProgress(0);
+
+      const interval = setInterval(() => {
+        setBuildProgress(p => Math.min(p + Math.random() * 15, 95));
+      }, 300);
+
+      try {
+        const response = await apiRequest('/api/app-builder/build', 'POST', {
+          templateId,
+          clinicName,
+          name: clinicName,
+          hipaaCompliant: true,
+        });
+        clearInterval(interval);
+        setBuildProgress(100);
+        return await response.json();
+      } catch (e) {
+        clearInterval(interval);
+        throw e;
+      }
     },
-    onSuccess: (project) => {
+    onSuccess: (data: any) => {
       toast({
-        title: "Project Created",
-        description: `Your new project is ready! Opening workspace...`,
+        title: "App Created!",
+        description: "Opening your workspace with fully working code...",
       });
-      setLocation(`/workspace/${project.id}`);
+      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      setShowCustomizeModal(false);
+      setIsBuilding(false);
+      if (data?.projectId) {
+        setLocation(`/workspace/${data.projectId}`);
+      }
     },
     onError: (error: any) => {
       toast({
@@ -89,13 +141,28 @@ export default function Templates() {
         description: error.message || "Failed to create project from template",
         variant: "destructive",
       });
-      setCreatingFromTemplate(null);
+      setIsBuilding(false);
+      setBuildProgress(0);
     }
   });
 
-  const handleUseTemplate = (templateId: number) => {
-    setCreatingFromTemplate(templateId);
-    createProjectMutation.mutate(templateId);
+  const handleSelectTemplate = (template: HealthcareTemplate) => {
+    setSelectedTemplate(template);
+    setClinicName("");
+    setShowCustomizeModal(true);
+  };
+
+  const handleCreateProject = () => {
+    if (!selectedTemplate) return;
+    if (!clinicName.trim()) {
+      toast({
+        title: "Enter a name",
+        description: "Please provide a name for your clinic or practice",
+        variant: "destructive",
+      });
+      return;
+    }
+    createProjectMutation.mutate({ templateId: selectedTemplate.id, clinicName });
   };
 
   const categories = templatesData?.categories?.map((cat: string) => ({ value: cat, label: cat })) || [
@@ -116,10 +183,18 @@ export default function Templates() {
     return null;
   }
 
+  const getIcon = (category: string) => {
+    return categoryIcons[category] || categoryIcons['default'];
+  };
+
+  const getPreview = (template: HealthcareTemplate) => {
+    return template.imageUrl || previewImages[template.category] || previewImages['default'];
+  };
+
   return (
     <PageLayout 
       title="Healthcare Templates" 
-      description="Choose from our collection of HIPAA-compliant healthcare application templates"
+      description="Choose a template, customize it, and get working code instantly"
       isLoading={isLoading || templatesLoading}
     >
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -134,7 +209,7 @@ export default function Templates() {
           />
         </div>
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-full sm:w-[200px] bg-gray-900 border-gray-800 text-gray-100">
+          <SelectTrigger className="w-full sm:w-[200px] bg-gray-900 border-gray-800 text-gray-100" data-testid="select-category">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent className="bg-gray-900 border-gray-800">
@@ -149,56 +224,69 @@ export default function Templates() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTemplates.map((template: HealthcareTemplate) => (
-          <Card key={template.id} className="bg-gray-900 border-gray-800 hover:bg-gray-800 transition-colors" data-testid={`template-card-${template.id}`}>
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-gray-800 rounded-lg">
-                    <Database className="w-5 h-5 text-emerald-400" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg text-white">{template.name}</CardTitle>
-                    <Badge className="mt-1 bg-gray-800 text-gray-300 border-gray-700">{template.category}</Badge>
-                  </div>
+        {filteredTemplates.map((template: HealthcareTemplate) => {
+          const Icon = getIcon(template.category);
+          return (
+            <Card 
+              key={template.id} 
+              className="bg-gray-900 border-gray-800 hover:border-emerald-700 transition-all cursor-pointer group overflow-hidden" 
+              data-testid={`template-card-${template.id}`}
+              onClick={() => handleSelectTemplate(template)}
+            >
+              <div className="h-40 overflow-hidden relative">
+                <img 
+                  src={getPreview(template)} 
+                  alt={template.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                  <Badge className="bg-emerald-600 text-white">{template.category}</Badge>
+                  {template.isHipaaCompliant && (
+                    <Badge className="bg-blue-600 text-white flex items-center gap-1">
+                      <Shield className="w-3 h-3" />
+                      HIPAA
+                    </Badge>
+                  )}
                 </div>
-                {template.isHipaaCompliant && (
-                  <Shield className="w-5 h-5 text-emerald-400" />
-                )}
               </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                {template.description}
-              </p>
-              <div className="flex flex-wrap gap-1 mb-4">
-                {template.tags?.map((tag: string, index: number) => (
-                  <Badge key={index} variant="outline" className="text-xs border-gray-700 text-gray-300">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-              <Button 
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-70" 
-                data-testid={`button-use-template-${template.id}`}
-                onClick={() => handleUseTemplate(template.id)}
-                disabled={creatingFromTemplate === template.id}
-              >
-                {creatingFromTemplate === template.id ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Use Template
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+              <CardHeader className="pb-2 pt-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-gray-800 rounded-lg">
+                    <Icon className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <CardTitle className="text-lg text-white">{template.name}</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                  {template.description}
+                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap gap-1">
+                    {template.tags?.slice(0, 3).map((tag: string, index: number) => (
+                      <Badge key={index} variant="outline" className="text-xs border-gray-700 text-gray-400">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  <Button 
+                    size="sm"
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white opacity-0 group-hover:opacity-100 transition-opacity" 
+                    data-testid={`button-use-template-${template.id}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectTemplate(template);
+                    }}
+                  >
+                    <Rocket className="w-4 h-4 mr-1" />
+                    Use
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {filteredTemplates.length === 0 && (
@@ -210,6 +298,95 @@ export default function Templates() {
           </p>
         </div>
       )}
+
+      <Dialog open={showCustomizeModal} onOpenChange={setShowCustomizeModal}>
+        <DialogContent className="bg-gray-900 border-gray-800 max-w-lg">
+          {isBuilding ? (
+            <div className="py-8 text-center">
+              <Rocket className="w-16 h-16 text-emerald-400 mx-auto mb-6 animate-bounce" />
+              <h2 className="text-xl font-bold text-white mb-2">Building Your App...</h2>
+              <p className="text-gray-400 mb-6">Generating HIPAA-compliant code, configuring database, setting up security</p>
+              <div className="w-full bg-gray-800 rounded-full h-3 mb-2">
+                <div 
+                  className="bg-emerald-500 h-3 rounded-full transition-all duration-300"
+                  style={{ width: `${buildProgress}%` }}
+                />
+              </div>
+              <p className="text-emerald-400 font-medium">{Math.round(buildProgress)}%</p>
+            </div>
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-white text-xl flex items-center gap-3">
+                  {selectedTemplate && (() => {
+                    const Icon = getIcon(selectedTemplate.category);
+                    return <Icon className="w-6 h-6 text-emerald-400" />;
+                  })()}
+                  {selectedTemplate?.name}
+                </DialogTitle>
+                <DialogDescription className="text-gray-400">
+                  {selectedTemplate?.description}
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-6 py-4">
+                {selectedTemplate && (
+                  <div className="rounded-lg overflow-hidden">
+                    <img 
+                      src={getPreview(selectedTemplate)} 
+                      alt={selectedTemplate.name}
+                      className="w-full h-48 object-cover"
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    What's the name of your clinic or practice?
+                  </label>
+                  <Input
+                    placeholder="e.g., Sunrise Medical Center"
+                    value={clinicName}
+                    onChange={(e) => setClinicName(e.target.value)}
+                    className="bg-gray-800 border-gray-700 text-white"
+                    data-testid="input-clinic-name"
+                  />
+                  <p className="text-xs text-gray-500 mt-2">
+                    Your app will be personalized with this name
+                  </p>
+                </div>
+
+                <div className="flex gap-2 flex-wrap">
+                  {selectedTemplate?.tags?.map((tag, i) => (
+                    <Badge key={i} className="bg-gray-800 text-gray-300 border border-gray-700">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <Button 
+                  variant="outline" 
+                  className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800"
+                  onClick={() => setShowCustomizeModal(false)}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white"
+                  onClick={handleCreateProject}
+                  disabled={!clinicName.trim()}
+                  data-testid="button-create-project"
+                >
+                  <Rocket className="w-4 h-4 mr-2" />
+                  Create My App
+                </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 }

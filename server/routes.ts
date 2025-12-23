@@ -3401,14 +3401,30 @@ Respond with a JSON object:
     }
   });
 
-  app.post('/api/app-builder/build', async (req, res) => {
+  app.post('/api/app-builder/build', isAuthenticated, async (req: any, res) => {
     try {
-      const appConfig = req.body;
-      const buildResult = await storage.buildHealthcareApp(appConfig);
-      res.json(buildResult);
+      const { name, description, type, templateId, clinicName } = req.body;
+      const userId = req.user?.id || req.session?.passport?.user || 'anonymous';
+      
+      // Import template generator
+      const { generateProjectFromPrompt, generateProjectFromTemplate } = await import('./template-generator');
+      
+      let result;
+      if (templateId) {
+        result = await generateProjectFromTemplate(templateId, userId, clinicName || name || 'My Healthcare Clinic');
+      } else {
+        result = await generateProjectFromPrompt(description || name, userId, clinicName || name || 'My Healthcare Clinic');
+      }
+      
+      res.json({ 
+        success: true, 
+        projectId: result.projectId,
+        files: result.files,
+        message: 'Healthcare application created successfully'
+      });
     } catch (error: any) {
       console.error('Error building app:', error);
-      res.status(500).json({ message: 'Failed to build application' });
+      res.status(500).json({ message: 'Failed to build application', error: error.message });
     }
   });
 

@@ -95,7 +95,7 @@ export default function Dashboard() {
       }, 400);
 
       try {
-        const result = await apiRequest('/api/app-builder/build', 'POST', {
+        const response = await apiRequest('/api/app-builder/build', 'POST', {
           name: description.slice(0, 30),
           description,
           type: 'custom',
@@ -103,7 +103,7 @@ export default function Dashboard() {
         });
         clearInterval(interval);
         setBuildProgress(100);
-        return result;
+        return await response.json();
       } catch (e) {
         clearInterval(interval);
         throw e;
