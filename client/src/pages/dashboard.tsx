@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import TopNavigation from "@/components/TopNavigation";
 import LeftSidebar from "@/components/LeftSidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useLocation } from "wouter";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -26,7 +27,13 @@ import {
   Activity,
   Pill,
   Users,
-  Stethoscope
+  Stethoscope,
+  Lock,
+  Network,
+  HelpCircle,
+  Lightbulb,
+  Brain,
+  BarChart3
 } from "lucide-react";
 
 interface Project {
@@ -48,6 +55,33 @@ const quickStarts = [
   { icon: Stethoscope, label: 'Lab Results', prompt: 'Create a lab results portal where patients can view their test results' },
 ];
 
+const aiSuggestions = [
+  "Build a patient appointment scheduling system",
+  "Create a telehealth video consultation app",
+  "Design a medication reminder app",
+  "Build an electronic health records viewer",
+  "Create a clinical trial management system",
+  "Design a patient intake form system",
+  "Build a lab results notification portal",
+  "Create a healthcare staff scheduling app",
+  "Design a prescription management system",
+  "Build a remote patient monitoring dashboard",
+];
+
+const hipaaChecklist = [
+  { id: 'encryption', label: 'Data Encryption', description: 'All data encrypted at rest and in transit', checked: true },
+  { id: 'access', label: 'Access Controls', description: 'Role-based authentication enabled', checked: true },
+  { id: 'audit', label: 'Audit Logging', description: 'All PHI access is logged', checked: true },
+  { id: 'backup', label: 'Backup & Recovery', description: 'Automated backup configured', checked: true },
+];
+
+const enterpriseTools = [
+  { icon: Lock, label: 'PHI Governance', href: '/phi-governance', description: 'Monitor and protect patient data' },
+  { icon: Network, label: 'EHR Integration', href: '/ehr-integration', description: 'Connect to Epic, Cerner, Allscripts' },
+  { icon: Shield, label: 'Compliance Hub', href: '/compliance-hub', description: 'HIPAA automation & audits' },
+  { icon: BarChart3, label: 'Executive Intel', href: '/executive-intelligence', description: 'Analytics & insights' },
+];
+
 export default function Dashboard() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -55,6 +89,8 @@ export default function Dashboard() {
   const [prompt, setPrompt] = useState('');
   const [isBuilding, setIsBuilding] = useState(false);
   const [buildProgress, setBuildProgress] = useState(0);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -69,16 +105,37 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const hasSeenOnboarding = localStorage.getItem('medbuilder_onboarding_seen');
+      if (!hasSeenOnboarding) {
+        setShowOnboarding(true);
+      }
+    }
+  }, [isAuthenticated, user]);
+
+  const dismissOnboarding = () => {
+    localStorage.setItem('medbuilder_onboarding_seen', 'true');
+    setShowOnboarding(false);
+  };
+
   const { data: projects, isLoading: projectsLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
     enabled: isAuthenticated,
     retry: false,
   });
 
+  const filteredSuggestions = useMemo(() => {
+    if (!prompt.trim() || prompt.length < 3) return [];
+    const lower = prompt.toLowerCase();
+    return aiSuggestions.filter(s => s.toLowerCase().includes(lower)).slice(0, 4);
+  }, [prompt]);
+
   const buildMutation = useMutation({
     mutationFn: async (description: string) => {
       setIsBuilding(true);
       setBuildProgress(0);
+      setShowSuggestions(false);
       
       const interval = setInterval(() => {
         setBuildProgress(p => Math.min(p + Math.random() * 20, 95));
@@ -127,6 +184,11 @@ export default function Dashboard() {
     buildMutation.mutate(template.prompt);
   };
 
+  const handleSuggestionClick = (suggestion: string) => {
+    setPrompt(suggestion);
+    setShowSuggestions(false);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
@@ -146,11 +208,57 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-950">
       <TopNavigation />
       
+      <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
+        <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-2xl flex items-center gap-2">
+              <Sparkles className="w-6 h-6 text-emerald-400" />
+              Welcome to MedBuilder!
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Build HIPAA-compliant healthcare apps in minutes
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-emerald-900/50 rounded-full flex items-center justify-center flex-shrink-0">
+                <Lightbulb className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div>
+                <p className="font-medium text-white">Describe what you want</p>
+                <p className="text-sm text-gray-400">Just type what you need and AI builds it for you</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-emerald-900/50 rounded-full flex items-center justify-center flex-shrink-0">
+                <Shield className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div>
+                <p className="font-medium text-white">Built-in HIPAA compliance</p>
+                <p className="text-sm text-gray-400">Every app is secure and compliant by default</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-emerald-900/50 rounded-full flex items-center justify-center flex-shrink-0">
+                <Brain className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div>
+                <p className="font-medium text-white">Enterprise-ready tools</p>
+                <p className="text-sm text-gray-400">PHI governance, EHR integration, compliance automation</p>
+              </div>
+            </div>
+          </div>
+          <Button onClick={dismissOnboarding} className="w-full bg-emerald-600 hover:bg-emerald-500">
+            Get Started
+          </Button>
+        </DialogContent>
+      </Dialog>
+      
       <div className="flex">
         <LeftSidebar />
         
         <main className="flex-1 p-6 lg:p-8 overflow-auto">
-          <div className="max-w-5xl mx-auto space-y-6">
+          <div className="max-w-6xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-white" data-testid="welcome-heading">
@@ -160,10 +268,17 @@ export default function Dashboard() {
                   Build HIPAA-compliant healthcare apps with AI
                 </p>
               </div>
-              <Badge className="bg-emerald-900/50 border border-emerald-700 text-emerald-300">
-                <Shield className="w-3 h-3 mr-1" />
-                HIPAA Compliant
-              </Badge>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge className="bg-emerald-900/50 border border-emerald-700 text-emerald-300 cursor-help">
+                    <Shield className="w-3 h-3 mr-1" />
+                    HIPAA Compliant
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent className="bg-gray-800 border-gray-700 text-white max-w-xs">
+                  <p>All apps built with MedBuilder include encryption, access controls, and audit logging</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
 
             {isBuilding ? (
@@ -185,17 +300,48 @@ export default function Dashboard() {
               <>
                 <Card className="bg-gray-900 border-gray-800">
                   <CardContent className="pt-6">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Sparkles className="w-5 h-5 text-emerald-400" />
-                      <span className="text-gray-300 font-medium">What do you want to build?</span>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-5 h-5 text-emerald-400" />
+                        <span className="text-gray-300 font-medium">What do you want to build?</span>
+                      </div>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="w-4 h-4 text-gray-500 cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-gray-800 border-gray-700 text-white max-w-xs">
+                          <p>Describe your healthcare app in plain English. AI will generate the code with HIPAA compliance built-in.</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
-                    <Textarea
-                      placeholder="Describe your healthcare app... e.g., 'A patient scheduling system with appointment reminders'"
-                      value={prompt}
-                      onChange={(e) => setPrompt(e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white min-h-[100px] text-lg placeholder:text-gray-500"
-                      data-testid="input-prompt"
-                    />
+                    <div className="relative">
+                      <Textarea
+                        placeholder="Describe your healthcare app... e.g., 'A patient scheduling system with appointment reminders'"
+                        value={prompt}
+                        onChange={(e) => {
+                          setPrompt(e.target.value);
+                          setShowSuggestions(e.target.value.length >= 3);
+                        }}
+                        onFocus={() => prompt.length >= 3 && setShowSuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                        className="bg-gray-800 border-gray-700 text-white min-h-[100px] text-lg placeholder:text-gray-500"
+                        data-testid="input-prompt"
+                      />
+                      {showSuggestions && filteredSuggestions.length > 0 && (
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-10">
+                          {filteredSuggestions.map((suggestion, i) => (
+                            <button
+                              key={i}
+                              className="w-full text-left px-4 py-3 hover:bg-gray-700 text-gray-300 hover:text-white flex items-center gap-2 first:rounded-t-lg last:rounded-b-lg"
+                              onMouseDown={() => handleSuggestionClick(suggestion)}
+                            >
+                              <Lightbulb className="w-4 h-4 text-emerald-400" />
+                              {suggestion}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                     <div className="flex justify-end mt-4">
                       <Button 
                         size="lg"
@@ -217,15 +363,21 @@ export default function Dashboard() {
                     {quickStarts.map((item) => {
                       const Icon = item.icon;
                       return (
-                        <button
-                          key={item.label}
-                          onClick={() => handleQuickStart(item)}
-                          className="p-3 bg-gray-900 border border-gray-800 rounded-lg hover:border-emerald-600 hover:bg-gray-800 transition-all text-center group"
-                          data-testid={`button-template-${item.label.toLowerCase()}`}
-                        >
-                          <Icon className="w-5 h-5 text-gray-500 group-hover:text-emerald-400 mx-auto mb-1" />
-                          <span className="text-white text-xs font-medium block">{item.label}</span>
-                        </button>
+                        <Tooltip key={item.label}>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => handleQuickStart(item)}
+                              className="p-3 bg-gray-900 border border-gray-800 rounded-lg hover:border-emerald-600 hover:bg-gray-800 transition-all text-center group"
+                              data-testid={`button-template-${item.label.toLowerCase()}`}
+                            >
+                              <Icon className="w-5 h-5 text-gray-500 group-hover:text-emerald-400 mx-auto mb-1" />
+                              <span className="text-white text-xs font-medium block">{item.label}</span>
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-gray-800 border-gray-700 text-white">
+                            <p>{item.prompt}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       );
                     })}
                   </div>
@@ -233,65 +385,116 @@ export default function Dashboard() {
               </>
             )}
 
-            <Card className="bg-gray-900 border-gray-800">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <div>
-                  <CardTitle className="text-lg text-white">Recent Projects</CardTitle>
-                  <CardDescription className="text-gray-400">Continue where you left off</CardDescription>
-                </div>
-                <Link href="/my-apps">
-                  <Button variant="ghost" size="sm" className="text-emerald-400 hover:text-emerald-300 hover:bg-gray-800" data-testid="view-all-projects">
-                    View All
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </Button>
-                </Link>
-              </CardHeader>
-              <CardContent>
-                {projectsLoading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
-                  </div>
-                ) : projects && projects.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {projects.slice(0, 6).map((project) => (
-                      <div 
-                        key={project.id}
-                        className="p-4 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors cursor-pointer border border-gray-800 hover:border-gray-700"
-                        onClick={() => navigate(`/workspace/${project.id}`)}
-                        data-testid={`project-${project.id}`}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center">
-                            <Code className="w-4 h-4 text-emerald-400" />
-                          </div>
-                          <Badge 
-                            className={project.status === 'active' || project.status === 'deployed'
-                              ? 'bg-emerald-900/50 text-emerald-300 border border-emerald-700 text-xs'
-                              : 'bg-gray-700 text-gray-300 border border-gray-600 text-xs'
-                            }
-                          >
-                            {project.status === 'active' ? <CheckCircle className="w-3 h-3 mr-1" /> : <Clock className="w-3 h-3 mr-1" />}
-                            {project.status}
-                          </Badge>
-                        </div>
-                        <p className="font-medium text-white truncate">{project.name}</p>
-                        <p className="text-sm text-gray-400 truncate">{project.type || 'Healthcare App'}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <FolderOpen className="w-6 h-6 text-gray-500" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2 space-y-4">
+                <Card className="bg-gray-900 border-gray-800">
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <div>
+                      <CardTitle className="text-lg text-white">Recent Projects</CardTitle>
+                      <CardDescription className="text-gray-400">Continue where you left off</CardDescription>
                     </div>
-                    <h3 className="font-medium text-white mb-1">No projects yet</h3>
-                    <p className="text-sm text-gray-400">
-                      Describe what you want to build above to get started
-                    </p>
+                    <Link href="/my-apps">
+                      <Button variant="ghost" size="sm" className="text-emerald-400 hover:text-emerald-300 hover:bg-gray-800" data-testid="view-all-projects">
+                        View All
+                        <ArrowRight className="w-4 h-4 ml-1" />
+                      </Button>
+                    </Link>
+                  </CardHeader>
+                  <CardContent>
+                    {projectsLoading ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+                      </div>
+                    ) : projects && projects.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {projects.slice(0, 4).map((project) => (
+                          <div 
+                            key={project.id}
+                            className="p-4 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors cursor-pointer border border-gray-800 hover:border-gray-700"
+                            onClick={() => navigate(`/workspace/${project.id}`)}
+                            data-testid={`project-${project.id}`}
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center">
+                                <Code className="w-4 h-4 text-emerald-400" />
+                              </div>
+                              <Badge 
+                                className={project.status === 'active' || project.status === 'deployed'
+                                  ? 'bg-emerald-900/50 text-emerald-300 border border-emerald-700 text-xs'
+                                  : 'bg-gray-700 text-gray-300 border border-gray-600 text-xs'
+                                }
+                              >
+                                {project.status === 'active' ? <CheckCircle className="w-3 h-3 mr-1" /> : <Clock className="w-3 h-3 mr-1" />}
+                                {project.status}
+                              </Badge>
+                            </div>
+                            <p className="font-medium text-white truncate">{project.name}</p>
+                            <p className="text-sm text-gray-400 truncate">{project.type || 'Healthcare App'}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-6">
+                        <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                          <FolderOpen className="w-6 h-6 text-gray-500" />
+                        </div>
+                        <h3 className="font-medium text-white mb-1">No projects yet</h3>
+                        <p className="text-sm text-gray-400">
+                          Describe what you want to build above
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <div>
+                  <h3 className="text-gray-400 text-sm font-medium mb-3">Enterprise Tools:</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {enterpriseTools.map((tool) => {
+                      const Icon = tool.icon;
+                      return (
+                        <Link key={tool.href} href={tool.href}>
+                          <div className="p-3 bg-gray-900 border border-gray-800 rounded-lg hover:border-emerald-600 hover:bg-gray-800 transition-all cursor-pointer group">
+                            <Icon className="w-5 h-5 text-gray-500 group-hover:text-emerald-400 mb-2" />
+                            <p className="text-white text-sm font-medium">{tool.label}</p>
+                            <p className="text-gray-500 text-xs truncate">{tool.description}</p>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                </div>
+              </div>
+
+              <Card className="bg-gray-900 border-gray-800 h-fit">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg text-white flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-emerald-400" />
+                    HIPAA Checklist
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">Your compliance status</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {hipaaChecklist.map((item) => (
+                    <div key={item.id} className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${item.checked ? 'bg-emerald-900/50' : 'bg-gray-800'}`}>
+                        <CheckCircle className={`w-3 h-3 ${item.checked ? 'text-emerald-400' : 'text-gray-500'}`} />
+                      </div>
+                      <div>
+                        <p className="text-white text-sm font-medium">{item.label}</p>
+                        <p className="text-gray-500 text-xs">{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                  <Link href="/compliance-hub">
+                    <Button variant="outline" size="sm" className="w-full mt-2 border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white">
+                      View Full Report
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </main>
       </div>
