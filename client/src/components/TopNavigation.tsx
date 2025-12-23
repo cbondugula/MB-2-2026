@@ -23,12 +23,12 @@ export default function TopNavigation() {
           className="flex items-center space-x-3 hover:opacity-90 transition-opacity"
           data-testid="logo-link"
         >
-          <div className="w-9 h-9 bg-emerald-600 rounded-xl flex items-center justify-center shadow-sm">
+          <div className="w-9 h-9 bg-[#76B900] rounded-xl flex items-center justify-center shadow-sm shadow-[#76B900]/20">
             <Shield className="w-5 h-5 text-white" />
           </div>
           <span className="text-xl font-bold text-white">MedBuilder</span>
         </Link>
-        <Badge className="bg-emerald-900/50 text-emerald-300 border border-emerald-700">
+        <Badge className="bg-[#76B900]/20 text-[#76B900] border border-[#76B900]/30">
           HIPAA Compliant
         </Badge>
       </div>
@@ -39,14 +39,14 @@ export default function TopNavigation() {
           <Input 
             type="text" 
             placeholder="Search templates, components..." 
-            className="pl-10 pr-4 py-2 w-72 bg-gray-900 border-gray-800 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            className="pl-10 pr-4 py-2 w-72 bg-gray-900 border-gray-800 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-[#76B900] focus:border-transparent"
             data-testid="search-input"
           />
         </div>
         
         <Button 
           onClick={handleNewProject}
-          className="bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm"
+          className="bg-[#76B900] hover:bg-[#8CC63F] text-white shadow-sm"
           data-testid="new-project-button"
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -58,7 +58,7 @@ export default function TopNavigation() {
             <Button variant="ghost" className="relative h-9 w-9 rounded-full hover:bg-gray-800" data-testid="user-menu-button">
               <Avatar className="h-9 w-9 border-2 border-gray-700">
                 <AvatarImage src={user?.profileImageUrl} alt={user?.firstName || "User"} />
-                <AvatarFallback className="bg-emerald-900 text-emerald-300">
+                <AvatarFallback className="bg-[#76B900]/20 text-[#76B900]">
                   {user?.firstName?.[0] || <User className="w-4 h-4" />}
                 </AvatarFallback>
               </Avatar>

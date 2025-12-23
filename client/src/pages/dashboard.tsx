@@ -145,7 +145,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-emerald-500 mx-auto mb-4" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#76B900] mx-auto mb-4" />
           <p className="text-gray-400">Loading MedBuilder...</p>
         </div>
       </div>
@@ -175,18 +175,18 @@ export default function Dashboard() {
             </div>
 
             {isBuilding ? (
-              <Card className="bg-gradient-to-br from-emerald-900/40 to-gray-900 border-emerald-700">
+              <Card className="bg-gradient-to-br from-[#76B900]/20 to-gray-900 border-[#76B900]/50">
                 <CardContent className="py-16 text-center">
-                  <Rocket className="w-16 h-16 text-emerald-400 mx-auto mb-6 animate-bounce" />
+                  <Rocket className="w-16 h-16 text-[#76B900] mx-auto mb-6 animate-bounce" />
                   <h2 className="text-2xl font-bold text-white mb-2">Building your app...</h2>
                   <p className="text-gray-400 mb-8">Setting up HIPAA compliance, generating code, configuring database</p>
                   <div className="w-full max-w-md mx-auto bg-gray-800 rounded-full h-3">
                     <div 
-                      className="bg-emerald-500 h-3 rounded-full transition-all duration-300"
+                      className="bg-[#76B900] h-3 rounded-full transition-all duration-300"
                       style={{ width: `${buildProgress}%` }}
                     />
                   </div>
-                  <p className="text-emerald-400 mt-3 text-lg font-medium">{Math.round(buildProgress)}%</p>
+                  <p className="text-[#76B900] mt-3 text-lg font-medium">{Math.round(buildProgress)}%</p>
                 </CardContent>
               </Card>
             ) : (
@@ -212,7 +212,7 @@ export default function Dashboard() {
                           className="w-full text-left px-5 py-4 hover:bg-gray-800 text-gray-300 hover:text-white flex items-center gap-3 border-b border-gray-800 last:border-0"
                           onMouseDown={() => handleSuggestionClick(suggestion)}
                         >
-                          <Lightbulb className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                          <Lightbulb className="w-4 h-4 text-[#76B900] flex-shrink-0" />
                           {suggestion}
                         </button>
                       ))}
@@ -221,7 +221,7 @@ export default function Dashboard() {
                   <div className="flex justify-center mt-4">
                     <Button 
                       size="lg"
-                      className="bg-emerald-600 hover:bg-emerald-500 text-white px-12 py-6 text-lg rounded-xl"
+                      className="bg-[#76B900] hover:bg-[#8CC63F] text-white px-12 py-6 text-lg rounded-xl"
                       onClick={handleBuild}
                       disabled={!prompt.trim()}
                       data-testid="button-build"
@@ -241,10 +241,10 @@ export default function Dashboard() {
                         <button
                           key={item.label}
                           onClick={() => handleQuickStart(item)}
-                          className="p-4 bg-gray-900 border border-gray-800 rounded-xl hover:border-emerald-600 hover:bg-gray-800 transition-all text-center group"
+                          className="p-4 bg-gray-900 border border-gray-800 rounded-xl hover:border-[#76B900] hover:bg-gray-800 transition-all text-center group"
                           data-testid={`button-template-${item.label.toLowerCase()}`}
                         >
-                          <Icon className="w-6 h-6 text-gray-500 group-hover:text-emerald-400 mx-auto mb-2" />
+                          <Icon className="w-6 h-6 text-gray-500 group-hover:text-[#76B900] mx-auto mb-2" />
                           <span className="text-white text-sm font-medium block">{item.label}</span>
                         </button>
                       );
@@ -259,7 +259,7 @@ export default function Dashboard() {
                 <CardHeader className="flex flex-row items-center justify-between pb-3">
                   <CardTitle className="text-lg text-white">Your Projects</CardTitle>
                   <Link href="/my-apps">
-                    <Button variant="ghost" size="sm" className="text-emerald-400 hover:text-emerald-300 hover:bg-gray-800" data-testid="view-all-projects">
+                    <Button variant="ghost" size="sm" className="text-[#76B900] hover:text-[#8CC63F] hover:bg-gray-800" data-testid="view-all-projects">
                       View All
                       <ArrowRight className="w-4 h-4 ml-1" />
                     </Button>
@@ -276,7 +276,7 @@ export default function Dashboard() {
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center">
-                            <Code className="w-5 h-5 text-emerald-400" />
+                            <Code className="w-5 h-5 text-[#76B900]" />
                           </div>
                           <div>
                             <p className="font-medium text-white">{project.name}</p>

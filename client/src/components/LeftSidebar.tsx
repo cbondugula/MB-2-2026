@@ -45,12 +45,12 @@ export default function LeftSidebar() {
               href={item.path}
               className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-all duration-200 ${
                 isActive(item.path)
-                  ? "bg-gray-800 text-emerald-400 shadow-sm"
+                  ? "bg-gray-800 text-[#76B900] shadow-sm"
                   : "text-gray-300 hover:bg-gray-900 hover:text-white"
               }`}
               data-testid={`nav-${item.path.replace('/', '') || 'dashboard'}`}
             >
-              <item.icon className={`w-5 h-5 ${isActive(item.path) ? 'text-emerald-400' : 'text-gray-500'}`} />
+              <item.icon className={`w-5 h-5 ${isActive(item.path) ? 'text-[#76B900]' : 'text-gray-500'}`} />
               <span>{item.label}</span>
             </Link>
           ))}
@@ -66,12 +66,12 @@ export default function LeftSidebar() {
               href={item.path}
               className={`flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-all duration-200 ${
                 isActive(item.path)
-                  ? "bg-gray-800 text-emerald-400"
+                  ? "bg-gray-800 text-[#76B900]"
                   : "text-gray-300 hover:bg-gray-900 hover:text-white"
               }`}
               data-testid={`nav-${item.path.replace('/', '')}`}
             >
-              <item.icon className={`w-4 h-4 ${isActive(item.path) ? 'text-emerald-400' : 'text-gray-500'}`} />
+              <item.icon className={`w-4 h-4 ${isActive(item.path) ? 'text-[#76B900]' : 'text-gray-500'}`} />
               <span className="text-sm">{item.label}</span>
             </Link>
           ))}
@@ -79,10 +79,10 @@ export default function LeftSidebar() {
       </nav>
 
       <div className="p-4 border-t border-gray-800">
-        <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-emerald-900/50 rounded-lg p-3">
+        <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-[#76B900]/30 rounded-lg p-3">
           <div className="flex items-center space-x-2 mb-1">
-            <Shield className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm font-semibold text-emerald-300">HIPAA Ready</span>
+            <Shield className="w-4 h-4 text-[#76B900]" />
+            <span className="text-sm font-semibold text-[#76B900]">HIPAA Ready</span>
           </div>
           <p className="text-xs text-gray-400">All apps built with compliance</p>
         </div>
