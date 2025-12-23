@@ -3405,7 +3405,7 @@ Respond with a JSON object:
   app.post('/api/app-builder/build', isAuthenticated, async (req: any, res) => {
     try {
       const { name, description, type, templateId, clinicName } = req.body;
-      const userId = req.user?.id || req.session?.passport?.user || 'anonymous';
+      const userId = req.user?.claims?.sub || req.user?.id || 'anonymous';
       
       // Import template generator
       const { generateProjectFromPrompt, generateProjectFromTemplate } = await import('./template-generator');
