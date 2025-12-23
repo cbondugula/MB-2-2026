@@ -5,7 +5,6 @@ import LeftSidebar from "@/components/LeftSidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
@@ -32,7 +31,6 @@ import {
   Network,
   HelpCircle,
   Lightbulb,
-  Brain,
   BarChart3
 } from "lucide-react";
 
@@ -89,7 +87,6 @@ export default function Dashboard() {
   const [prompt, setPrompt] = useState('');
   const [isBuilding, setIsBuilding] = useState(false);
   const [buildProgress, setBuildProgress] = useState(0);
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
@@ -104,20 +101,6 @@ export default function Dashboard() {
       }, 500);
     }
   }, [isAuthenticated, isLoading, toast]);
-
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      const hasSeenOnboarding = localStorage.getItem('medbuilder_onboarding_seen');
-      if (!hasSeenOnboarding) {
-        setShowOnboarding(true);
-      }
-    }
-  }, [isAuthenticated, user]);
-
-  const dismissOnboarding = () => {
-    localStorage.setItem('medbuilder_onboarding_seen', 'true');
-    setShowOnboarding(false);
-  };
 
   const { data: projects, isLoading: projectsLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
@@ -207,52 +190,6 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-950">
       <TopNavigation />
-      
-      <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
-        <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="text-2xl flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-emerald-400" />
-              Welcome to MedBuilder!
-            </DialogTitle>
-            <DialogDescription className="text-gray-400">
-              Build HIPAA-compliant healthcare apps in minutes
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-emerald-900/50 rounded-full flex items-center justify-center flex-shrink-0">
-                <Lightbulb className="w-4 h-4 text-emerald-400" />
-              </div>
-              <div>
-                <p className="font-medium text-white">Describe what you want</p>
-                <p className="text-sm text-gray-400">Just type what you need and AI builds it for you</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-emerald-900/50 rounded-full flex items-center justify-center flex-shrink-0">
-                <Shield className="w-4 h-4 text-emerald-400" />
-              </div>
-              <div>
-                <p className="font-medium text-white">Built-in HIPAA compliance</p>
-                <p className="text-sm text-gray-400">Every app is secure and compliant by default</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-emerald-900/50 rounded-full flex items-center justify-center flex-shrink-0">
-                <Brain className="w-4 h-4 text-emerald-400" />
-              </div>
-              <div>
-                <p className="font-medium text-white">Enterprise-ready tools</p>
-                <p className="text-sm text-gray-400">PHI governance, EHR integration, compliance automation</p>
-              </div>
-            </div>
-          </div>
-          <Button onClick={dismissOnboarding} className="w-full bg-emerald-600 hover:bg-emerald-500">
-            Get Started
-          </Button>
-        </DialogContent>
-      </Dialog>
       
       <div className="flex">
         <LeftSidebar />
