@@ -1,0 +1,39 @@
+~/workspace$ ^C
+~/workspace$ git rm --cached MULTI_PLATFORM_INTEGRATION_ARCHITECTURE.md STRATEGIC_IMPLEMENTATION_REPORT.md EXECUTIVE_SUMMARY_BOARD.md 2>/dev/null; echo "Done!"
+Done!
+~/workspace$ git add .gitignore
+~/workspace$ git commit -m "remove files connf"
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+~/workspace$ git push origin main
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 598 bytes | 598.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/cbondugula/MB-2-2026.git
+   d78553b..5990bfc  main -> main
+~/workspace$ gir
+gir: command not installed, but was located via Nix.
+package: gir-rs  0.17.1  Tool to generate rust bindings and user API for glib-based libraries
+Would you like to run gir from Nix and add it to your project? [Yn]: n
+~/workspace$ dir
+attached_assets             DEMO_WALKTHROUGH.md          ml_environment              RATE_LIMITING.md
+backup-dual-processing.ts       demo-workflow.test.ts            MONITORING.md               replit.md
+backup-patent-filing-systems.ts     DEPLOYMENT.md                MULTI_PLATFORM_INTEGRATION_ARCHITECTURE.md  server
+backup-patent-portfolio.ts      design_guidelines.md             node_modules                shared
+backup-quantum-services.ts      drizzle.config.ts            package.json                STRATEGIC_IMPLEMENTATION_REPORT.md
+backup-revolutionary-systems.ts     ERROR_TRACKING.md            package-lock.json               tailwind.config.ts
+backup-specialized-patents.ts       EXECUTIVE_SUMMARY_BOARD.md       PATENT-ALGORITHMS.md            test_input.json
+backup-voice-patent-implementations.ts  generated-icon.png           patent-applications             tsconfig.json
+client                  HIPAA_COMPLIANCE.md          PHI_ENCRYPTION_VERIFICATION.md      uv.lock
+components.json             HONEST_STRATEGIC_EVALUATION.md       PLATFORM_EVOLUTION_STRATEGY.md      vite.config.ts
+COMPREHENSIVE-BACKUP-SYSTEM     IBM_QUANTUM_PARTNERSHIP_PROPOSAL.md  postcss.config.js               vitest.config.ts
+comprehensive-testing.js        IP_PROTECTION_STRATEGY.md        pyproject.toml
+demo-screenshots            JOB_QUEUE_CACHING.md             python_scripts
+~/workspace$ 
