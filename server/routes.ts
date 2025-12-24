@@ -59,6 +59,8 @@ import {
   chatRateLimiter,
   authRateLimiter
 } from "./rate-limiter";
+import { multiJurisdictionalComplianceService } from "./multi-jurisdictional-compliance";
+import { multiculturalHealthcareEngine } from "./multicultural-healthcare-engine";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply global rate limiting FIRST (before any routes are created)
@@ -7693,6 +7695,152 @@ Respond with ONLY valid JSON array, no explanation.`;
     } catch (error: any) {
       console.error("Error getting project health:", error);
       res.status(500).json({ message: "Failed to get project health" });
+    }
+  });
+
+  // ============================================
+  // Multi-Jurisdictional Compliance API Routes
+  // ============================================
+
+  app.get('/api/compliance/regulations', async (req, res) => {
+    try {
+      const regulations = multiJurisdictionalComplianceService.getAllRegulations();
+      res.json({ regulations, count: regulations.length });
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to get regulations", error: error.message });
+    }
+  });
+
+  app.get('/api/compliance/regulations/:id', async (req, res) => {
+    try {
+      const regulation = multiJurisdictionalComplianceService.getRegulation(req.params.id);
+      if (!regulation) {
+        return res.status(404).json({ message: "Regulation not found" });
+      }
+      res.json(regulation);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to get regulation", error: error.message });
+    }
+  });
+
+  app.post('/api/compliance/detect-jurisdictions', async (req, res) => {
+    try {
+      const { operatingCountries, userLocations, dataProcessingLocations } = req.body;
+      const result = await multiJurisdictionalComplianceService.detectApplicableJurisdictions(
+        operatingCountries || [],
+        userLocations || [],
+        dataProcessingLocations || []
+      );
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to detect jurisdictions", error: error.message });
+    }
+  });
+
+  app.post('/api/compliance/assess', async (req, res) => {
+    try {
+      const { projectConfig, targetRegulations } = req.body;
+      const assessments = await multiJurisdictionalComplianceService.assessCompliance(
+        projectConfig || {},
+        targetRegulations || ['hipaa']
+      );
+      const report = await multiJurisdictionalComplianceService.generateComplianceReport(
+        req.body.projectId || 'unknown',
+        assessments
+      );
+      res.json({ assessments, report });
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to assess compliance", error: error.message });
+    }
+  });
+
+  // ============================================
+  // Multicultural Healthcare Engine API Routes
+  // ============================================
+
+  app.get('/api/multicultural/profiles', async (req, res) => {
+    try {
+      const profiles = multiculturalHealthcareEngine.getAllCulturalProfiles();
+      res.json({ 
+        profiles: profiles.map(p => ({ id: p.id, name: p.name, region: p.region, countries: p.countries })),
+        count: profiles.length 
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to get cultural profiles", error: error.message });
+    }
+  });
+
+  app.get('/api/multicultural/profiles/:id', async (req, res) => {
+    try {
+      const profile = multiculturalHealthcareEngine.getCulturalProfile(req.params.id);
+      if (!profile) {
+        return res.status(404).json({ message: "Cultural profile not found" });
+      }
+      res.json(profile);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to get cultural profile", error: error.message });
+    }
+  });
+
+  app.get('/api/multicultural/languages', async (req, res) => {
+    try {
+      const languages = multiculturalHealthcareEngine.getAllLanguages();
+      res.json({ languages, count: languages.length });
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to get languages", error: error.message });
+    }
+  });
+
+  app.get('/api/multicultural/languages/:code', async (req, res) => {
+    try {
+      const language = multiculturalHealthcareEngine.getLanguage(req.params.code);
+      if (!language) {
+        return res.status(404).json({ message: "Language not found" });
+      }
+      res.json(language);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to get language", error: error.message });
+    }
+  });
+
+  app.get('/api/multicultural/traditional-medicine', async (req, res) => {
+    try {
+      const systems = multiculturalHealthcareEngine.getAllTraditionalMedicineSystems();
+      res.json({ systems, count: systems.length });
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to get traditional medicine systems", error: error.message });
+    }
+  });
+
+  app.post('/api/multicultural/adapt', async (req, res) => {
+    try {
+      const { cultureId, applicationContext } = req.body;
+      if (!cultureId) {
+        return res.status(400).json({ message: "cultureId is required" });
+      }
+      const adaptation = await multiculturalHealthcareEngine.getCulturalAdaptation(
+        cultureId,
+        applicationContext || 'general'
+      );
+      res.json(adaptation);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to get cultural adaptation", error: error.message });
+    }
+  });
+
+  app.post('/api/multicultural/safety-check', async (req, res) => {
+    try {
+      const { traditionalTreatment, conventionalMedications } = req.body;
+      if (!traditionalTreatment) {
+        return res.status(400).json({ message: "traditionalTreatment is required" });
+      }
+      const result = await multiculturalHealthcareEngine.checkTraditionalMedicineSafety(
+        traditionalTreatment,
+        conventionalMedications || []
+      );
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to check safety", error: error.message });
     }
   });
 

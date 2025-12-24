@@ -45,9 +45,23 @@ MedBuilder is a comprehensive no-code/low-code platform for building healthcare 
 
 ### Global Healthcare Support
 - 193 countries coverage
-- 45+ languages
-- Multicultural healthcare considerations
-- Alternative medicine integration
+- 45+ languages with medical terminology
+- 25+ cultural profiles with healthcare-specific adaptations
+- Traditional medicine integration (TCM, Ayurveda, Unani, Homeopathy, Kampo, Siddha)
+- Cultural competency adaptation for healthcare interfaces
+
+### Multi-Jurisdictional Compliance
+- **HIPAA** (USA) - Full implementation
+- **GDPR** (EU) - 72-hour breach notification, data subject rights
+- **PIPEDA** (Canada) - Privacy protection compliance
+- **LGPD** (Brazil) - Brazilian data protection
+- **POPIA** (South Africa) - Personal information protection
+- **CCPA/CPRA** (California) - Consumer privacy rights
+- **DPDP** (India) - Digital personal data protection
+- **Privacy Act** (Australia) - Australian privacy requirements
+- Automated jurisdiction detection based on user locations
+- Conflict resolution for overlapping regulations
+- Compliance gap analysis and remediation recommendations
 
 ## Tech Stack
 
@@ -153,6 +167,20 @@ The application will be available at `http://localhost:5000`
 ### AI Features
 - `POST /api/projects/:id/ai-assist` - AI code generation
 - `POST /api/projects/:id/ai-plans` - Create AI execution plan
+
+### Multi-Jurisdictional Compliance
+- `GET /api/compliance/regulations` - List all supported privacy regulations
+- `GET /api/compliance/regulations/:id` - Get regulation details (hipaa, gdpr, pipeda, etc.)
+- `POST /api/compliance/detect-jurisdictions` - Detect applicable regulations based on locations
+- `POST /api/compliance/assess` - Assess project compliance with recommendations
+
+### Multicultural Healthcare
+- `GET /api/multicultural/profiles` - List cultural profiles (East Asian, South Asian, etc.)
+- `GET /api/multicultural/profiles/:id` - Get detailed cultural profile
+- `GET /api/multicultural/languages` - List 45+ supported languages with medical terminology
+- `GET /api/multicultural/traditional-medicine` - List traditional medicine systems
+- `POST /api/multicultural/adapt` - Get cultural adaptation recommendations
+- `POST /api/multicultural/safety-check` - Check traditional medicine safety
 
 ## Pricing Tiers
 
