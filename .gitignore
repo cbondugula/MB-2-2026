@@ -5,5 +5,51 @@ server/public
 vite.config.ts.*
 *.tar.gz
 
-# Confidential patent documentation - DO NOT COMMIT
+# ============================================
+# CONFIDENTIAL - DO NOT COMMIT TO PUBLIC REPO
+# Patent, Quantum, Strategy & Business Documents
+# ============================================
+
+# Patent Documentation
 PATENT-ALGORITHMS.md
+patent-applications/
+*PATENT*.md
+*patent*.md
+backup-patent*.ts
+backup-specialized-patents.ts
+backup-voice-patent-implementations.ts
+
+# Quantum Documentation & Code
+*QUANTUM*.md
+*quantum*.md
+backup-quantum-services.ts
+IBM_QUANTUM_PARTNERSHIP_PROPOSAL.md
+
+# Strategy & Business Documents
+*STRATEGY*.md
+*strategy*.md
+IP_PROTECTION_STRATEGY.md
+PLATFORM_EVOLUTION_STRATEGY.md
+
+# Comprehensive Backup System (All IP/Patent/Strategy)
+COMPREHENSIVE-BACKUP-SYSTEM/
+
+# IP Protection Documents
+*IP-*.md
+*IP_*.md
+
+# Claims Documents
+*CLAIMS*.txt
+*CLAIMS*.md
+
+# Partnership & Funding Documents
+*PARTNERSHIP*.md
+*FUNDING*.md
+*VALUATION*.md
+*SERIES-*.md
+
+# Attached confidential assets
+attached_assets/*patent*
+attached_assets/*PATENT*
+attached_assets/*quantum*
+attached_assets/*CLAIMS*
