@@ -164,7 +164,7 @@ export default function AppPreview() {
       <div className="container mx-auto px-6 py-8">
         {/* Live Preview Section */}
         <div className="mb-6">
-          <CodePreview code={codeFiles} framework={app.framework} />
+          <CodePreview code={codeFiles} framework={app.framework} projectId={appId} />
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
