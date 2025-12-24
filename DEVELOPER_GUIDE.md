@@ -504,7 +504,7 @@ The app runs on port 5000 by default. Ensure no other services use this port.
 
 ---
 
-## Recent Updates (December 2024)
+## Recent Updates (December 2025)
 
 ### Deploy to Replit Feature
 - Generate Replit-ready ZIP packages with .replit config
@@ -549,4 +549,4 @@ For questions or issues, contact the development team or create a GitHub issue.
 
 ---
 
-*Last updated: December 24, 2024*
+*Last updated: December 24, 2025*
