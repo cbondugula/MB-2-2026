@@ -8,11 +8,16 @@ MedBuilder is a comprehensive no-code/low-code platform for building healthcare 
 
 ## Key Features
 
+### Dual Development Modes
+- **Healthcare Mode**: HIPAA-compliant templates with PHI protection, audit logging, and medical-specific features
+- **General Mode**: Standard app templates for e-commerce, CRM, blogs, chat apps, dashboards, and more
+- Easy toggle to switch between modes based on your project needs
+
 ### AI-Powered Development
 - Real-time AI code completion with GPT-4o
-- Intelligent HIPAA compliance checking
+- Intelligent HIPAA compliance checking (Healthcare Mode)
 - Architecture review and recommendations
-- Smart healthcare-specific templates
+- Smart templates for both healthcare and general applications
 - Automated security scanning
 
 ### Healthcare Compliance

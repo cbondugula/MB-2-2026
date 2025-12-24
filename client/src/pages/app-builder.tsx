@@ -5,6 +5,8 @@ import PageLayout from '@/components/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { 
@@ -15,10 +17,17 @@ import {
   Activity,
   Pill,
   Users,
-  Stethoscope
+  Stethoscope,
+  Heart,
+  ShoppingCart,
+  Briefcase,
+  BookOpen,
+  MessageSquare,
+  BarChart3,
+  Shield
 } from 'lucide-react';
 
-const quickStarts = [
+const healthcareQuickStarts = [
   { icon: Calendar, label: 'Patient Scheduler', prompt: 'Build a patient appointment scheduling system with calendar view and reminders' },
   { icon: Users, label: 'Patient Portal', prompt: 'Create a patient portal with login, medical records view, and appointment booking' },
   { icon: Activity, label: 'Telehealth', prompt: 'Build a telehealth app with video consultations and waiting room' },
@@ -27,12 +36,24 @@ const quickStarts = [
   { icon: Stethoscope, label: 'Lab Results', prompt: 'Create a lab results portal where patients can view their test results' },
 ];
 
+const generalQuickStarts = [
+  { icon: ShoppingCart, label: 'E-Commerce', prompt: 'Build an online store with product catalog, shopping cart, and checkout' },
+  { icon: Briefcase, label: 'CRM System', prompt: 'Create a customer relationship management system with contacts and deals tracking' },
+  { icon: BookOpen, label: 'Blog Platform', prompt: 'Build a blog platform with posts, categories, and comments' },
+  { icon: MessageSquare, label: 'Chat App', prompt: 'Create a real-time chat application with rooms and direct messaging' },
+  { icon: BarChart3, label: 'Dashboard', prompt: 'Build an analytics dashboard with charts, metrics, and data visualization' },
+  { icon: Calendar, label: 'Task Manager', prompt: 'Create a task management app with projects, tasks, and team collaboration' },
+];
+
 export default function AppBuilder() {
   const [prompt, setPrompt] = useState('');
   const [isBuilding, setIsBuilding] = useState(false);
   const [buildProgress, setBuildProgress] = useState(0);
+  const [isHealthcareMode, setIsHealthcareMode] = useState(true);
   const { toast } = useToast();
   const [, navigate] = useLocation();
+
+  const quickStarts = isHealthcareMode ? healthcareQuickStarts : generalQuickStarts;
 
   const buildMutation = useMutation({
     mutationFn: async (description: string) => {
@@ -48,7 +69,8 @@ export default function AppBuilder() {
           name: description.slice(0, 30),
           description,
           type: 'custom',
-          hipaaCompliant: true,
+          hipaaCompliant: isHealthcareMode,
+          appMode: isHealthcareMode ? 'healthcare' : 'general',
         });
         clearInterval(interval);
         setBuildProgress(100);
@@ -87,14 +109,66 @@ export default function AppBuilder() {
   };
 
   return (
-    <PageLayout title="Build App" description="Describe your healthcare app and we'll build it">
+    <PageLayout 
+      title="Build App" 
+      description={isHealthcareMode ? "Describe your healthcare app and we'll build it" : "Describe your app and we'll build it"}
+    >
       <div className="max-w-3xl mx-auto space-y-8">
+        <Card className="bg-gray-900/50 border-gray-800">
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {isHealthcareMode ? (
+                  <div className="p-2 rounded-lg bg-[#76B900]/20">
+                    <Heart className="w-5 h-5 text-[#76B900]" />
+                  </div>
+                ) : (
+                  <div className="p-2 rounded-lg bg-blue-500/20">
+                    <Briefcase className="w-5 h-5 text-blue-400" />
+                  </div>
+                )}
+                <div>
+                  <p className="text-white font-medium">
+                    {isHealthcareMode ? 'Healthcare Mode' : 'General Mode'}
+                  </p>
+                  <p className="text-gray-400 text-sm">
+                    {isHealthcareMode 
+                      ? 'HIPAA-compliant templates with medical features' 
+                      : 'Standard templates for any type of application'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Label htmlFor="mode-toggle" className="text-gray-400 text-sm">
+                  {isHealthcareMode ? 'Healthcare' : 'General'}
+                </Label>
+                <Switch
+                  id="mode-toggle"
+                  checked={isHealthcareMode}
+                  onCheckedChange={setIsHealthcareMode}
+                  data-testid="switch-app-mode"
+                />
+              </div>
+            </div>
+            {isHealthcareMode && (
+              <div className="mt-3 flex items-center gap-2 text-xs text-[#76B900] bg-[#76B900]/10 px-3 py-2 rounded-lg">
+                <Shield className="w-4 h-4" />
+                <span>HIPAA compliance, PHI protection, and audit logging enabled</span>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {isBuilding ? (
           <Card className="bg-gradient-to-br from-[#1a3d00]/40 to-gray-900 border-[#76B900]">
             <CardContent className="py-12 text-center">
               <Rocket className="w-12 h-12 text-[#76B900] mx-auto mb-4 animate-bounce" />
               <h2 className="text-2xl font-bold text-white mb-2">Building your app...</h2>
-              <p className="text-gray-400 mb-6">Setting up HIPAA compliance, generating code, configuring database</p>
+              <p className="text-gray-400 mb-6">
+                {isHealthcareMode 
+                  ? 'Setting up HIPAA compliance, generating code, configuring database'
+                  : 'Generating code, setting up database, configuring features'}
+              </p>
               <div className="w-full max-w-md mx-auto bg-gray-800 rounded-full h-3">
                 <div 
                   className="bg-[#76B900] h-3 rounded-full transition-all duration-300"
@@ -113,7 +187,10 @@ export default function AppBuilder() {
                   <span className="text-gray-300 font-medium">What do you want to build?</span>
                 </div>
                 <Textarea
-                  placeholder="Describe your healthcare app... e.g., 'A patient scheduling system with appointment reminders and doctor availability'"
+                  placeholder={isHealthcareMode 
+                    ? "Describe your healthcare app... e.g., 'A patient scheduling system with appointment reminders and doctor availability'"
+                    : "Describe your app... e.g., 'An online store with product catalog and shopping cart'"
+                  }
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="bg-gray-800 border-gray-700 text-white min-h-[120px] text-lg placeholder:text-gray-500"
@@ -135,7 +212,9 @@ export default function AppBuilder() {
             </Card>
 
             <div>
-              <h3 className="text-gray-400 text-sm font-medium mb-4">Or start with a template:</h3>
+              <h3 className="text-gray-400 text-sm font-medium mb-4">
+                Or start with a {isHealthcareMode ? 'healthcare' : 'general'} template:
+              </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {quickStarts.map((item) => {
                   const Icon = item.icon;
