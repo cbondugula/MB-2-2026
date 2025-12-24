@@ -101,7 +101,6 @@ tslearn==0.6.2
 flask==2.3.3
 fastapi==0.103.0
 uvicorn==0.23.2
-mlflow==2.17.0
 
 # Data Processing
 requests==2.31.0
