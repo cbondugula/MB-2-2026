@@ -1,51 +1,60 @@
 import { Sandpack } from "@codesandbox/sandpack-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play } from "lucide-react";
+import { Play, Code, ExternalLink } from "lucide-react";
+import { useState } from "react";
 
 interface CodePreviewProps {
-  code: Record<string, string>; // { "src/App.tsx": "...", "package.json": "..." }
+  code: Record<string, string>; // { "App.tsx": "...", "App.css": "..." }
   framework?: string;
   className?: string;
 }
 
 export function CodePreview({ code, framework = "react", className = "" }: CodePreviewProps) {
-  // Convert code object to Sandpack files format
-  const files = Object.entries(code).reduce((acc, [path, content]) => {
-    acc[path.startsWith('/') ? path : `/${path}`] = { code: content };
-    return acc;
-  }, {} as Record<string, { code: string }>);
+  const [showCode, setShowCode] = useState(false);
+  
+  // Check if we have valid code files
+  const hasCode = Object.keys(code).length > 0;
+  
+  if (!hasCode) {
+    return (
+      <Card className={`bg-gray-800 border-gray-700 ${className}`}>
+        <CardContent className="py-12 text-center">
+          <Code className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+          <p className="text-gray-400">No code files to preview</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
-  // Determine the template based on framework or detected files
-  const hasReact = framework === "react" || 
-                   Object.keys(code).some(k => k.endsWith('.tsx') || k.endsWith('.jsx')) ||
-                   code["package.json"]?.includes('"react"');
+  // Convert code object to Sandpack files format with proper paths
+  const files: Record<string, { code: string }> = {};
+  
+  Object.entries(code).forEach(([path, content]) => {
+    // Ensure path starts with /
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    files[normalizedPath] = { code: content };
+  });
 
-  const template = hasReact ? "react-ts" : "vanilla";
+  // Add index.tsx entry point if missing
+  if (!files["/index.tsx"] && !files["/index.ts"] && !files["/index.js"]) {
+    const appFile = Object.keys(files).find(f => f.includes('App.tsx') || f.includes('App.jsx') || f.includes('App.ts'));
+    const appImport = appFile ? appFile.replace('/', '').replace('.tsx', '').replace('.jsx', '').replace('.ts', '') : 'App';
+    
+    files["/index.tsx"] = {
+      code: `import { createRoot } from "react-dom/client";
+import ${appImport} from "./${appImport}";
+${files["/App.css"] ? 'import "./App.css";' : ''}
 
-  // Ensure package.json exists for React apps
-  if (hasReact && !files["/package.json"]) {
-    files["/package.json"] = {
-      code: JSON.stringify({
-        "name": "preview-app",
-        "version": "1.0.0",
-        "dependencies": {
-          "react": "^18.2.0",
-          "react-dom": "^18.2.0",
-          "react-router-dom": "^6.20.0"
-        },
-        "devDependencies": {
-          "@types/react": "^18.2.0",
-          "@types/react-dom": "^18.2.0",
-          "typescript": "^5.0.0"
-        }
-      }, null, 2)
+const root = createRoot(document.getElementById("root")!);
+root.render(<${appImport} />);
+`
     };
   }
 
   return (
     <Card className={`bg-gray-800 border-gray-700 ${className}`}>
-      <CardHeader>
+      <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <CardTitle className="text-lg text-white flex items-center gap-2">
@@ -56,33 +65,46 @@ export function CodePreview({ code, framework = "react", className = "" }: CodeP
               {framework}
             </Badge>
           </div>
+          <button
+            onClick={() => setShowCode(!showCode)}
+            className="text-xs text-gray-400 hover:text-white flex items-center gap-1"
+          >
+            <Code className="w-3 h-3" />
+            {showCode ? 'Hide Code' : 'Show Code'}
+          </button>
         </div>
       </CardHeader>
       
       <CardContent>
-        <div className="rounded-lg overflow-hidden" style={{ height: "600px" }}>
+        <div className="rounded-lg overflow-hidden border border-gray-700" style={{ height: "500px" }}>
           <Sandpack
-            template={template}
+            template="react-ts"
             files={files}
             theme="dark"
             options={{
-              showNavigator: true,
-              showTabs: true,
-              showLineNumbers: true,
+              showNavigator: false,
+              showTabs: showCode,
+              showLineNumbers: showCode,
               showInlineErrors: true,
               wrapContent: true,
-              editorHeight: 600,
-              editorWidthPercentage: 50,
+              editorHeight: 500,
+              editorWidthPercentage: showCode ? 50 : 0,
+              initMode: "lazy",
+              autorun: true,
+              recompileMode: "delayed",
+              recompileDelay: 1000,
             }}
             customSetup={{
               dependencies: {
                 "react": "^18.2.0",
                 "react-dom": "^18.2.0",
-                "react-router-dom": "^6.20.0",
               },
             }}
           />
         </div>
+        <p className="text-xs text-gray-500 mt-2 text-center">
+          Powered by CodeSandbox • Click "Try again" if preview doesn't load
+        </p>
       </CardContent>
     </Card>
   );
