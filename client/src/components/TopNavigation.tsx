@@ -92,7 +92,11 @@ export default function TopNavigation() {
               <HelpCircle className="w-4 h-4 mr-2" />
               Help & Docs
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-gray-200 focus:bg-gray-800 focus:text-white cursor-pointer" data-testid="menu-settings">
+            <DropdownMenuItem 
+              className="text-gray-200 focus:bg-gray-800 focus:text-white cursor-pointer"
+              onClick={() => setLocation('/settings')}
+              data-testid="menu-settings"
+            >
               <Settings className="w-4 h-4 mr-2" />
               Settings
             </DropdownMenuItem>

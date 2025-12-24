@@ -28,6 +28,7 @@ import PHIGovernance from "@/pages/phi-governance";
 import EHRIntegration from "@/pages/ehr-integration";
 import Signup from "@/pages/signup";
 import Login from "@/pages/login";
+import Settings from "@/pages/settings";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -62,6 +63,7 @@ function Router() {
           <Route path="/executive-intelligence" component={ExecutiveIntelligence} />
           <Route path="/phi-governance" component={PHIGovernance} />
           <Route path="/ehr-integration" component={EHRIntegration} />
+          <Route path="/settings" component={Settings} />
         </>
       )}
       <Route component={NotFound} />
