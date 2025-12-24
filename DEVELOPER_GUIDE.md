@@ -94,6 +94,8 @@ medbuilder/
 - **Wouter** - Routing
 - **React Hook Form** - Form handling
 - **Zod** - Validation
+- **JSZip** - ZIP file generation for exports
+- **file-saver** - File download functionality
 
 ### Backend
 - **Express.js** - Web framework
@@ -116,21 +118,56 @@ medbuilder/
 Create a `.env` file or set these in your environment:
 
 ```bash
-# Database
+# Database (Required)
 DATABASE_URL=postgresql://user:password@host:5432/database
 
-# Authentication
+# Authentication (Required)
 SESSION_SECRET=your-session-secret
 
-# AI Services (optional)
+# AI Services (Optional - for AI code generation)
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
 GOOGLE_GEMINI_API_KEY=...
 
-# Payments (optional)
+# Payments (Optional - for subscription billing)
 STRIPE_SECRET_KEY=sk_...
 VITE_STRIPE_PUBLIC_KEY=pk_...
 ```
+
+See `.env.example` for a complete template.
+
+---
+
+## Key Features
+
+### 1. Live Preview
+The workspace includes a real-time preview panel that updates as you code:
+- **Live updating** - Changes reflect immediately
+- **Full-screen mode** - Expand preview for better visibility
+- **Pop-out window** - Open preview in a new browser tab
+- **Refresh control** - Manual refresh option
+
+### 2. Deploy to Replit
+Export your project as a Replit-ready ZIP package:
+- Includes `.replit` configuration file
+- Includes `replit.nix` for dependencies
+- Pre-configured `package.json` with scripts
+- Ready to import and run on Replit
+
+### 3. AI Code Assistant
+AI-powered code generation for healthcare applications:
+- HIPAA-aware code suggestions
+- Healthcare template generation
+- Code review and compliance checking
+
+### 4. Settings & User Preferences
+Comprehensive settings page with:
+- Profile management
+- Security settings (2FA, password)
+- Notification preferences
+- Theme preferences (dark mode)
+- HIPAA compliance information
+- Data export/download
 
 ---
 
@@ -141,7 +178,7 @@ The database uses Drizzle ORM with PostgreSQL. Key tables:
 ### Core Tables
 - `users` - User accounts (supports Replit Auth + email/password)
 - `projects` - User projects with code and configuration
-- `templates` - Healthcare app templates
+- `templates` - Healthcare app templates (14 seeded templates)
 - `sessions` - Authentication sessions
 
 ### Healthcare-Specific
@@ -299,7 +336,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 Icons from Lucide React:
 
 ```tsx
-import { Home, Settings, User, Search, Plus, Check, X } from "lucide-react";
+import { Home, Settings, User, Search, Plus, Check, X, Eye, Rocket, Download } from "lucide-react";
 ```
 
 ---
@@ -372,15 +409,44 @@ const results = scanCodeForPhi(codeContent);
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/api/auth/user` | GET | Get current user |
-| `/api/templates` | GET | List all templates |
+| `/api/templates` | GET | List all templates (14 healthcare templates) |
 | `/api/projects` | GET | List user projects |
 | `/api/projects` | POST | Create new project |
 | `/api/projects/:id` | GET | Get project details |
 | `/api/projects/:id` | PATCH | Update project |
+| `/api/projects/:id/ai-assist` | POST | AI code generation |
+| `/api/projects/:id/deploy` | POST | Generate deployment package |
 | `/api/healthcare/blueprints` | GET | Get healthcare blueprints |
 | `/api/compliance-checks` | GET | Get compliance status |
 | `/api/compliance-frameworks` | GET | List compliance frameworks |
 | `/api/pricing/tiers` | GET | Get pricing tiers |
+
+---
+
+## Workspace Features
+
+### Live Preview Panel
+- Real-time rendering of React components
+- Uses Babel standalone for in-browser transpilation
+- Supports JSX/TSX files
+
+### Export to Replit
+The workspace generates Replit-ready packages:
+
+```typescript
+// Generated package includes:
+// - .replit (run configuration)
+// - replit.nix (Nix dependencies)
+// - package.json (npm scripts)
+// - index.js (Express server)
+// - public/index.html (frontend)
+// - README.md (documentation)
+```
+
+### Full-Screen Preview
+- Click "Preview" button in toolbar
+- Use expand icon on preview panel
+- "Open in New Tab" for external viewing
 
 ---
 
@@ -398,10 +464,19 @@ npm run start
 - PostgreSQL database
 - Environment variables configured
 
-### Replit Deployment
-1. Click "Publish" in Replit
-2. Configure domain settings
-3. App auto-deploys on publish
+### Deploy to Replit
+1. Export project using "Deploy to Replit" button
+2. Download the generated ZIP file
+3. Go to replit.com → Create Repl → Import from ZIP
+4. Upload the ZIP file
+5. Click Run - your app is live!
+
+### Alternative Deployment
+Export the ZIP and deploy to:
+- Vercel
+- AWS
+- Heroku
+- Any Node.js hosting platform
 
 ---
 
@@ -422,6 +497,39 @@ npm run check
 ### Port Issues
 The app runs on port 5000 by default. Ensure no other services use this port.
 
+### Preview Not Loading
+- Check browser console for errors
+- Ensure App.tsx exists in project files
+- Try refreshing the preview panel
+
+---
+
+## Recent Updates (December 2024)
+
+### Deploy to Replit Feature
+- Generate Replit-ready ZIP packages with .replit config
+- One-click export with auto-redirect to replit.com
+- Includes proper Node.js configuration
+
+### Enhanced Live Preview
+- Prominent "Preview" button in workspace toolbar
+- Full-screen preview modal
+- Expand/popout buttons on preview panel
+- Live updating indicator
+
+### Settings Page
+- Profile management
+- Security settings (2FA, password)
+- Notification preferences
+- Dark mode toggle
+- HIPAA compliance info
+- Data download option
+
+### Self-Testing Capabilities
+- Automated health checks
+- API endpoint verification
+- Database connectivity testing
+
 ---
 
 ## Contributing
@@ -441,4 +549,4 @@ For questions or issues, contact the development team or create a GitHub issue.
 
 ---
 
-*Last updated: December 2024*
+*Last updated: December 24, 2024*
