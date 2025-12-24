@@ -1175,56 +1175,58 @@ export default function Workspace() {
           </div>
         )}
 
-        <div className="flex-1 flex overflow-hidden">
-          <div className={`${showAI ? 'w-2/3' : 'w-full'} flex flex-col overflow-hidden`}>
+        <div className="flex-1 flex overflow-hidden min-h-0">
+          <div className={`${showAI ? 'w-2/3' : 'w-full'} flex flex-col overflow-hidden min-h-0`}>
             {Object.keys(editedFiles).length > 0 ? (
-              <SandpackProvider
-                template="react-ts"
-                files={sandpackFiles}
-                theme="dark"
-                options={{
-                  activeFile: `/${activeFile}`,
-                  visibleFiles: Object.keys(sandpackFiles),
-                  recompileMode: "delayed",
-                  recompileDelay: 1000,
-                  initMode: "lazy",
-                  autorun: true,
-                  bundlerTimeOut: 60000,
-                }}
-                customSetup={{
-                  dependencies: {
-                    "react": "^18.2.0",
-                    "react-dom": "^18.2.0",
-                  },
-                }}
-              >
-                <SandpackLayout style={{ height: '100%', border: 'none' }}>
-                  <div className="flex-1 flex">
-                    <div className="w-1/2 border-r border-gray-800">
-                      <SandpackCodeEditor
-                        showTabs
-                        showLineNumbers
-                        showInlineErrors
-                        wrapContent
-                        closableTabs
-                        style={{ height: showConsole ? 'calc(100% - 200px)' : '100%' }}
-                      />
-                      {showConsole && (
-                        <div className="h-[200px] border-t border-gray-800">
-                          <SandpackConsole />
-                        </div>
-                      )}
+              <div className="flex-1 min-h-0 h-full">
+                <SandpackProvider
+                  template="react-ts"
+                  files={sandpackFiles}
+                  theme="dark"
+                  options={{
+                    activeFile: `/${activeFile}`,
+                    visibleFiles: Object.keys(sandpackFiles),
+                    recompileMode: "delayed",
+                    recompileDelay: 1000,
+                    initMode: "immediate",
+                    autorun: true,
+                    bundlerTimeOut: 60000,
+                  }}
+                  customSetup={{
+                    dependencies: {
+                      "react": "^18.2.0",
+                      "react-dom": "^18.2.0",
+                    },
+                  }}
+                >
+                  <SandpackLayout style={{ height: '100%', border: 'none', minHeight: '500px' }}>
+                    <div className="flex-1 flex h-full">
+                      <div className="w-1/2 border-r border-gray-800 h-full">
+                        <SandpackCodeEditor
+                          showTabs
+                          showLineNumbers
+                          showInlineErrors
+                          wrapContent
+                          closableTabs
+                          style={{ height: showConsole ? 'calc(100% - 200px)' : '100%' }}
+                        />
+                        {showConsole && (
+                          <div className="h-[200px] border-t border-gray-800">
+                            <SandpackConsole />
+                          </div>
+                        )}
+                      </div>
+                      <div className="w-1/2 h-full">
+                        <SandpackPreview
+                          showNavigator
+                          showRefreshButton
+                          style={{ height: '100%' }}
+                        />
+                      </div>
                     </div>
-                    <div className="w-1/2 relative">
-                      <SandpackPreview
-                        showNavigator
-                        showRefreshButton
-                        style={{ height: '100%' }}
-                      />
-                    </div>
-                  </div>
-                </SandpackLayout>
-              </SandpackProvider>
+                  </SandpackLayout>
+                </SandpackProvider>
+              </div>
             ) : (
               <div className="flex-1 flex items-center justify-center bg-gray-900">
                 <div className="text-center space-y-4">
