@@ -1129,15 +1129,15 @@ export default function Workspace() {
             onClick={handleDeploy}
             disabled={deployMutation.isPending}
             size="sm"
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-            data-testid="deploy-button"
+            className="bg-[#76B900] hover:bg-[#8CC63F] text-white"
+            data-testid="export-button"
           >
             {deployMutation.isPending ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
-              <Rocket className="w-4 h-4 mr-2" />
+              <Download className="w-4 h-4 mr-2" />
             )}
-            Deploy
+            Export
           </Button>
         </div>
       </header>
@@ -1834,22 +1834,22 @@ export default function Workspace() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Rocket className="w-5 h-5 text-blue-400" />
-              Deploy Your App
+              Export Your App
             </DialogTitle>
             <DialogDescription className="text-gray-400">
               {deployMutation.isPending 
-                ? "Deploying your application..." 
+                ? "Generating export package..." 
                 : deploymentResult 
-                  ? "Your app is now live!" 
-                  : "Deploy your application to get a shareable URL."}
+                  ? "Your app is ready for export! Download the code to deploy on your preferred hosting platform." 
+                  : "Generate an export package to deploy on Replit, Vercel, AWS, or any hosting platform."}
             </DialogDescription>
           </DialogHeader>
           
           <Tabs value={deployTab} onValueChange={(v) => setDeployTab(v as 'deploy' | 'history')} className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-gray-800">
               <TabsTrigger value="deploy" className="data-[state=active]:bg-gray-700" data-testid="deploy-tab">
-                <Rocket className="w-4 h-4 mr-2" />
-                Deploy
+                <Download className="w-4 h-4 mr-2" />
+                Export
               </TabsTrigger>
               <TabsTrigger value="history" className="data-[state=active]:bg-gray-700" data-testid="history-tab">
                 <History className="w-4 h-4 mr-2" />
@@ -1861,7 +1861,7 @@ export default function Workspace() {
               {deployMutation.isPending && (
                 <div className="text-center py-8">
                   <Loader2 className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
-                  <p className="text-gray-300">Building and deploying...</p>
+                  <p className="text-gray-300">Generating export package...</p>
                   <p className="text-sm text-gray-500 mt-2">This may take a moment</p>
                 </div>
               )}
@@ -1870,29 +1870,16 @@ export default function Workspace() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-[#76B900]">
                     <CheckCircle2 className="w-5 h-5" />
-                    <span className="font-medium">Deployment Successful!</span>
+                    <span className="font-medium">Export Ready!</span>
                   </div>
                   
                   <div className="bg-gray-800 rounded-lg p-4 space-y-3">
                     <div>
-                      <label className="text-xs text-gray-500 uppercase">Live URL</label>
+                      <label className="text-xs text-gray-500 uppercase">Project Name</label>
                       <div className="flex items-center gap-2 mt-1">
                         <div className="flex-1 bg-gray-950 rounded px-3 py-2 text-sm font-mono text-blue-300 truncate">
-                          {deploymentResult.deploymentUrl}
+                          {project?.name || 'healthcare-app'}
                         </div>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={copyDeploymentUrl}
-                          className="border-gray-700 bg-gray-800 hover:bg-gray-700"
-                          data-testid="copy-url-button"
-                        >
-                          {copied ? (
-                            <CheckCircle2 className="w-4 h-4 text-[#76B900]" />
-                          ) : (
-                            <Copy className="w-4 h-4" />
-                          )}
-                        </Button>
                       </div>
                     </div>
                     
@@ -1901,14 +1888,14 @@ export default function Workspace() {
                         <label className="text-xs text-gray-500">Status</label>
                         <div className="flex items-center gap-1.5 mt-1">
                           <span className="w-2 h-2 rounded-full bg-[#76B900]"></span>
-                          <span className="text-gray-300 capitalize">{deploymentResult.status}</span>
+                          <span className="text-gray-300">Ready to Download</span>
                         </div>
                       </div>
                       <div>
-                        <label className="text-xs text-gray-500">Environment</label>
+                        <label className="text-xs text-gray-500">Format</label>
                         <div className="flex items-center gap-1.5 mt-1">
-                          <Globe className="w-3.5 h-3.5 text-gray-400" />
-                          <span className="text-gray-300 capitalize">{deploymentResult.environment}</span>
+                          <FileCode className="w-3.5 h-3.5 text-gray-400" />
+                          <span className="text-gray-300">ZIP Archive</span>
                         </div>
                       </div>
                     </div>
@@ -1916,19 +1903,44 @@ export default function Workspace() {
                     {deploymentResult.hipaaEnabled && (
                       <div className="flex items-center gap-2 text-sm text-[#76B900] bg-[#76B900]/10 px-3 py-2 rounded">
                         <Shield className="w-4 h-4" />
-                        <span>HIPAA Compliant Deployment</span>
+                        <span>HIPAA Compliant Code</span>
                       </div>
                     )}
+                    
+                    <div className="bg-blue-900/20 border border-blue-800 rounded p-3 text-sm">
+                      <p className="text-blue-300 font-medium mb-1">Next Steps:</p>
+                      <ol className="text-gray-400 text-xs space-y-1 list-decimal list-inside">
+                        <li>Download the code package below</li>
+                        <li>Extract and open in your preferred IDE</li>
+                        <li>Deploy to Replit, Vercel, AWS, or any hosting platform</li>
+                      </ol>
+                    </div>
                   </div>
                   
                   <div className="flex gap-2">
                     <Button
-                      className="flex-1 bg-blue-600 hover:bg-blue-700"
-                      onClick={() => window.open(deploymentResult.deploymentUrl, '_blank')}
-                      data-testid="open-deployment-button"
+                      className="flex-1 bg-[#76B900] hover:bg-[#8CC63F]"
+                      onClick={() => {
+                        const codeData = project?.code || {};
+                        const jsonStr = JSON.stringify(codeData, null, 2);
+                        const blob = new Blob([jsonStr], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${(project?.name || 'healthcare-app').replace(/\s+/g, '-').toLowerCase()}-export.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        toast({
+                          title: "Download Started",
+                          description: "Your code package is being downloaded.",
+                        });
+                      }}
+                      data-testid="download-code-button"
                     >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Open App
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Code
                     </Button>
                     <Button
                       variant="outline"
@@ -1943,16 +1955,16 @@ export default function Workspace() {
               
               {!deploymentResult && !deployMutation.isPending && !deployMutation.isError && (
                 <div className="text-center py-6">
-                  <Rocket className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-                  <p className="text-gray-300 mb-2">Ready to deploy?</p>
-                  <p className="text-sm text-gray-500 mb-4">Your app will be published with HIPAA-compliant settings</p>
+                  <Download className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+                  <p className="text-gray-300 mb-2">Ready to export?</p>
+                  <p className="text-sm text-gray-500 mb-4">Generate a code package with HIPAA-compliant settings</p>
                   <Button
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-[#76B900] hover:bg-[#8CC63F]"
                     onClick={() => deployMutation.mutate()}
-                    data-testid="start-deploy-button"
+                    data-testid="start-export-button"
                   >
-                    <Rocket className="w-4 h-4 mr-2" />
-                    Deploy Now
+                    <Package className="w-4 h-4 mr-2" />
+                    Generate Export
                   </Button>
                 </div>
               )}
@@ -1960,14 +1972,14 @@ export default function Workspace() {
               {deployMutation.isError && (
                 <div className="text-center py-4">
                   <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-2" />
-                  <p className="text-red-300">Deployment failed</p>
+                  <p className="text-red-300">Export failed</p>
                   <p className="text-sm text-gray-500 mt-1">Please try again</p>
                   <Button
-                    className="mt-4 bg-blue-600 hover:bg-blue-700"
+                    className="mt-4 bg-[#76B900] hover:bg-[#8CC63F]"
                     onClick={() => deployMutation.mutate()}
-                    data-testid="retry-deploy-button"
+                    data-testid="retry-export-button"
                   >
-                    Retry Deployment
+                    Retry Export
                   </Button>
                 </div>
               )}
