@@ -113,34 +113,43 @@ function buildFileTree(files: Record<string, string>): FileNode[] {
   return root;
 }
 
-// Simple Preview Renderer that shows code output in an iframe
+// Live React Preview Renderer using Babel standalone
 function PreviewRenderer({ files }: { files: Record<string, string> }) {
   const previewHtml = useMemo(() => {
-    const appTsx = files['App.tsx'] || files['App.jsx'] || '';
+    const appCode = files['App.tsx'] || files['App.jsx'] || files['App.ts'] || files['App.js'] || '';
     const appCss = files['App.css'] || '';
     
-    // Create a simple HTML preview that shows the CSS styles applied
+    // Create an HTML document that loads React and Babel to render the component
     return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: system-ui, -apple-system, sans-serif; }
+    .error-display { padding: 20px; color: #ff6b6b; background: #2d1f1f; border-radius: 8px; margin: 20px; font-family: monospace; white-space: pre-wrap; }
+    .loading { display: flex; align-items: center; justify-content: center; height: 100vh; color: #666; }
     ${appCss}
   </style>
 </head>
 <body>
-  <div id="root">
-    <div style="padding: 20px; text-align: center; color: #666;">
-      <h3 style="color: #76B900; margin-bottom: 10px;">Preview Mode</h3>
-      <p style="font-size: 14px;">Your styles are being applied. Edit the code on the left to see changes.</p>
-      <div style="margin-top: 20px; padding: 20px; border: 1px dashed #ccc; border-radius: 8px;">
-        <p style="font-size: 12px; color: #999;">Component preview area</p>
-      </div>
-    </div>
-  </div>
+  <div id="root"><div class="loading">Loading preview...</div></div>
+  <script type="text/babel" data-presets="react,typescript">
+    try {
+      // Component code
+      ${appCode.replace(/export\s+default\s+/g, 'const App = ').replace(/import\s+.*?from\s+['"].*?['"];?\s*/g, '')}
+      
+      // Render the component
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(React.createElement(App));
+    } catch (error) {
+      document.getElementById('root').innerHTML = '<div class="error-display">Error: ' + error.message + '</div>';
+    }
+  </script>
 </body>
 </html>`;
   }, [files]);
@@ -151,7 +160,7 @@ function PreviewRenderer({ files }: { files: Record<string, string> }) {
       srcDoc={previewHtml}
       className="w-full h-full border-0"
       title="Preview"
-      sandbox="allow-scripts"
+      sandbox="allow-scripts allow-same-origin"
     />
   );
 }
