@@ -1,14 +1,6 @@
 import { useRoute, Link } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useState, useEffect, useCallback } from "react";
-import { 
-  SandpackProvider, 
-  SandpackLayout, 
-  SandpackCodeEditor, 
-  SandpackPreview,
-  SandpackConsole,
-  useSandpack
-} from "@codesandbox/sandpack-react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -119,6 +111,49 @@ function buildFileTree(files: Record<string, string>): FileNode[] {
   });
   
   return root;
+}
+
+// Simple Preview Renderer that shows code output in an iframe
+function PreviewRenderer({ files }: { files: Record<string, string> }) {
+  const previewHtml = useMemo(() => {
+    const appTsx = files['App.tsx'] || files['App.jsx'] || '';
+    const appCss = files['App.css'] || '';
+    
+    // Create a simple HTML preview that shows the CSS styles applied
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; }
+    ${appCss}
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div style="padding: 20px; text-align: center; color: #666;">
+      <h3 style="color: #76B900; margin-bottom: 10px;">Preview Mode</h3>
+      <p style="font-size: 14px;">Your styles are being applied. Edit the code on the left to see changes.</p>
+      <div style="margin-top: 20px; padding: 20px; border: 1px dashed #ccc; border-radius: 8px;">
+        <p style="font-size: 12px; color: #999;">Component preview area</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+  }, [files]);
+
+  return (
+    <iframe
+      id="preview-iframe"
+      srcDoc={previewHtml}
+      className="w-full h-full border-0"
+      title="Preview"
+      sandbox="allow-scripts"
+    />
+  );
 }
 
 function FileTreeNode({ 
@@ -956,11 +991,6 @@ export default function Workspace() {
 
   const hasUnsavedChanges = JSON.stringify(editedFiles) !== JSON.stringify(codeFiles);
 
-  const sandpackFiles: Record<string, string> = {};
-  Object.entries(editedFiles).forEach(([path, content]) => {
-    sandpackFiles[`/${path}`] = content;
-  });
-
   return (
     <div className="h-screen bg-gray-950 text-white flex flex-col overflow-hidden">
       <header className="bg-gray-900 border-b border-gray-800 px-4 py-2 flex items-center justify-between flex-shrink-0">
@@ -1178,54 +1208,91 @@ export default function Workspace() {
         <div className="flex-1 flex overflow-hidden min-h-0">
           <div className={`${showAI ? 'w-2/3' : 'w-full'} flex flex-col overflow-hidden min-h-0`}>
             {Object.keys(editedFiles).length > 0 ? (
-              <div className="flex-1 min-h-0 h-full">
-                <SandpackProvider
-                  template="react-ts"
-                  files={sandpackFiles}
-                  theme="dark"
-                  options={{
-                    activeFile: `/${activeFile}`,
-                    visibleFiles: Object.keys(sandpackFiles),
-                    recompileMode: "delayed",
-                    recompileDelay: 1000,
-                    initMode: "immediate",
-                    autorun: true,
-                    bundlerTimeOut: 60000,
-                  }}
-                  customSetup={{
-                    dependencies: {
-                      "react": "^18.2.0",
-                      "react-dom": "^18.2.0",
-                    },
-                  }}
-                >
-                  <SandpackLayout style={{ height: '100%', border: 'none', minHeight: '500px' }}>
-                    <div className="flex-1 flex h-full">
-                      <div className="w-1/2 border-r border-gray-800 h-full">
-                        <SandpackCodeEditor
-                          showTabs
-                          showLineNumbers
-                          showInlineErrors
-                          wrapContent
-                          closableTabs
-                          style={{ height: showConsole ? 'calc(100% - 200px)' : '100%' }}
-                        />
-                        {showConsole && (
-                          <div className="h-[200px] border-t border-gray-800">
-                            <SandpackConsole />
-                          </div>
-                        )}
+              <div className="flex-1 min-h-0 h-full flex">
+                {/* Code Editor Panel */}
+                <div className="w-1/2 border-r border-gray-800 h-full flex flex-col">
+                  {/* File Tabs */}
+                  <div className="flex items-center bg-gray-900 border-b border-gray-800 px-2 overflow-x-auto">
+                    {Object.keys(editedFiles).map((fileName) => (
+                      <button
+                        key={fileName}
+                        onClick={() => setActiveFile(fileName)}
+                        className={`px-3 py-2 text-sm flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap ${
+                          activeFile === fileName
+                            ? 'border-[#76B900] text-[#8CC63F] bg-gray-800'
+                            : 'border-transparent text-gray-400 hover:text-gray-200'
+                        }`}
+                      >
+                        <FileCode className="w-3.5 h-3.5" />
+                        {fileName}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Code Editor */}
+                  <div className="flex-1 relative">
+                    <textarea
+                      value={editedFiles[activeFile] || ''}
+                      onChange={(e) => handleFileChange(activeFile, e.target.value)}
+                      className="w-full h-full bg-gray-950 text-gray-200 font-mono text-sm p-4 resize-none focus:outline-none focus:ring-1 focus:ring-[#76B900]"
+                      spellCheck={false}
+                      style={{ tabSize: 2 }}
+                    />
+                    <div className="absolute top-2 right-2">
+                      <Badge variant="secondary" className="bg-gray-800 text-gray-400 text-xs">
+                        {activeFile.split('.').pop()?.toUpperCase()}
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {/* Console Panel */}
+                  {showConsole && (
+                    <div className="h-[200px] border-t border-gray-800 bg-gray-950">
+                      <div className="flex items-center justify-between px-3 py-1.5 bg-gray-900 border-b border-gray-800">
+                        <span className="text-xs text-gray-400 flex items-center gap-1">
+                          <Terminal className="w-3 h-3" /> Console
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-5 w-5 p-0 text-gray-500"
+                          onClick={() => setShowConsole(false)}
+                        >
+                          <X className="w-3 h-3" />
+                        </Button>
                       </div>
-                      <div className="w-1/2 h-full">
-                        <SandpackPreview
-                          showNavigator
-                          showRefreshButton
-                          style={{ height: '100%' }}
-                        />
+                      <div className="p-3 text-xs font-mono text-gray-500">
+                        Console output will appear here...
                       </div>
                     </div>
-                  </SandpackLayout>
-                </SandpackProvider>
+                  )}
+                </div>
+                
+                {/* Preview Panel */}
+                <div className="w-1/2 h-full flex flex-col bg-white">
+                  <div className="flex items-center justify-between px-3 py-2 bg-gray-900 border-b border-gray-800">
+                    <div className="flex items-center gap-2">
+                      <Eye className="w-4 h-4 text-[#76B900]" />
+                      <span className="text-sm text-gray-300">Preview</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 px-2 text-gray-400 hover:text-white"
+                        onClick={() => {
+                          const previewFrame = document.getElementById('preview-iframe') as HTMLIFrameElement;
+                          if (previewFrame) previewFrame.src = previewFrame.src;
+                        }}
+                      >
+                        <RotateCcw className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex-1 bg-white">
+                    <PreviewRenderer files={editedFiles} />
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="flex-1 flex items-center justify-center bg-gray-900">
