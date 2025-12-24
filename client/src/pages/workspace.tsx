@@ -56,7 +56,9 @@ import {
   Upload,
   AlertTriangle,
   Check,
-  Github
+  Github,
+  Maximize2,
+  Minimize2
 } from "lucide-react";
 import {
   Dialog,
@@ -691,6 +693,7 @@ export default function Workspace() {
   const [currentPlan, setCurrentPlan] = useState<any>(null);
   const [showGitPanel, setShowGitPanel] = useState(false);
   const [showPackagesPanel, setShowPackagesPanel] = useState(false);
+  const [showFullPreview, setShowFullPreview] = useState(false);
   const [packageSearch, setPackageSearch] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
 
@@ -1264,6 +1267,15 @@ export default function Workspace() {
             <ListChecks className="w-4 h-4" />
           </Button>
           <Button
+            onClick={() => setShowFullPreview(true)}
+            size="sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            data-testid="preview-button"
+          >
+            <Eye className="w-4 h-4 mr-2" />
+            Preview
+          </Button>
+          <Button
             onClick={() => saveProjectMutation.mutate()}
             disabled={!hasUnsavedChanges || saveProjectMutation.isPending}
             size="sm"
@@ -1434,7 +1446,8 @@ export default function Workspace() {
                   <div className="flex items-center justify-between px-3 py-2 bg-gray-900 border-b border-gray-800">
                     <div className="flex items-center gap-2">
                       <Eye className="w-4 h-4 text-[#76B900]" />
-                      <span className="text-sm text-gray-300">Preview</span>
+                      <span className="text-sm text-gray-300">Live Preview</span>
+                      <span className="w-2 h-2 rounded-full bg-[#76B900] animate-pulse" title="Live updating"></span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Button
@@ -1445,8 +1458,38 @@ export default function Workspace() {
                           const previewFrame = document.getElementById('preview-iframe') as HTMLIFrameElement;
                           if (previewFrame) previewFrame.src = previewFrame.src;
                         }}
+                        title="Refresh preview"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 px-2 text-gray-400 hover:text-white"
+                        onClick={() => setShowFullPreview(true)}
+                        title="Full screen preview"
+                        data-testid="expand-preview-button"
+                      >
+                        <Maximize2 className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 px-2 text-gray-400 hover:text-white"
+                        onClick={() => {
+                          const previewHtml = document.getElementById('preview-iframe')?.getAttribute('srcdoc');
+                          if (previewHtml) {
+                            const newWindow = window.open('', '_blank');
+                            if (newWindow) {
+                              newWindow.document.write(previewHtml);
+                              newWindow.document.close();
+                            }
+                          }
+                        }}
+                        title="Open in new tab"
+                        data-testid="popout-preview-button"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
                       </Button>
                     </div>
                   </div>
@@ -2235,6 +2278,66 @@ export default function Workspace() {
               )}
             </TabsContent>
           </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {/* Full Screen Preview Modal */}
+      <Dialog open={showFullPreview} onOpenChange={setShowFullPreview}>
+        <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-6xl w-[95vw] h-[90vh] p-0 overflow-hidden">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between px-4 py-3 bg-gray-900 border-b border-gray-800">
+              <div className="flex items-center gap-3">
+                <Eye className="w-5 h-5 text-[#76B900]" />
+                <span className="font-medium text-white">Full Screen Preview</span>
+                <span className="w-2 h-2 rounded-full bg-[#76B900] animate-pulse" title="Live updating"></span>
+                <span className="text-xs text-gray-500">Changes update in real-time</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-white"
+                  onClick={() => {
+                    const previewFrame = document.getElementById('fullscreen-preview-iframe') as HTMLIFrameElement;
+                    if (previewFrame) previewFrame.src = previewFrame.src;
+                  }}
+                  title="Refresh preview"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-white"
+                  onClick={() => {
+                    const previewHtml = document.getElementById('fullscreen-preview-iframe')?.getAttribute('srcdoc');
+                    if (previewHtml) {
+                      const newWindow = window.open('', '_blank');
+                      if (newWindow) {
+                        newWindow.document.write(previewHtml);
+                        newWindow.document.close();
+                      }
+                    }
+                  }}
+                  title="Open in new tab"
+                >
+                  <ExternalLink className="w-4 h-4 mr-1" />
+                  Open in New Tab
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-white"
+                  onClick={() => setShowFullPreview(false)}
+                >
+                  <Minimize2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="flex-1 bg-white">
+              <PreviewRenderer files={editedFiles} />
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
