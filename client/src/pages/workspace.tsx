@@ -1186,7 +1186,16 @@ export default function Workspace() {
                   activeFile: `/${activeFile}`,
                   visibleFiles: Object.keys(sandpackFiles),
                   recompileMode: "delayed",
-                  recompileDelay: 500,
+                  recompileDelay: 1000,
+                  initMode: "lazy",
+                  autorun: true,
+                  bundlerTimeOut: 60000,
+                }}
+                customSetup={{
+                  dependencies: {
+                    "react": "^18.2.0",
+                    "react-dom": "^18.2.0",
+                  },
                 }}
               >
                 <SandpackLayout style={{ height: '100%', border: 'none' }}>
@@ -1206,7 +1215,7 @@ export default function Workspace() {
                         </div>
                       )}
                     </div>
-                    <div className="w-1/2">
+                    <div className="w-1/2 relative">
                       <SandpackPreview
                         showNavigator
                         showRefreshButton
