@@ -237,7 +237,7 @@ Return as a complete Python script that can be executed immediately.`;
     
     // Generate additional components
     const deploymentConfig = await this.generateDeploymentConfig(requirements);
-    const requirements_list = this.getRequirementsForDomain(requirements.healthcareDomain);
+    const requirements_list = await this.getRequirementsForDomain(requirements.healthcareDomain);
 
     return {
       id: `ml_pipeline_${Date.now()}`,
